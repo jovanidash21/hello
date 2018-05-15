@@ -1,0 +1,76 @@
+.chat-section {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  .header,
+  .chat-box,
+  .chat-input {
+    padding-left: 0;
+    @media screen and (min-width: $screen-tablet-min) {
+      margin-right: 250px;
+    }
+  }
+  .left-side-drawer-overlay {
+    &,
+    & + .bm-menu-wrap {
+      z-index: 3 !important;
+    }
+  }
+  .right-side-drawer-overlay {
+    &,
+    & + .bm-menu-wrap {
+      z-index: 2 !important;
+    }
+  }
+  .bm-burger-button {
+    display: none;
+  }
+  .header {
+    flex-shrink: 0;
+  }
+  .chat-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-height: calc(100vh - 127px);
+    position: relative;
+    @media screen and (min-width: $screen-tablet-min) {
+      max-height: calc(100vh - 135px);
+    }
+    .chat-bubbles {
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: $color-mine-shaft;
+        border-radius: 5px;
+      }
+    }
+    .user-no-chat-rooms {
+      font-size: 21px;
+      left: 50%;
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .mui-container-fluid {
+      padding-bottom: 15px;
+      padding-top: 15px;
+    }
+    .chat-no-messages {
+      font-size: 17px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .chat-typers {
+      display: flex;
+      margin-top: 15px;
+    }
+  }
+}

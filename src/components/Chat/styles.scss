@@ -1,0 +1,149 @@
+.chat-bubble-wrapper {
+  display: flex;
+  padding: 2px;
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+  .chat-message {
+    max-width: 75%;
+  }
+  .chat-bubble {
+    $bg-color: $color-dusty-gray;
+    background-color: $bg-color;
+    border-radius: 21px;
+    margin-left: 25px;
+    position: relative;
+    word-wrap: break-word;
+    &:after {
+      border: 21px solid;
+      border-color: transparent $bg-color;
+      border-width: 10px 20px 10px 0;
+      bottom: auto;
+      content: '';
+      left: -17px;
+      position: absolute;
+      right: auto;
+      text-align: left;
+      top: 11px;
+    }
+    &.right {
+      $bg-color: $color-dodger-blue;
+      background-color: $bg-color;
+      margin-left: 0;
+      margin-right: 25px;
+      &:after {
+        border-color: transparent $bg-color;
+        left: auto;
+        right: -17px;
+        transform: rotate(180deg);
+      }
+    }
+    .chat-text {
+      color: #fff;
+      font-size: 14px;
+      padding: 11px 17px;
+    }
+  }
+  .chat-user-name {
+    color: $color-dusty-gray;
+    font-size: 11px;
+    margin-left: 45px;
+  }
+  .chat-image {
+    $image-size: 35px;
+    background-repeat: no-repeat;
+    background-size: $image-size;
+    border-radius: 50%;
+    flex: 0 0 $image-size;
+    height: $image-size;
+    margin-top: 3px;
+    width: $image-size;
+    &.left {
+      margin-top: 19px;
+    }
+  }
+  .chat-time {
+    align-self: flex-end;
+    color: #000;
+    font-size: 11px;
+    margin: 0 4px 2px;
+  }
+}
+
+.chat-typer-wrapper {
+  align-items: center;
+  display: flex;
+  padding: 4px;
+  .chat-image {
+    $image-size: 21px;
+    background-repeat: no-repeat;
+    background-size: $image-size;
+    border-radius: 50%;
+    height: $image-size;
+    width: $image-size;
+  }
+  .chat-typer {
+    align-items: center;
+    background-color: $color-dusty-gray;
+    border-radius: 21px;
+    display: flex;
+    margin-left: 3px;
+    padding: 5px;
+    position: relative;
+    span {
+      background-color: #fff;
+      border-radius: 50%;
+      display: block;
+      height: 5px;
+      margin: 0 1px;
+      opacity: 0.5;
+      width: 5px;
+      @for $i from 1 through 3 {
+        &:nth-of-type(#{$i}) {
+          animation: 1s blink infinite ($i * .3333s);
+        }
+      }
+      @keyframes blink {
+        50% {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+.chat-input {
+  align-items: center;
+  background-color: $color-gallery;
+  display: flex;
+  flex-shrink: 0;
+  .mui-textfield {
+    flex: 19;
+    margin: 0;
+    padding: 10px;
+    input {
+      border: 0;
+      height: 45px;
+      margin-bottom: 0;
+      padding: 17px;
+    }
+  }
+  .send-button {
+    background-color: $color-royal-purple;
+    border-radius: 0;
+    color: #fff;
+    flex: 1;
+    height: 65px;
+    margin: 0;
+    position: relative;
+    &:hover {
+      box-shadow: none;
+    }
+    span {
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
