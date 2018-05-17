@@ -10,7 +10,18 @@ var usersDataSchema = new Schema
 (
   {
     name: String,
-    email: String,
+    gender: {
+      type: String,
+      enum: [
+        'male',
+        'female'
+      ],
+      default: 'male'
+    },
+    email: {
+      type: String,
+      default: ''
+    },
     profilePicture: {
       type: String,
       default: 'https://raw.githubusercontent.com/jovanidash21/chat-app/master/public/images/default-profile-picture.jpg'
@@ -19,6 +30,18 @@ var usersDataSchema = new Schema
       type: Schema.Types.ObjectId,
       ref: 'chatRoomsData'
     }],
+    role: {
+      type: String,
+      enum: [
+        'owner',
+        'admin',
+        'moderator',
+        'vip',
+        'registered',
+        'guest'
+      ],
+      default: 'guest'
+    },
     socketID: String
   },
   {
