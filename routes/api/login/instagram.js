@@ -18,7 +18,8 @@ passport.use(new Strategy({
     username: username,
     name: name,
     email: '',
-    profilePicture: profilePicture
+    profilePicture: profilePicture,
+    role: 'registered'
   }
 
   usersData.findOne({username: username}, function(err, user) {

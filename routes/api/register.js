@@ -8,7 +8,9 @@ router.post('/', function(req, res, next) {
   var userData = {
     username: req.body.username,
     name: req.body.name,
-    email: req.body.email
+    email: req.body.email,
+    gender: req.body.gender,
+    role: 'registered'
   };
 
   usersData.register(new usersData(userData), req.body.password, function(err) {
