@@ -10,16 +10,17 @@ var usersDataSchema = new Schema
 (
   {
     name: String,
+    email: {
+      type: String,
+      default: ''
+    },
     gender: {
       type: String,
       enum: [
+        '',
         'male',
         'female'
       ],
-      default: 'male'
-    },
-    email: {
-      type: String,
       default: ''
     },
     profilePicture: {
