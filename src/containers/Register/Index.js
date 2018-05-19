@@ -13,6 +13,7 @@ import Head from '../../components/Head';
 import EmailInput from '../../components/AuthForm/Input/EmailInput';
 import NameInput from '../../components/AuthForm/Input/NameInput';
 import UsernameInput from '../../components/AuthForm/Input/UsernameInput';
+import GenderSelect from '../../components/AuthForm/Select/GenderSelect';
 import PasswordInput from '../../components/AuthForm/Input/PasswordInput';
 import RegisterButton from '../../components/AuthForm/Button/RegisterButton';
 import LoginButton from '../../components/AuthForm/Button/LoginButton';
@@ -26,6 +27,7 @@ class Register extends Component {
       email: '',
       name: '',
       username: '',
+      gender: 'male',
       password: ''
     };
   }
@@ -48,6 +50,11 @@ class Register extends Component {
 
     this.setState({username: event.target.value});
   }
+  onGenderChange(event) {
+    event.preventDefault();
+
+    this.setState({gender: event.target.value});
+  }
   onPasswordChange(event) {
     event.preventDefault();
 
@@ -68,17 +75,16 @@ class Register extends Component {
       email,
       name,
       username,
+      gender,
       password
     } = this.state;
-    let data = {email, name, username, password};
+    let data = {email, name, username, gender, password};
 
     register(data);
   }
   render() {
-    const {
-      auth,
-      register
-    } = this.props;
+    const { auth } = this.props;
+    const { gender } = this.state;
 
     return (
       <div>
@@ -106,6 +112,11 @@ class Register extends Component {
                 />
                 <UsernameInput
                   onUsernameChange={::this.onUsernameChange}
+                  isDisabled={auth.isLoading}
+                />
+                <GenderSelect
+                  defaultGender={gender}
+                  onGenderChange={::this.onGenderChange}
                   isDisabled={auth.isLoading}
                 />
                 <PasswordInput
