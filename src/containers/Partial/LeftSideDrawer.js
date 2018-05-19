@@ -98,12 +98,16 @@ class LeftSideDrawer extends Component {
             <h1 className="title">Chat App</h1>
             <div className="chat-rooms-options">
               <h3>Chat Rooms</h3>
-              <div className="add-chat-room-icon"
-                onClick={::this.handleActivateModal}
-                title="Add Chat Room"
-              >
-                <FontAwesome name="plus-circle" />
-              </div>
+              {
+                (user.userData.role === 'owner' ||
+                user.userData.role === 'admin') &&
+                <div className="add-chat-room-icon"
+                  onClick={::this.handleActivateModal}
+                  title="Add Chat Room"
+                >
+                  <FontAwesome name="plus-circle" />
+                </div>
+              }
             </div>
             {::this.handleComponent()}
           </div>
