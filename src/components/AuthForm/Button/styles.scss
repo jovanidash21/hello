@@ -33,6 +33,9 @@
   &.button-register {
     background-color: $color-sunshade;
   }
+  &.button-guest {
+    background-color: $color-millbrook;
+  }
   .icon {
     border-right: 1px solid $color-dusty-gray;
     display: inline-table;

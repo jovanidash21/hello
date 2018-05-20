@@ -7,81 +7,60 @@ import {
   Col,
   Panel,
   Divider
-} from 'muicss/react'
+} from 'muicss/react';
+import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../actions';
 import Head from '../../components/Head';
 import EmailInput from '../../components/AuthForm/Input/EmailInput';
 import NameInput from '../../components/AuthForm/Input/NameInput';
-import UsernameInput from '../../components/AuthForm/Input/UsernameInput';
 import GenderSelect from '../../components/AuthForm/Select/GenderSelect';
-import PasswordInput from '../../components/AuthForm/Input/PasswordInput';
-import RegisterButton from '../../components/AuthForm/Button/RegisterButton';
-import LoginButton from '../../components/AuthForm/Button/LoginButton';
 import GuestButton from '../../components/AuthForm/Button/GuestButton';
+import LoginButton from '../../components/AuthForm/Button/LoginButton';
+import RegisterButton from '../../components/AuthForm/Button/RegisterButton';
 import ErrorCard from '../../components/AuthForm/Card/ErrorCard';
 
-class Register extends Component {
+class Guest extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: '',
       name: '',
-      username: '',
-      gender: 'male',
-      password: ''
+      gender: 'male'
     };
   }
   componentWillMount() {
     document.body.className = '';
-    document.body.classList.add('register-page');
-  }
-  onEmailChange(event) {
-    event.preventDefault();
-
-    this.setState({email: event.target.value});
+    document.body.classList.add('guest-login-page');
   }
   onNameChange(event) {
     event.preventDefault();
 
     this.setState({name: event.target.value});
   }
-  onUsernameChange(event) {
-    event.preventDefault();
-
-    this.setState({username: event.target.value});
-  }
   onGenderChange(event) {
     event.preventDefault();
 
     this.setState({gender: event.target.value});
   }
-  onPasswordChange(event) {
-    event.preventDefault();
-
-    this.setState({password: event.target.value});
-  }
   handleHeadData() {
-    const title = 'Chat App | Register';
+    const title = 'Chat App | Guest';
 
     return (
       <Head title={title} />
     )
   }
-  handleRegister(event) {
+  handleGuestLogin(event) {
     event.preventDefault();
 
-    const { register } = this.props;
+    const { guestLogin } = this.props;
     const {
-      email,
       name,
-      username,
-      gender,
-      password
+      gender
     } = this.state;
-    let data = {email, name, username, gender, password};
+    const username = uuidv4();
+    let data = {name, username, gender};
 
-    register(data);
+    guestLogin(data);
   }
   render() {
     const { auth } = this.props;
@@ -93,26 +72,18 @@ class Register extends Component {
         <Panel className="form-card">
           <Row>
             <Col md="12">
-              <h1 className="mui--text-center">Create an Account</h1>
+              <h1 className="mui--text-center">Create Identity</h1>
             </Col>
             {
-              auth.isRegisterError &&
+              auth.isGuestLoginError &&
               <Col md="12">
-                <ErrorCard label="Sorry! Username already taken." />
+                <ErrorCard label="Sorry! Please try again." />
               </Col>
             }
             <Col md="12">
-              <Form onSubmit={::this.handleRegister}>
-                <EmailInput
-                  onEmailChange={::this.onEmailChange}
-                  isDisabled={auth.isLoading}
-                />
+              <Form onSubmit={::this.handleGuestLogin}>
                 <NameInput
                   onNameChange={::this.onNameChange}
-                  isDisabled={auth.isLoading}
-                />
-                <UsernameInput
-                  onUsernameChange={::this.onUsernameChange}
                   isDisabled={auth.isLoading}
                 />
                 <GenderSelect
@@ -120,11 +91,7 @@ class Register extends Component {
                   onGenderChange={::this.onGenderChange}
                   isDisabled={auth.isLoading}
                 />
-                <PasswordInput
-                  onPasswordChange={::this.onPasswordChange}
-                  isDisabled={auth.isLoading}
-                />
-                <RegisterButton
+                <GuestButton
                   type="submit"
                   isDisabled={auth.isLoading}
                 />
@@ -137,7 +104,7 @@ class Register extends Component {
               <LoginButton isDisabled={auth.isLoading} />
             </Col>
             <Col md="12">
-              <GuestButton isDisabled={auth.isLoading} />
+              <RegisterButton isDisabled={auth.isLoading} />
             </Col>
           </Row>
         </Panel>
@@ -155,4 +122,4 @@ const mapStateToProps = (state) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Register);
+)(Guest);

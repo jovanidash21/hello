@@ -1,6 +1,7 @@
 import {
   LOGIN,
   REGISTER,
+  GUEST_LOGIN,
   LOGOUT
 } from '../constants/auth';
 
@@ -13,6 +14,7 @@ const auth = (state=initialState, action) => {
   switch(action.type) {
     case `${LOGIN}_LOADING`:
     case `${REGISTER}_LOADING`:
+    case `${GUEST_LOGIN}_LOADING`:
     case `${LOGOUT}_LOADING`:
       return {
         ...state,
@@ -21,6 +23,7 @@ const auth = (state=initialState, action) => {
       };
     case `${LOGIN}_SUCCESS`:
     case `${REGISTER}_SUCCESS`:
+    case `${GUEST_LOGIN}_SUCCESS`:
       return {
         ...state,
         isLoading: false,
@@ -43,6 +46,12 @@ const auth = (state=initialState, action) => {
         ...state,
         isLoading: false,
         isRegisterError: true
+      };
+    case `${GUEST_LOGIN}_ERROR`:
+      return {
+        ...state,
+        isLoading: false,
+        isGuestLoginError: true
       };
     case `${LOGOUT}_ERROR`:
       return {

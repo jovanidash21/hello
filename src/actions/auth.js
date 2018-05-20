@@ -6,6 +6,7 @@ import { sendEmail } from './email';
 import {
   LOGIN,
   REGISTER,
+  GUEST_LOGIN,
   LOGOUT,
   SOCKET_USER_LOGIN,
   SOCKET_USER_LOGOUT
@@ -199,6 +200,26 @@ export function register(data) {
     .then(() => {
       dispatch(hideLoading());
       dispatch(sendEmail(data));
+      dispatch(push('/chat'));
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        dispatch(hideLoading());
+      }
+    });
+  }
+}
+
+export function guestLogin(data) {
+  return dispatch => {
+    dispatch(showLoading());
+
+    return dispatch({
+      type: GUEST_LOGIN,
+      payload: axios.post('/api/login/guest', data)
+    })
+    .then((response) => {
+      dispatch(hideLoading());
       dispatch(push('/chat'));
     })
     .catch((error) => {

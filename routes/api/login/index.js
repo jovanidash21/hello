@@ -22,5 +22,6 @@ router.use('/twitter', require('./twitter'));
 router.use('/instagram', require('./instagram'));
 router.use('/linkedin', require('./linkedin'));
 router.use('/github', require('./github'));
+router.use('/guest', require('./guest'));
 
 module.exports = router;

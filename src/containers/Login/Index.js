@@ -14,9 +14,9 @@ import UsernameInput from '../../components/AuthForm/Input/UsernameInput';
 import PasswordInput from '../../components/AuthForm/Input/PasswordInput';
 import LoginButton from '../../components/AuthForm/Button/LoginButton';
 import RegisterButton from '../../components/AuthForm/Button/RegisterButton';
+import GuestButton from '../../components/AuthForm/Button/GuestButton';
 import SocialButton from '../../components/AuthForm/Button/SocialButton';
 import ErrorCard from '../../components/AuthForm/Card/ErrorCard';
-
 
 class Login extends Component {
   constructor(props) {
@@ -154,6 +154,9 @@ class Login extends Component {
             </Col>
             <Col md="12">
               <RegisterButton isDisabled={auth.isLoading} />
+            </Col>
+            <Col md="12">
+              <GuestButton isDisabled={auth.isLoading} />
             </Col>
           </Row>
         </Panel>

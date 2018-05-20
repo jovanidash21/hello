@@ -9,6 +9,7 @@ import {
   linkedinLogin,
   githubLogin,
   register,
+  guestLogin,
   logout
 } from './auth';
 import {
@@ -43,6 +44,7 @@ const actions = (dispatch) => {
     linkedinLogin,
     githubLogin,
     register,
+    guestLogin,
     logout,
     fetchUser,
     fetchUsers,

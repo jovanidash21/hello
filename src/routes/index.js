@@ -5,6 +5,7 @@ import AuthForm from '../containers/AuthForm';
 import Layout from '../containers/Layout';
 import Login from '../containers/Login';
 import Register from '../containers/Register';
+import Guest from '../containers/Guest';
 import Chat from '../containers/Chat';
 
 const routes = (
@@ -13,6 +14,7 @@ const routes = (
     <Switch>
       <AuthForm exact path="/" component={Login} />
       <AuthForm exact path="/register" component={Register} />
+      <AuthForm exact path="/guest" component={Guest} />
       <Layout exact path="/chat" component={Chat} />
     </Switch>
   </div>
