@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 var passport = require('passport');
 var Strategy = require('passport-custom').Strategy;
-var usersData = require('../../../models/users-data-schema');
-var chatRoomsData = require('../../../models/chat-rooms-data-schema');
+var User = require('../../../models/User');
+var ChatRoom = require('../../../models/ChatRoom');
 
 passport.use(new Strategy(
   function(req, done) {
-    usersData.findOne({username: req.body.username}, function (err, user) {
+    User.findOne({username: req.body.username}, function (err, user) {
       if (!err) {
         return done(null, user);
       } else {
@@ -25,7 +25,7 @@ router.post('/', function(req, res, next) {
     role: 'guest'
   };
 
-  usersData.findOne({username: req.body.username}, function(err, user) {
+  User.findOne({username: req.body.username}, function(err, user) {
     if (!err) {
       if (user !== null) {
         res.status(401).send({
@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
           message: 'Username already exist.'
         });
       } else {
-        var newUser = new usersData(userData);
+        var newUser = new User(userData);
 
         newUser.save(function(err) {
           if (!err) {
@@ -44,7 +44,7 @@ router.post('/', function(req, res, next) {
                   var userID = newUser._id;
 
                   if (chatLoungeID) {
-                    chatRoomsData.findByIdAndUpdate(
+                    ChatRoom.findByIdAndUpdate(
                       chatLoungeID,
                       { $push: { members: userID }},
                       { safe: true, upsert: true, new: true },
@@ -57,7 +57,7 @@ router.post('/', function(req, res, next) {
                       }
                     );
 
-                    usersData.findByIdAndUpdate(
+                    User.findByIdAndUpdate(
                       userID,
                       { $push: { chatRooms: chatLoungeID }},
                       { safe: true, upsert: true, new: true },

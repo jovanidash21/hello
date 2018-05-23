@@ -49,6 +49,7 @@ class RightSideDrawer extends Component {
                   key={i}
                   userData={user.userData}
                   chatRoomMember={chatRoomMember}
+                  handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                 />
               )
             }
@@ -59,6 +60,60 @@ class RightSideDrawer extends Component {
       return (
         <LoadingAnimation name="ball-clip-rotate" color="white" />
       )
+    }
+  }
+  handleAddDirectChatRoom(event, memberID) {
+    const {
+      user,
+      chatRoom,
+      createDirectChatRoom,
+      socketJoinChatRoom,
+      changeChatRoom,
+      fetchMessages,
+      handleRightSideDrawerToggleEvent
+    } = this.props;
+    const userID = user.userData._id;
+    const chatRooms = chatRoom.chatRooms;
+    var directChatRoomExists = false;
+    var directChatRoomData = {};
+
+
+    for ( var i = 0; i < chatRooms.length; i++ ) {
+      if ( chatRooms[i].chatType === 'direct' ) {
+        var isMembersMatch = chatRooms[i].members.some(member => member._id === memberID);
+
+        if ( isMembersMatch ) {
+          directChatRoomExists = true;
+          directChatRoomData = chatRooms[i];
+          break;
+        } else {
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+
+    if ( ! directChatRoomExists ) {
+      let data = {
+        name: '',
+        members: [userID, memberID],
+        chatType: 'direct',
+        userID: userID
+      };
+
+      createDirectChatRoom(data);
+      handleRightSideDrawerToggleEvent(event);
+    } else {
+      let data = {
+        userID: userID,
+        chatRoomID: directChatRoomData._id
+      };
+
+      socketJoinChatRoom(directChatRoomData._id);
+      changeChatRoom(directChatRoomData);
+      fetchMessages(data);
+      handleRightSideDrawerToggleEvent(event);
     }
   }
   render() {

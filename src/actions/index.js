@@ -23,7 +23,8 @@ import {
 } from './typer';
 import {
   fetchChatRooms,
-  createChatRoom,
+  createGroupChatRoom,
+  createDirectChatRoom,
   socketJoinChatRoom,
   socketLeaveChatRoom
 } from './chat-room';
@@ -51,7 +52,8 @@ const actions = (dispatch) => {
     socketIsTyping,
     socketIsNotTyping,
     fetchChatRooms,
-    createChatRoom,
+    createGroupChatRoom,
+    createDirectChatRoom,
     socketJoinChatRoom,
     socketLeaveChatRoom,
     changeChatRoom,

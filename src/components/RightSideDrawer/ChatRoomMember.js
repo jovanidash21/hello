@@ -7,6 +7,16 @@ class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
   }
+  handleAddDirectChatRoom(event) {
+    event.preventDefault();
+
+    const {
+      chatRoomMember,
+      handleAddDirectChatRoom
+    } = this.props;
+
+    handleAddDirectChatRoom(event, chatRoomMember._id);
+  }
   render() {
     const {
       userData,
@@ -23,12 +33,7 @@ class ChatRoomMember extends Component {
           {chatRoomMember.name}
         </div>
         {
-          (
-            ( userData.role === 'owner' ||
-              userData.role === 'admin' ) &&
-            ( chatRoomMember.role !== 'owner' &&
-              chatRoomMember.role !== 'admin' )
-          ) &&
+          userData._id !== chatRoomMember._id &&
           <div>
             <div className="member-options-button" data-mui-toggle="dropdown">
               <FontAwesome
@@ -38,20 +43,33 @@ class ChatRoomMember extends Component {
             </div>
             <ul className="mui-dropdown__menu mui-dropdown__menu--right">
               <li>
-                <a href="#">Make Admin</a>
+                <a href="#" onClick={::this.handleAddDirectChatRoom}>
+                  Direct Messages
+                </a>
               </li>
-              <li>
-                <a href="#">Ban Member</a>
-              </li>
-              <li>
-                <a href="#">Kick Member</a>
-              </li>
-              <li>
-                <a href="#">Mute Member</a>
-              </li>
-              <li>
-                <a href="#">Make VIP</a>
-              </li>
+              {/*
+                (
+                  ( userData.role === 'owner' ||
+                    userData.role === 'admin' ) &&
+                  ( chatRoomMember.role !== 'owner' &&
+                    chatRoomMember.role !== 'admin' )
+                ) &&
+                <li>
+                  <a href="#">Make Admin</a>
+                </li>
+                <li>
+                  <a href="#">Ban Member</a>
+                </li>
+                <li>
+                  <a href="#">Kick Member</a>
+                </li>
+                <li>
+                  <a href="#">Mute Member</a>
+                </li>
+                <li>
+                  <a href="#">Make VIP</a>
+                </li>
+              */}
             </ul>
           </div>
         }
@@ -62,7 +80,8 @@ class ChatRoomMember extends Component {
 
 ChatRoomMember.propTypes = {
   userData: PropTypes.object.isRequired,
-  chatRoomMember: PropTypes.object.isRequired
+  chatRoomMember: PropTypes.object.isRequired,
+  handleAddDirectChatRoom: PropTypes.func.isRequired
 }
 
 export default ChatRoomMember;
