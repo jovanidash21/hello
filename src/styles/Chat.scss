@@ -2,6 +2,14 @@
   display: flex;
   height: 100vh;
   flex-direction: column;
+  &.no-chat-input {
+    .chat-box {
+      max-height: calc(100vh - 62px);
+      @media screen and (min-width: $screen-tablet-min) {
+        max-height: calc(100vh - 70px);
+      }
+    }
+  }
   .header,
   .chat-box,
   .chat-input {
