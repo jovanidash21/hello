@@ -7,6 +7,40 @@ class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
   }
+  handleRoleBadgeLogo() {
+    const { chatRoomMember } = this.props;
+    var icon = '';
+    var title = '';
+
+    switch ( chatRoomMember.role ) {
+      case 'owner':
+        icon = 'shield';
+        title = 'This member is an owner';
+        break;
+      case 'admin':
+        icon = 'font';
+        title = 'This member is an admin';
+        break;
+      case 'moderator':
+        icon = 'forward';
+        title = 'This member is a moderator';
+        break;
+      default:
+        return;
+    }
+
+    return (
+      <div
+        className={`badge-logo top ${chatRoomMember.role}`}
+        title={title}
+      >
+        <FontAwesome
+          className="social-icon"
+          name={icon}
+        />
+      </div>
+    )
+  }
   handleAccountTypeBadgeLogo() {
     const { chatRoomMember } = this.props;
     var icon = '';
@@ -52,6 +86,11 @@ class ChatRoomMember extends Component {
           style={{backgroundImage: `url(${chatRoomMember.profilePicture})`}}
         >
           {
+            chatRoomMember.role !== 'ordinary' &&
+            chatRoomMember.role !== 'vip' &&
+            ::this.handleRoleBadgeLogo()
+          }
+          {
             chatRoomMember.accountType !== 'local' &&
             ::this.handleAccountTypeBadgeLogo()
           }
@@ -60,46 +99,58 @@ class ChatRoomMember extends Component {
           {chatRoomMember.name}
         </div>
         {
-          userData._id !== chatRoomMember._id &&
-          <div>
-            <div className="member-options-button" data-mui-toggle="dropdown">
-              <FontAwesome
-                className="options-icon"
-                 name="ellipsis-v"
-              />
-            </div>
-            <ul className="mui-dropdown__menu mui-dropdown__menu--right">
-              <li>
-                <a href="#" onClick={::this.handleAddDirectChatRoom}>
-                  Direct Messages
-                </a>
-              </li>
-              {/*
-                (
-                  ( userData.role === 'owner' ||
-                    userData.role === 'admin' ) &&
-                  ( chatRoomMember.role !== 'owner' &&
-                    chatRoomMember.role !== 'admin' )
-                ) &&
-                <li>
-                  <a href="#">Make Admin</a>
-                </li>
-                <li>
-                  <a href="#">Ban Member</a>
-                </li>
-                <li>
-                  <a href="#">Kick Member</a>
-                </li>
-                <li>
-                  <a href="#">Mute Member</a>
-                </li>
-                <li>
-                  <a href="#">Make VIP</a>
-                </li>
-              */}
-            </ul>
+          chatRoomMember.gender.length > 0 &&
+          <div className="gender-logo" title={chatRoomMember.gender}>
+            <FontAwesome
+              className="gender-icon"
+              name={chatRoomMember.gender}
+            />
           </div>
         }
+        <div className="member-options-button-wrapper">
+          {
+            userData._id !== chatRoomMember._id &&
+            <div>
+              <div className="member-options-button" data-mui-toggle="dropdown">
+                <FontAwesome
+                  className="options-icon"
+                   name="ellipsis-v"
+                />
+              </div>
+
+              <ul className="mui-dropdown__menu mui-dropdown__menu--right">
+                <li>
+                  <a href="#" onClick={::this.handleAddDirectChatRoom}>
+                    Direct Messages
+                  </a>
+                </li>
+                {/*
+                  (
+                    ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' )
+                  ) &&
+                  <li>
+                    <a href="#">Make Admin</a>
+                  </li>
+                  <li>
+                    <a href="#">Ban Member</a>
+                  </li>
+                  <li>
+                    <a href="#">Kick Member</a>
+                  </li>
+                  <li>
+                    <a href="#">Mute Member</a>
+                  </li>
+                  <li>
+                    <a href="#">Make VIP</a>
+                  </li>
+                */}
+              </ul>
+            </div>
+          }
+        </div>
       </div>
     )
   }

@@ -50,6 +50,7 @@
       max-height: calc(100vh - 135px);
     }
     .chat-bubbles {
+      overflow-x: hidden;
       overflow-y: auto;
       &::-webkit-scrollbar {
         width: 6px;
