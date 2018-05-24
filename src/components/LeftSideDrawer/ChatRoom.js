@@ -34,39 +34,62 @@ class ChatRoom extends Component {
       chatRoomData
     } = this.props;
 
-    if (chatRoomData.chatType !== 'direct') {
-      return;
-    } else {
-      for ( var i = 0; i < chatRoomData.members.length; i++ ) {
-        var member = chatRoomData.members[i];
+    switch ( chatRoomData.chatType ) {
+      case 'private':
+        var icon = '';
 
-        if ( member._id != userData._id ) {
-          if ( member.accountType !== 'local' ) {
-            var icon = '';
-
-            switch ( member.accountType ) {
-              case 'guest':
-                icon = 'star';
-                break;
-              default:
-                icon = member.accountType;
-                break;
-            }
-
-            return (
-              <div className={`badge-logo ${member.accountType}`}>
-                <FontAwesome
-                  className="social-icon"
-                  name={icon}
-                />
-              </div>
-            )
-          }
-          return;
-        } else {
-          continue;
+        switch ( userData.accountType ) {
+          case 'guest':
+            icon = 'star';
+            break;
+          default:
+            icon = userData.accountType;
+            break;
         }
-      }
+
+        return (
+          <div className={`badge-logo ${userData.accountType}`}>
+            <FontAwesome
+              className="social-icon"
+              name={icon}
+            />
+          </div>
+        )
+        break;
+      case 'direct':
+        for ( var i = 0; i < chatRoomData.members.length; i++ ) {
+          var member = chatRoomData.members[i];
+
+          if ( member._id != userData._id ) {
+            if ( member.accountType !== 'local' ) {
+              var icon = '';
+
+              switch ( member.accountType ) {
+                case 'guest':
+                  icon = 'star';
+                  break;
+                default:
+                  icon = member.accountType;
+                  break;
+              }
+
+              return (
+                <div className={`badge-logo ${member.accountType}`}>
+                  <FontAwesome
+                    className="social-icon"
+                    name={icon}
+                  />
+                </div>
+              )
+            }
+            return;
+          } else {
+            continue;
+          }
+        }
+        break;
+      case 'group':
+        return;
     }
   }
   handleChangeChatRoom(event) {

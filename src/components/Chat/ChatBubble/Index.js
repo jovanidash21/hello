@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import { emojify } from 'react-emojione';
 import TimeAgo from 'react-timeago';
 import moment from 'moment';
@@ -8,6 +9,28 @@ import './styles.scss';
 class ChatBubble extends Component {
   constructor(props) {
     super(props);
+  }
+  handleAccountTypeBadgeLogo() {
+    const { userData } = this.props;
+    var icon = '';
+
+    switch ( userData.accountType ) {
+      case 'guest':
+        icon = 'star';
+        break;
+      default:
+        icon = userData.accountType;
+        break;
+    }
+
+    return (
+      <div className={`badge-logo closer ${userData.accountType}`}>
+        <FontAwesome
+          className="social-icon"
+          name={icon}
+        />
+      </div>
+    )
   }
   handleMessageText() {
     const { message } = this.props;
@@ -34,11 +57,12 @@ class ChatBubble extends Component {
     return (
       <div className={"chat-bubble-wrapper " + (isSender ? 'reverse' : '')}>
         <div
-        className={"chat-image " + (!isSender ? 'left' : '')}
-        style={{backgroundImage: `url(${userData.profilePicture})`}}
-        title={userData.name}
-        />
-
+          className={"chat-image " + (!isSender ? 'left' : '')}
+          style={{backgroundImage: `url(${userData.profilePicture})`}}
+          title={userData.name}
+        >
+          {::this.handleAccountTypeBadgeLogo()}
+        </div>
         <div className="chat-details">
           {
             !isSender &&
