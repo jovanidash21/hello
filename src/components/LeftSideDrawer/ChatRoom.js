@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import './styles.scss';
 
 class ChatRoom extends Component {
@@ -25,6 +26,47 @@ class ChatRoom extends Component {
       handleSocketJoinChatRoom(chatRoomData._id);
       handleChangeChatRoom(chatRoomData);
       handleFetchMessages(data);
+    }
+  }
+  handleAccountTypeBadgeLogo() {
+    const {
+      userData,
+      chatRoomData
+    } = this.props;
+
+    if (chatRoomData.chatType !== 'direct') {
+      return;
+    } else {
+      for ( var i = 0; i < chatRoomData.members.length; i++ ) {
+        var member = chatRoomData.members[i];
+
+        if ( member._id != userData._id ) {
+          if ( member.accountType !== 'local' ) {
+            var icon = '';
+
+            switch ( member.accountType ) {
+              case 'guest':
+                icon = 'star';
+                break;
+              default:
+                icon = member.accountType;
+                break;
+            }
+
+            return (
+              <div className={`badge-logo ${member.accountType}`}>
+                <FontAwesome
+                  className="social-icon"
+                  name={icon}
+                />
+              </div>
+            )
+          }
+          return;
+        } else {
+          continue;
+        }
+      }
     }
   }
   handleChangeChatRoom(event) {
@@ -64,7 +106,9 @@ class ChatRoom extends Component {
         onClick={::this.handleChangeChatRoom}
         title={chatRoomData.name}
       >
-        <div className="chat-room-icon" style={{backgroundImage: `url(${chatRoomData.chatIcon})`}}></div>
+        <div className="chat-room-icon" style={{backgroundImage: `url(${chatRoomData.chatIcon})`}}>
+          {::this.handleAccountTypeBadgeLogo()}
+        </div>
         <div className="chat-room-name">
           {chatRoomData.name}
           {

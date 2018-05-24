@@ -10,7 +10,8 @@ router.post('/', function(req, res, next) {
     name: req.body.name,
     email: req.body.email,
     gender: req.body.gender,
-    role: 'registered'
+    accountType: 'local',
+    role: 'ordinary'
   };
 
   User.register(new User(userData), req.body.password, function(err) {

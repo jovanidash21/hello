@@ -8,7 +8,28 @@ class OptionsDropdown extends Component {
   constructor(props) {
     super(props);
   }
+  handleAccountTypeBadgeLogo() {
+    const { userData } = this.props;
+    var icon = '';
 
+    switch ( userData.accountType ) {
+      case 'guest':
+        icon = 'star';
+        break;
+      default:
+        icon = userData.accountType;
+        break;
+    }
+
+    return (
+      <div className={`badge-logo ${userData.accountType}`}>
+        <FontAwesome
+          className="social-icon"
+          name={icon}
+        />
+      </div>
+    )
+  }
   handleLogout(event) {
     event.preventDefault();
 
@@ -30,7 +51,12 @@ class OptionsDropdown extends Component {
               className="user-picture"
               style={{backgroundImage: `url(${userData.profilePicture})`}}
               title={userData.name}
-            ></div>
+            >
+              {
+                userData.accountType !== 'local' &&
+                ::this.handleAccountTypeBadgeLogo()
+              }
+            </div>
             <div className="user-name">
               {userData.name}
             </div>

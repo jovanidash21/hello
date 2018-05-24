@@ -7,6 +7,28 @@ class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
   }
+  handleAccountTypeBadgeLogo() {
+    const { chatRoomMember } = this.props;
+    var icon = '';
+
+    switch ( chatRoomMember.accountType ) {
+      case 'guest':
+        icon = 'star';
+        break;
+      default:
+        icon = chatRoomMember.accountType;
+        break;
+    }
+
+    return (
+      <div className={`badge-logo ${chatRoomMember.accountType}`}>
+        <FontAwesome
+          className="social-icon"
+          name={icon}
+        />
+      </div>
+    )
+  }
   handleAddDirectChatRoom(event) {
     event.preventDefault();
 
@@ -28,7 +50,12 @@ class ChatRoomMember extends Component {
         <div
           className="member-icon"
           style={{backgroundImage: `url(${chatRoomMember.profilePicture})`}}
-        />
+        >
+          {
+            chatRoomMember.accountType !== 'local' &&
+            ::this.handleAccountTypeBadgeLogo()
+          }
+        </div>
         <div className="member-name">
           {chatRoomMember.name}
         </div>

@@ -22,7 +22,8 @@ router.post('/', function(req, res, next) {
     username: req.body.username,
     name: req.body.name,
     gender: req.body.gender,
-    role: 'guest'
+    accountType: 'guest',
+    role: 'ordinary'
   };
 
   User.findOne({username: req.body.username}, function(err, user) {

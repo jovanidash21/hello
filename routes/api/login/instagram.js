@@ -18,7 +18,9 @@ passport.use(new Strategy({
     username: username,
     name: name,
     email: '',
-    profilePicture: profilePicture
+    profilePicture: profilePicture,
+    accountType: 'instagram',
+    role: 'ordinary'
   }
 
   User.findOne({username: username}, function(err, user) {
