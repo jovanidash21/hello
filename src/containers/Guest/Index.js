@@ -77,7 +77,7 @@ class Guest extends Component {
             {
               auth.isGuestLoginError &&
               <Col md="12">
-                <ErrorCard label="Sorry! Please try again." />
+                <ErrorCard label="Sorry! Guest name already taken." />
               </Col>
             }
             <Col md="12">

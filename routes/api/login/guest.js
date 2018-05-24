@@ -26,12 +26,12 @@ router.post('/', function(req, res, next) {
     role: 'ordinary'
   };
 
-  User.findOne({username: req.body.username}, function(err, user) {
+  User.findOne({name: req.body.name, accountType: 'guest'}, function(err, user) {
     if (!err) {
       if (user !== null) {
         res.status(401).send({
           success: false,
-          message: 'Username already exist.'
+          message: 'Guest name already exist.'
         });
       } else {
         var newUser = new User(userData);
