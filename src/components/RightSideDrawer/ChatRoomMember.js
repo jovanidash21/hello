@@ -7,6 +7,18 @@ class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
   }
+  handleOnlineIcon() {
+    const { chatRoomMember } = this.props;
+
+    return (
+      <div className="online-indicator">
+        <FontAwesome
+          className="circle-icon"
+          name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
+        />
+      </div>
+    )
+  }
   handleRoleBadgeLogo() {
     const { chatRoomMember } = this.props;
     var icon = '';
@@ -81,6 +93,7 @@ class ChatRoomMember extends Component {
 
     return (
       <div className="chat-room-member" title={chatRoomMember.name}>
+        {::this.handleOnlineIcon()}
         <div
           className="member-icon"
           style={{backgroundImage: `url(${chatRoomMember.profilePicture})`}}
@@ -97,6 +110,10 @@ class ChatRoomMember extends Component {
         </div>
         <div className="member-name">
           {chatRoomMember.name}
+          {
+            userData._id === chatRoomMember._id &&
+            <span className="you-label">(you)</span>
+          }
         </div>
         {
           chatRoomMember.gender.length > 0 &&

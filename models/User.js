@@ -56,7 +56,14 @@ var usersDataSchema = new Schema
       ],
       default: 'ordinary'
     },
-    socketID: String
+    isOnline: {
+      type: Boolean,
+      default: false
+    },
+    socketID: {
+      type: String,
+      default: ''
+    }
   },
   {
     collection: 'User'
