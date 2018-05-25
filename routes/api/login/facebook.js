@@ -34,8 +34,7 @@ passport.use(new Strategy({
     name: name,
     email: email,
     profilePicture: profilePicture,
-    accountType: 'facebook',
-    role: 'ordinary'
+    accountType: 'facebook'
   }
 
   User.findOne({username: username}, function(err, user) {

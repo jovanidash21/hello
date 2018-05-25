@@ -33,8 +33,7 @@ passport.use(new Strategy({
     name: name,
     email: email,
     profilePicture: profilePicture,
-    accountType: 'github',
-    role: 'ordinary'
+    accountType: 'github'
   }
 
   User.findOne({username: username}, function(err, user) {

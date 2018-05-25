@@ -35,8 +35,7 @@ passport.use(new Strategy({
     name: name,
     email: email,
     profilePicture: profilePicture,
-    accountType: 'twitter',
-    role: 'ordinary'
+    accountType: 'twitter'
   }
 
   User.findOne({username: username}, function(err, user) {

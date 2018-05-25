@@ -28,8 +28,7 @@ passport.use(new Strategy({
     name: name,
     email: email,
     profilePicture: profilePicture,
-    accountType: 'google',
-    role: 'ordinary'
+    accountType: 'google'
   }
 
   User.findOne({username: username}, function(err, user) {
