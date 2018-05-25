@@ -50,6 +50,7 @@ class RightSideDrawer extends Component {
                   userData={user.userData}
                   chatRoomMember={chatRoomMember}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
+                  handleUpdateMemberRole={::this.handleUpdateMemberRole}
                 />
               )
             }
@@ -114,6 +115,18 @@ class RightSideDrawer extends Component {
       changeChatRoom(directChatRoomData);
       fetchMessages(data);
       handleRightSideDrawerToggleEvent(event);
+    }
+  }
+  handleUpdateMemberRole(userID, role) {
+    const {
+      user,
+      updateMemberRole
+    } = this.props;
+    const userData = user.userData;
+    let data = {userID, role};
+
+    if ( userData.role === 'owner' || userData.role === 'admin' ) {
+      updateMemberRole(data);
     }
   }
   render() {

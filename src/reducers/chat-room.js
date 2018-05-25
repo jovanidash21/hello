@@ -9,6 +9,10 @@ import {
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_BROADCAST_CREATE_CHAT_ROOM
 } from '../constants/chat-room';
+import {
+  SOCKET_UPDATE_MEMBER_DATA,
+  SOCKET_BROADCAST_UPDATE_MEMBER_DATA
+} from '../constants/member';
 
 const initialState = {
   isLoading: false,
@@ -102,6 +106,31 @@ const chatRoom = (state=initialState, action) => {
           action.chatRoom
         ]
       };
+    case SOCKET_UPDATE_MEMBER_DATA:
+    case SOCKET_BROADCAST_UPDATE_MEMBER_DATA:
+      var memberID = action.member;
+      var role = action.role;
+      var chatRooms = [...state.chatRooms];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        for (var j = 0; j < chatRoom.members.length; j++) {
+          var member = chatRoom.members[j];
+
+          if ( member._id === memberID ) {
+            member.role = role;
+            break;
+          } else {
+            continue
+          }
+        }
+      }
+
+      return {
+        ...state,
+        chatRooms: [...chatRooms]
+      }
     default:
       return state;
   }

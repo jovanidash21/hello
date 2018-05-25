@@ -73,6 +73,13 @@ var sockets = function(socket) {
           message: action.message
         });
         break;
+      case 'SOCKET_UPDATE_MEMBER_DATA':
+        socket.broadcast.emit('action', {
+          type: 'SOCKET_BROADCAST_UPDATE_MEMBER_DATA',
+          member: action.member,
+          role: action.role
+        });
+        break;
       default:
         break;
     }

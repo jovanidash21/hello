@@ -14,6 +14,9 @@
   &.active {
     background-color: $color-royal-purple;
   }
+  &.special {
+    background-color: $color-vermillion;
+  }
   .online-indicator {
     color: #fff;
     font-size: 10px;
