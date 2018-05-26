@@ -11,7 +11,7 @@ class ChatRoomMember extends Component {
     const { chatRoomMember } = this.props;
 
     return (
-      <div className="online-indicator">
+      <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
         <FontAwesome
           className="circle-icon"
           name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
@@ -136,7 +136,14 @@ class ChatRoomMember extends Component {
         }
         <div className="member-options-button-wrapper">
           {
-            userData._id !== chatRoomMember._id &&
+            (
+              ( userData._id !== chatRoomMember._id ) &&
+              ( userData.role === 'owner' ||
+                userData.role === 'admin' ) ||
+              ( chatRoomMember.role !== 'owner' &&
+                chatRoomMember.role !== 'admin' &&
+                chatRoomMember.role !== 'vip' )
+            ) &&
             <div>
               <div className="member-options-button" data-mui-toggle="dropdown">
                 <FontAwesome
@@ -146,11 +153,20 @@ class ChatRoomMember extends Component {
               </div>
 
               <ul className="mui-dropdown__menu mui-dropdown__menu--right">
-                <li>
-                  <a href="#" onClick={::this.handleAddDirectChatRoom}>
-                    Direct Messages
-                  </a>
-                </li>
+                {
+                  (
+                    ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) ||
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' &&
+                      chatRoomMember.role !== 'vip' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={::this.handleAddDirectChatRoom}>
+                      Direct Messages
+                    </a>
+                  </li>
+                }
                 {
                   (
                     ( userData.role === 'owner' ||
@@ -167,8 +183,7 @@ class ChatRoomMember extends Component {
                   (
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' ) &&
+                    ( chatRoomMember.role !== 'moderator' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
                   <li>
@@ -179,8 +194,7 @@ class ChatRoomMember extends Component {
                   (
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' ) &&
+                    ( chatRoomMember.role !== 'vip' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
                   <li>

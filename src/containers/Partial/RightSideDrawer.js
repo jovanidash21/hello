@@ -35,14 +35,15 @@ class RightSideDrawer extends Component {
               size="2x"
             />
             <h3>
-              {activeChatRoomData.members.length}&nbsp;
-              {activeChatRoomData.members.length > 1 ? 'Members' : 'Member'}
+              Online Members
             </h3>
           </div>
           <div className="member-list">
             {
               activeChatRoomData.members.length > 0 &&
-              activeChatRoomData.members.sort((a, b) =>
+              activeChatRoomData.members.filter((member) =>
+                member.isOnline
+              ).sort((a, b) =>
                 a.name.toLowerCase().localeCompare(b.name.toLowerCase())
               ).map((chatRoomMember, i) =>
                 <ChatRoomMember

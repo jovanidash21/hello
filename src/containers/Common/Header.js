@@ -51,7 +51,6 @@ class Header extends Component {
                 className="user-icon"
                 name="user"
               />
-              {activeChatRoomData.members.length}
             </div>
           </MediaQuery>
         </div>

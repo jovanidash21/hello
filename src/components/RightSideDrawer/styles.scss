@@ -1,6 +1,6 @@
 .chat-room-member {
   align-items: center;
-  border-bottom: 1px solid $color-goblin;
+  border-bottom: 1px solid $color-english-walnut;
   display: flex;
   font-size: 14px;
   padding: 3px 15px 3px 0;
@@ -9,7 +9,7 @@
   &:active,
   &:focus,
   &:hover {
-    background-color: $color-goblin;
+    background-color: $color-english-walnut;
   }
   &.active {
     background-color: $color-royal-purple;
@@ -18,9 +18,12 @@
     background-color: $color-vermillion;
   }
   .online-indicator {
-    color: #fff;
+    color: $color-dusty-gray;
     font-size: 10px;
     margin: 0 5px;
+    &.online {
+      color: $color-mantis;
+    }
   }
   .member-icon {
     $image-size: 23px;
