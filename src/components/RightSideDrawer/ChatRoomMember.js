@@ -95,6 +95,16 @@ class ChatRoomMember extends Component {
 
     handleUpdateMemberRole(chatRoomMember._id, role);
   }
+  handleMuteMember(event) {
+    event.preventDefault();
+
+    const {
+      chatRoomMember,
+      handleMuteMember
+    } = this.props;
+
+    handleMuteMember(chatRoomMember._id);
+  }
   render() {
     const {
       userData,
@@ -102,7 +112,13 @@ class ChatRoomMember extends Component {
     } = this.props;
 
     return (
-      <div className={"chat-room-member " + ( chatRoomMember.role === 'vip' ? 'special' : '' )} title={chatRoomMember.name}>
+      <div
+        className={"chat-room-member " +
+          ( chatRoomMember.role === 'vip' ? 'special ' : '' ) +
+          ( chatRoomMember.isMute ? 'mute' : '' )
+        }
+        title={chatRoomMember.name}
+      >
         {::this.handleOnlineIcon()}
         <div
           className="member-icon"
@@ -183,7 +199,8 @@ class ChatRoomMember extends Component {
                   (
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'moderator' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'moderator' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
                   <li>
@@ -194,11 +211,24 @@ class ChatRoomMember extends Component {
                   (
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'vip' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'vip' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
                   <li>
                     <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'vip')}>Make VIP</a>
+                  </li>
+                }
+                {
+                  (
+                    ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' &&
+                      chatRoomMember.role !== 'vip' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>
                   </li>
                 }
               </ul>
@@ -214,7 +244,8 @@ ChatRoomMember.propTypes = {
   userData: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
-  handleUpdateMemberRole: PropTypes.func.isRequired
+  handleUpdateMemberRole: PropTypes.func.isRequired,
+  handleMuteMember: PropTypes.func.isRequired
 }
 
 export default ChatRoomMember;

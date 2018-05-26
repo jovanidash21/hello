@@ -56,6 +56,10 @@ var usersDataSchema = new Schema
       ],
       default: 'ordinary'
     },
+    isMute: {
+      type: Boolean,
+      default: false
+    },
     isOnline: {
       type: Boolean,
       default: false

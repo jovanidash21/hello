@@ -73,11 +73,17 @@ var sockets = function(socket) {
           message: action.message
         });
         break;
-      case 'SOCKET_UPDATE_MEMBER_DATA':
+      case 'SOCKET_UPDATE_MEMBER_ROLE':
         socket.broadcast.emit('action', {
-          type: 'SOCKET_BROADCAST_UPDATE_MEMBER_DATA',
+          type: 'SOCKET_BROADCAST_UPDATE_MEMBER_ROLE',
           member: action.member,
           role: action.role
+        });
+        break;
+      case 'SOCKET_MUTE_MEMBER':
+        socket.broadcast.emit('action', {
+          type: 'SOCKET_BROADCAST_MUTE_MEMBER',
+          member: action.member
         });
         break;
       default:

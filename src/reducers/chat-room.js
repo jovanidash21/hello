@@ -9,8 +9,10 @@ import {
   SOCKET_BROADCAST_CREATE_CHAT_ROOM
 } from '../constants/chat-room';
 import {
-  SOCKET_UPDATE_MEMBER_DATA,
-  SOCKET_BROADCAST_UPDATE_MEMBER_DATA
+  SOCKET_UPDATE_MEMBER_ROLE,
+  SOCKET_BROADCAST_UPDATE_MEMBER_ROLE,
+  SOCKET_MUTE_MEMBER,
+  SOCKET_BROADCAST_MUTE_MEMBER
 } from '../constants/member';
 
 const initialState = {
@@ -126,8 +128,8 @@ const chatRoom = (state=initialState, action) => {
           action.chatRoom
         ]
       };
-    case SOCKET_UPDATE_MEMBER_DATA:
-    case SOCKET_BROADCAST_UPDATE_MEMBER_DATA:
+    case SOCKET_UPDATE_MEMBER_ROLE:
+    case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE:
       var memberID = action.member;
       var role = action.role;
       var chatRooms = [...state.chatRooms];
@@ -140,6 +142,30 @@ const chatRoom = (state=initialState, action) => {
 
           if ( member._id === memberID ) {
             member.role = role;
+            break;
+          } else {
+            continue
+          }
+        }
+      }
+
+      return {
+        ...state,
+        chatRooms: [...chatRooms]
+      }
+    case SOCKET_MUTE_MEMBER:
+    case SOCKET_BROADCAST_MUTE_MEMBER:
+      var memberID = action.member;
+      var chatRooms = [...state.chatRooms];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        for (var j = 0; j < chatRoom.members.length; j++) {
+          var member = chatRoom.members[j];
+
+          if ( member._id === memberID ) {
+            member.isMute = true;
             break;
           } else {
             continue

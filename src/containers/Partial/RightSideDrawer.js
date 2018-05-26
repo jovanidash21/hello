@@ -52,6 +52,7 @@ class RightSideDrawer extends Component {
                   chatRoomMember={chatRoomMember}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
+                  handleMuteMember={::this.handleMuteMember}
                 />
               )
             }
@@ -128,6 +129,18 @@ class RightSideDrawer extends Component {
 
     if ( userData.role === 'owner' || userData.role === 'admin' ) {
       updateMemberRole(data);
+    }
+  }
+  handleMuteMember(userID) {
+    const {
+      user,
+      muteMember
+    } = this.props;
+    const userData = user.userData;
+    let data = {userID};
+
+    if ( userData.role === 'owner' || userData.role === 'admin' ) {
+      muteMember(data);
     }
   }
   render() {

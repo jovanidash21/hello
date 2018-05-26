@@ -3,7 +3,7 @@
   border-bottom: 1px solid $color-english-walnut;
   display: flex;
   font-size: 14px;
-  padding: 3px 15px 3px 0;
+  padding: 3px 0;
   position: relative;
   transition: all 0.2s ease;
   &:active,
@@ -16,6 +16,9 @@
   }
   &.special {
     background-color: $color-vermillion;
+  }
+  &.mute {
+    background-color: $color-emperor;
   }
   .online-indicator {
     color: $color-dusty-gray;
