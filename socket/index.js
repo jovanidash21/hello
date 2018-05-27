@@ -73,6 +73,22 @@ var sockets = function(socket) {
           message: action.message
         });
         break;
+      case 'SOCKET_KICK_MEMBER':
+        User.findById(action.member, function(err, user) {
+          if (!err) {
+            socket.broadcast.to(user.socketID).emit('action', {
+              type: 'SOCKET_BROADCAST_KICK_USER',
+              chatRoom: action.chatRoom
+            });
+
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_KICK_MEMBER',
+              chatRoom: action.chatRoom,
+              member: action.member
+            });
+          }
+        });
+        break;
       case 'SOCKET_UPDATE_MEMBER_ROLE':
         socket.broadcast.emit('action', {
           type: 'SOCKET_BROADCAST_UPDATE_MEMBER_ROLE',

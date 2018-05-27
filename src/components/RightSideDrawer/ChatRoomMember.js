@@ -85,6 +85,17 @@ class ChatRoomMember extends Component {
 
     handleAddDirectChatRoom(event, chatRoomMember._id);
   }
+  handleKickMember(event) {
+    event.preventDefault();
+
+    const {
+      activeChatRoomData,
+      chatRoomMember,
+      handleKickMember
+    } = this.props;
+
+    handleKickMember(activeChatRoomData._id, chatRoomMember._id);
+  }
   handleUpdateMemberRole(event, role) {
     event.preventDefault();
 
@@ -196,6 +207,19 @@ class ChatRoomMember extends Component {
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={::this.handleKickMember}>
+                      Kick Member
+                    </a>
+                  </li>
+                }
+                {
+                  (
+                    ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
@@ -266,8 +290,10 @@ class ChatRoomMember extends Component {
 
 ChatRoomMember.propTypes = {
   userData: PropTypes.object.isRequired,
+  activeChatRoomData: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
+  handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,
   handleMuteMember: PropTypes.func.isRequired
 }

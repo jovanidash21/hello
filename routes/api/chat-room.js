@@ -116,6 +116,57 @@ router.post('/group/:userID', function(req, res, next) {
   }
 });
 
+router.post('/kick-user/:chatRoomID/:userID', function(req, res, next) {
+  var chatRoomID = req.params.chatRoomID;
+  var userID = req.params.userID;
+
+  if (
+    req.user === undefined &&
+    (req.user.role !== 'owner' || req.user.role !== 'admin')
+  ) {
+    res.status(401).send({
+      success: false,
+      message: 'Unauthorized'
+    });
+  } else {
+    User.findByIdAndUpdate(
+      userID,
+      { $pull: { chatRooms: chatRoomID }},
+      { safe: true, upsert: true, new: true },
+      function(err, user) {
+        if (!err) {
+          ChatRoom.findByIdAndUpdate(
+            chatRoomID,
+            { $pull: { members: userID }},
+            { safe: true, upsert: true, new: true },
+            function(err) {
+              if (!err) {
+                if (user.accountType === 'guest') {
+                  user.remove();
+                }
+                res.status(200).send({
+                  success: true,
+                  message: 'User kick out of the chat room.'
+                });
+              } else {
+                res.status(500).send({
+                  success: false,
+                  message: 'Server Error!'
+                });
+              }
+            }
+          );
+        } else {
+          res.status(500).send({
+            success: false,
+            message: 'Server Error!'
+          });
+        }
+      }
+    );
+  }
+});
+
 module.exports = router;
 
 router.post('/direct/:userID', function(req, res, next) {

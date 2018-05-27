@@ -2,6 +2,7 @@ import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
 } from '../constants/auth';
+import { SOCKET_BROADCAST_KICK_USER } from '../constants/user';
 import {
   FETCH_CHAT_ROOMS,
   CREATE_CHAT_ROOM,
@@ -9,6 +10,8 @@ import {
   SOCKET_BROADCAST_CREATE_CHAT_ROOM
 } from '../constants/chat-room';
 import {
+  SOCKET_KICK_MEMBER,
+  SOCKET_BROADCAST_KICK_MEMBER,
   SOCKET_UPDATE_MEMBER_ROLE,
   SOCKET_BROADCAST_UPDATE_MEMBER_ROLE,
   SOCKET_MUTE_MEMBER,
@@ -130,6 +133,55 @@ const chatRoom = (state=initialState, action) => {
           action.chatRoom
         ]
       };
+    case SOCKET_BROADCAST_KICK_USER:
+      var chatRoomID = action.chatRoom;
+      var chatRooms = [...state.chatRooms];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        if ( chatRoom._id === chatRoomID ) {
+          chatRooms.splice(i, 1);
+          break;
+        } else {
+          continue
+        }
+      }
+
+      return {
+        ...state,
+        chatRooms: [...chatRooms]
+      }
+    case SOCKET_KICK_MEMBER:
+    case SOCKET_BROADCAST_KICK_MEMBER:
+      var chatRoomID = action.chatRoom;
+      var memberID = action.member;
+      var chatRooms = [...state.chatRooms];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        if ( chatRoom._id === chatRoomID ) {
+          for (var j = 0; j < chatRoom.members.length; j++) {
+            var member = chatRoom.members[j];
+
+            if ( member._id === memberID ) {
+              chatRoom.members.splice(j, 1);
+              break;
+            } else {
+              continue
+            }
+          }
+          break;
+        } else {
+          continue
+        }
+      }
+
+      return {
+        ...state,
+        chatRooms: [...chatRooms]
+      }
     case SOCKET_UPDATE_MEMBER_ROLE:
     case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE:
       var memberID = action.member;

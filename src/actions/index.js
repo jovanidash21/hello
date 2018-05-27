@@ -34,6 +34,7 @@ import {
   sendMessage
 } from './message';
 import {
+  kickMember,
   updateMemberRole,
   muteMember
 } from './member';
@@ -63,6 +64,7 @@ const actions = (dispatch) => {
     changeChatRoom,
     fetchMessages,
     sendMessage,
+    kickMember,
     updateMemberRole,
     muteMember
   }, dispatch);
