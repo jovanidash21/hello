@@ -12,7 +12,9 @@ import {
   SOCKET_UPDATE_MEMBER_ROLE,
   SOCKET_BROADCAST_UPDATE_MEMBER_ROLE,
   SOCKET_MUTE_MEMBER,
-  SOCKET_BROADCAST_MUTE_MEMBER
+  SOCKET_BROADCAST_MUTE_MEMBER,
+  SOCKET_UNMUTE_MEMBER,
+  SOCKET_BROADCAST_UNMUTE_MEMBER
 } from '../constants/member';
 
 const initialState = {
@@ -166,6 +168,30 @@ const chatRoom = (state=initialState, action) => {
 
           if ( member._id === memberID ) {
             member.isMute = true;
+            break;
+          } else {
+            continue
+          }
+        }
+      }
+
+      return {
+        ...state,
+        chatRooms: [...chatRooms]
+      }
+    case SOCKET_UNMUTE_MEMBER:
+    case SOCKET_BROADCAST_UNMUTE_MEMBER:
+      var memberID = action.member;
+      var chatRooms = [...state.chatRooms];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        for (var j = 0; j < chatRoom.members.length; j++) {
+          var member = chatRoom.members[j];
+
+          if ( member._id === memberID ) {
+            member.isMute = false;
             break;
           } else {
             continue

@@ -154,7 +154,16 @@ class Chat extends Component {
     const { isLeftSideDrawerOpen } = this.state;
 
     return (
-      <div id="chat-section" className={"chat-section " + (user.userData.accountType === 'guest' ? 'no-chat-input' : '')}>
+      <div
+        id="chat-section"
+        className={"chat-section " +
+          (
+            user.userData.accountType === 'guest' ||
+            user.userData.isMute
+              ? 'no-chat-input' : ''
+          )
+        }
+      >
         <Head title="Chat App" />
         <LeftSideDrawer
           handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
@@ -177,7 +186,10 @@ class Chat extends Component {
           </div>
         </div>
         {
-          user.userData.accountType !== 'guest' &&
+          (
+            user.userData.accountType !== 'guest' &&
+            ! user.userData.isMute
+          ) &&
           <ChatInput
             userData={user.userData}
             activeChatRoomData={activeChatRoom.chatRoomData}

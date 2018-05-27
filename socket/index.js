@@ -81,10 +81,48 @@ var sockets = function(socket) {
         });
         break;
       case 'SOCKET_MUTE_MEMBER':
-        socket.broadcast.emit('action', {
-          type: 'SOCKET_BROADCAST_MUTE_MEMBER',
-          member: action.member
-        });
+        setTimeout(function () {
+          User.findByIdAndUpdate(
+            action.member,
+            { $set: { isMute: false, } },
+            { safe: true, upsert: true, new: true },
+            function(err, user) {
+              if (!err) {
+                socket.emit('action', {
+                  type: 'SOCKET_UNMUTE_MEMBER',
+                  member: action.member
+                });
+
+                socket.broadcast.to(user.socketID).emit('action', {
+                  type: 'SOCKET_BROADCAST_UNMUTE_USER'
+                });
+
+                socket.broadcast.emit('action', {
+                  type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
+                  member: action.member
+                });
+              }
+            }
+          );
+        }, 2 * 60 * 1000);
+
+        User.findByIdAndUpdate(
+          action.member,
+          { $set: { isMute: true, } },
+          { safe: true, upsert: true, new: true },
+          function(err, user) {
+            if (!err) {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_MUTE_USER'
+              });
+
+              socket.broadcast.emit('action', {
+                type: 'SOCKET_BROADCAST_MUTE_MEMBER',
+                member: action.member
+              });
+            }
+          }
+        );
         break;
       default:
         break;

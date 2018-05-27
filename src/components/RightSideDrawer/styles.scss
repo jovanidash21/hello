@@ -17,9 +17,6 @@
   &.special {
     background-color: $color-vermillion;
   }
-  &.mute {
-    background-color: $color-emperor;
-  }
   .online-indicator {
     color: $color-dusty-gray;
     font-size: 10px;
@@ -47,6 +44,14 @@
       color: $color-alto;
       margin-left: 7px;
     }
+  }
+  .mute-logo {
+    color: $color-alto;
+    margin: 0 2px;
+  }
+  .gender-logo {
+    color: #fff;
+    margin: 0 2px;
   }
   .member-options-button-wrapper {
     width: 30px;

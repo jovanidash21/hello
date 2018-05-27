@@ -114,8 +114,7 @@ class ChatRoomMember extends Component {
     return (
       <div
         className={"chat-room-member " +
-          ( chatRoomMember.role === 'vip' ? 'special ' : '' ) +
-          ( chatRoomMember.isMute ? 'mute' : '' )
+          ( chatRoomMember.role === 'vip' ? 'special ' : '' )
         }
         title={chatRoomMember.name}
       >
@@ -141,6 +140,15 @@ class ChatRoomMember extends Component {
             <span className="you-label">(you)</span>
           }
         </div>
+        {
+          chatRoomMember.isMute &&
+          <div className="mute-logo" title="This member is muted">
+            <FontAwesome
+              className="eye-icon"
+              name="eye"
+            />
+          </div>
+        }
         {
           chatRoomMember.gender.length > 0 &&
           <div className="gender-logo" title={chatRoomMember.gender}>
@@ -222,10 +230,13 @@ class ChatRoomMember extends Component {
                 {
                   (
                     ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                      userData.role === 'admin' ||
+                      userData.role === 'moderator' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' &&
-                      chatRoomMember.role !== 'vip' )
+                      chatRoomMember.role !== 'moderator' &&
+                      chatRoomMember.accountType !== 'guest' ) &&
+                      ! chatRoomMember.isMute
                   ) &&
                   <li>
                     <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>

@@ -1,6 +1,8 @@
 import {
   FETCH_USER,
-  FETCH_USERS
+  FETCH_USERS,
+  SOCKET_BROADCAST_MUTE_USER,
+  SOCKET_BROADCAST_UNMUTE_USER
 } from '../constants/user';
 
 const initialState = {
@@ -34,6 +36,24 @@ const user = (state=initialState, action) => {
         ...state,
         isLoading: false,
         isError: true
+      };
+    case SOCKET_BROADCAST_MUTE_USER:
+      var user = {...state.userData};
+
+      user.isMute = true;
+
+      return {
+        ...state,
+        userData: {...user}
+      };
+    case SOCKET_BROADCAST_UNMUTE_USER:
+      var user = {...state.userData};
+
+      user.isMute = false;
+
+      return {
+        ...state,
+        userData: {...user}
       };
     default:
       return state;
