@@ -230,6 +230,19 @@ class ChatRoomMember extends Component {
                 {
                   (
                     ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' &&
+                      chatRoomMember.role !== 'ordinary' ) &&
+                    ( chatRoomMember.accountType !== 'guest' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'ordinary')}>Make Ordinary</a>
+                  </li>
+                }
+                {
+                  (
+                    ( userData.role === 'owner' ||
                       userData.role === 'admin' ||
                       userData.role === 'moderator' ) &&
                     ( chatRoomMember.role !== 'owner' &&
