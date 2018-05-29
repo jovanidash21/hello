@@ -5,6 +5,7 @@ import { slide as Menu } from 'react-burger-menu';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../actions';
 import LoadingAnimation from '../../components/LoadingAnimation';
+import ChatRoomMemberFilter from '../../components/RightSideDrawer/ChatRoomMemberFilter';
 import ChatRoomMember from '../../components/RightSideDrawer/ChatRoomMember';
 import '../../styles/RightSideDrawer.scss';
 
@@ -13,7 +14,8 @@ class RightSideDrawer extends Component {
     super(props);
 
     this.state = {
-      showModal: false
+      showModal: false,
+      memberName: ''
     }
   }
   handleComponent() {
@@ -22,9 +24,18 @@ class RightSideDrawer extends Component {
       chatRoom,
       activeChatRoom,
     } = this.props;
+    const { memberName } = this.state;
 
-    if (!chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess) {
+    if ( !chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess ) {
       const activeChatRoomData = activeChatRoom.chatRoomData;
+      var members = [...activeChatRoomData.members];
+      var query = memberName.trim().toLowerCase();
+
+      if ( query.length > 0 ) {
+        members = members.filter((member) => {
+          return member.name.toLowerCase().match(query);
+        });
+      }
 
       return (
         <div className="right-side-drawer">
@@ -38,10 +49,11 @@ class RightSideDrawer extends Component {
               Online Members
             </h3>
           </div>
+          <ChatRoomMemberFilter onMemberNameChange={::this.onMemberNameChange} />
           <div className="member-list">
             {
-              activeChatRoomData.members.length > 0 &&
-              activeChatRoomData.members.filter((member) =>
+              members.length > 0 &&
+              members.filter((member) =>
                 member.isOnline
               ).sort((a, b) =>
                 a.name.toLowerCase().localeCompare(b.name.toLowerCase())
@@ -66,6 +78,9 @@ class RightSideDrawer extends Component {
         <LoadingAnimation name="ball-clip-rotate" color="white" />
       )
     }
+  }
+  onMemberNameChange(event) {
+    this.setState({memberName: event.target.value});
   }
   handleAddDirectChatRoom(event, memberID) {
     const {
