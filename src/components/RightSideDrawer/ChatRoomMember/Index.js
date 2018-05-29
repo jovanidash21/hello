@@ -171,14 +171,8 @@ class ChatRoomMember extends Component {
         }
         <div className="member-options-button-wrapper">
           {
-            (
-              ( userData._id !== chatRoomMember._id ) &&
-              ( userData.role === 'owner' ||
-                userData.role === 'admin' ) ||
-              ( chatRoomMember.role !== 'owner' &&
-                chatRoomMember.role !== 'admin' &&
-                chatRoomMember.role !== 'vip' )
-            ) &&
+            userData._id !== chatRoomMember._id &&
+            userData.accountType !== 'guest' &&
             <div>
               <div className="member-options-button" data-mui-toggle="dropdown">
                 <FontAwesome
@@ -189,13 +183,7 @@ class ChatRoomMember extends Component {
 
               <ul className="mui-dropdown__menu mui-dropdown__menu--right">
                 {
-                  (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) ||
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' &&
-                      chatRoomMember.role !== 'vip' )
-                  ) &&
+                  chatRoomMember.role !== 'vip' &&
                   <li>
                     <a href="#" onClick={::this.handleAddDirectChatRoom}>
                       Direct Messages
