@@ -82,7 +82,6 @@ class RightSideDrawer extends Component {
     var directChatRoomExists = false;
     var directChatRoomData = {};
 
-
     for ( var i = 0; i < chatRooms.length; i++ ) {
       if ( chatRooms[i].chatType === 'direct' ) {
         var isMembersMatch = chatRooms[i].members.some(member => member._id === memberID);

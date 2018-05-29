@@ -14,6 +14,7 @@ class LeftSideDrawer extends Component {
     super(props);
 
     this.state = {
+      activeTab: 'group',
       showModal: false
     }
   }
@@ -25,7 +26,7 @@ class LeftSideDrawer extends Component {
 
     fetchChatRooms(user.userData._id);
   }
-  handleComponent() {
+  handleComponent(chatType) {
     const {
       user,
       chatRoom,
@@ -43,7 +44,9 @@ class LeftSideDrawer extends Component {
       return (
         <div className="chat-room-list">
           {
-            chatRoom.chatRooms.map((chatRoomData, i) =>
+            chatRoom.chatRooms.filter((chatRoom) =>
+              chatRoom.chatType === chatType
+            ).map((chatRoomData, i) =>
               <ChatRoom
                 key={i}
                 index={i}
@@ -67,6 +70,11 @@ class LeftSideDrawer extends Component {
       )
     }
   }
+  handleChangeTab(event, tab) {
+    event.preventDefault();
+
+    this.setState({activeTab: tab});
+  }
   handleActivateModal() {
     this.setState({showModal: true});
   }
@@ -82,7 +90,10 @@ class LeftSideDrawer extends Component {
       handleLeftSideDrawerToggleState,
       noOverlay
     } = this.props;
-    const { showModal } = this.state;
+    const {
+      activeTab,
+      showModal
+    } = this.state;
 
     return (
       <Menu
@@ -94,25 +105,55 @@ class LeftSideDrawer extends Component {
       >
         <div>
           <div className="left-side-drawer">
-            <h1 className="title">Chat App</h1>
-            <div className="chat-rooms-options">
-              <h3>Chat Rooms</h3>
-              {
-                (user.userData.role === 'owner' ||
-                user.userData.role === 'admin') &&
-                <div className="add-chat-room-icon"
-                  onClick={::this.handleActivateModal}
-                  title="Add Chat Room"
-                >
-                  <FontAwesome name="plus-circle" />
-                </div>
-              }
+            <ul className="chat-room-tabs mui-tabs__bar">
+              <li>
+                <a data-mui-toggle="tab" data-mui-controls="direct-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'direct')}>
+                  Direct
+                </a>
+              </li>
+              <li className="mui--is-active">
+                <a data-mui-toggle="tab" data-mui-controls="group-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'group')}>
+                  Group
+                </a>
+              </li>
+            </ul>
+            <div className="chat-room-pane mui-tabs__pane" id="direct-chat-rooms">
+              <div className="chat-rooms-options">
+                <h3>Direct Messages</h3>
+                {
+                  (user.userData.role === 'owner' ||
+                  user.userData.role === 'admin') &&
+                  <div className="add-chat-room-icon"
+                    onClick={::this.handleActivateModal}
+                    title="Open a Direct Message"
+                  >
+                    <FontAwesome name="plus-circle" />
+                  </div>
+                }
+              </div>
+              {::this.handleComponent('direct')}
             </div>
-            {::this.handleComponent()}
+            <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">
+              <div className="chat-rooms-options">
+                <h3>Group Messages</h3>
+                {
+                  (user.userData.role === 'owner' ||
+                  user.userData.role === 'admin') &&
+                  <div className="add-chat-room-icon"
+                    onClick={::this.handleActivateModal}
+                    title="Add Chat Room"
+                  >
+                    <FontAwesome name="plus-circle" />
+                  </div>
+                }
+              </div>
+              {::this.handleComponent('group')}
+            </div>
           </div>
           {
             showModal &&
             <CreateChatRoomModal
+              chatType={activeTab}
               handleDeactivateModal={::this.handleDeactivateModal}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
               isLoading={chatRoom.isLoading}
