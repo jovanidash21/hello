@@ -60,7 +60,7 @@ class Guest extends Component {
     const username = uuidv4();
     let data = {name, username, gender};
 
-    guestLogin(data);
+    guestLogin(name, username, gender);
   }
   render() {
     const { auth } = this.props;

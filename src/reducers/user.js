@@ -7,8 +7,8 @@ import {
 
 const initialState = {
   isLoading: false,
-  userData: {},
-  users: []
+  active: {},
+  all: []
 };
 
 const user = (state=initialState, action) => {
@@ -23,13 +23,13 @@ const user = (state=initialState, action) => {
         ...state,
         isLoading: false,
         isSuccess: true,
-        userData: action.payload.data
+        active: action.payload.data
       };
     case `${FETCH_USERS}_SUCCESS`:
       return {
         ...state,
         isSuccess: true,
-        users: action.payload.data
+        all: action.payload.data
       };
     case `${FETCH_USER}_ERROR`:
       return {
@@ -38,22 +38,22 @@ const user = (state=initialState, action) => {
         isError: true
       };
     case SOCKET_BROADCAST_MUTE_USER:
-      var user = {...state.userData};
+      var user = {...state.active};
 
       user.isMute = true;
 
       return {
         ...state,
-        userData: {...user}
+        active: {...user}
       };
     case SOCKET_BROADCAST_UNMUTE_USER:
-      var user = {...state.userData};
+      var user = {...state.active};
 
       user.isMute = false;
 
       return {
         ...state,
-        userData: {...user}
+        active: {...user}
       };
     default:
       return state;

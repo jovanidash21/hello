@@ -21,14 +21,13 @@ class RightSideDrawer extends Component {
   handleComponent() {
     const {
       user,
-      chatRoom,
-      activeChatRoom,
+      chatRoom
     } = this.props;
     const { memberName } = this.state;
 
     if ( !chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess ) {
-      const activeChatRoomData = activeChatRoom.chatRoomData;
-      var members = [...activeChatRoomData.members];
+      const activeChatRoom = chatRoom.active;
+      var members = [...activeChatRoom.members];
       var query = memberName.trim().toLowerCase();
 
       if ( query.length > 0 ) {
@@ -60,8 +59,8 @@ class RightSideDrawer extends Component {
               ).map((chatRoomMember, i) =>
                 <ChatRoomMember
                   key={i}
-                  userData={user.userData}
-                  activeChatRoomData={activeChatRoomData}
+                  userData={user.active}
+                  activeChatRoom={activeChatRoom}
                   chatRoomMember={chatRoomMember}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                   handleKickMember={::this.handleKickMember}
@@ -92,8 +91,8 @@ class RightSideDrawer extends Component {
       fetchMessages,
       handleRightSideDrawerToggleEvent
     } = this.props;
-    const userID = user.userData._id;
-    const chatRooms = chatRoom.chatRooms;
+    const userID = user.active._id;
+    const chatRooms = chatRoom.all;
     var directChatRoomExists = false;
     var directChatRoomData = {};
 
@@ -114,61 +113,46 @@ class RightSideDrawer extends Component {
     }
 
     if ( ! directChatRoomExists ) {
-      let data = {
-        name: '',
-        members: [userID, memberID],
-        chatType: 'direct',
-        userID: userID
-      };
-
-      createDirectChatRoom(data);
+      createDirectChatRoom(userID, memberID);
       handleRightSideDrawerToggleEvent(event);
     } else {
-      let data = {
-        userID: userID,
-        chatRoomID: directChatRoomData._id
-      };
-
       socketJoinChatRoom(directChatRoomData._id);
       changeChatRoom(directChatRoomData);
-      fetchMessages(data);
+      fetchMessages(userID, directChatRoomData._id);
       handleRightSideDrawerToggleEvent(event);
     }
   }
-  handleKickMember(chatRoomID, userID) {
+  handleKickMember(chatRoomID, memberID) {
     const {
       user,
       kickMember
     } = this.props;
-    const userData = user.userData;
-    let data = { chatRoomID, userID };
+    const userData = user.active;
 
     if ( userData.role === 'owner' || userData.role === 'admin' ) {
-      kickMember(data);
+      kickMember(chatRoomID, memberID);
     }
   }
-  handleUpdateMemberRole(userID, role) {
+  handleUpdateMemberRole(memberID, role) {
     const {
       user,
       updateMemberRole
     } = this.props;
-    const userData = user.userData;
-    let data = {userID, role};
+    const userData = user.active;
 
     if ( userData.role === 'owner' || userData.role === 'admin' ) {
-      updateMemberRole(data);
+      updateMemberRole(memberID, role);
     }
   }
-  handleMuteMember(userID) {
+  handleMuteMember(memberID) {
     const {
       user,
       muteMember
     } = this.props;
-    const userData = user.userData;
-    let data = {userID};
+    const userData = user.active;
 
     if ( userData.role === 'owner' || userData.role === 'admin' ) {
-      muteMember(data);
+      muteMember(memberID);
     }
   }
   render() {
@@ -199,8 +183,7 @@ class RightSideDrawer extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom,
-    activeChatRoom: state.activeChatRoom
+    chatRoom: state.chatRoom
   }
 }
 

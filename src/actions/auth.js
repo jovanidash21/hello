@@ -12,6 +12,10 @@ import {
   SOCKET_USER_LOGOUT
 } from '../constants/auth';
 
+/**
+ * Socket user login
+ * @param {Object} user
+ */
 export function socketUserLogin(user) {
   return {
     type: SOCKET_USER_LOGIN,
@@ -19,7 +23,17 @@ export function socketUserLogin(user) {
   }
 }
 
-export function localLogin(data) {
+/**
+ * Local login
+ * @param {string} username
+ * @param {string} password
+ */
+export function localLogin(username, password) {
+  let data = {
+    username,
+    password,
+  };
+
   return dispatch => {
     dispatch(showLoading());
 
@@ -39,6 +53,9 @@ export function localLogin(data) {
   }
 }
 
+/**
+ * Facebook login
+ */
 export function facebookLogin() {
   return dispatch => {
     return dispatch({
@@ -64,6 +81,9 @@ export function facebookLogin() {
   }
 }
 
+/**
+ * Google login
+ */
 export function googleLogin() {
   return dispatch => {
     return dispatch({
@@ -89,6 +109,9 @@ export function googleLogin() {
   }
 }
 
+/**
+ * Twitter login
+ */
 export function twitterLogin() {
   return dispatch => {
     return dispatch({
@@ -114,6 +137,9 @@ export function twitterLogin() {
   }
 }
 
+/**
+ * Instagram login
+ */
 export function instagramLogin() {
   return dispatch => {
     return dispatch({
@@ -139,6 +165,9 @@ export function instagramLogin() {
   }
 }
 
+/**
+ * LinkedIn login
+ */
 export function linkedinLogin() {
   return dispatch => {
     return dispatch({
@@ -164,6 +193,9 @@ export function linkedinLogin() {
   }
 }
 
+/**
+ * GitHub login
+ */
 export function githubLogin() {
   return dispatch => {
     return dispatch({
@@ -189,7 +221,23 @@ export function githubLogin() {
   }
 }
 
-export function register(data) {
+/**
+ * Register
+ * @param {string} email
+ * @param {string} name
+ * @param {string} username
+ * @param {string} gender
+ * @param {string} password
+ */
+export function register(email, name, username, gender, password) {
+  let data = {
+    email,
+    name,
+    username,
+    gender,
+    password,
+  };
+
   return dispatch => {
     dispatch(showLoading());
 
@@ -199,7 +247,7 @@ export function register(data) {
     })
     .then(() => {
       dispatch(hideLoading());
-      dispatch(sendEmail(data));
+      dispatch(sendEmail(email, name));
       dispatch(push('/chat'));
     })
     .catch((error) => {
@@ -210,7 +258,19 @@ export function register(data) {
   }
 }
 
-export function guestLogin(data) {
+/**
+ * Guest login
+ * @param {string} name
+ * @param {string} username
+ * @param {string} gender
+ */
+export function guestLogin(name, username, gender) {
+  let data = {
+    name,
+    username,
+    gender,
+  };
+
   return dispatch => {
     dispatch(showLoading());
 
@@ -230,7 +290,11 @@ export function guestLogin(data) {
   }
 }
 
-export function logout(user) {
+/**
+ * Logout
+ * @param {string} userID
+ */
+export function logout(userID) {
   return dispatch => {
     dispatch(showLoading());
 
@@ -241,7 +305,7 @@ export function logout(user) {
     .then(() => {
       dispatch({
         type: SOCKET_USER_LOGOUT,
-        user: user,
+        user: userID,
       });
       dispatch(hideLoading());
       dispatch(push('/'));

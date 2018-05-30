@@ -24,13 +24,12 @@ class LeftSideDrawer extends Component {
       fetchChatRooms
     } = this.props;
 
-    fetchChatRooms(user.userData._id);
+    fetchChatRooms(user.active._id);
   }
   handleComponent(chatType) {
     const {
       user,
       chatRoom,
-      activeChatRoom,
       socketJoinChatRoom,
       socketLeaveChatRoom,
       changeChatRoom,
@@ -39,21 +38,21 @@ class LeftSideDrawer extends Component {
     } = this.props;
 
     if (!chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess) {
-      const activeChatRoomData = activeChatRoom.chatRoomData;
+      const activeChatRoom = chatRoom.active;
 
       return (
         <div className="chat-room-list">
           {
-            chatRoom.chatRooms.filter((chatRoom) =>
+            chatRoom.all.filter((chatRoom) =>
               chatRoom.chatType === chatType
             ).map((chatRoomData, i) =>
               <ChatRoom
                 key={i}
                 index={i}
-                userData={user.userData}
+                userData={user.active}
                 chatRoomData={chatRoomData}
-                activeChatRoomData={activeChatRoomData}
-                isActive={(activeChatRoomData._id === chatRoomData._id) ? true : false}
+                activeChatRoom={activeChatRoom}
+                isActive={(activeChatRoom._id === chatRoomData._id) ? true : false}
                 handleSocketJoinChatRoom={socketJoinChatRoom}
                 handleSocketLeaveChatRoom={socketLeaveChatRoom}
                 handleChangeChatRoom={changeChatRoom}
@@ -121,8 +120,8 @@ class LeftSideDrawer extends Component {
               <div className="chat-rooms-options">
                 <h3>Direct Messages</h3>
                 {
-                  (user.userData.role === 'owner' ||
-                  user.userData.role === 'admin') &&
+                  (user.active.role === 'owner' ||
+                  user.active.role === 'admin') &&
                   <div className="add-chat-room-icon"
                     onClick={::this.handleActivateModal}
                     title="Open a Direct Message"
@@ -137,8 +136,8 @@ class LeftSideDrawer extends Component {
               <div className="chat-rooms-options">
                 <h3>Group Messages</h3>
                 {
-                  (user.userData.role === 'owner' ||
-                  user.userData.role === 'admin') &&
+                  (user.active.role === 'owner' ||
+                  user.active.role === 'admin') &&
                   <div className="add-chat-room-icon"
                     onClick={::this.handleActivateModal}
                     title="Add Chat Room"
@@ -168,8 +167,7 @@ class LeftSideDrawer extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom,
-    activeChatRoom: state.activeChatRoom
+    chatRoom: state.chatRoom
   }
 }
 

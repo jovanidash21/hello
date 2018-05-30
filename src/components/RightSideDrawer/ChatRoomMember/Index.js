@@ -89,12 +89,12 @@ class ChatRoomMember extends Component {
     event.preventDefault();
 
     const {
-      activeChatRoomData,
+      activeChatRoom,
       chatRoomMember,
       handleKickMember
     } = this.props;
 
-    handleKickMember(activeChatRoomData._id, chatRoomMember._id);
+    handleKickMember(activeChatRoom._id, chatRoomMember._id);
   }
   handleUpdateMemberRole(event, role) {
     event.preventDefault();
@@ -278,7 +278,7 @@ class ChatRoomMember extends Component {
 
 ChatRoomMember.propTypes = {
   userData: PropTypes.object.isRequired,
-  activeChatRoomData: PropTypes.object.isRequired,
+  activeChatRoom: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,

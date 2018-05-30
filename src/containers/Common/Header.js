@@ -19,13 +19,12 @@ class Header extends Component {
   handleComponent() {
     const {
       chatRoom,
-      activeChatRoom,
       handleLeftSideDrawerToggleEvent,
       handleRightSideDrawerToggleEvent
     } = this.props;
 
     if (!chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess) {
-      const activeChatRoomData = activeChatRoom.chatRoomData;
+      const activeChatRoom = chatRoom.active;
 
       return (
         <div className="side-bar-toggler">
@@ -37,9 +36,9 @@ class Header extends Component {
           />
           <h2
             className="chat-room-name"
-            title={activeChatRoomData.name}
+            title={activeChatRoom.name}
           >
-            {activeChatRoomData.name}
+            {activeChatRoom.name}
           </h2>
           <MediaQuery query="(max-width: 767px)">
             <div
@@ -61,6 +60,14 @@ class Header extends Component {
       )
     }
   }
+  handleLogout() {
+    const {
+      user,
+      logout
+    } = this.props;
+
+    logout(user.active._id);
+  }
   render() {
     const {
       user,
@@ -77,8 +84,8 @@ class Header extends Component {
               </td>
               <td className="mui--appbar-height mui--text-right">
                 <OptionsDropdown
-                  userData={user.userData}
-                  handleLogout={logout}
+                  userData={user.active}
+                  handleLogout={::this.handleLogout}
                 />
               </td>
             </tr>
@@ -92,8 +99,7 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom,
-    activeChatRoom: state.activeChatRoom
+    chatRoom: state.chatRoom
   }
 }
 

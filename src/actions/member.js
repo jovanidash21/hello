@@ -8,17 +8,22 @@ import {
   SOCKET_MUTE_MEMBER
 } from '../constants/member';
 
-export function kickMember(data) {
+/**
+ * Kick member
+ * @param {string} chatRoomID
+ * @param {string} memberID
+ */
+export function kickMember(chatRoomID, memberID) {
   return dispatch => {
     return dispatch({
       type: KICK_MEMBER,
-      payload: axios.post(`api/chat-room/kick-user/${data.chatRoomID}/${data.userID}`)
+      payload: axios.post(`api/chat-room/kick-user/${chatRoomID}/${memberID}`)
     })
     .then((response) => {
       dispatch({
         type: SOCKET_KICK_MEMBER,
-        chatRoom: data.chatRoomID,
-        member: data.userID
+        chatRoom: chatRoomID,
+        member: memberID
       });
     })
     .catch((error) => {
@@ -29,7 +34,17 @@ export function kickMember(data) {
   }
 }
 
-export function updateMemberRole(data) {
+/**
+ * Update member role
+ * @param {string} memberID
+ * @param {string} role
+ */
+export function updateMemberRole(memberID, role) {
+  let data = {
+    memberID,
+    role,
+  };
+
   return dispatch => {
     return dispatch({
       type: UPDATE_MEMBER_ROLE,
@@ -38,8 +53,8 @@ export function updateMemberRole(data) {
     .then((response) => {
       dispatch({
         type: SOCKET_UPDATE_MEMBER_ROLE,
-        member: data.userID,
-        role: data.role
+        member: memberID,
+        role: role
       });
     })
     .catch((error) => {
@@ -50,16 +65,20 @@ export function updateMemberRole(data) {
   }
 }
 
-export function muteMember(data) {
+/**
+ * Mute member
+ * @param {string} memberID
+ */
+export function muteMember(memberID) {
   return dispatch => {
     return dispatch({
       type: MUTE_MEMBER,
-      payload: axios.post('api/user/mute', data)
+      payload: axios.post('api/user/mute', memberID)
     })
     .then((response) => {
       dispatch({
         type: SOCKET_MUTE_MEMBER,
-        member: data.userID
+        member: memberID
       });
     })
     .catch((error) => {

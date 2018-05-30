@@ -79,9 +79,8 @@ class Register extends Component {
       gender,
       password
     } = this.state;
-    let data = {email, name, username, gender, password};
 
-    register(data);
+    register(email, name, username, gender, password);
   }
   render() {
     const { auth } = this.props;

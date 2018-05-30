@@ -18,7 +18,7 @@ class CreateChatRoomModal extends Component {
 
     this.state = {
       chatRoomName: '',
-      members: [this.props.user.userData]
+      members: [this.props.user.active]
     }
   }
   onChatRoomNameChange(event) {
@@ -78,18 +78,13 @@ class CreateChatRoomModal extends Component {
       chatRoomName,
       members
     } = this.state;
-    let data = {
-      name: chatRoomName,
-      members: members,
-      userID: user.userData._id
-    }
 
     if (
       chatType === 'group' &&
       chatRoomName.length > 0 &&
       members.length > 2
     ) {
-      createGroupChatRoom(data);
+      createGroupChatRoom(chatRoomName, members, user.active._id);
       handleDeactivateModal();
       handleLeftSideDrawerToggleEvent(event);
     }
@@ -106,8 +101,8 @@ class CreateChatRoomModal extends Component {
       handleDeactivateModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
-    const userID = user.userData._id;
-    const chatRooms = chatRoom.chatRooms;
+    const userID = user.active._id;
+    const chatRooms = chatRoom.all;
     var directChatRoomExists = false;
     var directChatRoomData = {};
 
@@ -129,25 +124,13 @@ class CreateChatRoomModal extends Component {
       }
 
       if ( ! directChatRoomExists ) {
-        let data = {
-          name: '',
-          members: [userID, memberID],
-          chatType: 'direct',
-          userID: userID
-        };
-
-        createDirectChatRoom(data);
+        createDirectChatRoom(userID, memberID);
         handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       } else {
-        let data = {
-          userID: userID,
-          chatRoomID: directChatRoomData._id
-        };
-
         socketJoinChatRoom(directChatRoomData._id);
         changeChatRoom(directChatRoomData);
-        fetchMessages(data);
+        fetchMessages(userID, directChatRoomData._id);
         handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       }
@@ -202,8 +185,8 @@ class CreateChatRoomModal extends Component {
               </div>
             }
             <ChatMemberSelect
-              userData={user.userData}
-              users={user.users}
+              userData={user.active}
+              users={user.all}
               onSuggestionSelected={::this.onSuggestionSelected}
             />
             {

@@ -5,6 +5,7 @@ import {
 import { SOCKET_BROADCAST_KICK_USER } from '../constants/user';
 import {
   FETCH_CHAT_ROOMS,
+  CHANGE_CHAT_ROOM,
   CREATE_CHAT_ROOM,
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_BROADCAST_CREATE_CHAT_ROOM
@@ -22,7 +23,8 @@ import {
 
 const initialState = {
   isLoading: false,
-  chatRooms: []
+  active: {},
+  all: []
 };
 
 const chatRoom = (state=initialState, action) => {
@@ -41,7 +43,7 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         isLoading: false,
         isFetchChatRoomsSuccess: true,
-        chatRooms: action.payload.data.chatRooms
+        all: action.payload.data.chatRooms
       };
     case `${CREATE_CHAT_ROOM}_SUCCESS`:
       return {
@@ -56,10 +58,15 @@ const chatRoom = (state=initialState, action) => {
         isLoading: false,
         isError: true
       };
+    case CHANGE_CHAT_ROOM:
+      return {
+        ...state,
+        active: action.payload
+      };
     case SOCKET_BROADCAST_USER_LOGIN:
       var user = action.user;
       var userID = action.user._id;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
       var isUserExist = false;
 
       for (var i = 0; i < 1; i++) {
@@ -99,11 +106,11 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_BROADCAST_USER_LOGOUT:
       var userID = action.user;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -122,20 +129,24 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_CREATE_CHAT_ROOM:
     case SOCKET_BROADCAST_CREATE_CHAT_ROOM:
       return {
         ...state,
-        chatRooms: [
-          ...state.chatRooms,
+        all: [
+          ...state.all,
           action.chatRoom
         ]
       };
     case SOCKET_BROADCAST_KICK_USER:
       var chatRoomID = action.chatRoom;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
+
+      if ( state.active._id === chatRoomID ) {
+        location.reload();
+      }
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -150,13 +161,13 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_KICK_MEMBER:
     case SOCKET_BROADCAST_KICK_MEMBER:
       var chatRoomID = action.chatRoom;
       var memberID = action.member;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -180,13 +191,13 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_UPDATE_MEMBER_ROLE:
     case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE:
       var memberID = action.member;
       var role = action.role;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -205,12 +216,12 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_MUTE_MEMBER:
     case SOCKET_BROADCAST_MUTE_MEMBER:
       var memberID = action.member;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -229,12 +240,12 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     case SOCKET_UNMUTE_MEMBER:
     case SOCKET_BROADCAST_UNMUTE_MEMBER:
       var memberID = action.member;
-      var chatRooms = [...state.chatRooms];
+      var chatRooms = [...state.all];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -253,7 +264,7 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        chatRooms: [...chatRooms]
+        all: [...chatRooms]
       }
     default:
       return state;
