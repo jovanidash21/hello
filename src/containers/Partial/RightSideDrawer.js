@@ -21,13 +21,14 @@ class RightSideDrawer extends Component {
   handleComponent() {
     const {
       user,
-      chatRoom
+      chatRoom,
+      member
     } = this.props;
     const { memberName } = this.state;
 
-    if ( !chatRoom.isLoading && chatRoom.isFetchChatRoomsSuccess ) {
+    if ( !member.isLoading && member.isFetchMembersSuccess ) {
       const activeChatRoom = chatRoom.active;
-      var members = [...activeChatRoom.members];
+      var members = [...member.all];
       var query = memberName.trim().toLowerCase();
 
       if ( query.length > 0 ) {
@@ -51,8 +52,8 @@ class RightSideDrawer extends Component {
           <ChatRoomMemberFilter onMemberNameChange={::this.onMemberNameChange} />
           <div className="member-list">
             {
-              members.length > 0 &&
-              members.filter((member) =>
+              member.all.length > 0 &&
+              member.all.filter((member) =>
                 member.isOnline
               ).sort((a, b) =>
                 a.name.toLowerCase().localeCompare(b.name.toLowerCase())
@@ -86,13 +87,12 @@ class RightSideDrawer extends Component {
       user,
       chatRoom,
       createDirectChatRoom,
-      socketJoinChatRoom,
       changeChatRoom,
-      fetchMessages,
       handleRightSideDrawerToggleEvent
     } = this.props;
     const userID = user.active._id;
     const chatRooms = chatRoom.all;
+    const activeChatRoom = chatRoom.active;
     var directChatRoomExists = false;
     var directChatRoomData = {};
 
@@ -116,9 +116,7 @@ class RightSideDrawer extends Component {
       createDirectChatRoom(userID, memberID);
       handleRightSideDrawerToggleEvent(event);
     } else {
-      socketJoinChatRoom(directChatRoomData._id);
-      changeChatRoom(directChatRoomData);
-      fetchMessages(userID, directChatRoomData._id);
+      changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
       handleRightSideDrawerToggleEvent(event);
     }
   }
@@ -172,7 +170,7 @@ class RightSideDrawer extends Component {
         noOverlay={noOverlay}
         right
       >
-        <div>
+        <div className="right-side-drawer-wrapper">
           {::this.handleComponent()}
         </div>
       </Menu>
@@ -183,7 +181,8 @@ class RightSideDrawer extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom
+    chatRoom: state.chatRoom,
+    member: state.member
   }
 }
 

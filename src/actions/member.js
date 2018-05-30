@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {
+  FETCH_MEMBERS,
   KICK_MEMBER,
   SOCKET_KICK_MEMBER,
   UPDATE_MEMBER_ROLE,
@@ -7,6 +8,25 @@ import {
   MUTE_MEMBER,
   SOCKET_MUTE_MEMBER
 } from '../constants/member';
+
+/**
+ * Fetch members
+ * @param {string} chatRoomID
+ * @param {string} userID
+ */
+export function fetchMembers(chatRoomID, userID) {
+  return dispatch => {
+    return dispatch({
+      type: FETCH_MEMBERS,
+      payload: axios.get(`/api/member/${chatRoomID}/${userID}`)
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    });
+  }
+}
 
 /**
  * Kick member

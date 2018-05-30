@@ -7,10 +7,10 @@ import {
 
 /**
  * Fetch messages
- * @param {string} userID
  * @param {string} chatRoomID
+ * @param {string} userID
  */
-export function fetchMessages(userID, chatRoomID) {
+export function fetchMessages(chatRoomID, userID) {
   return dispatch => {
     return dispatch({
       type: FETCH_MESSAGES,

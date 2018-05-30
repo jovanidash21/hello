@@ -23,14 +23,16 @@ router.get('/:userID', function(req, res, next) {
           for (var i = 0; i < userChatRooms.chatRooms.length; i++) {
             var chatRoom = userChatRooms.chatRooms[i];
 
-            if ( chatRoom.chatType === 'direct' ) {
-              for (var j = 0; j < chatRoom.members.length; j++) {
-                var member = chatRoom.members[j];
+            for (var j = 0; j < chatRoom.members.length; j++) {
+              var member = chatRoom.members[j];
 
+              if (chatRoom.chatType === 'direct') {
                 if (member._id != userID) {
                   chatRoom.name = member.name;
                   chatRoom.chatIcon = member.profilePicture;
                 }
+              } else if (chatRoom.chatType === 'group') {
+                chatRoom.members[j] = member._id;
               }
             }
           }

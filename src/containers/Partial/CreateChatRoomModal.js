@@ -69,6 +69,7 @@ class CreateChatRoomModal extends Component {
 
     const {
       user,
+      chatRoom,
       chatType,
       createGroupChatRoom,
       handleDeactivateModal,
@@ -78,13 +79,14 @@ class CreateChatRoomModal extends Component {
       chatRoomName,
       members
     } = this.state;
+    const activeChatRoom = chatRoom.active;
 
     if (
       chatType === 'group' &&
       chatRoomName.length > 0 &&
       members.length > 2
     ) {
-      createGroupChatRoom(chatRoomName, members, user.active._id);
+      createGroupChatRoom(chatRoomName, members, user.active._id, activeChatRoom._id);
       handleDeactivateModal();
       handleLeftSideDrawerToggleEvent(event);
     }
@@ -94,15 +96,14 @@ class CreateChatRoomModal extends Component {
       user,
       chatRoom,
       createDirectChatRoom,
-      socketJoinChatRoom,
       changeChatRoom,
-      fetchMessages,
       chatType,
       handleDeactivateModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
     const userID = user.active._id;
     const chatRooms = chatRoom.all;
+    const activeChatRoom = chatRoom.active;
     var directChatRoomExists = false;
     var directChatRoomData = {};
 
@@ -124,13 +125,11 @@ class CreateChatRoomModal extends Component {
       }
 
       if ( ! directChatRoomExists ) {
-        createDirectChatRoom(userID, memberID);
+        createDirectChatRoom(userID, memberID, activeChatRoom._id);
         handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       } else {
-        socketJoinChatRoom(directChatRoomData._id);
-        changeChatRoom(directChatRoomData);
-        fetchMessages(userID, directChatRoomData._id);
+        changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
         handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       }
