@@ -26,7 +26,7 @@ class LeftSideDrawer extends Component {
 
     fetchChatRooms(user.active._id);
   }
-  handleComponent(chatType) {
+  handleChatRoomsListRender(chatType) {
     const {
       user,
       chatRoom,
@@ -143,7 +143,7 @@ class LeftSideDrawer extends Component {
                   </div>
                 }
               </div>
-              {::this.handleComponent('direct')}
+              {::this.handleChatRoomsListRender('direct')}
             </div>
             <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">
               <div className="chat-rooms-options">
@@ -159,7 +159,7 @@ class LeftSideDrawer extends Component {
                   </div>
                 }
               </div>
-              {::this.handleComponent('group')}
+              {::this.handleChatRoomsListRender('group')}
             </div>
           </div>
           {

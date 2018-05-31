@@ -18,7 +18,7 @@ class RightSideDrawer extends Component {
       memberName: ''
     }
   }
-  handleComponent() {
+  handleMembersListRender() {
     const {
       user,
       chatRoom,
@@ -171,7 +171,7 @@ class RightSideDrawer extends Component {
         right
       >
         <div className="right-side-drawer-wrapper">
-          {::this.handleComponent()}
+          {::this.handleMembersListRender()}
         </div>
       </Menu>
     );
