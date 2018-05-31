@@ -52,8 +52,8 @@ class RightSideDrawer extends Component {
           <ChatRoomMemberFilter onMemberNameChange={::this.onMemberNameChange} />
           <div className="member-list">
             {
-              member.all.length > 0 &&
-              member.all.filter((member) =>
+              members.length > 0 &&
+              members.filter((member) =>
                 member.isOnline
               ).sort((a, b) =>
                 a.name.toLowerCase().localeCompare(b.name.toLowerCase())

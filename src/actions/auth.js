@@ -140,6 +140,7 @@ export function twitterLogin() {
 /**
  * Instagram login
  */
+/*
 export function instagramLogin() {
   return dispatch => {
     return dispatch({
@@ -164,10 +165,12 @@ export function instagramLogin() {
     });
   }
 }
+*/
 
 /**
  * LinkedIn login
  */
+/*
 export function linkedinLogin() {
   return dispatch => {
     return dispatch({
@@ -192,10 +195,12 @@ export function linkedinLogin() {
     });
   }
 }
+*/
 
 /**
  * GitHub login
  */
+/*
 export function githubLogin() {
   return dispatch => {
     return dispatch({
@@ -220,6 +225,7 @@ export function githubLogin() {
     });
   }
 }
+*/
 
 /**
  * Register

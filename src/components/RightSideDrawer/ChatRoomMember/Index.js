@@ -244,12 +244,15 @@ class ChatRoomMember extends Component {
                     ( userData.role === 'owner' ||
                       userData.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' &&
                       chatRoomMember.role !== 'ordinary' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
                   ) &&
                   <li>
-                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'ordinary')}>Make Ordinary</a>
+                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'ordinary')}>
+                      {chatRoomMember.role === 'admin' && 'Remove Admin'}
+                      {chatRoomMember.role === 'moderator' && 'Remove Moderator'}
+                      {chatRoomMember.role === 'vip' && 'Remove VIP'}
+                    </a>
                   </li>
                 }
                 {
@@ -258,8 +261,6 @@ class ChatRoomMember extends Component {
                       userData.role === 'admin' ||
                       userData.role === 'moderator' ) &&
                     ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' &&
-                      chatRoomMember.role !== 'moderator' &&
                       chatRoomMember.accountType !== 'guest' ) &&
                       ! chatRoomMember.isMute
                   ) &&

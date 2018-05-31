@@ -125,30 +125,6 @@ class Login extends Component {
               />
             </Col>
             <Col md="12">
-              <SocialButton
-                socialMedia="instagram"
-                label="Login with Instagram"
-                handleSocialLogin={instagramLogin}
-                isDisabled={auth.isLoading}
-              />
-            </Col>
-            <Col md="12">
-              <SocialButton
-                socialMedia="linkedin"
-                label="Login with LinkedIn"
-                handleSocialLogin={linkedinLogin}
-                isDisabled={auth.isLoading}
-              />
-            </Col>
-            <Col md="12">
-              <SocialButton
-                socialMedia="github"
-                label="Login with GitHub"
-                handleSocialLogin={githubLogin}
-                isDisabled={auth.isLoading}
-              />
-            </Col>
-            <Col md="12">
               <Divider className="line" />
             </Col>
             <Col md="12">
