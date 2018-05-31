@@ -48,13 +48,17 @@ class Header extends Component {
               <div
                 className="members-count"
                 onClick={handleRightSideDrawerToggleEvent}
-                title="View Members List"
+                title="View Online Members List"
               >
                 <FontAwesome
                   className="user-icon"
                   name="user"
                 />
-                {member.all.length}
+                {
+                  member.all.filter((member) =>
+                    member.isOnline
+                  ).length
+                }
               </div>
             }
           </MediaQuery>

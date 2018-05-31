@@ -171,8 +171,14 @@ class ChatRoomMember extends Component {
         }
         <div className="member-options-button-wrapper">
           {
-            userData._id !== chatRoomMember._id &&
-            userData.accountType !== 'guest' &&
+            (
+              userData._id !== chatRoomMember._id &&
+              userData.accountType !== 'guest' &&
+              (
+                userData.role !== 'ordinary' ||
+                chatRoomMember.role !== 'vip'
+              )
+            ) &&
             <div>
               <div className="member-options-button" data-mui-toggle="dropdown">
                 <FontAwesome
