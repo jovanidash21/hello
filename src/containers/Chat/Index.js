@@ -106,7 +106,6 @@ class Chat extends Component {
                   key={i}
                   userData={messageData.user}
                   message={messageData.text}
-                  time={messageData.createdAt}
                   isSender={(messageData.user._id === user.active._id) ? true : false }
                 />
               )
