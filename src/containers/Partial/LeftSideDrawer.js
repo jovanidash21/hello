@@ -40,8 +40,27 @@ class LeftSideDrawer extends Component {
       return (
         <div className="chat-room-list">
           {
+            chatType === 'direct' &&
             chatRoom.all.filter((chatRoom) =>
-              chatRoom.chatType === chatType
+              chatRoom.chatType === 'private' ||
+              chatRoom.chatType === 'direct'
+            ).map((chatRoomData, i) =>
+              <ChatRoom
+                key={i}
+                userData={user.active}
+                chatRoomData={chatRoomData}
+                activeChatRoom={activeChatRoom}
+                isActive={(activeChatRoom._id === chatRoomData._id) ? true : false}
+                handleChangeChatRoom={changeChatRoom}
+                handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+              />
+            )
+          }
+          {
+            chatType === 'group' &&
+            chatRoom.all.filter((chatRoom) =>
+              chatRoom.chatType === 'public' ||
+              chatRoom.chatType === 'group'
             ).map((chatRoomData, i) =>
               <ChatRoom
                 key={i}

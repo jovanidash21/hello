@@ -79,7 +79,7 @@ class ChatRoom extends Component {
           }
         }
         break;
-      case 'group':
+      default:
         return;
     }
   }
@@ -125,7 +125,7 @@ class ChatRoom extends Component {
 }
 
 ChatRoom.propTypes = {
-  index: PropTypes.number.isRequired,
+  index: PropTypes.number,
   userData: PropTypes.object.isRequired,
   chatRoomData: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
@@ -135,6 +135,7 @@ ChatRoom.propTypes = {
 }
 
 ChatRoom.defaultProps = {
+  index: -1,
   isActive: false
 }
 

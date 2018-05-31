@@ -1,25 +1,15 @@
 import {
-  SOCKET_BROADCAST_USER_LOGIN,
-  SOCKET_BROADCAST_USER_LOGOUT
-} from '../constants/auth';
-import { SOCKET_BROADCAST_KICK_USER } from '../constants/user';
-import {
   FETCH_CHAT_ROOMS,
   CHANGE_CHAT_ROOM,
   CREATE_CHAT_ROOM,
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_BROADCAST_CREATE_CHAT_ROOM
 } from '../constants/chat-room';
+import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
 import {
-  SOCKET_KICK_MEMBER,
-  SOCKET_BROADCAST_KICK_MEMBER,
-  SOCKET_UPDATE_MEMBER_ROLE,
-  SOCKET_BROADCAST_UPDATE_MEMBER_ROLE,
-  SOCKET_MUTE_MEMBER,
-  SOCKET_BROADCAST_MUTE_MEMBER,
-  SOCKET_UNMUTE_MEMBER,
-  SOCKET_BROADCAST_UNMUTE_MEMBER
-} from '../constants/member';
+  SOCKET_BROADCAST_KICK_USER,
+  SOCKET_BROADCAST_UNKICK_USER
+} from '../constants/user';
 
 const initialState = {
   isLoading: false,
@@ -63,74 +53,6 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         active: action.chatRoom
       };
-    case SOCKET_BROADCAST_USER_LOGIN:
-      var user = action.user;
-      var userID = action.user._id;
-      var chatRooms = [...state.all];
-      var isUserExist = false;
-
-      for (var i = 0; i < 1; i++) {
-        var chatRoom = chatRooms[i];
-
-        for (var j = 0; j < chatRoom.members.length; j++) {
-          var member = chatRoom.members[j];
-
-          if ( member._id === userID ) {
-            isUserExist = true;
-            break;
-          } else {
-            continue
-          }
-        }
-      }
-
-      if ( ! isUserExist ) {
-        user.isOnline = true;
-        chatRooms[0].members.push(user);
-      } else {
-        for (var i = 0; i < chatRooms.length; i++) {
-          var chatRoom = chatRooms[i];
-
-          for (var j = 0; j < chatRoom.members.length; j++) {
-            var member = chatRoom.members[j];
-
-            if ( member._id === userID ) {
-              member.isOnline = true;
-              break;
-            } else {
-              continue
-            }
-          }
-        }
-      }
-
-      return {
-        ...state,
-        all: [...chatRooms]
-      }
-    case SOCKET_BROADCAST_USER_LOGOUT:
-      var userID = action.user;
-      var chatRooms = [...state.all];
-
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        for (var j = 0; j < chatRoom.members.length; j++) {
-          var member = chatRoom.members[j];
-
-          if ( member._id === userID ) {
-            member.isOnline = false;
-            break;
-          } else {
-            continue
-          }
-        }
-      }
-
-      return {
-        ...state,
-        all: [...chatRooms]
-      }
     case SOCKET_CREATE_CHAT_ROOM:
     case SOCKET_BROADCAST_CREATE_CHAT_ROOM:
       return {
@@ -140,11 +62,29 @@ const chatRoom = (state=initialState, action) => {
           action.chatRoom
         ]
       };
+    case SOCKET_BROADCAST_USER_LOGIN:
+      var user = action.user;
+      var userID = user._id;
+      var activeChatRoom = {...state.active};
+      var members = activeChatRoom.members;
+
+      if (
+        activeChatRoom.chatType === 'public' &&
+        members.indexOf(userID) == -1
+      ) {
+        members.push(userID);
+      }
+
+      return {
+        ...state,
+        active: {...activeChatRoom}
+      }
     case SOCKET_BROADCAST_KICK_USER:
-      var chatRoomID = action.chatRoom;
+      var chatRoomID = action.chatRoomID;
+      var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
 
-      if ( state.active._id === chatRoomID ) {
+      if ( activeChatRoom._id === chatRoomID ) {
         location.reload();
       }
 
@@ -163,104 +103,11 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       }
-    case SOCKET_KICK_MEMBER:
-    case SOCKET_BROADCAST_KICK_MEMBER:
-      var chatRoomID = action.chatRoom;
-      var memberID = action.member;
+    case SOCKET_BROADCAST_UNKICK_USER:
+      var chatRoom = action.chatRoom;
       var chatRooms = [...state.all];
 
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        if ( chatRoom._id === chatRoomID ) {
-          for (var j = 0; j < chatRoom.members.length; j++) {
-            var member = chatRoom.members[j];
-
-            if ( member._id === memberID ) {
-              chatRoom.members.splice(j, 1);
-              break;
-            } else {
-              continue
-            }
-          }
-          break;
-        } else {
-          continue
-        }
-      }
-
-      return {
-        ...state,
-        all: [...chatRooms]
-      }
-    case SOCKET_UPDATE_MEMBER_ROLE:
-    case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE:
-      var memberID = action.member;
-      var role = action.role;
-      var chatRooms = [...state.all];
-
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        for (var j = 0; j < chatRoom.members.length; j++) {
-          var member = chatRoom.members[j];
-
-          if ( member._id === memberID ) {
-            member.role = role;
-            break;
-          } else {
-            continue
-          }
-        }
-      }
-
-      return {
-        ...state,
-        all: [...chatRooms]
-      }
-    case SOCKET_MUTE_MEMBER:
-    case SOCKET_BROADCAST_MUTE_MEMBER:
-      var memberID = action.member;
-      var chatRooms = [...state.all];
-
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        for (var j = 0; j < chatRoom.members.length; j++) {
-          var member = chatRoom.members[j];
-
-          if ( member._id === memberID ) {
-            member.isMute = true;
-            break;
-          } else {
-            continue
-          }
-        }
-      }
-
-      return {
-        ...state,
-        all: [...chatRooms]
-      }
-    case SOCKET_UNMUTE_MEMBER:
-    case SOCKET_BROADCAST_UNMUTE_MEMBER:
-      var memberID = action.member;
-      var chatRooms = [...state.all];
-
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        for (var j = 0; j < chatRoom.members.length; j++) {
-          var member = chatRoom.members[j];
-
-          if ( member._id === memberID ) {
-            member.isMute = false;
-            break;
-          } else {
-            continue
-          }
-        }
-      }
+      chatRooms.push(chatRoom);
 
       return {
         ...state,

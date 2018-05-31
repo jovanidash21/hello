@@ -42,8 +42,8 @@ export function kickMember(chatRoomID, memberID) {
     .then((response) => {
       dispatch({
         type: SOCKET_KICK_MEMBER,
-        chatRoom: chatRoomID,
-        member: memberID
+        chatRoomID: chatRoomID,
+        memberID: memberID
       });
     })
     .catch((error) => {
@@ -65,15 +65,17 @@ export function updateMemberRole(memberID, role) {
     role,
   };
 
+  console.log(data);
+
   return dispatch => {
     return dispatch({
       type: UPDATE_MEMBER_ROLE,
-      payload: axios.post('api/user/role', data)
+      payload: axios.post('api/member/role', data)
     })
     .then((response) => {
       dispatch({
         type: SOCKET_UPDATE_MEMBER_ROLE,
-        member: memberID,
+        memberID: memberID,
         role: role
       });
     })
@@ -90,15 +92,17 @@ export function updateMemberRole(memberID, role) {
  * @param {string} memberID
  */
 export function muteMember(memberID) {
+  let data = { memberID };
+
   return dispatch => {
     return dispatch({
       type: MUTE_MEMBER,
-      payload: axios.post('api/user/mute', memberID)
+      payload: axios.post('api/member/mute', data)
     })
     .then((response) => {
       dispatch({
         type: SOCKET_MUTE_MEMBER,
-        member: memberID
+        memberID: memberID
       });
     })
     .catch((error) => {
