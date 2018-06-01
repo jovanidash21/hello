@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 var ChatRoom = require('../../models/ChatRoom');
-var IPAddress = require('../../models/IPAddress');
 
 router.get('/:chatRoomID/:userID', function(req, res, next) {
   var chatRoomID = req.params.chatRoomID;
@@ -29,6 +28,7 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
   }
 });
 
+/*
 router.post('/block', function(req, res, next) {
   var memberID = req.body.memberID;
 
@@ -47,25 +47,7 @@ router.post('/block', function(req, res, next) {
       { safe: true, upsert: true, new: true },
       function(err, user) {
         if (!err) {
-          var ipAddressData = {
-            address: user.ipAddress
-          };
 
-          var ipAddress = new IPAddress(ipAddressData);
-
-          ipAddress.save(function(err) {
-            if (!err) {
-              res.status(200).send({
-                success: true,
-                message: 'User block'
-              });
-            } else {
-              res.status(500).send({
-                success: false,
-                message: 'Server Error!'
-              });
-            }
-          });
         } else {
           res.status(500).send({
             success: false,
@@ -76,6 +58,7 @@ router.post('/block', function(req, res, next) {
     );
   }
 });
+*/
 
 router.post('/kick', function(req, res, next) {
   var chatRoomID = req.body.chatRoomID;
