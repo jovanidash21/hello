@@ -8,9 +8,13 @@ var sockets = function(socket) {
     switch(action.type) {
       case 'SOCKET_USER_LOGIN':
         User.findByIdAndUpdate(
-          action.user._id,
-          { $set: { isOnline: true, socketID: socket.id } },
-          { safe: true, upsert: true, new: true },
+          action.user._id, {
+            $set: {
+              isOnline: true,
+              ipAddress: socket.request.connection.remoteAddress,
+              socketID: socket.id
+            }
+          }, { safe: true, upsert: true, new: true },
           function(err) {
             if (!err) {
               users[socket.id] = action.user._id;
@@ -26,7 +30,7 @@ var sockets = function(socket) {
       case 'SOCKET_USER_LOGOUT':
         User.findByIdAndUpdate(
           action.user,
-          { $set: { isOnline: false, socketID: ''} },
+          { $set: { isOnline: false, ipAddress: '', socketID: ''} },
           { safe: true, upsert: true, new: true },
           function(err) {
             if (!err) {
@@ -184,7 +188,7 @@ var sockets = function(socket) {
     socket.on('disconnect', function() {
       User.findByIdAndUpdate(
         users[socket.id],
-        { $set: { isOnline: false, socketID: ''} },
+        { $set: { isOnline: false, ipAddress: '', socketID: ''} },
         { safe: true, upsert: true, new: true },
         function(err) {
           if (!err) {

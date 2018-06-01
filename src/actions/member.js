@@ -6,7 +6,9 @@ import {
   UPDATE_MEMBER_ROLE,
   SOCKET_UPDATE_MEMBER_ROLE,
   MUTE_MEMBER,
-  SOCKET_MUTE_MEMBER
+  SOCKET_MUTE_MEMBER,
+  BLOCK_MEMBER,
+  SOCKET_BLOCK_MEMBER
 } from '../constants/member';
 
 /**
@@ -28,16 +30,48 @@ export function fetchMembers(chatRoomID, userID) {
   }
 }
 
+
+/**
+ * Block member
+ * @param {string} memberID
+ */
+export function blockMember(memberID) {
+  let data = { memberID };
+
+  return dispatch => {
+    return dispatch({
+      type: BLOCK_MEMBER,
+      payload: axios.post('api/member/block', data)
+    })
+    .then((response) => {
+      dispatch({
+        type: SOCKET_BLOCK_MEMBER,
+        memberID: memberID
+      });
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    });
+  }
+}
+
 /**
  * Kick member
  * @param {string} chatRoomID
  * @param {string} memberID
  */
 export function kickMember(chatRoomID, memberID) {
+  let data = {
+    chatRoomID,
+    memberID,
+  };
+
   return dispatch => {
     return dispatch({
       type: KICK_MEMBER,
-      payload: axios.post(`api/chat-room/kick-user/${chatRoomID}/${memberID}`)
+      payload: axios.post('api/member/kick', data)
     })
     .then((response) => {
       dispatch({

@@ -32,6 +32,7 @@ import {
 } from './message';
 import {
   fetchMembers,
+  blockMember,
   kickMember,
   updateMemberRole,
   muteMember
@@ -60,6 +61,7 @@ const actions = (dispatch) => {
     fetchMessages,
     sendMessage,
     fetchMembers,
+    blockMember,
     kickMember,
     updateMemberRole,
     muteMember

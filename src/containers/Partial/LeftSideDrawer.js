@@ -47,6 +47,7 @@ class LeftSideDrawer extends Component {
             ).map((chatRoomData, i) =>
               <ChatRoom
                 key={i}
+                index={i}
                 userData={user.active}
                 chatRoomData={chatRoomData}
                 activeChatRoom={activeChatRoom}

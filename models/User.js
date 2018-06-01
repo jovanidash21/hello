@@ -55,6 +55,10 @@ var userSchema = new Schema (
       ],
       default: 'ordinary',
     },
+    isBlock: {
+      type: Boolean,
+      default: false,
+    },
     isMute: {
       type: Boolean,
       default: false,
@@ -62,6 +66,10 @@ var userSchema = new Schema (
     isOnline: {
       type: Boolean,
       default: false,
+    },
+    ipAddress: {
+      type: String,
+      default: '',
     },
     socketID: {
       type: String,

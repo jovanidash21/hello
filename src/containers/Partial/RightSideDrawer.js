@@ -64,6 +64,7 @@ class RightSideDrawer extends Component {
                   activeChatRoom={activeChatRoom}
                   chatRoomMember={chatRoomMember}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
+                  handleBlockMember={::this.handleBlockMember}
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
                   handleMuteMember={::this.handleMuteMember}
@@ -118,6 +119,17 @@ class RightSideDrawer extends Component {
     } else {
       changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
       handleRightSideDrawerToggleEvent(event);
+    }
+  }
+  handleBlockMember(memberID) {
+    const {
+      user,
+      blockMember
+    } = this.props;
+    const userData = user.active;
+
+    if ( userData.role === 'owner' || userData.role === 'admin' ) {
+      blockMember(memberID);
     }
   }
   handleKickMember(chatRoomID, memberID) {

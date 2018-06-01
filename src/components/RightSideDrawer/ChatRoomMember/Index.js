@@ -85,6 +85,16 @@ class ChatRoomMember extends Component {
 
     handleAddDirectChatRoom(event, chatRoomMember._id);
   }
+  handleBlockMember(event) {
+    event.preventDefault();
+
+    const {
+      chatRoomMember,
+      handleBlockMember
+    } = this.props;
+
+    handleBlockMember(chatRoomMember._id);
+  }
   handleKickMember(event) {
     event.preventDefault();
 
@@ -189,13 +199,30 @@ class ChatRoomMember extends Component {
 
               <ul className="mui-dropdown__menu mui-dropdown__menu--right">
                 {
-                  chatRoomMember.role !== 'vip' &&
+                  (
+                    userData.role === 'owner' ||
+                    userData.role === 'admin' ||
+                    chatRoomMember.role !== 'vip'
+                  ) &&
                   <li>
                     <a href="#" onClick={::this.handleAddDirectChatRoom}>
                       Direct Messages
                     </a>
                   </li>
                 }
+                {/*
+                  (
+                    ( userData.role === 'owner' ||
+                      userData.role === 'admin' ) &&
+                    ( chatRoomMember.role !== 'owner' &&
+                      chatRoomMember.role !== 'admin' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={::this.handleBlockMember}>
+                      Block Member
+                    </a>
+                  </li>
+                */}
                 {
                   (
                     ( userData.role === 'owner' ||
@@ -288,6 +315,7 @@ ChatRoomMember.propTypes = {
   activeChatRoom: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
+  handleBlockMember: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,
   handleMuteMember: PropTypes.func.isRequired
