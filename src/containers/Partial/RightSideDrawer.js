@@ -55,9 +55,15 @@ class RightSideDrawer extends Component {
               members.length > 0 &&
               members.filter((member) =>
                 member.isOnline
-              ).sort((a, b) =>
-                a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-              ).map((chatRoomMember, i) =>
+              ).sort((a, b) =>  {
+                var n = a.priority - b.priority;
+
+                if (n !== 0) {
+                  return n;
+                }
+
+                return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+              }).map((chatRoomMember, i) =>
                 <ChatRoomMember
                   key={i}
                   userData={user.active}

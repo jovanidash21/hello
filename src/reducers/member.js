@@ -21,6 +21,36 @@ import {
   SOCKET_BROADCAST_USER_LOGOUT
 } from '../constants/auth';
 
+const memberPriority = (member) => {
+  var priority = -1;
+
+  switch (member.role) {
+    case 'owner':
+      priority = 1;
+      break;
+    case 'admin':
+      priority = 2;
+      break;
+    case 'moderator':
+      priority = 3;
+      break;
+    case 'vip':
+      priority = 4;
+      break;
+    case 'ordinary':
+      if ( member.accountType !== 'guest' ) {
+        priority = 5;
+      } else {
+        priority = 6;
+      }
+      break;
+    default:
+      break;
+  }
+
+  return priority;
+}
+
 const initialState = {
   isLoading: false,
   activeChatRoom: {},
@@ -35,11 +65,19 @@ const member = (state=initialState, action) => {
         isLoading: true
       };
     case `${FETCH_MEMBERS}_SUCCESS`:
+      var members = [...action.payload.data];
+
+      for (var i = 0; i < members.length; i++) {
+        var member = members[i];
+
+        member.priority = memberPriority(member);
+      }
+
       return {
         ...state,
         isLoading: false,
         isFetchMembersSuccess: true,
-        all: action.payload.data
+        all: [...members]
       };
     case `${FETCH_MEMBERS}_ERROR`:
       return {
@@ -84,6 +122,7 @@ const member = (state=initialState, action) => {
       var members = [...state.all];
 
       if ( activeChatRoom._id === chatRoomID ) {
+        member.priority = memberPriority(member);
         members.push(member);
       }
 
@@ -102,6 +141,7 @@ const member = (state=initialState, action) => {
 
         if ( member._id === memberID ) {
           member.role = role;
+          member.priority = memberPriority(member);
           break;
         } else {
           continue
@@ -173,6 +213,7 @@ const member = (state=initialState, action) => {
 
       if ( activeChatRoom.chatType === 'public' && !isUserExist ) {
         user.isOnline = true;
+        user.priority = memberPriority(user);
         members.push(user);
       }
 
