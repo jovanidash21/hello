@@ -119,9 +119,7 @@ class Chat extends Component {
               typer.map((typerData, i) =>
                 <ChatTyper
                   key={i}
-                  name={typerData.name}
-                  profilePicture={typerData.profilePicture}
-                  badge={typerData.accountType !== 'local' ? typerData.accountType : ''}
+                  typer={typerData}
                 />
               )
             }

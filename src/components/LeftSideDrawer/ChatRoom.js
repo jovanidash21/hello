@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import Avatar from '../Avatar';
 import './styles.scss';
 
 class ChatRoom extends Component {
@@ -19,69 +20,42 @@ class ChatRoom extends Component {
       handleChangeChatRoom(chatRoomData, userData._id, '');
     }
   }
-  handleAccountTypeBadgeLogo() {
+  handleAvatar(type) {
     const {
       userData,
       chatRoomData
     } = this.props;
+    var role = '';
+    var accountType = '';
 
     switch ( chatRoomData.chatType ) {
       case 'private':
-        var icon = '';
-
-        switch ( userData.accountType ) {
-          case 'guest':
-            icon = 'star';
-            break;
-          default:
-            icon = userData.accountType;
-            break;
-        }
-
-        return (
-          <div className={`badge-logo ${userData.accountType}`}>
-            <FontAwesome
-              className="social-icon"
-              name={icon}
-            />
-          </div>
-        )
+        role = userData.role;
+        accountType = userData.accountType;
         break;
       case 'direct':
         for ( var i = 0; i < chatRoomData.members.length; i++ ) {
           var member = chatRoomData.members[i];
 
           if ( member._id != userData._id ) {
-            if ( member.accountType !== 'local' ) {
-              var icon = '';
-
-              switch ( member.accountType ) {
-                case 'guest':
-                  icon = 'star';
-                  break;
-                default:
-                  icon = member.accountType;
-                  break;
-              }
-
-              return (
-                <div className={`badge-logo ${member.accountType}`}>
-                  <FontAwesome
-                    className="social-icon"
-                    name={icon}
-                  />
-                </div>
-              )
-            }
-            return;
+            role = member.role;
+            accountType = member.accountType;
+            break;
           } else {
             continue;
           }
         }
         break;
       default:
-        return;
+        break;
     }
+
+    if ( type === 'role' ) {
+      return role;
+    } else if ( type === 'accountType' ) {
+      return accountType;
+    }
+    return accountType;
   }
   handleChangeChatRoom(event) {
     event.preventDefault();
@@ -109,9 +83,11 @@ class ChatRoom extends Component {
         onClick={::this.handleChangeChatRoom}
         title={chatRoomData.name}
       >
-        <div className="chat-room-icon" style={{backgroundImage: `url(${chatRoomData.chatIcon})`}}>
-          {::this.handleAccountTypeBadgeLogo()}
-        </div>
+        <Avatar
+          image={chatRoomData.chatIcon}
+          role={::this.handleAvatar('role')}
+          accountType={::this.handleAvatar('accountType')}
+        />
         <div className="chat-room-name">
           {chatRoomData.name}
           {

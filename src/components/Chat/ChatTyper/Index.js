@@ -1,26 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import Avatar from '../../Avatar';
 import './styles.scss';
 
 const ChatTyper = (props) => {
   return (
     <div className="chat-typer-wrapper">
-      <div
-        className="chat-image"
-        style={{backgroundImage: `url(${props.profilePicture})`}}
-        title={props.name}
-      >
-        {
-          props.badge.length > 0 &&
-          <div className={`badge-logo closer ${props.badge}`}>
-            <FontAwesome
-              className="social-icon"
-              name={props.badge}
-            />
-          </div>
-        }
-      </div>
+      <Avatar
+        image={props.typer.profilePicture}
+        size="21px"
+        title={props.typer.name}
+        role={props.typer.role}
+        accountType={props.typer.accountType}
+        badgeCloser
+      />
       <div className="chat-typer">
         <span></span>
         <span></span>
@@ -31,13 +24,7 @@ const ChatTyper = (props) => {
 }
 
 ChatTyper.propTypes = {
-  name: PropTypes.string.isRequired,
-  profilePicture: PropTypes.string.isRequired,
-  badge: PropTypes.string
-}
-
-ChatTyper.defaultProps = {
-  badge: ''
+  typer: PropTypes.object.isRequired
 }
 
 export default ChatTyper;

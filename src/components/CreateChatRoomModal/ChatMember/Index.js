@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Avatar from '../../Avatar';
 import './styles.scss';
 
 class ChatMember extends Component {
@@ -23,9 +24,13 @@ class ChatMember extends Component {
     return (
       <div className="member-wrapper" onClick={::this.handleDeselectMember}>
         <div className="member" title={memberData.name}>
-          <div
-            className="member-image"
-            style={{backgroundImage: `url(${memberData.profilePicture})`}}
+          <Avatar
+            image={memberData.profilePicture}
+            size="20px"
+            title={memberData.name}
+            role={memberData.role}
+            accountType={memberData.accountType}
+            badgeCloser
           />
           <div className="member-name">
             {memberData.name}

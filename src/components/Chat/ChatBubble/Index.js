@@ -1,36 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
 import { emojify } from 'react-emojione';
 import TimeAgo from 'react-timeago';
 import moment from 'moment';
+import Avatar from '../../Avatar';
 import './styles.scss';
 
 class ChatBubble extends Component {
   constructor(props) {
     super(props);
-  }
-  handleAccountTypeBadgeLogo() {
-    const { userData } = this.props;
-    var icon = '';
-
-    switch ( userData.accountType ) {
-      case 'guest':
-        icon = 'star';
-        break;
-      default:
-        icon = userData.accountType;
-        break;
-    }
-
-    return (
-      <div className={`badge-logo closer ${userData.accountType}`}>
-        <FontAwesome
-          className="social-icon"
-          name={icon}
-        />
-      </div>
-    )
   }
   handleMessageText() {
     const { message } = this.props;
@@ -47,7 +25,7 @@ class ChatBubble extends Component {
 
     return messageText;
   }
- render() {
+  render() {
     const {
       userData,
       time,
@@ -58,13 +36,14 @@ class ChatBubble extends Component {
       <div className={"chat-bubble-wrapper " + (isSender ? 'reverse' : '')}>
         {
           !isSender &&
-          <div
-            className={"chat-image " + (!isSender ? 'left' : '')}
-            style={{backgroundImage: `url(${userData.profilePicture})`}}
+          <Avatar
+            image={userData.profilePicture}
+            size="35px"
             title={userData.name}
-          >
-            {::this.handleAccountTypeBadgeLogo()}
-          </div>
+            role={userData.role}
+            accountType={userData.accountType}
+            badgeCloser
+          />
         }
         <div className="chat-details">
           {

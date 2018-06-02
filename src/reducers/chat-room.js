@@ -33,7 +33,7 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         isLoading: false,
         isFetchChatRoomsSuccess: true,
-        all: action.payload.data.chatRooms
+        all: action.payload.data
       };
     case `${CREATE_CHAT_ROOM}_SUCCESS`:
       return {

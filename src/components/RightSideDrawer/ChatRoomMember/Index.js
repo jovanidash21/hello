@@ -1,79 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import Avatar from '../../Avatar';
 import './styles.scss';
 
 class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
-  }
-  handleOnlineIcon() {
-    const { chatRoomMember } = this.props;
-
-    return (
-      <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
-        <FontAwesome
-          className="circle-icon"
-          name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
-        />
-      </div>
-    )
-  }
-  handleRoleBadgeLogo() {
-    const { chatRoomMember } = this.props;
-    var icon = '';
-    var title = '';
-
-    switch ( chatRoomMember.role ) {
-      case 'owner':
-        icon = 'shield';
-        title = 'This member is an owner';
-        break;
-      case 'admin':
-        icon = 'font';
-        title = 'This member is an admin';
-        break;
-      case 'moderator':
-        icon = 'forward';
-        title = 'This member is a moderator';
-        break;
-      default:
-        return;
-    }
-
-    return (
-      <div
-        className={`badge-logo top ${chatRoomMember.role}`}
-        title={title}
-      >
-        <FontAwesome
-          className="social-icon"
-          name={icon}
-        />
-      </div>
-    )
-  }
-  handleAccountTypeBadgeLogo() {
-    const { chatRoomMember } = this.props;
-    var icon = '';
-
-    switch ( chatRoomMember.accountType ) {
-      case 'guest':
-        icon = 'star';
-        break;
-      default:
-        icon = chatRoomMember.accountType;
-        break;
-    }
-
-    return (
-      <div className={`badge-logo ${chatRoomMember.accountType}`}>
-        <FontAwesome
-          className="social-icon"
-          name={icon}
-        />
-      </div>
-    )
   }
   handleAddDirectChatRoom(event) {
     event.preventDefault();
@@ -139,21 +72,18 @@ class ChatRoomMember extends Component {
         }
         title={chatRoomMember.name}
       >
-        {::this.handleOnlineIcon()}
-        <div
-          className="member-icon"
-          style={{backgroundImage: `url(${chatRoomMember.profilePicture})`}}
-        >
-          {
-            chatRoomMember.role !== 'ordinary' &&
-            chatRoomMember.role !== 'vip' &&
-            ::this.handleRoleBadgeLogo()
-          }
-          {
-            chatRoomMember.accountType !== 'local' &&
-            ::this.handleAccountTypeBadgeLogo()
-          }
+        <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
+          <FontAwesome
+            className="circle-icon"
+            name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
+          />
         </div>
+        <Avatar
+          image={chatRoomMember.profilePicture}
+          size="23px"
+          role={chatRoomMember.role}
+          accountType={chatRoomMember.accountType}
+        />
         <div className="member-name">
           {chatRoomMember.name}
           {
