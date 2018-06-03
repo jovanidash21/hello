@@ -19,6 +19,13 @@ var api = require('./routes/api');
 
 var app = express();
 
+// ip blacklist
+var fs = require('fs');
+var ipfilter = require('express-ipfilter').IpFilter;
+var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+app.use(ipfilter(ipBlacklist));
+
 // browserSync setup
 if ( process.env.NODE_ENV != 'production' ) {
   var browserSync = require('browser-sync');
