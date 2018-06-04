@@ -100,7 +100,7 @@ class Avatar extends Component {
               (badgeCloser ? 'closer ' : '') +
               accountType
             }
-            title={bottomBadgeIcon}
+            title={accountType}
           >
             <FontAwesome
               className="icon"

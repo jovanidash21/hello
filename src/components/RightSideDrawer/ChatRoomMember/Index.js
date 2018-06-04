@@ -168,8 +168,7 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( userData.role === 'owner' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
