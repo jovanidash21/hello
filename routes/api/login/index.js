@@ -19,9 +19,9 @@ router.use('/local', require('./local'));
 router.use('/facebook', require('./facebook'));
 router.use('/google', require('./google'));
 router.use('/twitter', require('./twitter'));
-router.use('/instagram', require('./instagram'));
-router.use('/linkedin', require('./linkedin'));
-router.use('/github', require('./github'));
+// router.use('/instagram', require('./instagram'));
+// router.use('/linkedin', require('./linkedin'));
+// router.use('/github', require('./github'));
 router.use('/guest', require('./guest'));
 
 module.exports = router;

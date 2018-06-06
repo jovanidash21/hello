@@ -42,16 +42,16 @@ class LeftSideDrawer extends Component {
           {
             chatType === 'direct' &&
             chatRoom.all.filter((chatRoom) =>
-              chatRoom.chatType === 'private' ||
-              chatRoom.chatType === 'direct'
-            ).map((chatRoomData, i) =>
+              chatRoom.data.chatType === 'private' ||
+              chatRoom.data.chatType === 'direct'
+            ).map((chatRoom, i) =>
               <ChatRoom
                 key={i}
                 index={i}
-                userData={user.active}
-                chatRoomData={chatRoomData}
+                user={user.active}
+                chatRoom={chatRoom}
                 activeChatRoom={activeChatRoom}
-                isActive={(activeChatRoom._id === chatRoomData._id) ? true : false}
+                isActive={(activeChatRoom.data._id === chatRoom.data._id) ? true : false}
                 handleChangeChatRoom={changeChatRoom}
                 handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
               />
@@ -60,16 +60,24 @@ class LeftSideDrawer extends Component {
           {
             chatType === 'group' &&
             chatRoom.all.filter((chatRoom) =>
-              chatRoom.chatType === 'public' ||
-              chatRoom.chatType === 'group'
-            ).map((chatRoomData, i) =>
+              chatRoom.data.chatType === 'public' ||
+              chatRoom.data.chatType === 'group'
+            ).sort((a, b) =>  {
+              var n = a.priority - b.priority;
+
+              if (n !== 0) {
+                return n;
+              }
+
+              return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase());
+            }).map((chatRoom, i) =>
               <ChatRoom
                 key={i}
                 index={i}
-                userData={user.active}
-                chatRoomData={chatRoomData}
+                user={user.active}
+                chatRoom={chatRoom}
                 activeChatRoom={activeChatRoom}
-                isActive={(activeChatRoom._id === chatRoomData._id) ? true : false}
+                isActive={(activeChatRoom.data._id === chatRoom.data._id) ? true : false}
                 handleChangeChatRoom={changeChatRoom}
                 handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
               />

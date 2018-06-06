@@ -12,28 +12,28 @@ class ChatMember extends Component {
 
     const {
       index,
-      memberData,
+      member,
       handleDeselectMember
     } = this.props;
 
-    index !== 0 && handleDeselectMember(memberData);
+    index !== 0 && handleDeselectMember(member);
   }
   render() {
-    const { memberData } = this.props;
+    const { member } = this.props;
 
     return (
       <div className="member-wrapper" onClick={::this.handleDeselectMember}>
-        <div className="member" title={memberData.name}>
+        <div className="member" title={member.name}>
           <Avatar
-            image={memberData.profilePicture}
+            image={member.profilePicture}
             size="20px"
-            title={memberData.name}
-            role={memberData.role}
-            accountType={memberData.accountType}
+            title={member.name}
+            role={member.role}
+            accountType={member.accountType}
             badgeCloser
           />
           <div className="member-name">
-            {memberData.name}
+            {member.name}
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@ class ChatMember extends Component {
 
 ChatMember.propTypes = {
   index: PropTypes.number.isRequired,
-  memberData: PropTypes.object.isRequired,
+  member: PropTypes.object.isRequired,
   handleDeselectMember: PropTypes.func.isRequired
 }
 

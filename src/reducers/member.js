@@ -53,7 +53,9 @@ const memberPriority = (member) => {
 
 const initialState = {
   isLoading: false,
-  activeChatRoom: {},
+  activeChatRoom: {
+    data: {}
+  },
   all: []
 };
 
@@ -97,7 +99,7 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom._id === chatRoomID ) {
+      if ( activeChatRoom.data._id === chatRoomID ) {
         for (var i = 0; i < members.length; i++) {
           var member = members[i];
 
@@ -121,7 +123,7 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom._id === chatRoomID ) {
+      if ( activeChatRoom.data._id === chatRoomID ) {
         member.priority = memberPriority(member);
         members.push(member);
       }
@@ -211,7 +213,7 @@ const member = (state=initialState, action) => {
         }
       }
 
-      if ( activeChatRoom.chatType === 'public' && !isUserExist ) {
+      if ( activeChatRoom.data.chatType === 'public' && !isUserExist ) {
         user.isOnline = true;
         user.priority = memberPriority(user);
         members.push(user);

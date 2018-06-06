@@ -61,7 +61,7 @@ class ChatRoomMember extends Component {
   }
   render() {
     const {
-      userData,
+      user,
       chatRoomMember
     } = this.props;
 
@@ -87,7 +87,7 @@ class ChatRoomMember extends Component {
         <div className="member-name">
           {chatRoomMember.name}
           {
-            userData._id === chatRoomMember._id &&
+            user._id === chatRoomMember._id &&
             <span className="you-label">(you)</span>
           }
         </div>
@@ -112,10 +112,10 @@ class ChatRoomMember extends Component {
         <div className="member-options-button-wrapper">
           {
             (
-              userData._id !== chatRoomMember._id &&
-              userData.accountType !== 'guest' &&
+              user._id !== chatRoomMember._id &&
+              user.accountType !== 'guest' &&
               (
-                userData.role !== 'ordinary' ||
+                user.role !== 'ordinary' ||
                 chatRoomMember.role !== 'vip'
               )
             ) &&
@@ -130,8 +130,8 @@ class ChatRoomMember extends Component {
               <ul className="mui-dropdown__menu mui-dropdown__menu--right">
                 {
                   (
-                    userData.role === 'owner' ||
-                    userData.role === 'admin' ||
+                    user.role === 'owner' ||
+                    user.role === 'admin' ||
                     chatRoomMember.role !== 'vip'
                   ) &&
                   <li>
@@ -142,8 +142,8 @@ class ChatRoomMember extends Component {
                 }
                 {/*
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' )
                   ) &&
@@ -155,8 +155,8 @@ class ChatRoomMember extends Component {
                 */}
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' )
                   ) &&
@@ -168,7 +168,7 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ) &&
+                    ( user.role === 'owner' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'admin' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
@@ -179,8 +179,8 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'moderator' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
@@ -191,8 +191,8 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'vip' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
@@ -203,8 +203,8 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.role !== 'ordinary' ) &&
                     ( chatRoomMember.accountType !== 'guest' )
@@ -219,9 +219,9 @@ class ChatRoomMember extends Component {
                 }
                 {
                   (
-                    ( userData.role === 'owner' ||
-                      userData.role === 'admin' ||
-                      userData.role === 'moderator' ) &&
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ||
+                      user.role === 'moderator' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.accountType !== 'guest' ) &&
                       ! chatRoomMember.isMute
@@ -240,7 +240,7 @@ class ChatRoomMember extends Component {
 }
 
 ChatRoomMember.propTypes = {
-  userData: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
