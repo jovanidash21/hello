@@ -11,6 +11,7 @@ import LoadingAnimation from '../../components/LoadingAnimation';
 import ChatBubble from '../../components/Chat/ChatBubble';
 import ChatTyper from '../../components/Chat/ChatTyper';
 import ChatInput from '../../components/Chat/ChatInput';
+import NotificationPopUp from '../../components/NotificationPopUp';
 import '../../styles/Chat.scss';
 
 class Chat extends Component {
@@ -144,6 +145,15 @@ class Chat extends Component {
 
     sendMessage(newMessageID, text, user.active, chatRoom.active);
   }
+  handleNotificationViewMessage(chatRoomObj) {
+    const {
+      user,
+      chatRoom,
+      changeChatRoom
+    } = this.props;
+
+    changeChatRoom(chatRoomObj, user.active._id, chatRoom.active.data._id);
+  }
   render() {
     const {
       user,
@@ -200,6 +210,7 @@ class Chat extends Component {
             handleSendMessage={::this.handleSendMessage}
           />
         }
+        <NotificationPopUp handleViewMessage={::this.handleNotificationViewMessage} />
       </div>
     )
   }
