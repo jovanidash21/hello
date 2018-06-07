@@ -101,12 +101,12 @@ class Chat extends Component {
           {
             message.all.length
               ?
-              message.all.map((message, i) =>
+              message.all.map((singleMessage, i) =>
                 <ChatBubble
                   key={i}
-                  user={message.user}
-                  message={message.text}
-                  isSender={(message.user._id === user.active._id) ? true : false }
+                  user={singleMessage.user}
+                  message={singleMessage.text}
+                  isSender={(singleMessage.user._id === user.active._id) ? true : false }
                 />
               )
               :

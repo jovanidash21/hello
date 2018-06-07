@@ -37,16 +37,16 @@ class CreateChatRoomModal extends Component {
     const selectedMember = suggestion.suggestion;
 
     if ( chatType === 'group' ) {
-      if (members.some((member) => member._id === selectedMember._id)) {
+      if (members.some((singleMember) => singleMember._id === selectedMember._id)) {
         this.setState({
           members: [
-            ...members.filter((member) => member._id !== selectedMember._id)
+            ...members.filter((singleMember) => singleMember._id !== selectedMember._id)
           ]
         });
       } else {
         this.setState({
           members: [
-            ...members.filter((member) => member._id !== selectedMember._id),
+            ...members.filter((singleMember) => singleMember._id !== selectedMember._id),
             selectedMember
           ]
         });
@@ -60,7 +60,7 @@ class CreateChatRoomModal extends Component {
 
     this.setState({
       members: [
-        ...members.filter((member) => member._id !== member._id)
+        ...members.filter((singleMember) => singleMember._id !== member._id)
       ]
     });
   }
