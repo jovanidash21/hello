@@ -16,6 +16,30 @@ var userChatRoomSchema = new Schema (
       type: Number,
       default: 0,
     },
+    isKick: {
+      type: Boolean,
+      default: false,
+    },
+    endDate: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    _id : false,
+  },
+);
+
+var userBlockMuteSchema = new Schema (
+  {
+    data: {
+      type: Boolean,
+      default: false,
+    },
+    endDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     _id : false,
@@ -68,14 +92,8 @@ var userSchema = new Schema (
       ],
       default: 'ordinary',
     },
-    isBlock: {
-      type: Boolean,
-      default: false,
-    },
-    isMute: {
-      type: Boolean,
-      default: false,
-    },
+    block: userBlockMuteSchema,
+    mute: userBlockMuteSchema,
     isOnline: {
       type: Boolean,
       default: false,
