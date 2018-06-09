@@ -28,7 +28,6 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
   }
 });
 
-/*
 router.post('/block', function(req, res, next) {
   var memberID = req.body.memberID;
 
@@ -43,7 +42,7 @@ router.post('/block', function(req, res, next) {
   } else {
     User.findByIdAndUpdate(
       memberID,
-      { $set: { isBlock: true, isOnline: false, socketID: '' }},
+      { $set: { block: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
       { safe: true, upsert: true, new: true },
       function(err, user) {
         if (!err) {
@@ -58,7 +57,6 @@ router.post('/block', function(req, res, next) {
     );
   }
 });
-*/
 
 router.post('/kick', function(req, res, next) {
   var chatRoomID = req.body.chatRoomID;
@@ -73,30 +71,16 @@ router.post('/kick', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
-    User.findByIdAndUpdate(
-      memberID,
-      { $pull: { chatRooms: chatRoomID }},
+    User.update(
+      { _id: memberID, 'chatRooms.data': chatRoomID },
+      { $set: { 'chatRooms.$.isKick': true, 'chatRooms.$.endDate': new Date( +new Date() + 3 * 60 * 1000 ) } },
       { safe: true, upsert: true, new: true },
-      function(err, user) {
+      function(err) {
         if (!err) {
-          ChatRoom.findByIdAndUpdate(
-            chatRoomID,
-            { $pull: { members: memberID }},
-            { safe: true, upsert: true, new: true },
-            function(err) {
-              if (!err) {
-                res.status(200).send({
-                  success: true,
-                  message: 'User kick out of the chat room.'
-                });
-              } else {
-                res.status(500).send({
-                  success: false,
-                  message: 'Server Error!'
-                });
-              }
-            }
-          );
+          res.status(200).send({
+            success: true,
+            message: 'User kick out of the chat room.'
+          });
         } else {
           res.status(500).send({
             success: false,
@@ -156,7 +140,7 @@ router.post('/mute', function(req, res, next) {
   } else {
     User.findByIdAndUpdate(
       memberID,
-      { $set: { isMute: true }},
+      { $set: { mute: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
       { safe: true, upsert: true, new: true },
       function(err) {
         if (!err) {

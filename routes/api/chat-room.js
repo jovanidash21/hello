@@ -19,10 +19,14 @@ router.get('/:userID', function(req, res, next) {
         populate: {
           path: 'members'
         }
-      }).exec(function(err, userChatRooms) {
+      }).exec(function(err, user) {
         if (!err) {
-          for (var i = 0; i < userChatRooms.chatRooms.length; i++) {
-            var chatRoom = userChatRooms.chatRooms[i].data;
+          var userChatRooms = user.chatRooms.filter(function(chatRoom) {
+            return chatRoom.isKick === false;
+          });
+
+          for (var i = 0; i < userChatRooms.length; i++) {
+            var chatRoom = userChatRooms[i].data;
 
             for (var j = 0; j < chatRoom.members.length; j++) {
               var member = chatRoom.members[j];
@@ -37,7 +41,7 @@ router.get('/:userID', function(req, res, next) {
               }
             }
           }
-          res.status(200).send(userChatRooms.chatRooms);
+          res.status(200).send(userChatRooms);
         } else {
           res.status(500).send({
             success: false,
