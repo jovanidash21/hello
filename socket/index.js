@@ -1,3 +1,4 @@
+var CronJob = require('cron').CronJob;
 var User = require('../models/User');
 var ChatRoom = require('../models/ChatRoom');
 var Message = require('../models/Message');
@@ -6,6 +7,66 @@ var users = {};
 
 var sockets = function(io) {
   io.sockets.on('connection', function (socket) {
+    var cron = new CronJob('0 */1 * * * *', function() {
+      console.log('Cron task');
+
+      User.find({
+      }).populate({
+        path: 'chatRooms.data'
+      }).exec(function(err, users) {
+        if (!err) {
+          for (var i = 0; i < users.length; i++) {
+            var user = users[i];
+
+            for (var j = 0; j < user.chatRooms.length; j++) {
+              var chatRoom = user.chatRooms[j];
+
+              if (chatRoom.isKick && chatRoom.endDate <= new Date()) {
+                User.findOneAndUpdate(
+                  { _id: user._id, 'chatRooms.data': chatRoom.data._id },
+                  { $set: { 'chatRooms.$.isKick': false, 'chatRooms.$.endDate': new Date() } },
+                  { safe: true, upsert: true, new: true },
+                  function(err, user) {
+                    if (!err) {
+                      socket.broadcast.to(user.socketID).emit('action', {
+                        type: 'SOCKET_BROADCAST_UNKICK_USER',
+                        chatRoom: {
+                          data: chatRoom,
+                          unReadMessages: 0
+                        }
+                      });
+
+                      socket.broadcast.emit('action', {
+                        type: 'SOCKET_BROADCAST_UNKICK_MEMBER',
+                        chatRoomID: chatRoom.data._id,
+                        member: user
+                      });
+                    }
+                  }
+                );
+              }
+            }
+
+            if (user.mute.data && user.mute.endDate <= new Date()) {
+              User.findByIdAndUpdate(
+                user._id,
+                { $set: { mute: { data: false, endDate: new Date() } } },
+                { safe: true, upsert: true, new: true },
+                function(err, user) {
+                  if (!err) {
+                    socket.broadcast.emit('action', {
+                      type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
+                      memberID: user._id
+                    });
+                  }
+                }
+              );
+            }
+          }
+        }
+      });
+    }, null, true);
+
     socket.on('action', (action) => {
       switch(action.type) {
         case 'SOCKET_USER_LOGIN':
@@ -139,52 +200,15 @@ var sockets = function(io) {
             });
           break;
         case 'SOCKET_BLOCK_MEMBER':
-          setTimeout(function () {
-            User.findByIdAndUpdate(
-              action.memberID,
-              { $push: { chatRooms: action.chatRoomID }},
-              { safe: true, upsert: true, new: true },
-              function(err, user) {
-                if (!err) {
-                  ChatRoom.findByIdAndUpdate(
-                    action.chatRoomID,
-                    { $push: { members: action.memberID }},
-                    { safe: true, upsert: true, new: true },
-                    function(err, chatRoom) {
-                      if (!err) {
-                        socket.emit('action', {
-                          type: 'SOCKET_UNKICK_MEMBER',
-                          chatRoomID: action.chatRoomID,
-                          member: user
-                        });
-
-                        socket.broadcast.to(user.socketID).emit('action', {
-                          type: 'SOCKET_BROADCAST_UNKICK_USER',
-                          chatRoom: chatRoom
-                        });
-
-                        socket.broadcast.emit('action', {
-                          type: 'SOCKET_BROADCAST_UNKICK_MEMBER',
-                          chatRoomID: action.chatRoomID,
-                          member: user
-                        });
-                      }
-                    }
-                  );
-                }
-              }
-            );
-          }, 30 * 60 * 1000);
-
           User.findById(action.memberID, function(err, user) {
             if (!err) {
               socket.broadcast.to(user.socketID).emit('action', {
-                type: 'SOCKET_BROADCAST_KICK_USER',
+                type: 'SOCKET_BROADCAST_BLOCK_USER',
                 chatRoomID: action.chatRoomID
               });
 
               socket.broadcast.emit('action', {
-                type: 'SOCKET_BROADCAST_KICK_MEMBER',
+                type: 'SOCKET_BROADCAST_BLOCK_MEMBER',
                 chatRoomID: action.chatRoomID,
                 memberID: action.memberID
               });
@@ -192,43 +216,6 @@ var sockets = function(io) {
           });
           break;
         case 'SOCKET_KICK_MEMBER':
-          setTimeout(function () {
-            User.findByIdAndUpdate(
-              action.memberID,
-              { $push: { chatRooms: action.chatRoomID }},
-              { safe: true, upsert: true, new: true },
-              function(err, user) {
-                if (!err) {
-                  ChatRoom.findByIdAndUpdate(
-                    action.chatRoomID,
-                    { $push: { members: action.memberID }},
-                    { safe: true, upsert: true, new: true },
-                    function(err, chatRoom) {
-                      if (!err) {
-                        socket.emit('action', {
-                          type: 'SOCKET_UNKICK_MEMBER',
-                          chatRoomID: action.chatRoomID,
-                          member: user
-                        });
-
-                        socket.broadcast.to(user.socketID).emit('action', {
-                          type: 'SOCKET_BROADCAST_UNKICK_USER',
-                          chatRoom: chatRoom
-                        });
-
-                        socket.broadcast.emit('action', {
-                          type: 'SOCKET_BROADCAST_UNKICK_MEMBER',
-                          chatRoomID: action.chatRoomID,
-                          member: user
-                        });
-                      }
-                    }
-                  );
-                }
-              }
-            );
-          }, 30 * 60 * 1000);
-
           User.findById(action.memberID, function(err, user) {
             if (!err) {
               socket.broadcast.to(user.socketID).emit('action', {
@@ -252,69 +239,35 @@ var sockets = function(io) {
           });
           break;
         case 'SOCKET_MUTE_MEMBER':
-          setTimeout(function () {
-            User.findByIdAndUpdate(
-              action.memberID,
-              { $set: { isMute: false, } },
-              { safe: true, upsert: true, new: true },
-              function(err, user) {
-                if (!err) {
-                  socket.emit('action', {
-                    type: 'SOCKET_UNMUTE_MEMBER',
-                    memberID: action.memberID
-                  });
-
-                  socket.broadcast.to(user.socketID).emit('action', {
-                    type: 'SOCKET_BROADCAST_UNMUTE_USER'
-                  });
-
-                  socket.broadcast.emit('action', {
-                    type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
-                    memberID: action.memberID
-                  });
-                }
-              }
-            );
-          }, 3 * 60 * 1000);
-
-          User.findByIdAndUpdate(
-            action.memberID,
-            { $set: { isMute: true, } },
-            { safe: true, upsert: true, new: true },
-            function(err, user) {
-              if (!err) {
-                socket.broadcast.to(user.socketID).emit('action', {
-                  type: 'SOCKET_BROADCAST_MUTE_USER'
-                });
-
-                socket.broadcast.emit('action', {
-                  type: 'SOCKET_BROADCAST_MUTE_MEMBER',
-                  memberID: action.memberID
-                });
-              }
+          User.findById(action.memberID, function(err, user) {
+            if (!err) {
+              socket.broadcast.emit('action', {
+                type: 'SOCKET_BROADCAST_MUTE_MEMBER',
+                memberID: action.memberID
+              });
             }
-          );
+          });
           break;
         default:
           break;
       }
-      socket.on('disconnect', function() {
-        User.findByIdAndUpdate(
-          users[socket.id],
-          { $set: { isOnline: false, ipAddress: '', socketID: ''} },
-          { safe: true, upsert: true, new: true },
-          function(err) {
-            if (!err) {
-              socket.broadcast.emit('action', {
-                type: 'SOCKET_BROADCAST_USER_LOGOUT',
-                userID: users[socket.id]
-              });
+    });
+    socket.on('disconnect', function() {
+      User.findByIdAndUpdate(
+        users[socket.id],
+        { $set: { isOnline: false, ipAddress: '', socketID: ''} },
+        { safe: true, upsert: true, new: true },
+        function(err) {
+          if (!err) {
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_USER_LOGOUT',
+              userID: users[socket.id]
+            });
 
-              delete users[socket.id];
-            }
+            delete users[socket.id];
           }
-        );
-      });
+        }
+      );
     });
   });
 };
