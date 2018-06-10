@@ -172,7 +172,7 @@ class Chat extends Component {
         className={"chat-section " +
           (
             user.active.accountType === 'guest' ||
-            user.active.isMute
+            user.active.mute.data
               ? 'no-chat-input' : ''
           )
         }
@@ -201,7 +201,7 @@ class Chat extends Component {
         {
           (
             user.active.accountType !== 'guest' &&
-            ! user.active.isMute
+            ! user.active.mute.data
           ) &&
           <ChatInput
             user={user.active}

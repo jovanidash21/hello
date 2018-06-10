@@ -163,16 +163,9 @@ const chatRoom = (state=initialState, action) => {
         location.reload();
       }
 
-      for (var i = 0; i < chatRooms.length; i++) {
-        var chatRoom = chatRooms[i];
-
-        if ( chatRoom._id === chatRoomID ) {
-          chatRooms.splice(i, 1);
-          break;
-        } else {
-          continue
-        }
-      }
+      chatRooms = chatRooms.filter(chatRoom =>
+        chatRoom.data._id !== chatRoomID
+      );
 
       return {
         ...state,
@@ -182,6 +175,7 @@ const chatRoom = (state=initialState, action) => {
       var chatRoom = action.chatRoom;
       var chatRooms = [...state.all];
 
+      chatRoom.priority = chatRoomPriority(chatRoom.data);
       chatRooms.push(chatRoom);
 
       return {

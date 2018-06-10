@@ -37,7 +37,7 @@ class ChatRoomMember extends Component {
       handleKickMember
     } = this.props;
 
-    handleKickMember(activeChatRoom._id, chatRoomMember._id);
+    handleKickMember(activeChatRoom.data._id, chatRoomMember._id);
   }
   handleUpdateMemberRole(event, role) {
     event.preventDefault();
@@ -92,7 +92,7 @@ class ChatRoomMember extends Component {
           }
         </div>
         {
-          chatRoomMember.isMute &&
+          chatRoomMember.mute.data &&
           <div className="mute-logo" title="This member is muted">
             <FontAwesome
               className="eye-icon"
@@ -224,7 +224,7 @@ class ChatRoomMember extends Component {
                       user.role === 'moderator' ) &&
                     ( chatRoomMember.role !== 'owner' &&
                       chatRoomMember.accountType !== 'guest' ) &&
-                      ! chatRoomMember.isMute
+                      ! chatRoomMember.mute.data
                   ) &&
                   <li>
                     <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>

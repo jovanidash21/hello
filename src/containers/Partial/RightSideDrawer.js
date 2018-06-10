@@ -53,9 +53,7 @@ class RightSideDrawer extends Component {
           <div className="member-list">
             {
               members.length > 0 &&
-              members.filter((member) =>
-                member.isOnline
-              ).sort((a, b) =>  {
+              members.sort((a, b) =>  {
                 var n = a.priority - b.priority;
 
                 if (n !== 0) {

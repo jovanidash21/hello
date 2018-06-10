@@ -1,9 +1,11 @@
 import {
   FETCH_USER,
-  FETCH_USERS,
-  SOCKET_BROADCAST_MUTE_USER,
-  SOCKET_BROADCAST_UNMUTE_USER
+  FETCH_USERS
 } from '../constants/user';
+import {
+  SOCKET_BROADCAST_MUTE_MEMBER,
+  SOCKET_BROADCAST_UNMUTE_MEMBER
+} from '../constants/member';
 
 const initialState = {
   isLoading: false,
@@ -37,19 +39,25 @@ const user = (state=initialState, action) => {
         isLoading: false,
         isError: true
       };
-    case SOCKET_BROADCAST_MUTE_USER:
+    case SOCKET_BROADCAST_MUTE_MEMBER:
+      var memberID = action.memberID;
       var user = {...state.active};
 
-      user.isMute = true;
+      if ( memberID === user._id ) {
+        user.mute.data = true;
+      }
 
       return {
         ...state,
         active: {...user}
       };
-    case SOCKET_BROADCAST_UNMUTE_USER:
+    case SOCKET_BROADCAST_UNMUTE_MEMBER:
+      var memberID = action.memberID;
       var user = {...state.active};
 
-      user.isMute = false;
+      if ( memberID === user._id ) {
+        user.mute.data = false;
+      }
 
       return {
         ...state,
