@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
-var ChatRoom = require('../../models/ChatRoom');
 
 router.get('/:chatRoomID/:userID', function(req, res, next) {
   var chatRoomID = req.params.chatRoomID;
@@ -13,18 +12,24 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
-    ChatRoom.findById(chatRoomID)
-      .populate('members')
-      .exec(function(err, chatRoomData) {
-        if (!err) {
-          res.status(200).send(chatRoomData.members);
-        } else {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
+    User.find({
+      chatRooms: {
+        $elemMatch: {
+          data: chatRoomID,
+          isKick: false
         }
-      });
+      },
+      isOnline: true
+    }, function(err, members) {
+      if (!err) {
+        res.status(200).send(members);
+      } else {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      }
+    });
   }
 });
 
