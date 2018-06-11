@@ -189,9 +189,13 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
+      members = members.filter(member =>
+        member._id !== userID
+      );
+
       for ( var i = 0; i < user.chatRooms.length; i++ ) {
         var chatRoom = user.chatRooms[i];
-        
+
         if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.isKick ) {
           user.isOnline = true;
           user.priority = memberPriority(user);
