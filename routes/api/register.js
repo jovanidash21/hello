@@ -11,7 +11,9 @@ router.post('/', function(req, res, next) {
     email: req.body.email,
     gender: req.body.gender,
     accountType: 'local',
-    role: 'ordinary'
+    role: 'ordinary',
+    block: {},
+    mute: {}
   };
 
   User.register(new User(userData), req.body.password, function(err) {

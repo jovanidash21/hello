@@ -33,6 +33,9 @@ passport.use(new Strategy({
           }
         });
       } else {
+        userData.role = 'ordinary';
+        userData.block = {};
+        userData.mute = {};
         var newUser = new User(userData);
 
         newUser.save(function(err) {
