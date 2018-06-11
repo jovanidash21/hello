@@ -11,57 +11,43 @@ var sockets = function(io) {
       console.log('Cron task');
 
       User.find({
-      }).populate({
-        path: 'chatRooms.data'
-      }).exec(function(err, users) {
+        chatRooms: {
+          $elemMatch: {
+            isKick: false,
+            endDate: {
+              $lte: new Date()
+            }
+          }
+        }
+      }, function(err, chatRooms) {
+        if (!err) {
+          console.log(chatRooms);
+        }
+      });
+
+      User.find({
+        'mute.data': true,
+        'mute.endDate': {
+          $lte: new Date()
+        }
+      }, function(err, users) {
         if (!err) {
           for (var i = 0; i < users.length; i++) {
             var user = users[i];
 
-            for (var j = 0; j < user.chatRooms.length; j++) {
-              var chatRoom = user.chatRooms[j];
-
-              if (chatRoom.isKick && chatRoom.endDate <= new Date()) {
-                User.findOneAndUpdate(
-                  { _id: user._id, 'chatRooms.data': chatRoom.data._id },
-                  { $set: { 'chatRooms.$.isKick': false, 'chatRooms.$.endDate': new Date() } },
-                  { safe: true, upsert: true, new: true },
-                  function(err, user) {
-                    if (!err) {
-                      socket.broadcast.to(user.socketID).emit('action', {
-                        type: 'SOCKET_BROADCAST_UNKICK_USER',
-                        chatRoom: {
-                          data: chatRoom,
-                          unReadMessages: 0
-                        }
-                      });
-
-                      socket.broadcast.emit('action', {
-                        type: 'SOCKET_BROADCAST_UNKICK_MEMBER',
-                        chatRoomID: chatRoom.data._id,
-                        member: user
-                      });
-                    }
-                  }
-                );
-              }
-            }
-
-            if (user.mute.data && user.mute.endDate <= new Date()) {
-              User.findByIdAndUpdate(
-                user._id,
-                { $set: { mute: { data: false, endDate: new Date() } } },
-                { safe: true, upsert: true, new: true },
-                function(err, user) {
-                  if (!err) {
-                    socket.broadcast.emit('action', {
-                      type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
-                      memberID: user._id
-                    });
-                  }
+            User.findByIdAndUpdate(
+              user._id,
+              { $set: { mute: { data: false, endDate: new Date() } } },
+              { safe: true, upsert: true, new: true },
+              function(err, user) {
+                if (!err) {
+                  socket.broadcast.emit('action', {
+                    type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
+                    memberID: user._id
+                  });
                 }
-              );
-            }
+              }
+            );
           }
         }
       });
@@ -92,7 +78,7 @@ var sockets = function(io) {
           break;
         case 'SOCKET_USER_LOGOUT':
           User.findByIdAndUpdate(
-            action.user,
+            action.userID,
             { $set: { isOnline: false, ipAddress: '', socketID: ''} },
             { safe: true, upsert: true, new: true },
             function(err) {
