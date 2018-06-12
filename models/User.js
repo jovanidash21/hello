@@ -6,17 +6,9 @@ var timestamps = require('mongoose-timestamp');
 
 mongoose.Promise = Promise;
 
-var userChatRoomSchema = new Schema (
+var userEndDateSchema = new Schema (
   {
     data: {
-      type: Schema.Types.ObjectId,
-      ref: 'ChatRoom',
-    },
-    unReadMessages: {
-      type: Number,
-      default: 0,
-    },
-    isKick: {
       type: Boolean,
       default: false,
     },
@@ -30,16 +22,18 @@ var userChatRoomSchema = new Schema (
   },
 );
 
-var userBlockMuteSchema = new Schema (
+var userChatRoomSchema = new Schema (
   {
     data: {
-      type: Boolean,
-      default: false,
+      type: Schema.Types.ObjectId,
+      ref: 'ChatRoom',
     },
-    endDate: {
-      type: Date,
-      default: Date.now,
+    unReadMessages: {
+      type: Number,
+      default: 0,
     },
+    kick: userEndDateSchema,
+    trash: userEndDateSchema,
   },
   {
     _id : false,
@@ -92,8 +86,8 @@ var userSchema = new Schema (
       ],
       default: 'ordinary',
     },
-    block: userBlockMuteSchema,
-    mute: userBlockMuteSchema,
+    block: userEndDateSchema,
+    mute: userEndDateSchema,
     isOnline: {
       type: Boolean,
       default: false,

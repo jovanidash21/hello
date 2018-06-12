@@ -16,7 +16,7 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
       chatRooms: {
         $elemMatch: {
           data: chatRoomID,
-          isKick: false
+          'kick.data': false
         }
       },
       isOnline: true
@@ -78,7 +78,7 @@ router.post('/kick', function(req, res, next) {
   } else {
     User.update(
       { _id: memberID, 'chatRooms.data': chatRoomID },
-      { $set: { 'chatRooms.$.isKick': true, 'chatRooms.$.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
+      { $set: { 'chatRooms.$.kick.data': true, 'chatRooms.$.kick.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
       { safe: true, upsert: true, new: true },
       function(err) {
         if (!err) {

@@ -22,7 +22,7 @@ router.get('/:userID', function(req, res, next) {
       }).exec(function(err, user) {
         if (!err) {
           var userChatRooms = user.chatRooms.filter(function(chatRoom) {
-            return chatRoom.isKick === false;
+            return chatRoom.kick.data === false;
           });
 
           for (var i = 0; i < userChatRooms.length; i++) {
@@ -91,7 +91,14 @@ router.post('/group/:userID', function(req, res, next) {
 
                   User.findByIdAndUpdate(
                     chatRoomMember,
-                    { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0 } } },
+                    { $push: {
+                      chatRooms: {
+                        data: chatRoomID,
+                        unReadMessages: 0,
+                        kick: {},
+                        trash: {}
+                      }
+                    } },
                     { safe: true, upsert: true, new: true },
                     function(err) {
                       if (!err) {
@@ -177,7 +184,14 @@ router.post('/direct/:userID', function(req, res, next) {
 
                             User.findByIdAndUpdate(
                               chatRoomMember,
-                              { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0 } } },
+                              { $push: {
+                                chatRooms: {
+                                  data: chatRoomID,
+                                  unReadMessages: 0,
+                                  kick: {},
+                                  trash: {}
+                                }
+                              } },
                               { safe: true, upsert: true, new: true },
                               function(err) {
                                 if (!err) {

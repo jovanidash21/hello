@@ -200,7 +200,7 @@ const member = (state=initialState, action) => {
       for ( var i = 0; i < user.chatRooms.length; i++ ) {
         var chatRoom = user.chatRooms[i];
 
-        if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.isKick ) {
+        if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.kick.data ) {
           user.isOnline = true;
           user.priority = memberPriority(user);
           members.push(user);

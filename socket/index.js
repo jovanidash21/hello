@@ -13,8 +13,8 @@ var sockets = function(io) {
       User.find({
         chatRooms: {
           $elemMatch: {
-            isKick: true,
-            endDate: {
+            'kick.data': true,
+            'kick.endDate': {
               $lte: new Date()
             }
           }
@@ -33,7 +33,7 @@ var sockets = function(io) {
             for (var j = 0; j < user.chatRooms.length; j++) {
               var chatRoom = user.chatRooms[j];
 
-              if (chatRoom.isKick && chatRoom.endDate <= new Date()) {
+              if (chatRoom.kick.data && chatRoom.kick.endDate <= new Date()) {
                 for (var k = 0; k < chatRoom.data.members.length; k++) {
                   var member = chatRoom.data.members[k];
 
@@ -67,7 +67,7 @@ var sockets = function(io) {
 
             User.findOneAndUpdate(
               { _id: userChatRoom.user._id, 'chatRooms.data': userChatRoom.chatRoom.data._id },
-              { $set: { 'chatRooms.$.isKick': false, 'chatRooms.$.endDate': new Date() } },
+              { $set: { 'chatRooms.$.kick.data': false, 'chatRooms.$.kick.endDate': new Date() } },
               { safe: true, upsert: true, new: true },
               function() {}
             );
