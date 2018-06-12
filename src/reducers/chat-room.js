@@ -175,6 +175,10 @@ const chatRoom = (state=initialState, action) => {
       var chatRoom = action.chatRoom;
       var chatRooms = [...state.all];
 
+      chatRooms = chatRooms.filter(singleChatRoom =>
+        singleChatRoom.data._id !== chatRoom.data._id
+      );
+
       chatRoom.priority = chatRoomPriority(chatRoom.data);
       chatRooms.push(chatRoom);
 

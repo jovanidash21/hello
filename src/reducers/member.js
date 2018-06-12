@@ -113,6 +113,10 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
+      members = members.filter(singleMember =>
+        singleMember._id !== member._id
+      );
+
       if ( activeChatRoom.data._id === chatRoomID ) {
         member.priority = memberPriority(member);
         members.push(member);

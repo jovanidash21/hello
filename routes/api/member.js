@@ -78,7 +78,7 @@ router.post('/kick', function(req, res, next) {
   } else {
     User.update(
       { _id: memberID, 'chatRooms.data': chatRoomID },
-      { $set: { 'chatRooms.$.isKick': true, 'chatRooms.$.endDate': new Date( +new Date() + 3 * 60 * 1000 ) } },
+      { $set: { 'chatRooms.$.isKick': true, 'chatRooms.$.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
       { safe: true, upsert: true, new: true },
       function(err) {
         if (!err) {

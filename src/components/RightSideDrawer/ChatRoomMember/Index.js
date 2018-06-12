@@ -153,7 +153,7 @@ class ChatRoomMember extends Component {
                     </a>
                   </li>
                 */}
-                {/*
+                {
                   (
                     ( user.role === 'owner' ||
                       user.role === 'admin' ) &&
@@ -165,7 +165,7 @@ class ChatRoomMember extends Component {
                       Kick Member
                     </a>
                   </li>
-                */}
+                }
                 {
                   (
                     ( user.role === 'owner' ) &&

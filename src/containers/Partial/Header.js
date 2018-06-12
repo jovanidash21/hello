@@ -54,11 +54,7 @@ class Header extends Component {
                   className="user-icon"
                   name="user"
                 />
-                {
-                  member.all.filter((member) =>
-                    member.isOnline
-                  ).length
-                }
+                {member.all.length}
               </div>
             }
           </MediaQuery>
