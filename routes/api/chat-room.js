@@ -114,7 +114,9 @@ router.post('/group/:userID', function(req, res, next) {
                   message: 'Chat Room Created.',
                   chatRoom: {
                     data: chatRoomData,
-                    unReadMessages: 0
+                    unReadMessages: 0,
+                    kick: {},
+                    trash: {}
                   }
                 });
               } else {
@@ -207,7 +209,9 @@ router.post('/direct/:userID', function(req, res, next) {
                             message: 'Chat Room Created.',
                             chatRoom: {
                               data: chatRoomData,
-                              unReadMessages: 0
+                              unReadMessages: 0,
+                              kick: {},
+                              trash: {}
                             }
                           });
                         } else {
