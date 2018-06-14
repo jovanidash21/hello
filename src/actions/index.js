@@ -28,7 +28,9 @@ import {
 } from './chat-room';
 import {
   fetchMessages,
-  sendMessage
+  sendTextMessage,
+  sendFileMessage,
+  sendImageMessage
 } from './message';
 import {
   fetchMembers,
@@ -59,7 +61,9 @@ const actions = (dispatch) => {
     socketJoinChatRoom,
     socketLeaveChatRoom,
     fetchMessages,
-    sendMessage,
+    sendTextMessage,
+    sendFileMessage,
+    sendImageMessage,
     fetchMembers,
     blockMember,
     kickMember,
