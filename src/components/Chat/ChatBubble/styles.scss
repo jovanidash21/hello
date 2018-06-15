@@ -67,7 +67,7 @@
     }
   }
   .chat-image {
-    margin-left: 10px;
+    margin-left: 15px;
     &.right {
       margin-left: 0;
     }
@@ -88,11 +88,11 @@
     }
   }
   .chat-user-name {
-    color: $color-dusty-gray;
+    color: #000;
     font-size: 11px;
     height: 15px;
     line-height: 15px;
-    margin-left: 10px;
+    margin-left: 15px;
   }
   .chat-message {
     display: flex;
