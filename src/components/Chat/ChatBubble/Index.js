@@ -133,6 +133,7 @@ class ChatBubble extends Component {
             image={message.user.profilePicture}
             size="35px"
             title={message.user.name}
+            role={message.user.role}
             accountType={message.user.accountType}
             badgeCloser
           />
