@@ -4,13 +4,19 @@ import { emojify } from 'react-emojione';
 import ReactHtmlParser from 'react-html-parser';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
+import Lightbox from 'react-image-lightbox';
 import moment from 'moment';
 import Avatar from '../../Avatar';
+import 'react-image-lightbox/style.css';
 import './styles.scss';
 
 class ChatBubble extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isLightboxOpen: false
+    };
   }
   handleMessageText() {
     const {
@@ -41,6 +47,7 @@ class ChatBubble extends Component {
             '<img class="image-message" src="' + message.fileLink + '" />' +
           '</a>';
         messageText = ReactHtmlParser(messageText);
+        messageText = '';
         break;
     }
 
@@ -51,6 +58,7 @@ class ChatBubble extends Component {
       message,
       isSender
     } = this.props;
+    const { isLightboxOpen } = this.state;
 
     if ( message.messageType !== 'text' && message.fileLink.length === 0 ) {
       return (
@@ -69,10 +77,22 @@ class ChatBubble extends Component {
                   <FontAwesome name="file" />
                 </div>
               }
+              {
+                message.messageType === 'image' &&
+                <div
+                  className="image-logo"
+                  onClick={::this.handleLightboxToggle}
+                >
+                  <FontAwesome
+                    name="picture-o"
+                    size="4x"
+                  />
+                </div>
+              }
               {::this.handleMessageText()}
             </div>
           </div>
-          {
+          {/*
             message.createdAt &&
             <div className="chat-time">
               <TimeAgo
@@ -81,10 +101,23 @@ class ChatBubble extends Component {
                 minPeriod={60}
               />
             </div>
+          */}
+          {
+            message.messageType === 'image' &&
+            isLightboxOpen &&
+            <Lightbox
+              mainSrc={message.fileLink}
+              onCloseRequest={::this.handleLightboxToggle}
+            />
           }
         </div>
       )
     }
+  }
+  handleLightboxToggle(event) {
+    event.preventDefault();
+
+    this.setState({isLightboxOpen: !this.state.isLightboxOpen});
   }
   render() {
     const {

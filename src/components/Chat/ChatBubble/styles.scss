@@ -67,12 +67,10 @@
     &.right {
       margin-left: 0;
     }
-    .image-message {
-      background-color: $color-gallery;
-      border: 1px solid $color-alto;
-      border-radius: 21px;
-      height: auto;
-      width: 100%;
+    .image-logo {
+      background: $color-flamenco;
+      cursor: pointer;
+      padding: 0px 4px;
     }
   }
   .avatar {
