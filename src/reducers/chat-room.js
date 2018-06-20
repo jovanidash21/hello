@@ -35,6 +35,7 @@ const chatRoomPriority = (chatRoom) => {
 
 const initialState = {
   isLoading: false,
+  isFetchingChatRooms: false,
   active: {
     data: {}
   },
@@ -46,7 +47,8 @@ const chatRoom = (state=initialState, action) => {
     case `${FETCH_CHAT_ROOMS}_LOADING`:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
+        isFetchingChatRooms: true
       };
     case `${CREATE_CHAT_ROOM}_LOADING`:
       return {
@@ -64,7 +66,7 @@ const chatRoom = (state=initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        isFetchChatRoomsSuccess: true,
+        isFetchingChatRooms: false,
         all: [...chatRooms]
       };
     case `${CREATE_CHAT_ROOM}_SUCCESS`:
@@ -78,6 +80,7 @@ const chatRoom = (state=initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isFetchingChatRooms: false,
         isError: true
       };
     case CHANGE_CHAT_ROOM:

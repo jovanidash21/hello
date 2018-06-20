@@ -97,7 +97,7 @@ class Chat extends Component {
           Hi! Welcome, create a Chat Room now.
         </div>
       )
-    } else if (!message.isLoading && message.isFetchMessagesSuccess) {
+    } else if (!message.isLoading && !message.isFetchingMessages) {
       return (
         <Container fluid>
           {
