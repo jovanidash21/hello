@@ -8,18 +8,6 @@ class ChatRoom extends Component {
   constructor(props) {
     super(props);
   }
-  componentWillMount() {
-    const {
-      index,
-      user,
-      chatRoom,
-      handleChangeChatRoom
-    } = this.props;
-
-    if (index === 0) {
-      handleChangeChatRoom(chatRoom, user._id, '');
-    }
-  }
   handleAvatar(type) {
     const {
       user,
@@ -120,7 +108,6 @@ class ChatRoom extends Component {
 }
 
 ChatRoom.propTypes = {
-  index: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
   chatRoom: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,

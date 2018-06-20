@@ -41,13 +41,21 @@ class Chat extends Component {
 
     ::this.handleScrollToBottom();
   }
-  componentDidUpdate() {
-    ::this.handleScrollToBottom();
+  componentDidUpdate(prevProps) {
+    if (
+      ( prevProps.message.isFetchingMessages && !this.props.message.isFetchingMessages ) ||
+      ( !prevProps.message.isSendingMessage && this.props.message.isSendingMessage )
+    ) {
+      ::this.handleScrollToBottom();
+    }
   }
   calculateViewportHeight() {
     var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
     document.getElementById('chat-section').setAttribute('style', 'height:' + viewportHeight + 'px;');
+  }
+  handleScrollToBottom() {
+    this.messagesBottom.scrollIntoView();
   }
   handleRightSideDrawerRender() {
     const { isRightSideDrawerOpen } = this.state;
@@ -134,9 +142,6 @@ class Chat extends Component {
       )
     }
   }
-  handleScrollToBottom() {
-    this.messagesBottom.scrollIntoView();
-  }
   handleSendTextMessage(newMessageID, text) {
     const {
       user,
@@ -222,8 +227,7 @@ class Chat extends Component {
             <div
               style={{float: "left", clear: "both"}}
               ref={(element) => { this.messagesBottom = element; }}
-            >
-            </div>
+            />
           </div>
         </div>
         {

@@ -20,21 +20,9 @@
     $bg-color: $color-dusty-gray;
     background-color: $bg-color;
     border-radius: 8px;
-    margin-left: 15px;
+    margin-left: 10px;
     position: relative;
     word-wrap: break-word;
-    &:after {
-      border-color: $bg-color transparent transparent transparent;
-      border-style: solid;
-      border-width: 12px;
-      bottom: auto;
-      content: '';
-      left: -8px;
-      position: absolute;
-      right: auto;
-      text-align: left;
-      top: 0;
-    }
     &.right {
       $bg-color: $color-dodger-blue;
       background-color: $bg-color;
@@ -67,12 +55,13 @@
     }
   }
   .chat-image {
-    margin-left: 15px;
+    margin-left: 10px;
     &.right {
       margin-left: 0;
     }
     .image-logo {
       background: $color-flamenco;
+      border-radius: 8px;
       cursor: pointer;
       padding: 0px 4px;
     }
@@ -89,10 +78,11 @@
   }
   .chat-user-name {
     color: #000;
-    font-size: 11px;
+    font-size: 13px;
+    font-weight: 700;
     height: 15px;
     line-height: 15px;
-    margin-left: 15px;
+    margin-left: 10px;
   }
   .chat-message {
     display: flex;
