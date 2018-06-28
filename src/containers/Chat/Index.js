@@ -46,8 +46,8 @@ class Chat extends Component {
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.message.isFetchingMessages && !this.props.message.isFetchingMessages ) ||
-      ( !prevProps.message.isSendingMessage && this.props.message.isSendingMessage )
+      ( prevProps.message.isFetching && !this.props.message.isFetching ) ||
+      ( !prevProps.message.isSending && this.props.message.isSending )
     ) {
       ::this.handleScrollToBottom();
     }
@@ -108,7 +108,7 @@ class Chat extends Component {
           Hi! Welcome, create a Chat Room now.
         </div>
       )
-    } else if (!message.isLoading && !message.isFetchingMessages) {
+    } else if ( !message.isFetching && message.isFetchingSuccess ) {
       return (
         <Container fluid>
           {

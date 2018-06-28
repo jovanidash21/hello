@@ -24,7 +24,11 @@ class Header extends Component {
       handleRightSideDrawerToggleEvent
     } = this.props;
 
-    if (!chatRoom.isLoading && !chatRoom.isFetchingChatRooms) {
+    if (
+      !chatRoom.isFetching &&
+      chatRoom.isFetchingSuccess &&
+      Object.keys(chatRoom.active.data).length > 0
+    ) {
       const activeChatRoom = chatRoom.active;
 
       return (
@@ -43,8 +47,8 @@ class Header extends Component {
           </h2>
           <MediaQuery query="(max-width: 767px)">
             {
-              !member.isLoading &&
-              member.isFetchMembersSuccess &&
+              !member.isFetching &&
+              member.isFetchingSuccess &&
               <div
                 className="members-count"
                 onClick={handleRightSideDrawerToggleEvent}

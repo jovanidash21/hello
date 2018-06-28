@@ -50,7 +50,8 @@ const memberPriority = (member) => {
 }
 
 const initialState = {
-  isLoading: false,
+  isFetching: false,
+  isFetchingSuccess: true,
   activeChatRoom: {
     data: {}
   },
@@ -62,7 +63,7 @@ const member = (state=initialState, action) => {
     case `${FETCH_MEMBERS}_LOADING`:
       return {
         ...state,
-        isLoading: true
+        isFetching: true
       };
     case `${FETCH_MEMBERS}_SUCCESS`:
       var members = [...action.payload.data];
@@ -75,15 +76,15 @@ const member = (state=initialState, action) => {
 
       return {
         ...state,
-        isLoading: false,
-        isFetchMembersSuccess: true,
+        isFetching: false,
+        isFetchingSuccess: true,
         all: [...members]
       };
     case `${FETCH_MEMBERS}_ERROR`:
       return {
         ...state,
-        isLoading: false,
-        isError: true
+        isFetching: false,
+        isFetchingSuccess: false
       };
     case CHANGE_CHAT_ROOM:
       return {

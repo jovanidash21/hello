@@ -26,7 +26,7 @@ class RightSideDrawer extends Component {
     } = this.props;
     const { memberName } = this.state;
 
-    if ( !member.isLoading && member.isFetchMembersSuccess ) {
+    if ( !member.isFetching && member.isFetchingSuccess ) {
       const activeChatRoom = chatRoom.active;
       var members = [...member.all];
       var query = memberName.trim().toLowerCase();

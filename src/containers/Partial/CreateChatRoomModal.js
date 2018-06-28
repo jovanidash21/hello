@@ -10,6 +10,7 @@ import mapDispatchToProps from '../../actions';
 import ChatRoomNameInput from '../../components/CreateChatRoomModal/ChatRoomNameInput';
 import ChatMember from '../../components/CreateChatRoomModal/ChatMember';
 import ChatMemberSelect from '../../components/CreateChatRoomModal/ChatMemberSelect';
+import ErrorCard from '../../components/AuthForm/Card/ErrorCard';
 import '../../styles/CreateChatRoomModal.scss';
 
 class CreateChatRoomModal extends Component {
@@ -19,6 +20,13 @@ class CreateChatRoomModal extends Component {
     this.state = {
       chatRoomName: '',
       members: [this.props.user.active]
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if ( prevProps.chatRoom.isCreating && this.props.chatRoom.isCreatingSuccess ) {
+      const { handleDeactivateModal } = this.props;
+
+      handleDeactivateModal();
     }
   }
   onChatRoomNameChange(event) {
@@ -72,7 +80,6 @@ class CreateChatRoomModal extends Component {
       chatRoom,
       chatType,
       createGroupChatRoom,
-      handleDeactivateModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
     const {
@@ -87,7 +94,6 @@ class CreateChatRoomModal extends Component {
       members.length > 2
     ) {
       createGroupChatRoom(chatRoomName, members, user.active._id, activeChatRoom._id);
-      handleDeactivateModal();
       handleLeftSideDrawerToggleEvent(event);
     }
   }
@@ -98,7 +104,6 @@ class CreateChatRoomModal extends Component {
       createDirectChatRoom,
       changeChatRoom,
       chatType,
-      handleDeactivateModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
     const userID = user.active._id;
@@ -126,11 +131,9 @@ class CreateChatRoomModal extends Component {
 
       if ( ! directChatRoomExists ) {
         createDirectChatRoom(userID, memberID, activeChatRoom._id);
-        handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       } else {
         changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
-        handleDeactivateModal();
         handleLeftSideDrawerToggleEvent(event);
       }
     }
@@ -138,6 +141,7 @@ class CreateChatRoomModal extends Component {
   render() {
     const {
       user,
+      chatRoom,
       chatType,
       handleDeactivateModal,
       isLoading
@@ -154,6 +158,11 @@ class CreateChatRoomModal extends Component {
           style={{width: '300px'}}
           onClose={handleDeactivateModal}
         >
+          {
+            !chatRoom.isCreating &&
+            !chatRoom.isCreatingSuccess &&
+            <ErrorCard label="Error! Please try again" />
+          }
           <Form onSubmit={::this.handleAddGroupChatRoom}>
             <h2 className="modal-title">
               {

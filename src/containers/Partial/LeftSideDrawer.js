@@ -27,7 +27,7 @@ class LeftSideDrawer extends Component {
     fetchChatRooms(user.active._id);
   }
   componentDidUpdate(prevProps) {
-    if ( prevProps.chatRoom.isFetchingChatRooms && !this.props.chatRoom.isFetchingChatRooms ) {
+    if ( prevProps.chatRoom.isFetching && !this.props.chatRoom.isFetching ) {
       const {
         user,
         chatRoom,
@@ -54,7 +54,7 @@ class LeftSideDrawer extends Component {
       handleLeftSideDrawerToggleEvent
     } = this.props;
 
-    if ( !chatRoom.isLoading && !chatRoom.isFetchingChatRooms ) {
+    if ( !chatRoom.isFetching && chatRoom.isFetchingSuccess ) {
       const activeChatRoom = chatRoom.active;
 
       return (
@@ -195,7 +195,7 @@ class LeftSideDrawer extends Component {
               chatType={activeTab}
               handleDeactivateModal={::this.handleDeactivateModal}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-              isLoading={chatRoom.isLoading}
+              isLoading={chatRoom.isCreating}
             />
           }
         </div>
