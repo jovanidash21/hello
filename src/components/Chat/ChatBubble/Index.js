@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { emojify } from 'react-emojione';
 import ReactHtmlParser from 'react-html-parser';
 import FontAwesome from 'react-fontawesome';
+import Plyr from 'react-plyr';
 import TimeAgo from 'react-timeago';
 import Lightbox from 'react-image-lightbox';
 import moment from 'moment';
@@ -42,19 +43,18 @@ class ChatBubble extends Component {
         messageText = ReactHtmlParser(messageText);
         break;
       case 'image':
-        messageText =
-          '<a href="' + message.fileLink + '" target="_blank">' +
-            '<img class="image-message" src="' + message.fileLink + '" />' +
-          '</a>';
-        messageText = ReactHtmlParser(messageText);
         messageText = '';
         break;
+      case 'audio':
+        messageText = '';
+        break
     }
 
     return messageText;
   }
   handleChatBubbleRender() {
     const {
+      index,
       message,
       isSender
     } = this.props;
@@ -89,19 +89,19 @@ class ChatBubble extends Component {
                   />
                 </div>
               }
+              {
+                message.messageType === 'audio' &&
+                <Plyr
+                  className={"react-plyr-" + index}
+                  type="audio"
+                  url={message.fileLink}
+                  volume={1}
+                  onPlay={::this.handleAudioOnPlay}
+                />
+              }
               {::this.handleMessageText()}
             </div>
           </div>
-          {/*
-            message.createdAt &&
-            <div className="chat-time">
-              <TimeAgo
-                date={moment(message.createdAt).format("MMM D, YYYY h:mm:ss A")}
-                title={moment(message.createdAt).format("dddd - MMM D, YYYY - h:mm A")}
-                minPeriod={60}
-              />
-            </div>
-          */}
           {
             message.messageType === 'image' &&
             isLightboxOpen &&
@@ -118,6 +118,14 @@ class ChatBubble extends Component {
     event.preventDefault();
 
     this.setState({isLightboxOpen: !this.state.isLightboxOpen});
+  }
+  handleAudioOnPlay(event) {
+    const {
+      index,
+      handleAudioPlayingToggle
+    } = this.props;
+
+    handleAudioPlayingToggle(index);
   }
   render() {
     const {
@@ -151,8 +159,10 @@ class ChatBubble extends Component {
 }
 
 ChatBubble.propTypes = {
+  index: PropTypes.number.isRequired,
   message: PropTypes.object.isRequired,
-  isSender: PropTypes.bool.isRequired
+  isSender: PropTypes.bool.isRequired,
+  handleAudioPlayingToggle: PropTypes.func.isRequired
 }
 
 export default ChatBubble;
