@@ -59,6 +59,20 @@ class ChatRoom extends Component {
     handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id);
     handleLeftSideDrawerToggleEvent();
   }
+  handleTrashChatRoom(event) {
+    event.preventDefault();
+
+    if ( event.stopPropagation ) {
+      event.stopPropagation();
+    }
+
+    const {
+      chatRoom,
+      handleTrashChatRoom
+    } = this.props;
+
+    handleTrashChatRoom(chatRoom.data._id);
+  }
   render() {
     const {
       chatRoom,
@@ -102,6 +116,12 @@ class ChatRoom extends Component {
             }
           </div>
         }
+        {
+          chatRoom.data.chatType === 'direct' &&
+          <div className="trash-chat-room-button" onClick={::this.handleTrashChatRoom}>
+            <FontAwesome name="times" />
+          </div>
+        }
       </div>
     )
   }
@@ -113,11 +133,13 @@ ChatRoom.propTypes = {
   activeChatRoom: PropTypes.object.isRequired,
   isActive: PropTypes.bool,
   handleChangeChatRoom: PropTypes.func.isRequired,
-  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired
+  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
+  handleTrashChatRoom: PropTypes.func
 }
 
 ChatRoom.defaultProps = {
-  isActive: false
+  isActive: false,
+  handleTrashChatRoom: () => {}
 }
 
 export default ChatRoom;

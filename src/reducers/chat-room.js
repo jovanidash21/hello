@@ -3,7 +3,8 @@ import {
   CHANGE_CHAT_ROOM,
   CREATE_CHAT_ROOM,
   SOCKET_CREATE_CHAT_ROOM,
-  SOCKET_BROADCAST_CREATE_CHAT_ROOM
+  SOCKET_BROADCAST_CREATE_CHAT_ROOM,
+  TRASH_CHAT_ROOM
 } from '../constants/chat-room';
 import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
 import {
@@ -106,6 +107,17 @@ const chatRoom = (state=initialState, action) => {
           ...state.all,
           {...chatRoom}
         ]
+      };
+    case `${TRASH_CHAT_ROOM}_SUCCESS`:
+      var chatRooms = [...state.all];
+
+      chatRooms = chatRooms.filter(chatRoom =>
+        chatRoom.data._id !== action.meta
+      );
+
+      return {
+        ...state,
+        all: [...chatRooms]
       };
     case SOCKET_BROADCAST_USER_LOGIN:
       var user = action.user;

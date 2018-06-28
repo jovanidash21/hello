@@ -73,6 +73,7 @@ class LeftSideDrawer extends Component {
                 isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
                 handleChangeChatRoom={changeChatRoom}
                 handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+                handleTrashChatRoom={::this.handleTrashChatRoom}
               />
             )
           }
@@ -119,6 +120,14 @@ class LeftSideDrawer extends Component {
   }
   handleDeactivateModal() {
     this.setState({showModal: false});
+  }
+  handleTrashChatRoom(chatRoomID) {
+    const {
+      user,
+      trashChatRoom
+    } = this.props;
+
+    trashChatRoom(user.active._id, chatRoomID);
   }
   render() {
     const {

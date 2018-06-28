@@ -5,7 +5,8 @@ import {
   CREATE_CHAT_ROOM,
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_JOIN_CHAT_ROOM,
-  SOCKET_LEAVE_CHAT_ROOM
+  SOCKET_LEAVE_CHAT_ROOM,
+  TRASH_CHAT_ROOM
 } from '../constants/chat-room';
 import { fetchMessages } from './message';
 import { fetchMembers } from './member';
@@ -181,4 +182,29 @@ export function socketLeaveChatRoom(chatRoomID) {
     type: SOCKET_LEAVE_CHAT_ROOM,
     chatRoomID: chatRoomID
   };
+}
+
+/**
+ * Trash chat room
+ * @param {string} userID
+ * @param {string} chatRoomID
+ */
+export function trashChatRoom(userID, chatRoomID) {
+  let data = {
+    userID,
+    chatRoomID
+  };
+
+  return dispatch => {
+    return dispatch({
+      type: TRASH_CHAT_ROOM,
+      payload: axios.post('/api/chat-room/trash', data),
+      meta: chatRoomID
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    });
+  }
 }

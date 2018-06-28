@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 var ChatRoom = require('../../models/ChatRoom');
-var Message = require('../../models/Message');
 
 router.get('/:userID', function(req, res, next) {
   var userID = req.params.userID;
@@ -22,7 +21,7 @@ router.get('/:userID', function(req, res, next) {
       }).exec(function(err, user) {
         if (!err) {
           var userChatRooms = user.chatRooms.filter(function(chatRoom) {
-            return chatRoom.kick.data === false;
+            return !chatRoom.kick.data && !chatRoom.trash.data;
           });
 
           for (var i = 0; i < userChatRooms.length; i++) {
@@ -158,18 +157,56 @@ router.post('/direct/:userID', function(req, res, next) {
     ChatRoom.findOne({members: members, chatType: 'direct'}, function(err, chatRoom) {
       if (!err) {
         if (chatRoom !== null) {
-          res.status(401).send({
-            success: false,
-            message: 'Chat room already exist.'
-          });
+          var chatRoomID = chatRoom._id;
+
+          ChatRoom.findById(chatRoomID)
+            .populate('members')
+            .exec(function(err, chatRoomData) {
+              if (!err) {
+                res.status(200).send({
+                  success: true,
+                  message: 'Chat room already exist.',
+                  chatRoom: {
+                    data: chatRoomData,
+                    unReadMessages: 0,
+                    kick: {},
+                    trash: {}
+                  }
+                });
+              } else {
+                res.status(500).send({
+                  success: false,
+                  message: 'Server Error!'
+                });
+              }
+            });
         } else {
           ChatRoom.findOne({members: members.reverse(), chatType: 'direct'}, function(err, chatRoom) {
             if (!err) {
               if (chatRoom !== null) {
-                res.status(401).send({
-                  success: false,
-                  message: 'Chat room already exist.'
-                });
+                var chatRoomID = chatRoom._id;
+
+                ChatRoom.findById(chatRoomID)
+                  .populate('members')
+                  .exec(function(err, chatRoomData) {
+                    if (!err) {
+                      res.status(200).send({
+                        success: true,
+                        message: 'Chat room already exist.',
+                        chatRoom: {
+                          data: chatRoomData,
+                          unReadMessages: 0,
+                          kick: {},
+                          trash: {}
+                        }
+                      });
+                    } else {
+                      res.status(500).send({
+                        success: false,
+                        message: 'Server Error!'
+                      });
+                    }
+                  });
               } else {
                 var chatRoom = new ChatRoom(chatRoomData);
 
@@ -238,6 +275,37 @@ router.post('/direct/:userID', function(req, res, next) {
         res.end(err);
       }
     });
+  }
+});
+
+router.post('/trash', function(req, res, next) {
+  var userID = req.body.userID;
+  var chatRoomID = req.body.chatRoomID;
+
+  if ((req.user === undefined) || (req.user._id != userID)) {
+    res.status(401).send({
+      success: false,
+      message: 'Unauthorized'
+    });
+  } else {
+    User.update(
+      { _id: userID, 'chatRooms.data': chatRoomID },
+      { $set: { 'chatRooms.$.trash.data': true, 'chatRooms.$.trash.endDate': new Date( +new Date() + 2 * 60 * 1000 ) } },
+      { safe: true, upsert: true, new: true },
+      function(err) {
+        if (!err) {
+          res.status(200).send({
+            success: true,
+            message: 'Chat Room Trashed.'
+          });
+        } else {
+          res.status(500).send({
+            success: false,
+            message: 'Server Error!'
+          });
+        }
+      }
+    );
   }
 });
 
