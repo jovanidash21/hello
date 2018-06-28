@@ -24,9 +24,13 @@ class CreateChatRoomModal extends Component {
   }
   componentDidUpdate(prevProps) {
     if ( prevProps.chatRoom.isCreating && this.props.chatRoom.isCreatingSuccess ) {
-      const { handleDeactivateModal } = this.props;
+      const {
+        handleDeactivateModal,
+        handleLeftSideDrawerToggleEvent
+      } = this.props;
 
       handleDeactivateModal();
+      handleLeftSideDrawerToggleEvent();
     }
   }
   onChatRoomNameChange(event) {
@@ -79,8 +83,7 @@ class CreateChatRoomModal extends Component {
       user,
       chatRoom,
       chatType,
-      createGroupChatRoom,
-      handleLeftSideDrawerToggleEvent
+      createGroupChatRoom
     } = this.props;
     const {
       chatRoomName,
@@ -94,10 +97,11 @@ class CreateChatRoomModal extends Component {
       members.length > 2
     ) {
       createGroupChatRoom(chatRoomName, members, user.active._id, activeChatRoom._id);
-      handleLeftSideDrawerToggleEvent(event);
     }
   }
   handleAddDirectChatRoom(event, memberID) {
+    event.preventDefault();
+
     const {
       user,
       chatRoom,
@@ -131,10 +135,9 @@ class CreateChatRoomModal extends Component {
 
       if ( ! directChatRoomExists ) {
         createDirectChatRoom(userID, memberID, activeChatRoom._id);
-        handleLeftSideDrawerToggleEvent(event);
       } else {
         changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
-        handleLeftSideDrawerToggleEvent(event);
+        handleLeftSideDrawerToggleEvent();
       }
     }
   }

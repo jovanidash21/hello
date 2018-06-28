@@ -57,7 +57,7 @@ class ChatRoom extends Component {
     } = this.props;
 
     handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id);
-    handleLeftSideDrawerToggleEvent(event);
+    handleLeftSideDrawerToggleEvent();
   }
   render() {
     const {
