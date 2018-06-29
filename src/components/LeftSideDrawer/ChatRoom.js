@@ -115,6 +115,7 @@ class ChatRoom extends Component {
         </div>
         {
           chatRoom.unReadMessages > 0 &&
+          chatRoom.data.chatType === 'direct' &&
           <div
             className="new-messages-count"
             title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
