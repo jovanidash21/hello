@@ -108,6 +108,7 @@ class CreateChatRoomModal extends Component {
       createDirectChatRoom,
       changeChatRoom,
       chatType,
+      handleDeactivateModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
     const userID = user.active._id;
@@ -118,8 +119,8 @@ class CreateChatRoomModal extends Component {
 
     if ( chatType === 'direct' ) {
       for ( var i = 0; i < chatRooms.length; i++ ) {
-        if ( chatRooms[i].chatType === 'direct' ) {
-          var isMembersMatch = chatRooms[i].members.some(member => member._id === memberID);
+        if ( chatRooms[i].data.chatType === 'direct' ) {
+          var isMembersMatch = chatRooms[i].data.members.some(member => member._id === memberID);
 
           if ( isMembersMatch ) {
             directChatRoomExists = true;
@@ -133,10 +134,11 @@ class CreateChatRoomModal extends Component {
         }
       }
 
-      if ( ! directChatRoomExists ) {
+      if ( !directChatRoomExists ) {
         createDirectChatRoom(userID, memberID, activeChatRoom._id);
       } else {
         changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
+        handleDeactivateModal();
         handleLeftSideDrawerToggleEvent();
       }
     }

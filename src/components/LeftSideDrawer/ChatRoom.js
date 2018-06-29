@@ -7,6 +7,10 @@ import './styles.scss';
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isTrashing: false
+    };
   }
   handleAvatar(type) {
     const {
@@ -71,6 +75,7 @@ class ChatRoom extends Component {
       handleTrashChatRoom
     } = this.props;
 
+    this.setState({isTrashing: true});
     handleTrashChatRoom(chatRoom.data._id);
   }
   render() {
@@ -78,13 +83,15 @@ class ChatRoom extends Component {
       chatRoom,
       isActive
     } = this.props;
+    const { isTrashing } = this.state;
 
     return (
       <div
         className={
           "chat-room " +
           (isActive ? 'active ' : '') +
-          (chatRoom.unReadMessages > 0 ? 'new-message' : '')
+          (chatRoom.unReadMessages > 0 ? 'new-message ' : '') +
+          (isTrashing ? 'is-trashing' : '')
         }
         onClick={::this.handleChangeChatRoom}
         title={chatRoom.data.name}

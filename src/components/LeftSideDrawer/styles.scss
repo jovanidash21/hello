@@ -5,7 +5,7 @@
   cursor: pointer;
   display: flex;
   font-size: 14px;
-  padding: 10px 15px;
+  padding: 10px 10px 10px 15px;
   transition: all 0.2s ease;
   &:active,
   &:focus,
@@ -19,6 +19,11 @@
     color: #fff;
     font-size: 15px;
     font-weight: bold;
+  }
+  &.is-trashing {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
   }
   .avatar {
     margin-right: 14px;
@@ -46,5 +51,18 @@
     line-height: 18px;
     margin-left: 3px;
     padding: 0 9px;
+  }
+  .trash-chat-room-button {
+    cursor: pointer;
+    color: $color-alto;
+    margin-left: 5px;
+    opacity: 0;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  &:hover {
+    .trash-chat-room-button {
+      opacity: 1;
+    }
   }
 }

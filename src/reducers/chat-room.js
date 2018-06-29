@@ -109,10 +109,16 @@ const chatRoom = (state=initialState, action) => {
         ]
       };
     case `${TRASH_CHAT_ROOM}_SUCCESS`:
+      var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
+      var chatRoomID = action.meta;
+
+      if ( activeChatRoom.data._id === chatRoomID ) {
+        location.reload();
+      }
 
       chatRooms = chatRooms.filter(chatRoom =>
-        chatRoom.data._id !== action.meta
+        chatRoom.data._id !== chatRoomID
       );
 
       return {

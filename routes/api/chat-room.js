@@ -159,54 +159,130 @@ router.post('/direct/:userID', function(req, res, next) {
         if (chatRoom !== null) {
           var chatRoomID = chatRoom._id;
 
-          ChatRoom.findById(chatRoomID)
-            .populate('members')
-            .exec(function(err, chatRoomData) {
-              if (!err) {
-                res.status(200).send({
-                  success: true,
-                  message: 'Chat room already exist.',
-                  chatRoom: {
-                    data: chatRoomData,
-                    unReadMessages: 0,
-                    kick: {},
-                    trash: {}
-                  }
-                });
-              } else {
-                res.status(500).send({
-                  success: false,
-                  message: 'Server Error!'
-                });
+          User.findOne({
+            _id: userID,
+            chatRooms: {
+              $elemMatch: {
+                data: chatRoomID,
+                'trash.data': true
               }
-            });
-        } else {
-          ChatRoom.findOne({members: members.reverse(), chatType: 'direct'}, function(err, chatRoom) {
+            }
+          }, function(err, user) {
             if (!err) {
-              if (chatRoom !== null) {
-                var chatRoomID = chatRoom._id;
-
-                ChatRoom.findById(chatRoomID)
-                  .populate('members')
-                  .exec(function(err, chatRoomData) {
+              if (user !== null) {
+                User.update(
+                  { _id: userID, 'chatRooms.data': chatRoomID },
+                  { $set: { 'chatRooms.$.trash.data': false, 'chatRooms.$.trash.endDate': new Date() } },
+                  { safe: true, upsert: true, new: true },
+                  function(err) {
                     if (!err) {
-                      res.status(200).send({
-                        success: true,
-                        message: 'Chat room already exist.',
-                        chatRoom: {
-                          data: chatRoomData,
-                          unReadMessages: 0,
-                          kick: {},
-                          trash: {}
-                        }
-                      });
+                      ChatRoom.findById(chatRoomID)
+                        .populate('members')
+                        .exec(function(err, chatRoomData) {
+                          if (!err) {
+                            res.status(200).send({
+                              success: true,
+                              message: 'Chat room already exist.',
+                              chatRoom: {
+                                data: chatRoomData,
+                                unReadMessages: 0,
+                                kick: {},
+                                trash: {}
+                              }
+                            });
+                          } else {
+                            res.status(500).send({
+                              success: false,
+                              message: 'Server Error!'
+                            });
+                          }
+                        });
                     } else {
                       res.status(500).send({
                         success: false,
                         message: 'Server Error!'
                       });
                     }
-                  });
+                  }
+                );
+              } else {
+                res.status(401).send({
+                  success: false,
+                  message: 'Chat room already exist.'
+                });
+              }
+            } else {
+              res.status(500).send({
+                success: false,
+                message: 'Server Error!'
+              });
+            }
+          });
+        } else {
+          ChatRoom.findOne({members: members.reverse(), chatType: 'direct'}, function(err, chatRoom) {
+            if (!err) {
+              if (chatRoom !== null) {
+                var chatRoomID = chatRoom._id;
+
+                User.findOne({
+                  _id: userID,
+                  chatRooms: {
+                    $elemMatch: {
+                      data: chatRoomID,
+                      'trash.data': true
+                    }
+                  }
+                }, function(err, user) {
+                  if (!err) {
+                    if (user !== null) {
+                      User.update(
+                        { _id: userID, 'chatRooms.data': chatRoomID },
+                        { $set: { 'chatRooms.$.trash.data': false, 'chatRooms.$.trash.endDate': new Date() } },
+                        { safe: true, upsert: true, new: true },
+                        function(err) {
+                          if (!err) {
+                            ChatRoom.findById(chatRoomID)
+                              .populate('members')
+                              .exec(function(err, chatRoomData) {
+                                if (!err) {
+                                  res.status(200).send({
+                                    success: true,
+                                    message: 'Chat room already exist.',
+                                    chatRoom: {
+                                      data: chatRoomData,
+                                      unReadMessages: 0,
+                                      kick: {},
+                                      trash: {}
+                                    }
+                                  });
+                                } else {
+                                  res.status(500).send({
+                                    success: false,
+                                    message: 'Server Error!'
+                                  });
+                                }
+                              });
+                          } else {
+                            res.status(500).send({
+                              success: false,
+                              message: 'Server Error!'
+                            });
+                          }
+                        }
+                      );
+                    } else {
+                      res.status(401).send({
+                        success: false,
+                        message: 'Chat room already exist.'
+                      });
+                    }
+                  } else {
+                    res.status(500).send({
+                      success: false,
+                      message: 'Server Error!'
+                    });
+                  }
+                });
               } else {
                 var chatRoom = new ChatRoom(chatRoomData);
 
