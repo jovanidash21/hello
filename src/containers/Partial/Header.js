@@ -73,14 +73,14 @@ class Header extends Component {
 
     const { handleLeftSideDrawerToggleEvent } = this.props;
 
-    handleLeftSideDrawerToggleEvent();
+    handleLeftSideDrawerToggleEvent(true);
   }
   handleRightSideDrawerToggleEvent(event) {
     event.preventDefault();
 
     const { handleRightSideDrawerToggleEvent } = this.props;
 
-    handleRightSideDrawerToggleEvent();
+    handleRightSideDrawerToggleEvent(true);
   }
   handleLogout() {
     const {
