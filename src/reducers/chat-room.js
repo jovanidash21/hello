@@ -39,6 +39,8 @@ const initialState = {
   isFetchingSuccess: true,
   isCreating: false,
   isCreatingSuccess: true,
+  isTrashing: false,
+  isTrashingSuccess: true,
   active: {
     data: {}
   },
@@ -56,6 +58,11 @@ const chatRoom = (state=initialState, action) => {
       return {
         ...state,
         isCreating: true
+      };
+    case `${TRASH_CHAT_ROOM}_LOADING`:
+      return {
+        ...state,
+        isTrashing: true
       };
     case `${FETCH_CHAT_ROOMS}_SUCCESS`:
       var chatRooms = [...action.payload.data];
@@ -78,6 +85,25 @@ const chatRoom = (state=initialState, action) => {
         isCreating: false,
         isCreatingSuccess: true
       };
+    case `${TRASH_CHAT_ROOM}_SUCCESS`:
+      var activeChatRoom = {...state.active};
+      var chatRooms = [...state.all];
+      var chatRoomID = action.meta;
+
+      if ( activeChatRoom.data._id === chatRoomID ) {
+        location.reload();
+      }
+
+      chatRooms = chatRooms.filter(chatRoom =>
+        chatRoom.data._id !== chatRoomID
+      );
+
+      return {
+        ...state,
+        isTrashing: false,
+        isTrashingSuccess: true,
+        all: [...chatRooms]
+      };
     case `${FETCH_CHAT_ROOMS}_ERROR`:
       return {
         ...state,
@@ -89,6 +115,12 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         isCreating: false,
         isCreatingSuccess: false
+      };
+    case `${TRASH_CHAT_ROOM}_ERROR`:
+      return {
+        ...state,
+        isTrashing: false,
+        isTrashingSuccess: false
       };
     case CHANGE_CHAT_ROOM:
       return {
@@ -107,23 +139,6 @@ const chatRoom = (state=initialState, action) => {
           ...state.all,
           {...chatRoom}
         ]
-      };
-    case `${TRASH_CHAT_ROOM}_SUCCESS`:
-      var activeChatRoom = {...state.active};
-      var chatRooms = [...state.all];
-      var chatRoomID = action.meta;
-
-      if ( activeChatRoom.data._id === chatRoomID ) {
-        location.reload();
-      }
-
-      chatRooms = chatRooms.filter(chatRoom =>
-        chatRoom.data._id !== chatRoomID
-      );
-
-      return {
-        ...state,
-        all: [...chatRooms]
       };
     case SOCKET_BROADCAST_USER_LOGIN:
       var user = action.user;

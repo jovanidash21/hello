@@ -74,6 +74,7 @@ class LeftSideDrawer extends Component {
                 handleChangeChatRoom={changeChatRoom}
                 handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
                 handleTrashChatRoom={::this.handleTrashChatRoom}
+                isTrashingAChatRoom={chatRoom.isTrashing && chatRoom.isTrashingSuccess}
               />
             )
           }

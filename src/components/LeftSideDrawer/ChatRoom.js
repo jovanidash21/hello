@@ -12,6 +12,11 @@ class ChatRoom extends Component {
       isTrashing: false
     };
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.isTrashingAChatRoom && !this.props.isTrashingAChatRoom) {
+      this.setState({isTrashing: false});
+    }
+  }
   handleAvatar(type) {
     const {
       user,
@@ -141,12 +146,15 @@ ChatRoom.propTypes = {
   isActive: PropTypes.bool,
   handleChangeChatRoom: PropTypes.func.isRequired,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
-  handleTrashChatRoom: PropTypes.func
+  handleTrashChatRoom: PropTypes.func,
+  isTrashingAChatRoom: PropTypes.bool.isRequired
 }
 
 ChatRoom.defaultProps = {
   isActive: false,
-  handleTrashChatRoom: () => {}
+  handleTrashChatRoom: () => {},
+  isTrashingAChatRoom: false
+
 }
 
 export default ChatRoom;
