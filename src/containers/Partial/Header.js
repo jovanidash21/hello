@@ -19,9 +19,7 @@ class Header extends Component {
   handleLeftPartHeaderRender() {
     const {
       chatRoom,
-      member,
-      handleLeftSideDrawerToggleEvent,
-      handleRightSideDrawerToggleEvent
+      member
     } = this.props;
 
     if (
@@ -37,7 +35,7 @@ class Header extends Component {
             className="hamburger-icon"
             name="bars"
             size="2x"
-            onClick={handleLeftSideDrawerToggleEvent}
+            onClick={::this.handleLeftSideDrawerToggleEvent}
           />
           <h2
             className="chat-room-name"
@@ -51,7 +49,7 @@ class Header extends Component {
               member.isFetchingSuccess &&
               <div
                 className="members-count"
-                onClick={handleRightSideDrawerToggleEvent}
+                onClick={::this.handleRightSideDrawerToggleEvent}
                 title="View Online Members List"
               >
                 <FontAwesome
@@ -69,6 +67,20 @@ class Header extends Component {
         <LoadingAnimation name="ball-clip-rotate" color="white" />
       )
     }
+  }
+  handleLeftSideDrawerToggleEvent(event) {
+    event.preventDefault();
+
+    const { handleLeftSideDrawerToggleEvent } = this.props;
+
+    handleLeftSideDrawerToggleEvent();
+  }
+  handleRightSideDrawerToggleEvent(event) {
+    event.preventDefault();
+
+    const { handleRightSideDrawerToggleEvent } = this.props;
+
+    handleRightSideDrawerToggleEvent();
   }
   handleLogout() {
     const {
