@@ -7,6 +7,30 @@ import './styles.scss';
 class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isShowDropdownMenu: false
+    };
+  }
+  componentDidMount() {
+    ::this.handleShowDropdownMenu();
+  }
+  handleShowDropdownMenu() {
+    const {
+      user,
+      chatRoomMember
+    } = this.props;
+
+    if (
+      user._id !== chatRoomMember._id &&
+      user.accountType !== 'guest' &&
+      (
+        user.role !== 'ordinary' ||
+        chatRoomMember.role !== 'vip'
+      )
+    ) {
+      this.setState({isShowDropdownMenu: true});
+    }
   }
   handleAddDirectChatRoom(event) {
     event.preventDefault();
@@ -64,176 +88,168 @@ class ChatRoomMember extends Component {
       user,
       chatRoomMember
     } = this.props;
+    const { isShowDropdownMenu } = this.state;
+    var chatRoomMemberOptions = {};
+
+    if ( isShowDropdownMenu ) {
+      chatRoomMemberOptions = {
+        'data-mui-toggle': "dropdown"
+      }
+    }
 
     return (
       <div
-        className={"chat-room-member " +
+        className={"chat-room-member-wrapper " +
           ( chatRoomMember.role === 'vip' ? 'special ' : '' )
         }
         title={chatRoomMember.name}
       >
-        <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
-          <FontAwesome
-            className="circle-icon"
-            name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
+        <div className="chat-room-member" {...chatRoomMemberOptions}>
+          <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
+            <FontAwesome
+              className="circle-icon"
+              name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
+            />
+          </div>
+          <Avatar
+            image={chatRoomMember.profilePicture}
+            size="23px"
+            role={chatRoomMember.role}
+            accountType={chatRoomMember.accountType}
           />
-        </div>
-        <Avatar
-          image={chatRoomMember.profilePicture}
-          size="23px"
-          role={chatRoomMember.role}
-          accountType={chatRoomMember.accountType}
-        />
-        <div className="member-name">
-          {chatRoomMember.name}
+          <div className="member-name">
+            {chatRoomMember.name}
+            {
+              user._id === chatRoomMember._id &&
+              <span className="you-label">(you)</span>
+            }
+          </div>
           {
-            user._id === chatRoomMember._id &&
-            <span className="you-label">(you)</span>
+            chatRoomMember.mute.data &&
+            <div className="mute-logo" title="This member is muted">
+              <FontAwesome
+                className="eye-icon"
+                name="eye"
+              />
+            </div>
           }
-        </div>
-        {
-          chatRoomMember.mute.data &&
-          <div className="mute-logo" title="This member is muted">
-            <FontAwesome
-              className="eye-icon"
-              name="eye"
-            />
-          </div>
-        }
-        {
-          chatRoomMember.gender.length > 0 &&
-          <div className="gender-logo" title={chatRoomMember.gender}>
-            <FontAwesome
-              className="gender-icon"
-              name={chatRoomMember.gender}
-            />
-          </div>
-        }
-        <div className="member-options-button-wrapper">
           {
-            (
-              user._id !== chatRoomMember._id &&
-              user.accountType !== 'guest' &&
-              (
-                user.role !== 'ordinary' ||
-                chatRoomMember.role !== 'vip'
-              )
-            ) &&
-            <div>
-              <div className="member-options-button" data-mui-toggle="dropdown">
-                <FontAwesome
-                  className="options-icon"
-                   name="ellipsis-v"
-                />
-              </div>
-
-              <ul className="mui-dropdown__menu mui-dropdown__menu--right">
-                {
-                  (
-                    user.role === 'owner' ||
-                    user.role === 'admin' ||
-                    chatRoomMember.role !== 'vip'
-                  ) &&
-                  <li>
-                    <a href="#" onClick={::this.handleAddDirectChatRoom}>
-                      Direct Messages
-                    </a>
-                  </li>
-                }
-                {/*
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={::this.handleBlockMember}>
-                      Block Member
-                    </a>
-                  </li>
-                */}
-                {
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={::this.handleKickMember}>
-                      Kick Member
-                    </a>
-                  </li>
-                }
-                {
-                  (
-                    ( user.role === 'owner' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'admin' ) &&
-                    ( chatRoomMember.accountType !== 'guest' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'admin')}>Make Admin</a>
-                  </li>
-                }
-                {
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'moderator' ) &&
-                    ( chatRoomMember.accountType !== 'guest' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'moderator')}>Make Moderator</a>
-                  </li>
-                }
-                {
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'vip' ) &&
-                    ( chatRoomMember.accountType !== 'guest' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'vip')}>Make VIP</a>
-                  </li>
-                }
-                {
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.role !== 'ordinary' ) &&
-                    ( chatRoomMember.accountType !== 'guest' )
-                  ) &&
-                  <li>
-                    <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'ordinary')}>
-                      {chatRoomMember.role === 'admin' && 'Remove Admin'}
-                      {chatRoomMember.role === 'moderator' && 'Remove Moderator'}
-                      {chatRoomMember.role === 'vip' && 'Remove VIP'}
-                    </a>
-                  </li>
-                }
-                {
-                  (
-                    ( user.role === 'owner' ||
-                      user.role === 'admin' ||
-                      user.role === 'moderator' ) &&
-                    ( chatRoomMember.role !== 'owner' &&
-                      chatRoomMember.accountType !== 'guest' ) &&
-                      ! chatRoomMember.mute.data
-                  ) &&
-                  <li>
-                    <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>
-                  </li>
-                }
-              </ul>
+            chatRoomMember.gender.length > 0 &&
+            <div className="gender-logo" title={chatRoomMember.gender}>
+              <FontAwesome
+                className="gender-icon"
+                name={chatRoomMember.gender}
+              />
             </div>
           }
         </div>
+        {
+          isShowDropdownMenu &&
+          <ul className="mui-dropdown__menu mui-dropdown__menu--right">
+            {
+              (
+                user.role === 'owner' ||
+                user.role === 'admin' ||
+                chatRoomMember.role !== 'vip'
+              ) &&
+              <li>
+                <a href="#" onClick={::this.handleAddDirectChatRoom}>
+                  Direct Messages
+                </a>
+              </li>
+            }
+            {/*
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'admin' )
+              ) &&
+              <li>
+                <a href="#" onClick={::this.handleBlockMember}>
+                  Block Member
+                </a>
+              </li>
+            */}
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'admin' )
+              ) &&
+              <li>
+                <a href="#" onClick={::this.handleKickMember}>
+                  Kick Member
+                </a>
+              </li>
+            }
+            {
+              (
+                ( user.role === 'owner' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'admin' ) &&
+                ( chatRoomMember.accountType !== 'guest' )
+              ) &&
+              <li>
+                <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'admin')}>Make Admin</a>
+              </li>
+            }
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'moderator' ) &&
+                ( chatRoomMember.accountType !== 'guest' )
+              ) &&
+              <li>
+                <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'moderator')}>Make Moderator</a>
+              </li>
+            }
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'vip' ) &&
+                ( chatRoomMember.accountType !== 'guest' )
+              ) &&
+              <li>
+                <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'vip')}>Make VIP</a>
+              </li>
+            }
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.role !== 'ordinary' ) &&
+                ( chatRoomMember.accountType !== 'guest' )
+              ) &&
+              <li>
+                <a href="#" onClick={(e) => ::this.handleUpdateMemberRole(e, 'ordinary')}>
+                  {chatRoomMember.role === 'admin' && 'Remove Admin'}
+                  {chatRoomMember.role === 'moderator' && 'Remove Moderator'}
+                  {chatRoomMember.role === 'vip' && 'Remove VIP'}
+                </a>
+              </li>
+            }
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ||
+                  user.role === 'moderator' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.accountType !== 'guest' ) &&
+                  ! chatRoomMember.mute.data
+              ) &&
+              <li>
+                <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>
+              </li>
+            }
+          </ul>
+        }
       </div>
     )
   }

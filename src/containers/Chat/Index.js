@@ -21,6 +21,7 @@ class Chat extends Component {
     super(props);
 
     this.state = {
+      isChatBubblesScrollToBottom: false,
       isLeftSideDrawerOpen: false,
       isRightSideDrawerOpen: false,
       isAudioRecorderOpen: false,
@@ -41,13 +42,13 @@ class Chat extends Component {
     ::this.calculateViewportHeight();
     window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
     window.addEventListener('resize', ::this.calculateViewportHeight, true);
-
-    ::this.handleScrollToBottom();
+    this.chatBubbles.addEventListener('scroll', ::this.handleChatBoxScroll, true);
   }
   componentDidUpdate(prevProps) {
     if (
       ( prevProps.message.isFetching && !this.props.message.isFetching ) ||
-      ( !prevProps.message.isSending && this.props.message.isSending )
+      ( !prevProps.message.isSending && this.props.message.isSending ) ||
+      this.state.isChatBubblesScrollToBottom
     ) {
       ::this.handleScrollToBottom();
     }
@@ -59,6 +60,13 @@ class Chat extends Component {
   }
   handleScrollToBottom() {
     this.messagesBottom.scrollIntoView();
+  }
+  handleChatBoxScroll() {
+    if ( this.chatBubbles.scrollTop === (this.chatBubbles.scrollHeight - this.chatBubbles.offsetHeight)) {
+      this.setState({isChatBubblesScrollToBottom: true});
+    } else {
+      this.setState({isChatBubblesScrollToBottom: false});
+    }
   }
   handleRightSideDrawerRender() {
     const { isRightSideDrawerOpen } = this.state;
@@ -265,7 +273,10 @@ class Chat extends Component {
           handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
         />
         <div className={"chat-box " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
-          <div className="chat-bubbles">
+          <div
+            className="chat-bubbles"
+            ref={(element) => { this.chatBubbles = element; }}
+          >
             {::this.handleChatBoxRender()}
             <div
               style={{float: "left", clear: "both"}}

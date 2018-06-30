@@ -1,11 +1,7 @@
-.chat-room-member {
-  align-items: center;
+.chat-room-member-wrapper {
   border-bottom: 1px solid $color-english-walnut;
-  display: flex;
   font-size: 14px;
-  padding: 3px 0;
   position: relative;
-  transition: all 0.2s ease;
   &:active,
   &:focus,
   &:hover {
@@ -17,6 +13,14 @@
   &.special {
     background-color: $color-vermillion;
   }
+}
+.chat-room-member {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  padding: 3px;
+  transition: all 0.2s ease;
   .online-indicator {
     color: $color-dusty-gray;
     font-size: 10px;
@@ -45,20 +49,5 @@
   .gender-logo {
     color: #fff;
     margin: 0 2px;
-  }
-  .member-options-button-wrapper {
-    width: 30px;
-  }
-  .member-options-button {
-    cursor: pointer;
-    color: #000;
-    opacity: 0;
-    text-align: center;
-    transition: all 0.2s ease;
-  }
-  &:hover {
-    .member-options-button {
-      opacity: 1;
-    }
   }
 }
