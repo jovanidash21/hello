@@ -94,7 +94,8 @@ class CreateChatRoomModal extends Component {
     if (
       chatType === 'group' &&
       chatRoomName.length > 0 &&
-      members.length > 2
+      members.length > 2 &&
+      members.length < 6
     ) {
       createGroupChatRoom(chatRoomName, members, user.active._id, activeChatRoom._id);
     }
@@ -155,6 +156,11 @@ class CreateChatRoomModal extends Component {
       chatRoomName,
       members
     } = this.state;
+    const isButtonDisabled =
+      chatRoomName.length === 0 ||
+      members.length < 3 ||
+      members.length === 5 ||
+      isLoading;
 
     return (
      <ModalContainer onClose={handleDeactivateModal}>
@@ -179,11 +185,14 @@ class CreateChatRoomModal extends Component {
             {
               chatType === 'group' &&
               <div>
-                <ChatRoomNameInput  onChatRoomNameChange={::this.onChatRoomNameChange} />
+                <ChatRoomNameInput
+                  onChatRoomNameChange={::this.onChatRoomNameChange}
+                  isDisabled={isLoading}
+                />
                 <div className="members-list-label">
-                  Select atleast 3 members
+                  Minimum of 3 members and maximum of 5 members only
                 </div>
-                <div className="members-list">
+                <div className="members-list" disabled={isLoading}>
                   {
                     members.map((member, i) =>
                       <ChatMember
@@ -201,6 +210,7 @@ class CreateChatRoomModal extends Component {
               user={user.active}
               users={user.all}
               onSuggestionSelected={::this.onSuggestionSelected}
+              isDisabled={members.length === 5 || isLoading}
             />
             {
               chatType === 'group' &&
@@ -209,7 +219,7 @@ class CreateChatRoomModal extends Component {
                 size="large"
                 type="submit"
                 variant="raised"
-                disabled={chatRoomName.length === 0 || members.length < 3 || isLoading}
+                disabled={isButtonDisabled}
               >
                 Add
               </Button>

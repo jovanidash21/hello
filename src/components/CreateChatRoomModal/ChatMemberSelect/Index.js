@@ -78,7 +78,10 @@ class ChatMemberSelect extends Component {
     this.setState({suggestions: []});
   };
   render() {
-    const { users } = this.props;
+    const {
+      users,
+      isDisabled
+    } = this.props;
     const {
       selectMember,
       suggestions
@@ -86,7 +89,8 @@ class ChatMemberSelect extends Component {
     const inputProps = {
       placeholder: 'Select a member',
       value: selectMember,
-      onChange: ::this.onSelectMemberChange
+      onChange: ::this.onSelectMemberChange,
+      disabled: isDisabled
     };
 
     return (
@@ -109,7 +113,12 @@ class ChatMemberSelect extends Component {
 ChatMemberSelect.propTypes = {
   user: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
-  onSuggestionSelected: PropTypes.func.isRequired
+  onSuggestionSelected: PropTypes.func.isRequired,
+  isDisabled: PropTypes.bool
+}
+
+ChatMemberSelect.defaultProps = {
+  isDisabled: false
 }
 
 export default ChatMemberSelect;

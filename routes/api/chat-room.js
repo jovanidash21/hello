@@ -69,10 +69,10 @@ router.post('/group/:userID', function(req, res, next) {
       chatType: chatType
     };
 
-    if (members.length < 3) {
+    if (members.length < 3 || members.length > 5) {
       res.status(401).send({
         success: false,
-        message: 'Please select at least 3 members.'
+        message: 'Please select at least 3 and at most 5 members.'
       });
     } else {
       var chatRoom = new ChatRoom(chatRoomData);
