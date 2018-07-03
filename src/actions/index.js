@@ -28,7 +28,8 @@ import {
   trashChatRoom
 } from './chat-room';
 import {
-  fetchMessages,
+  fetchNewMessages,
+  fetchOldMessages,
   sendTextMessage,
   sendFileMessage,
   sendImageMessage,
@@ -63,7 +64,8 @@ const actions = (dispatch) => {
     socketJoinChatRoom,
     socketLeaveChatRoom,
     trashChatRoom,
-    fetchMessages,
+    fetchNewMessages,
+    fetchOldMessages,
     sendTextMessage,
     sendFileMessage,
     sendImageMessage,

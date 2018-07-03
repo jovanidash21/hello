@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { Container } from 'muicss/react';
 import Popup from 'react-popup';
+import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../actions';
 import Header from '../Partial/Header';
 import LeftSideDrawer from '../Partial/LeftSideDrawer';
@@ -21,7 +22,12 @@ class Chat extends Component {
     super(props);
 
     this.state = {
-      isChatBubblesScrollToBottom: false,
+      hasLoadedAllMessages: false,
+      isChatBoxScrollToBottom: false,
+      isChatBoxScrollToTop: false,
+      scrollPosition: 0,
+      oldestMessageQuery: false,
+      oldestMessageOffsetTop: 0,
       isLeftSideDrawerOpen: false,
       isRightSideDrawerOpen: false,
       isAudioRecorderOpen: false,
@@ -42,15 +48,43 @@ class Chat extends Component {
     ::this.calculateViewportHeight();
     window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
     window.addEventListener('resize', ::this.calculateViewportHeight, true);
-    this.chatBubbles.addEventListener('scroll', ::this.handleChatBoxScroll, true);
+    this.chatBox.addEventListener('scroll', ::this.handleChatBoxScroll, true);
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.message.isFetching && !this.props.message.isFetching ) ||
+      ( prevProps.message.isFetchingNew && !this.props.message.isFetchingNew ) ||
       ( !prevProps.message.isSending && this.props.message.isSending ) ||
-      this.state.isChatBubblesScrollToBottom
+      this.state.isChatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
+    }
+
+    if ( prevProps.message.isFetchingNew && !this.props.message.isFetchingNew ) {
+      this.setState({hasLoadedAllMessages: false});
+    }
+
+    if ( prevProps.message.isFetchingOld && !this.props.message.isFetchingOld ) {
+      const {
+        scrollPosition,
+        oldestMessageQuery,
+        oldestMessageOffsetTop
+      } = this.state;
+      const newOldestMessageOffsetTop = oldestMessageQuery.offsetTop;
+
+      if ( scrollPosition === this.chatBox.scrollTop && oldestMessageQuery ) {
+        this.chatBox.scrollTop = newOldestMessageOffsetTop - oldestMessageOffsetTop;
+      }
+    }
+
+    if (
+      ( prevProps.message.isFetchingNew &&
+        !this.props.message.isFetchingNew &&
+        this.props.message.all.length < 50 ) ||
+      ( prevProps.message.isFetchingOld &&
+        !this.props.message.isFetchingOld &&
+        prevProps.message.all.length === this.props.message.all.length )
+    ) {
+      this.setState({hasLoadedAllMessages: true});
     }
   }
   calculateViewportHeight() {
@@ -62,10 +96,17 @@ class Chat extends Component {
     this.messagesBottom.scrollIntoView();
   }
   handleChatBoxScroll() {
-    if ( this.chatBubbles.scrollTop === (this.chatBubbles.scrollHeight - this.chatBubbles.offsetHeight)) {
-      this.setState({isChatBubblesScrollToBottom: true});
+    if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
+      this.setState({isChatBoxScrollToBottom: true});
     } else {
-      this.setState({isChatBubblesScrollToBottom: false});
+      this.setState({isChatBoxScrollToBottom: false});
+    }
+
+    if ( this.chatBox.scrollTop < 40 ) {
+      this.setState({isChatBoxScrollToTop: true});
+      ::this.handleFetchOldMessages();
+    } else {
+      this.setState({isChatBoxScrollToTop: false});
     }
   }
   handleRightSideDrawerRender() {
@@ -105,6 +146,7 @@ class Chat extends Component {
       chatRoom,
       message
     } = this.props;
+    const { hasLoadedAllMessages } = this.state;
 
     if (chatRoom.all.length === 0) {
       return (
@@ -112,15 +154,21 @@ class Chat extends Component {
           Hi! Welcome, create a Chat Room now.
         </div>
       )
-    } else if ( !message.isFetching && message.isFetchingSuccess ) {
+    } else if ( !message.isFetchingNew && message.isFetchingNewSuccess ) {
       return (
         <Container fluid>
+          {
+            !hasLoadedAllMessages &&
+            <div className="loading-icon">
+              <FontAwesome name="spinner" size="2x" pulse />
+            </div>
+          }
           {
             message.all.length
               ?
               message.all.map((singleMessage, i) =>
                 <ChatBubble
-                  key={i}
+                  key={singleMessage._id}
                   index={i}
                   message={singleMessage}
                   isSender={(singleMessage.user._id === user.active._id) ? true : false }
@@ -156,6 +204,32 @@ class Chat extends Component {
 
     this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
     ::this.handleScrollToBottom();
+  }
+  handleFetchOldMessages() {
+    const {
+      user,
+      chatRoom,
+      message,
+      fetchOldMessages
+    } = this.props;
+    const {
+      hasLoadedAllMessages,
+      isChatBoxScrollToTop
+    } = this.state;
+
+    if ( !hasLoadedAllMessages && isChatBoxScrollToTop && !message.isFetchingOld ) {
+      const scrollPosition = this.chatBox.scrollTop;
+      const oldestMessageQuery = document.querySelectorAll(".chat-box .chat-bubble-wrapper")[0];
+      const oldestMessageOffsetTop = oldestMessageQuery.offsetTop;
+
+      this.setState({
+        scrollPosition: scrollPosition,
+        oldestMessageQuery: oldestMessageQuery,
+        oldestMessageOffsetTop: oldestMessageOffsetTop
+      });
+
+      fetchOldMessages(chatRoom.active.data._id, user.active._id, message.all.length);
+    }
   }
   handleSendTextMessage(newMessageID, text) {
     const {
@@ -272,10 +346,10 @@ class Chat extends Component {
           handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
           handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
         />
-        <div className={"chat-box " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+        <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
           <div
-            className="chat-bubbles"
-            ref={(element) => { this.chatBubbles = element; }}
+            className="chat-box"
+            ref={(element) => { this.chatBox = element; }}
           >
             {::this.handleChatBoxRender()}
             <div

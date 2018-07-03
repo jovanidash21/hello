@@ -62,9 +62,10 @@ var audioUpload = multer({
   }
 });
 
-router.get('/:chatRoomID/:userID', function(req, res, next) {
-  var chatRoomID = req.params.chatRoomID;
-  var userID = req.params.userID;
+router.post('/', function(req, res, next) {
+  var chatRoomID = req.body.chatRoomID;
+  var userID = req.body.userID;
+  var skipCount = req.body.skipCount;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
     res.status(401).send({
@@ -73,10 +74,14 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
     });
   } else {
     Message.find({chatRoom: chatRoomID})
+      .sort({createdAt: 'descending'})
+      .skip(skipCount)
+      .limit(50)
       .populate('user')
-      .sort('createdAt')
-      .exec(function(err, chatRoomMessages) {
+      .exec(function(err, messages) {
         if (!err) {
+          var chatRoomMessages = messages.reverse();
+
           for (var i = 0; i < chatRoomMessages.length; i++) {
             var message = chatRoomMessages[i];
 

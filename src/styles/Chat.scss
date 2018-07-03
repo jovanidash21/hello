@@ -3,7 +3,7 @@
   height: 100vh;
   flex-direction: column;
   &.no-chat-input {
-    .chat-box {
+    .chat-box-wrapper {
       max-height: calc(100vh - 62px);
       @media screen and (min-width: $screen-tablet-min) {
         max-height: calc(100vh - 70px);
@@ -11,7 +11,7 @@
     }
   }
   .header,
-  .chat-box,
+  .chat-box-wrapper,
   .chat-input,
   .chat-audio-recorder {
     padding-left: 0;
@@ -43,7 +43,7 @@
   .header {
     flex-shrink: 0;
   }
-  .chat-box {
+  .chat-box-wrapper {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -59,7 +59,7 @@
         max-height: calc(100vh - 182px);
       }
     }
-    .chat-bubbles {
+    .chat-box {
       overflow-x: hidden;
       overflow-y: auto;
       &::-webkit-scrollbar {
@@ -86,6 +86,12 @@
       @media screen and (min-width: $screen-tablet-min) {
         padding: 15px;
       }
+    }
+    .loading-icon {
+      color: $color-emperor;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 5px;
     }
     .chat-no-messages {
       font-size: 17px;

@@ -8,7 +8,7 @@ import {
   SOCKET_LEAVE_CHAT_ROOM,
   TRASH_CHAT_ROOM
 } from '../constants/chat-room';
-import { fetchMessages } from './message';
+import { fetchNewMessages } from './message';
 import { fetchMembers } from './member';
 
 /**
@@ -43,7 +43,7 @@ export function changeChatRoom(chatRoom, userID, activeChatRoomID) {
     });
     dispatch(socketLeaveChatRoom(activeChatRoomID));
     dispatch(socketJoinChatRoom(chatRoom.data._id));
-    dispatch(fetchMessages(chatRoom.data._id, userID));
+    dispatch(fetchNewMessages(chatRoom.data._id, userID));
     dispatch(fetchMembers(chatRoom.data._id, userID));
   }
 }
