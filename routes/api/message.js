@@ -76,7 +76,7 @@ router.post('/', function(req, res, next) {
     Message.find({chatRoom: chatRoomID})
       .sort({createdAt: 'descending'})
       .skip(skipCount)
-      .limit(50)
+      .limit(10)
       .populate('user')
       .exec(function(err, messages) {
         if (!err) {
