@@ -158,6 +158,15 @@ class ChatRoomMember extends Component {
                 </a>
               </li>
             }
+            {
+              ( user.role === 'owner' ||
+                user.role === 'admin' ) &&
+              chatRoomMember.ipAddress.length > 0  &&
+              <li className="member-api-address">
+                <small>IP Address</small>
+                {chatRoomMember.ipAddress}
+              </li>
+            }
             {/*
               (
                 ( user.role === 'owner' ||

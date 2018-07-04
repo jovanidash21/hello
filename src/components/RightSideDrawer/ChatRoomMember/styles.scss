@@ -13,6 +13,17 @@
   &.special {
     background-color: $color-vermillion;
   }
+  .member-api-address {
+    align-items: center;
+    background-color: $color-dusty-gray;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 2px 8px;
+    small {
+      margin-right: 5px;
+    }
+  }
 }
 .chat-room-member {
   align-items: center;
