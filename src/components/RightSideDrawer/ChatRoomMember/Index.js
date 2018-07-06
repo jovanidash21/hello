@@ -161,6 +161,7 @@ class ChatRoomMember extends Component {
             {
               ( user.role === 'owner' ||
                 user.role === 'admin' ) &&
+              chatRoomMember.accountType === 'guest' &&
               chatRoomMember.ipAddress.length > 0  &&
               <li className="member-api-address">
                 <small>IP Address</small>

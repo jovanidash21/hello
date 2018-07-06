@@ -60,14 +60,18 @@ class RightSideDrawer extends Component {
           <div className="member-list">
             {
               members.length > 0 &&
-              members.sort((a, b) =>  {
-                var n = a.priority - b.priority;
+              members.sort((a, b) => {
+                var priority = a.priority - b.priority;
+                var name = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                var date = new Date(b.createdAt) - new Date(a.createdAt);
 
-                if (n !== 0) {
-                  return n;
+                if (priority !== 0) {
+                  return priority;
+                } else if ( name !== 0 ) {
+                  return name;
+                } else {
+                  return date;
                 }
-
-                return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
               }).map((chatRoomMember, i) =>
                 <ChatRoomMember
                   key={i}

@@ -54,13 +54,21 @@ const message = (state=initialState, action) => {
         ]
       };
     case `${SEND_MESSAGE}_SUCCESS`:
+      var messages = [...state.all];
+      var messageID = action.meta;
+      var newMessage = action.payload.data.messageData;
+
+      messages = messages.filter((message) => message._id !== messageID);
+
+      newMessage.isSending = false;
+
       return {
         ...state,
         isSending: false,
         isSendingSuccess: true,
         all: [
-          ...state.all.filter((messageData) => messageData.newMessageID !== action.meta),
-          action.payload.data.messageData
+          ...messages,
+          newMessage
         ]
       };
     case `${FETCH_NEW_MESSAGES}_ERROR`:
