@@ -79,7 +79,7 @@ class Chat extends Component {
     if (
       ( prevProps.message.isFetchingNew &&
         !this.props.message.isFetchingNew &&
-        this.props.message.all.length < 10 ) ||
+        this.props.message.all.length < 25 ) ||
       ( prevProps.message.isFetchingOld &&
         !this.props.message.isFetchingOld &&
         this.props.message.all.length - prevProps.message.all.length < 10 )
@@ -102,7 +102,7 @@ class Chat extends Component {
       this.setState({isChatBoxScrollToBottom: false});
     }
 
-    if ( this.chatBox.scrollTop === 0 ) {
+    if ( this.chatBox.scrollTop < 40 ) {
       this.setState({isChatBoxScrollToTop: true});
       ::this.handleFetchOldMessages();
     } else {
@@ -157,12 +157,12 @@ class Chat extends Component {
     } else if ( !message.isFetchingNew && message.isFetchingNewSuccess ) {
       return (
         <Container fluid>
-          {/*
+          {
             !hasLoadedAllMessages &&
             <div className="loading-icon">
               <FontAwesome name="spinner" size="2x" pulse />
             </div>
-          */}
+          }
           {
             message.all.length
               ?

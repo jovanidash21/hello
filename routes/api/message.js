@@ -66,6 +66,7 @@ router.post('/', function(req, res, next) {
   var chatRoomID = req.body.chatRoomID;
   var userID = req.body.userID;
   var skipCount = req.body.skipCount;
+  var limit = req.body.limit;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
     res.status(401).send({
@@ -76,7 +77,7 @@ router.post('/', function(req, res, next) {
     Message.find({chatRoom: chatRoomID})
       .sort({createdAt: 'descending'})
       .skip(skipCount)
-      .limit(10)
+      .limit(limit)
       .populate('user')
       .exec(function(err, messages) {
         if (!err) {

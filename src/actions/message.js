@@ -15,7 +15,8 @@ export function fetchNewMessages(chatRoomID, userID) {
   let data = {
     chatRoomID: chatRoomID,
     userID: userID,
-    skipCount: 0
+    skipCount: 0,
+    limit: 25
   };
 
   return dispatch => {
@@ -41,7 +42,8 @@ export function fetchOldMessages(chatRoomID, userID, skipCount) {
   let data = {
     chatRoomID: chatRoomID,
     userID: userID,
-    skipCount: skipCount
+    skipCount: skipCount,
+    limit: 10
   };
 
   return dispatch => {
