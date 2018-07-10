@@ -1,16 +1,13 @@
 .chat-bubble-wrapper {
   display: flex;
-  padding: 2px;
-  &.reverse {
-    flex-direction: row-reverse;
-    .chat-message {
-      flex-direction: row-reverse;
-    }
-  }
+  padding: 1px;
   .chat-details {
-    max-width: 90%;
-    @media screen and (min-width: $screen-tablet-min) {
-      max-width: 75%;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    @media screen and (max-width: $screen-mobile-max) {
+      max-width: 80%;
     }
   }
   .uploading-icon {
@@ -19,7 +16,7 @@
   .chat-bubble {
     $bg-color: $color-dusty-gray;
     background-color: $bg-color;
-    border-radius: 8px;
+    border-radius: 15px;
     margin-left: 10px;
     position: relative;
     word-wrap: break-word;
@@ -103,9 +100,9 @@
     }
     .image-logo {
       background: $color-flamenco;
-      border-radius: 8px;
+      border-radius: 15px;
       cursor: pointer;
-      padding: 0px 4px;
+      padding: 4px 10px;
     }
   }
   .avatar {
@@ -124,17 +121,58 @@
     font-weight: 700;
     height: 15px;
     line-height: 15px;
-    margin-left: 10px;
+    margin-left: 20px;
   }
-  .chat-message {
-    display: flex;
-    flex-direction: row;
+  &.reverse {
+    flex-direction: row-reverse;
+    &.no-b-radius-top {
+      .chat-bubble,
+      .image-logo {
+        border-top-right-radius: 0;
+      }
+    }
+    &.no-b-radius-bottom {
+      .chat-bubble,
+      .image-logo {
+        border-bottom-right-radius: 0;
+      }
+    }
+    .chat-details {
+      align-items: flex-end;
+    }
   }
-  .chat-time {
-    align-self: flex-end;
-    color: #000;
-    font-size: 11px;
-    margin: 0 4px 2px;
-    white-space: nowrap;
+  &:not(.reverse) {
+    &.no-b-radius-top {
+      .chat-bubble,
+      .image-logo {
+        border-top-left-radius: 0;
+      }
+    }
+    &.no-b-radius-bottom {
+      .chat-bubble,
+      .image-logo {
+        border-bottom-left-radius: 0;
+      }
+    }
+    &.no-avatar {
+      .chat-bubble {
+        margin-left: 45px;
+        @media screen and (max-width: $screen-mobile-max) {
+          margin-left: 35px;
+        }
+        &:after {
+          display: none;
+        }
+      }
+      .image-logo {
+        margin-left: 35px;
+        @media screen and (max-width: $screen-mobile-max) {
+          margin-left: 25px;
+        }
+        &:after {
+          display: none;
+        }
+      }
+    }
   }
 }

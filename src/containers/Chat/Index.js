@@ -71,7 +71,11 @@ class Chat extends Component {
       } = this.state;
       const newOldestMessageOffsetTop = oldestMessageQuery.offsetTop;
 
-      if ( scrollPosition === this.chatBox.scrollTop && oldestMessageQuery ) {
+      if (
+        ( this.chatBox.scrollTop < 40 ||
+        scrollPosition === this.chatBox.scrollTop ) &&
+        oldestMessageQuery
+      ) {
         this.chatBox.scrollTop = newOldestMessageOffsetTop - oldestMessageOffsetTop;
       }
     }
@@ -172,6 +176,8 @@ class Chat extends Component {
                   index={i}
                   message={singleMessage}
                   isSender={(singleMessage.user._id === user.active._id) ? true : false }
+                  previousMessageSenderID={i-1 !== -1 ? message.all[i-1].user._id : ''}
+                  nextMessageSenderID={i !== message.all.length-1 ? message.all[i+1].user._id : ''}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                 />
               )

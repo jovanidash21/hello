@@ -130,13 +130,26 @@ class ChatBubble extends Component {
   render() {
     const {
       message,
-      isSender
+      isSender,
+      previousMessageSenderID,
+      nextMessageSenderID
     } = this.props;
+    const isPreviousMessageSameSender = message.user._id === previousMessageSenderID;
+    const isNextMessageSameSender = message.user._id === nextMessageSenderID;
 
     return (
-      <div className={"chat-bubble-wrapper " + (isSender ? 'reverse' : '')}>
+      <div
+        className={
+          "chat-bubble-wrapper " +
+          (isSender ? 'reverse ' : '') +
+          (isPreviousMessageSameSender ? 'no-b-radius-top ' : '') +
+          (isNextMessageSameSender ? 'no-b-radius-bottom ' : '') +
+          (!isSender && isPreviousMessageSameSender ? 'no-avatar' : '')
+        }
+      >
         {
           !isSender &&
+          !isPreviousMessageSameSender &&
           <Avatar
             image={message.user.profilePicture}
             size="35px"
@@ -149,6 +162,7 @@ class ChatBubble extends Component {
         <div className="chat-details">
           {
             !isSender &&
+            !isPreviousMessageSameSender &&
             <div className="chat-user-name">{message.user.name}</div>
           }
           {::this.handleChatBubbleRender()}
@@ -162,6 +176,8 @@ ChatBubble.propTypes = {
   index: PropTypes.number.isRequired,
   message: PropTypes.object.isRequired,
   isSender: PropTypes.bool.isRequired,
+  previousMessageSenderID: PropTypes.string.isRequired,
+  nextMessageSenderID: PropTypes.string.isRequired,
   handleAudioPlayingToggle: PropTypes.func.isRequired
 }
 
