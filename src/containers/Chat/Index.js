@@ -5,9 +5,12 @@ import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../actions';
-import Header from '../Partial/Header';
-import LeftSideDrawer from '../Partial/LeftSideDrawer';
-import RightSideDrawer from '../Partial/RightSideDrawer';
+import Header from '../Common/Header';
+import LeftSideDrawer from '../Common/LeftSideDrawer';
+import RightSideDrawer from '../Common/RightSideDrawer';
+import ActiveChatRoom from '../Partial/ActiveChatRoom';
+import ChatRoomsList from '../Partial/ChatRoomsList';
+import MembersList from '../Partial/MembersList';
 import Head from '../../components/Head';
 import LoadingAnimation from '../../components/LoadingAnimation';
 import ChatBubble from '../../components/Chat/ChatBubble';
@@ -121,11 +124,12 @@ class Chat extends Component {
         {(matches) => {
           return (
             <RightSideDrawer
-              handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
               handleRightSideDrawerToggleState={::this.handleRightSideDrawerToggleState}
               isRightSideDrawerOpen={matches ? isRightSideDrawerOpen : true}
               noOverlay={matches ? false : true}
-            />
+            >
+              <MembersList handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent} />
+            </RightSideDrawer>
           )
         }}
       </MediaQuery>
@@ -343,15 +347,18 @@ class Chat extends Component {
       >
         <Head title="Chat App" />
         <LeftSideDrawer
-          handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
           handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
           isLeftSideDrawerOpen={isLeftSideDrawerOpen}
-        />
+        >
+          <ChatRoomsList handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
+        </LeftSideDrawer>
         {::this.handleRightSideDrawerRender()}
-        <Header
-          handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
-          handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
-        />
+        <Header>
+          <ActiveChatRoom
+            handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+            handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
+          />
+        </Header>
         <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
           <div
             className="chat-box"

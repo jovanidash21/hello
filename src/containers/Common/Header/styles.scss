@@ -1,0 +1,16 @@
+.header {
+  box-shadow: 0px 0px 5px 1px $color-emperor;
+  table {
+    padding: 0 21px;
+    @media screen and (max-width: $screen-mobile-max) {
+      padding: 0 0 0 7px;
+    }
+  }
+  .mui--appbar-height {
+    position: relative;
+    width: 10px;
+  }
+  .left-part-header {
+    position: relative;
+  }
+}

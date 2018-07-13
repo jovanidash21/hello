@@ -29,5 +29,6 @@ $color-vermillion: #ff4500;
 $screen-mobile-min: 480px;
 $screen-tablet-min: 768px;
 $screen-desktop-min: 992px;
+$screen-small-mobile-max: $screen-mobile-min - 1;
 $screen-mobile-max: $screen-tablet-min - 1;
 $screen-tablet-max: $screen-desktop-min - 1;

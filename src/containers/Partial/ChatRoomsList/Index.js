@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { slide as Menu } from 'react-burger-menu';
 import FontAwesome from 'react-fontawesome';
-import mapDispatchToProps from '../../actions';
-import LoadingAnimation from '../../components/LoadingAnimation';
-import ChatRoom from '../../components/LeftSideDrawer/ChatRoom';
-import CreateChatRoomModal from './CreateChatRoomModal';
-import '../../styles/LeftSideDrawer.scss';
+import mapDispatchToProps from '../../../actions';
+import LoadingAnimation from '../../../components/LoadingAnimation';
+import ChatRoom from '../../../components/LeftSideDrawer/ChatRoom';
+import CreateChatRoomModal from '../CreateChatRoomModal';
+import './styles.scss';
 
-class LeftSideDrawer extends Component {
+class ChatRoomsList extends Component {
   constructor(props) {
     super(props);
 
@@ -54,7 +53,7 @@ class LeftSideDrawer extends Component {
       const activeChatRoom = chatRoom.active;
 
       return (
-        <div className="chat-room-list">
+        <div className="chat-rooms-list">
           {
             chatType === 'direct' &&
             chatRoom.all.filter((singleChatRoom) =>
@@ -130,10 +129,7 @@ class LeftSideDrawer extends Component {
     const {
       user,
       chatRoom,
-      isLeftSideDrawerOpen,
-      handleLeftSideDrawerToggleEvent,
-      handleLeftSideDrawerToggleState,
-      noOverlay
+      handleLeftSideDrawerToggleEvent
     } = this.props;
     const {
       activeTab,
@@ -141,71 +137,63 @@ class LeftSideDrawer extends Component {
     } = this.state;
 
     return (
-      <Menu
-        overlayClassName={"left-side-drawer-overlay"}
-        width="250px"
-        isOpen={isLeftSideDrawerOpen}
-        onStateChange={handleLeftSideDrawerToggleState}
-        noOverlay={noOverlay}
-      >
-        <div>
-          <div className="left-side-drawer">
-            <ul className="chat-room-tabs mui-tabs__bar">
-              <li>
-                <a data-mui-toggle="tab" data-mui-controls="direct-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'direct')}>
-                  Direct
-                </a>
-              </li>
-              <li className="mui--is-active">
-                <a data-mui-toggle="tab" data-mui-controls="group-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'group')}>
-                  Group
-                </a>
-              </li>
-            </ul>
-            <div className="chat-room-pane mui-tabs__pane" id="direct-chat-rooms">
-              <div className="chat-rooms-options">
-                <h3>Direct Messages</h3>
-                {
-                  (user.active.role === 'owner' ||
-                  user.active.role === 'admin') &&
-                  <div className="add-chat-room-icon"
-                    onClick={::this.handleActivateModal}
-                    title="Open a Direct Message"
-                  >
-                    <FontAwesome name="plus-circle" />
-                  </div>
-                }
-              </div>
-              {::this.handleChatRoomsListRender('direct')}
+      <div style={{height: '100%'}}>
+        <div className="chat-rooms-list-wrapper">
+          <ul className="chat-room-tabs mui-tabs__bar">
+            <li>
+              <a data-mui-toggle="tab" data-mui-controls="direct-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'direct')}>
+                Direct
+              </a>
+            </li>
+            <li className="mui--is-active">
+              <a data-mui-toggle="tab" data-mui-controls="group-chat-rooms" onClick={(e) => ::this.handleChangeTab(e, 'group')}>
+                Group
+              </a>
+            </li>
+          </ul>
+          <div className="chat-room-pane mui-tabs__pane" id="direct-chat-rooms">
+            <div className="chat-rooms-options">
+              <h3>Direct Messages</h3>
+              {
+                (user.active.role === 'owner' ||
+                user.active.role === 'admin') &&
+                <div className="add-chat-room-icon"
+                  onClick={::this.handleActivateModal}
+                  title="Open a Direct Message"
+                >
+                  <FontAwesome name="plus-circle" />
+                </div>
+              }
             </div>
-            <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">
-              <div className="chat-rooms-options">
-                <h3>Group Messages</h3>
-                {
-                  (user.active.role === 'owner' ||
-                  user.active.role === 'admin') &&
-                  <div className="add-chat-room-icon"
-                    onClick={::this.handleActivateModal}
-                    title="Add Chat Room"
-                  >
-                    <FontAwesome name="plus-circle" />
-                  </div>
-                }
-              </div>
-              {::this.handleChatRoomsListRender('group')}
-            </div>
+            {::this.handleChatRoomsListRender('direct')}
           </div>
-          {
-            showModal &&
-            <CreateChatRoomModal
-              chatType={activeTab}
-              handleDeactivateModal={::this.handleDeactivateModal}
-              handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-              isLoading={chatRoom.isCreating}
-            />
-          }
+          <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">
+            <div className="chat-rooms-options">
+              <h3>Group Messages</h3>
+              {
+                (user.active.role === 'owner' ||
+                user.active.role === 'admin') &&
+                <div className="add-chat-room-icon"
+                  onClick={::this.handleActivateModal}
+                  title="Add Chat Room"
+                >
+                  <FontAwesome name="plus-circle" />
+                </div>
+              }
+            </div>
+            {::this.handleChatRoomsListRender('group')}
+          </div>
         </div>
-      </Menu>
+        {
+          showModal &&
+          <CreateChatRoomModal
+            chatType={activeTab}
+            handleDeactivateModal={::this.handleDeactivateModal}
+            handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+            isLoading={chatRoom.isCreating}
+          />
+        }
+      </div>
     );
   }
 }
@@ -217,19 +205,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-LeftSideDrawer.propTypes = {
-  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
-  handleLeftSideDrawerToggleState: PropTypes.func.isRequired,
-  isLeftSideDrawerOpen: PropTypes.bool,
-  noOverlay: PropTypes.bool
-}
-
-LeftSideDrawer.defaultProps = {
-  isLeftSideDrawerOpen: false,
-  noOverlay: false
+ChatRoomsList.propTypes = {
+  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LeftSideDrawer);
+)(ChatRoomsList);

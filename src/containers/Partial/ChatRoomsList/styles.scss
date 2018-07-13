@@ -1,17 +1,7 @@
-.left-side-drawer {
-  background-color: $color-chateau-green;
-  color: #fff;
+.chat-rooms-list-wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: fixed;
-  top: 0;
-  width: 250px;
-  .title {
-    flex-shrink: 1;
-    margin: 0;
-    padding: 15px;
-  }
   .chat-room-tabs {
     display: flex;
     flex-shrink: 1;
@@ -47,6 +37,11 @@
       background-color: $color-mine-shaft;
       border-radius: 5px;
     }
+  }
+  .title {
+    flex-shrink: 1;
+    margin: 0;
+    padding: 15px;
   }
   .chat-rooms-options {
     align-items: center;

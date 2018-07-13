@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { slide as Menu } from 'react-burger-menu';
 import FontAwesome from 'react-fontawesome';
-import mapDispatchToProps from '../../actions';
-import LoadingAnimation from '../../components/LoadingAnimation';
-import ChatRoomMemberFilter from '../../components/RightSideDrawer/ChatRoomMemberFilter';
-import ChatRoomMember from '../../components/RightSideDrawer/ChatRoomMember';
-import '../../styles/RightSideDrawer.scss';
+import mapDispatchToProps from '../../../actions';
+import LoadingAnimation from '../../../components/LoadingAnimation';
+import ChatRoomMemberFilter from '../../../components/RightSideDrawer/ChatRoomMemberFilter';
+import ChatRoomMember from '../../../components/RightSideDrawer/ChatRoomMember';
+import './styles.scss';
 
-class RightSideDrawer extends Component {
+class MembersList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showModal: false,
       memberName: ''
     }
   }
@@ -45,7 +43,7 @@ class RightSideDrawer extends Component {
       }
 
       return (
-        <div className="right-side-drawer">
+        <div className="members-list-wrapper">
           <div className="members-count">
             <FontAwesome
               className="user-icon"
@@ -57,7 +55,7 @@ class RightSideDrawer extends Component {
             </h3>
           </div>
           <ChatRoomMemberFilter onMemberNameChange={::this.onMemberNameChange} />
-          <div className="member-list">
+          <div className="members-list">
             {
               members.length > 0 &&
               members.sort((a, b) => {
@@ -187,21 +185,11 @@ class RightSideDrawer extends Component {
       handleRightSideDrawerToggleState,
       noOverlay
     } = this.props;
-    const { showModal } = this.state;
 
     return (
-      <Menu
-        overlayClassName="right-side-drawer-overlay"
-        width="250px"
-        isOpen={isRightSideDrawerOpen}
-        onStateChange={handleRightSideDrawerToggleState}
-        noOverlay={noOverlay}
-        right
-      >
-        <div className="right-side-drawer-wrapper">
-          {::this.handleMembersListRender()}
-        </div>
-      </Menu>
+      <div style={{height: '100%'}}>
+        {::this.handleMembersListRender()}
+      </div>
     );
   }
 }
@@ -214,19 +202,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-RightSideDrawer.propTypes = {
-  handleRightSideDrawerToggleEvent: PropTypes.func.isRequired,
-  handleRightSideDrawerToggleState: PropTypes.func.isRequired,
-  isRightSideDrawerOpen: PropTypes.bool,
-  noOverlay: PropTypes.bool
-}
-
-RightSideDrawer.defaultProps = {
-  isRightSideDrawerOpen: false,
-  noOverlay: false
+MembersList.propTypes = {
+  handleRightSideDrawerToggleEvent: PropTypes.func.isRequired
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RightSideDrawer);
+)(MembersList);
