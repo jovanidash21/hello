@@ -1,0 +1,11 @@
+.admin-title-wrapper {
+  align-items: center;
+  display: flex;
+  .hamburger-icon {
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  .admin-title {
+    margin: 0 10px 0 0;
+  }
+}

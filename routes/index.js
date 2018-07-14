@@ -33,4 +33,12 @@ router.get('/chat', function(req, res, next) {
   }
 });
 
+router.get('/admin', function(req, res, next) {
+  if (req.user && (req.user.role == 'owner' || req.user.role == 'admin')) {
+    res.render('index', { title: 'Chat App | Admin' });
+  } else {
+    res.redirect('/');
+  }
+});
+
 module.exports = router;

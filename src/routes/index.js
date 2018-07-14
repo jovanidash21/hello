@@ -8,6 +8,7 @@ import Login from '../containers/Login';
 import Register from '../containers/Register';
 import Guest from '../containers/Guest';
 import Chat from '../containers/Chat';
+import Admin from '../containers/Admin';
 import 'react-popup/style.css';
 import '../styles/Common.scss';
 
@@ -20,6 +21,7 @@ const routes = (
       <AuthForm exact path="/register" component={Register} />
       <AuthForm exact path="/guest" component={Guest} />
       <Layout exact path="/chat" component={Chat} />
+      <Layout exact path="/admin" component={Admin} />
     </Switch>
   </div>
 );

@@ -1,0 +1,31 @@
+.menu-item {
+  align-items: center;
+  border-bottom: 1px solid $color-goblin;
+  color: $color-old-lace;
+  cursor: pointer;
+  display: flex;
+  padding: 10px 10px 10px 15px;
+  transition: all 0.2s ease;
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: $color-goblin;
+  }
+  &.active {
+    background-color: $color-royal-purple;
+  }
+  .menu-icon {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+    width: 30px;
+  }
+  .menu-title {
+    flex: 1;
+    font-size: 17px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
