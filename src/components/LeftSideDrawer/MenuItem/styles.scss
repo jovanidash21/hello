@@ -4,7 +4,7 @@
   color: $color-old-lace;
   cursor: pointer;
   display: flex;
-  padding: 10px 10px 10px 15px;
+  padding: 10px;
   transition: all 0.2s ease;
   &:active,
   &:focus,
@@ -27,5 +27,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .arrow-icon {
+    color: $color-emperor;
+    font-size: 18px;
   }
 }
