@@ -25,17 +25,8 @@ class AdminMenu extends Component {
     }
   }
   render() {
+    const { menuItems } = this.props;
     const { openMenuItem } = this.state;
-    const menuItems = [
-      {
-        icon: "user",
-        title: "User"
-      },
-      {
-        icon: "key",
-        title: "Chat Room"
-      }
-    ];
 
     return (
       <div style={{height: '100%'}}>
@@ -43,18 +34,22 @@ class AdminMenu extends Component {
           <h1 className="title">Admin Panel</h1>
           <div className="menus-list">
             {
-              menuItems.map((singleMenu, i) =>
+              menuItems.length > 0 &&
+              menuItems.map((singleMenuItem, i) =>
                 <MenuItem
                   key={i}
                   index={i}
-                  icon={singleMenu.icon}
-                  title={singleMenu.title}
+                  icon={singleMenuItem.icon}
+                  title={singleMenuItem.title}
                   isOpen={openMenuItem === i}
                   handleOpenMenuItem={::this.handleOpenMenuItem}
                 >
-                  <SubMenuItem title="Create" />
-                  <SubMenuItem title="Edit" />
-                  <SubMenuItem title="Delete" />
+                  {
+                    singleMenuItem.subMenuItems.length > 0 &&
+                    singleMenuItem.subMenuItems.map((singleSubMenuItem, i) =>
+                      <SubMenuItem key={i} title={singleSubMenuItem.title} />
+                    )
+                  }
                 </MenuItem>
               )
             }
@@ -73,6 +68,7 @@ const mapStateToProps = (state) => {
 }
 
 AdminMenu.propTypes = {
+  menuItems: PropTypes.array.isRequired,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired
 }
 

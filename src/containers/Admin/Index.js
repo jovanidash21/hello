@@ -13,6 +13,27 @@ import Head from '../../components/Head';
 import LoadingAnimation from '../../components/LoadingAnimation';
 import '../../styles/Admin.scss';
 
+const menuItems = [
+  {
+    icon: "user",
+    title: "User",
+    subMenuItems: [
+      { title: "Create" },
+      { title: "Edit" },
+      { title: "Delete" }
+    ]
+  },
+  {
+    icon: "key",
+    title: "Chat Room",
+    subMenuItems: [
+      { title: "Create" },
+      { title: "Edit" },
+      { title: "Delete" }
+    ]
+  }
+];
+
 class Admin extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +64,10 @@ class Admin extends Component {
               isLeftSideDrawerOpen={matches ? isLeftSideDrawerOpen : true}
               noOverlay={matches ? false : true}
             >
-              <AdminMenu handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
+              <AdminMenu
+                menuItems={menuItems}
+                handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+              />
             </LeftSideDrawer>
           )
         }}
