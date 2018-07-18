@@ -58,7 +58,7 @@ var userSchema = new Schema (
     },
     profilePicture: {
       type: String,
-      default: 'https://raw.githubusercontent.com/jovanidash21/chat-app/master/public/images/default-profile-picture.jpg',
+      default: '',
     },
     chatRooms: [userChatRoomSchema],
     accountType: {

@@ -114,6 +114,7 @@ class ChatRoomMember extends Component {
           <Avatar
             image={chatRoomMember.profilePicture}
             size="23px"
+            title={chatRoomMember.name}
             role={chatRoomMember.role}
             accountType={chatRoomMember.accountType}
           />
