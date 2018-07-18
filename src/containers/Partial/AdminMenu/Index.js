@@ -10,23 +10,54 @@ var SubMenuItem = MenuItem.SubMenuItem;
 class AdminMenu extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      openMenuItem: -1
+    };
+  }
+  handleOpenMenuItem(menuItemIndex) {
+    const { openMenuItem } = this.state;
+
+    if ( openMenuItem !== menuItemIndex ) {
+      this.setState({openMenuItem: menuItemIndex});
+    } else {
+      this.setState({openMenuItem: -1});
+    }
   }
   render() {
+    const { openMenuItem } = this.state;
+    const menuItems = [
+      {
+        icon: "user",
+        title: "User"
+      },
+      {
+        icon: "key",
+        title: "Chat Room"
+      }
+    ];
+
     return (
       <div style={{height: '100%'}}>
         <div className="admin-menu-wrapper">
           <h1 className="title">Admin Panel</h1>
           <div className="menus-list">
-            <MenuItem icon="user" title="User">
-              <SubMenuItem title="Create" />
-              <SubMenuItem title="Edit" />
-              <SubMenuItem title="Delete" />
-            </MenuItem>
-            <MenuItem icon="key" title="Chat Room">
-              <SubMenuItem title="Create" />
-              <SubMenuItem title="Edit" />
-              <SubMenuItem title="Delete" />
-            </MenuItem>
+            {
+              menuItems.map((singleMenu, i) =>
+                <MenuItem
+                  key={i}
+                  index={i}
+                  icon={singleMenu.icon}
+                  title={singleMenu.title}
+                  isOpen={openMenuItem === i}
+                  handleOpenMenuItem={::this.handleOpenMenuItem}
+                >
+                  <SubMenuItem title="Create" />
+                  <SubMenuItem title="Edit" />
+                  <SubMenuItem title="Delete" />
+                </MenuItem>
+              )
+            }
           </div>
         </div>
       </div>

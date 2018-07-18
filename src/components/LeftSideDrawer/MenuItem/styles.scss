@@ -1,35 +1,51 @@
-.menu-item {
-  align-items: center;
-  border-bottom: 1px solid $color-goblin;
-  color: $color-old-lace;
-  cursor: pointer;
-  display: flex;
-  padding: 10px;
-  transition: all 0.2s ease;
-  &:active,
-  &:focus,
-  &:hover {
-    background-color: $color-goblin;
-  }
-  &.active {
-    background-color: $color-royal-purple;
-  }
-  .menu-icon {
+.menu-item-wrapper {
+  .menu-item {
     align-items: center;
+    border-bottom: 1px solid $color-goblin;
+    color: $color-old-lace;
+    cursor: pointer;
     display: flex;
-    justify-content: center;
-    margin-right: 10px;
-    width: 30px;
+    padding: 10px;
+    transition: all 0.2s ease;
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: $color-goblin;
+    }
+    &.active {
+      background-color: $color-killarney;
+      & + .sub-menu-items {
+        display: block;
+      }
+      .arrow-icon {
+        color: #fff;
+        transform: rotate(-180deg);
+      }
+    }
+    .menu-icon {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-right: 10px;
+      width: 30px;
+    }
+    .menu-title {
+      flex: 1;
+      font-size: 17px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .arrow-icon {
+      color: $color-emperor;
+      font-size: 18px;
+      transform: rotate(0deg);
+      transition: all 0.2s ease;
+    }
   }
-  .menu-title {
-    flex: 1;
-    font-size: 17px;
+  .sub-menu-items {
+    max-height: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .arrow-icon {
-    color: $color-emperor;
-    font-size: 18px;
+    transition: all 0.2s ease;
   }
 }
