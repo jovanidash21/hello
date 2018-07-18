@@ -31,7 +31,7 @@ class ActiveChatRoom extends Component {
         for ( var i = 0; i < activeChatRoom.data.members.length; i++ ) {
           var member = activeChatRoom.data.members[i];
 
-          if ( member._id != user._id ) {
+          if ( member._id != activeUser._id ) {
             role = member.role;
             accountType = member.accountType;
             break;
