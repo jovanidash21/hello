@@ -11,6 +11,9 @@ import {
   SOCKET_BLOCK_MEMBER
 } from '../constants/member';
 
+const localtionArr = window.location.href.split("/");
+const baseURL = localtionArr[0] + "//" + localtionArr[2];
+
 /**
  * Fetch members
  * @param {string} chatRoomID
@@ -20,7 +23,7 @@ export function fetchMembers(chatRoomID, userID) {
   return dispatch => {
     return dispatch({
       type: FETCH_MEMBERS,
-      payload: axios.get(`/api/member/${chatRoomID}/${userID}`)
+      payload: axios.get(baseURL + `/api/member/${chatRoomID}/${userID}`)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -41,7 +44,7 @@ export function blockMember(memberID) {
   return dispatch => {
     return dispatch({
       type: BLOCK_MEMBER,
-      payload: axios.post('api/member/block', data)
+      payload: axios.post(baseURL + '/api/member/block', data)
     })
     .then((response) => {
       dispatch({
@@ -71,7 +74,7 @@ export function kickMember(chatRoomID, memberID) {
   return dispatch => {
     return dispatch({
       type: KICK_MEMBER,
-      payload: axios.post('api/member/kick', data)
+      payload: axios.post(baseURL + '/api/member/kick', data)
     })
     .then((response) => {
       dispatch({
@@ -104,7 +107,7 @@ export function updateMemberRole(memberID, role) {
   return dispatch => {
     return dispatch({
       type: UPDATE_MEMBER_ROLE,
-      payload: axios.post('api/member/role', data)
+      payload: axios.post(baseURL + '/api/member/role', data)
     })
     .then((response) => {
       dispatch({
@@ -131,7 +134,7 @@ export function muteMember(memberID) {
   return dispatch => {
     return dispatch({
       type: MUTE_MEMBER,
-      payload: axios.post('api/member/mute', data)
+      payload: axios.post(baseURL + '/api/member/mute', data)
     })
     .then((response) => {
       dispatch({

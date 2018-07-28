@@ -12,6 +12,9 @@ import {
   SOCKET_USER_LOGOUT
 } from '../constants/auth';
 
+const localtionArr = window.location.href.split("/");
+const baseURL = localtionArr[0] + "//" + localtionArr[2];
+
 /**
  * Socket user login
  * @param {Object} user
@@ -39,7 +42,7 @@ export function localLogin(username, password) {
 
     return dispatch({
       type: LOGIN,
-      payload: axios.post('/api/login/local', data)
+      payload: axios.post(baseURL + '/api/login/local', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -61,7 +64,7 @@ export function facebookLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('/api/login/facebook', 'Facebook Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/facebook', 'Facebook Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -89,7 +92,7 @@ export function googleLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('/api/login/google', 'Google Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/google', 'Google Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -117,7 +120,7 @@ export function twitterLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('/api/login/twitter', 'Twitter Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/twitter', 'Twitter Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -159,7 +162,7 @@ export function register(email, name, username, gender, password) {
 
     return dispatch({
       type: REGISTER,
-      payload: axios.post('/api/register', data)
+      payload: axios.post(baseURL + '/api/register', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -192,7 +195,7 @@ export function guestLogin(name, username, gender) {
 
     return dispatch({
       type: GUEST_LOGIN,
-      payload: axios.post('/api/login/guest', data)
+      payload: axios.post(baseURL + '/api/login/guest', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -216,7 +219,7 @@ export function logout(userID) {
 
     return dispatch({
       type: LOGOUT,
-      payload: axios.post('/api/logout')
+      payload: axios.post(baseURL + '/api/logout')
     })
     .then(() => {
       dispatch({
