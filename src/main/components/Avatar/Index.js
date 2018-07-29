@@ -102,6 +102,7 @@ class Avatar extends Component {
       title,
       role,
       accountType,
+      badgeBigger,
       badgeCloser
     } = this.props;
     const avatarStyles = ::this.handleAvatarStyles();
@@ -125,6 +126,7 @@ class Avatar extends Component {
           <div
             className={
               "badge-logo top " +
+              (badgeBigger ? 'bigger ' : '') +
               (badgeCloser ? 'closer ' : '') +
               role
             }
@@ -141,6 +143,7 @@ class Avatar extends Component {
           <div
             className={
               "badge-logo " +
+              (badgeBigger ? 'bigger ' : '') +
               (badgeCloser ? 'closer ' : '') +
               accountType
             }
@@ -163,12 +166,14 @@ Avatar.propTypes = {
   title: PropTypes.string.isRequired,
   role: PropTypes.string.isRequired,
   accountType: PropTypes.string.isRequired,
+  badgeBigger: PropTypes.bool
   badgeCloser: PropTypes.bool
 }
 
 Avatar.defaultProps = {
   image: '',
   size: '25px',
+  badgeBigger: false,
   badgeCloser: false
 }
 
