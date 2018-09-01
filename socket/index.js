@@ -32,23 +32,6 @@ var sockets = function(io) {
             }
           );
           break;
-        case 'SOCKET_USER_LOGOUT':
-          User.findByIdAndUpdate(
-            action.userID,
-            { $set: { isOnline: false, ipAddress: '', socketID: ''} },
-            { safe: true, upsert: true, new: true },
-            function(err) {
-              if (!err) {
-                socket.broadcast.emit('action', {
-                  type: 'SOCKET_BROADCAST_USER_LOGOUT',
-                  userID: action.userID
-                });
-
-                delete users[socket.id];
-              }
-            }
-          );
-          break;
         case 'SOCKET_JOIN_CHAT_ROOM':
           socket.join(action.chatRoomID);
           break;

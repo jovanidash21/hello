@@ -7,9 +7,7 @@ import {
   LOGIN,
   REGISTER,
   GUEST_LOGIN,
-  LOGOUT,
-  SOCKET_USER_LOGIN,
-  SOCKET_USER_LOGOUT
+  SOCKET_USER_LOGIN
 } from '../constants/auth';
 
 const localtionArr = window.location.href.split("/");
@@ -200,34 +198,6 @@ export function guestLogin(name, username, gender) {
     .then(() => {
       dispatch(hideLoading());
       dispatch(push('/chat'));
-    })
-    .catch((error) => {
-      if (error instanceof Error) {
-        dispatch(hideLoading());
-      }
-    });
-  }
-}
-
-/**
- * Logout
- * @param {string} userID
- */
-export function logout(userID) {
-  return dispatch => {
-    dispatch(showLoading());
-
-    return dispatch({
-      type: LOGOUT,
-      payload: axios.post(baseURL + '/api/logout')
-    })
-    .then(() => {
-      dispatch({
-        type: SOCKET_USER_LOGOUT,
-        userID: userID
-      });
-      dispatch(hideLoading());
-      dispatch(push('/'));
     })
     .catch((error) => {
       if (error instanceof Error) {

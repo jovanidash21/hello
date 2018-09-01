@@ -6,8 +6,7 @@ import {
   googleLogin,
   twitterLogin,
   register,
-  guestLogin,
-  logout
+  guestLogin
 } from './auth';
 import {
   fetchUser,
@@ -52,7 +51,6 @@ const actions = (dispatch) => {
     twitterLogin,
     register,
     guestLogin,
-    logout,
     fetchUser,
     fetchUsers,
     socketIsTyping,

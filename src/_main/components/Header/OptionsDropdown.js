@@ -9,13 +9,6 @@ class OptionsDropdown extends Component {
   constructor(props) {
     super(props);
   }
-  handleLogout(event) {
-    event.preventDefault();
-
-    const { handleLogout } = this.props;
-
-    handleLogout();
-  }
   render() {
     const { user } = this.props;
 
@@ -40,7 +33,7 @@ class OptionsDropdown extends Component {
           </button>
           <ul className="mui-dropdown__menu mui-dropdown__menu--right">
             <li>
-              <a href="#" onClick={::this.handleLogout}>
+              <a href="/logout">
                 Logout
               </a>
             </li>
@@ -52,8 +45,7 @@ class OptionsDropdown extends Component {
 }
 
 OptionsDropdown.propTypes = {
-  user: PropTypes.object.isRequired,
-  handleLogout: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired
 }
 
 export default OptionsDropdown;

@@ -10,14 +10,6 @@ class Header extends Component {
   constructor(props) {
     super(props);
   }
-  handleLogout() {
-    const {
-      user,
-      logout
-    } = this.props;
-
-    logout(user.active._id);
-  }
   render() {
     const {
       user,
@@ -35,10 +27,7 @@ class Header extends Component {
                 </div>
               </td>
               <td className="mui--appbar-height mui--text-right">
-                <OptionsDropdown
-                  user={user.active}
-                  handleLogout={::this.handleLogout}
-                />
+                <OptionsDropdown user={user.active} />
               </td>
             </tr>
           </tbody>
