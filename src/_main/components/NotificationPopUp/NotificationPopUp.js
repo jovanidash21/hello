@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import NotificationSystem from 'react-notification-system';
 import { SOCKET_BROADCAST_NOTIFY_MESSAGE } from '../../constants/message';
-import socket from '../../socket';
+import socket from '../../../socket';
 import './styles.scss';
 
 var notificationSystem = null;
