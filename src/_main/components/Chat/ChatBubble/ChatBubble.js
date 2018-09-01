@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { emojify } from 'react-emojione';
+import MediaQuery from 'react-responsive';
 import ReactHtmlParser from 'react-html-parser';
 import FontAwesome from 'react-fontawesome';
 import Plyr from 'react-plyr';
@@ -147,18 +148,26 @@ class ChatBubble extends Component {
           (!isSender && isPreviousMessageSameSender ? 'no-avatar' : '')
         }
       >
-        {
-          !isSender &&
-          !isPreviousMessageSameSender &&
-          <Avatar
-            image={message.user.profilePicture}
-            size="35px"
-            title={message.user.name}
-            role={message.user.role}
-            accountType={message.user.accountType}
-            badgeCloser
-          />
-        }
+        <MediaQuery query="(min-width: 768px)">
+          {(matches) => {
+            return (
+              <div>
+                {
+                  !isSender &&
+                  !isPreviousMessageSameSender &&
+                  <Avatar
+                    image={message.user.profilePicture}
+                    size={matches ? '35px' : '25px'}
+                    title={message.user.name}
+                    role={message.user.role}
+                    accountType={message.user.accountType}
+                    badgeCloser={matches ? true : false}
+                  />
+                }
+              </div>
+            )
+          }}
+        </MediaQuery>
         <div className="chat-details">
           {
             !isSender &&
