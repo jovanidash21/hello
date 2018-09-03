@@ -16,7 +16,7 @@ var sockets = function(io) {
             action.user._id, {
               $set: {
                 isOnline: true,
-                ipAddress: socket.request.connection.remoteAddress.replace('::ffff:', ''),
+                ipAddress: socket.request.connection.remoteAddress,
                 socketID: socket.id
               }
             }, { safe: true, upsert: true, new: true },
