@@ -196,6 +196,7 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       isAudioRecorderOpen
     } = this.state;
+    const isChatInputDisabled = chatRoom.isFetching || message.isFetchingNew;
 
     return (
       <div
@@ -237,6 +238,7 @@ class Chat extends Component {
                 handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                 handleSendFileMessage={::this.handleSendFileMessage}
                 handleSendImageMessage={::this.handleSendImageMessage}
+                isDisabled={isChatInputDisabled}
               />
               :
               <ChatAudioRecorder
@@ -254,7 +256,8 @@ class Chat extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom
+    chatRoom: state.chatRoom,
+    message: state.message
   }
 }
 
