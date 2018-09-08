@@ -20,13 +20,13 @@ var sockets = function(io) {
                 socketID: socket.id
               }
             }, { safe: true, upsert: true, new: true },
-            function(err) {
+            function(err, user) {
               if (!err) {
-                users[socket.id] = action.user._id;
+                users[socket.id] = user._id;
 
                 socket.broadcast.emit('action', {
                   type: 'SOCKET_BROADCAST_USER_LOGIN',
-                  user: action.user
+                  user: user
                 });
               }
             }
