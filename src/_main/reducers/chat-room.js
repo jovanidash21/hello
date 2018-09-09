@@ -130,15 +130,16 @@ const chatRoom = (state=initialState, action) => {
     case SOCKET_CREATE_CHAT_ROOM:
     case SOCKET_BROADCAST_CREATE_CHAT_ROOM:
       var chatRoom = {...action.chatRoom};
+      var chatRooms = [...state.all];
 
-      chatRoom.priority = chatRoomPriority(chatRoom.data);
+      if ( !chatRooms.some((singleChatRoom) => singleChatRoom.data._id === chatRoom.data._id)) {
+        chatRoom.priority = chatRoomPriority(chatRoom.data);
+        chatRooms = [...chatRooms, {...chatRoom}];
+      }
 
       return {
         ...state,
-        all: [
-          ...state.all,
-          {...chatRoom}
-        ]
+        all: [...chatRooms]
       };
     case SOCKET_BROADCAST_USER_LOGIN:
       var user = action.user;

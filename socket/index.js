@@ -114,6 +114,11 @@ var sockets = function(io) {
                             chatRoom.name = action.message.user.name;
 
                             socket.broadcast.to(user.socketID).emit('action', {
+                              type: 'SOCKET_BROADCAST_CREATE_CHAT_ROOM',
+                              chatRoom: {data: chatRoom, unReadMessages: 0},
+                            });
+
+                            socket.broadcast.to(user.socketID).emit('action', {
                               type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
                               chatRoom: {data: chatRoom, unReadMessages: 0},
                               chatRoomID: action.chatRoomID,
