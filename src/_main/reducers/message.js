@@ -1,6 +1,5 @@
 import {
   FETCH_NEW_MESSAGES,
-  FETCH_OLD_MESSAGES,
   SEND_MESSAGE,
   SOCKET_BROADCAST_SEND_MESSAGE
 } from '../constants/message';
@@ -9,8 +8,6 @@ import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
 const initialState = {
   isFetchingNew: false,
   isFetchingNewSuccess: true,
-  isFetchingOld: false,
-  isFetchingOldSuccess: true,
   isSending: false,
   isSendingSuccess: true,
   activeChatRoom: {
@@ -26,11 +23,6 @@ const message = (state=initialState, action) => {
         ...state,
         isFetchingNew: true
       };
-    case `${FETCH_OLD_MESSAGES}_LOADING`:
-      return {
-        ...state,
-        isFetchingOld: true
-      };
     case `${SEND_MESSAGE}_LOADING`:
       return {
         ...state,
@@ -43,23 +35,12 @@ const message = (state=initialState, action) => {
         isFetchingNewSuccess: true,
         all: action.payload.data
       };
-    case `${FETCH_OLD_MESSAGES}_SUCCESS`:
-      return {
-        ...state,
-        isFetchingOld: false,
-        isFetchingOldSuccess: true,
-        all: [
-          ...action.payload.data,
-          ...state.all
-        ]
-      };
     case `${SEND_MESSAGE}_SUCCESS`:
       var messages = [...state.all];
       var messageID = action.meta;
       var newMessage = action.payload.data.messageData;
 
       messages = messages.filter((message) => message._id !== messageID);
-
       newMessage.isSending = false;
 
       return {
@@ -76,12 +57,6 @@ const message = (state=initialState, action) => {
         ...state,
         isFetchingNew: false,
         isFetchingNewSuccess: false
-      };
-    case `${FETCH_OLD_MESSAGES}_ERROR`:
-      return {
-        ...state,
-        isFetchingOld: false,
-        isFetchingOldSuccess: false
       };
     case `${SEND_MESSAGE}_ERROR`:
       return {
@@ -103,6 +78,7 @@ const message = (state=initialState, action) => {
       if (message.chatRoom === activeChatRoom.data._id) {
         messages.push(message);
       }
+      messages = messages.slice(1);
 
       return {
         ...state,

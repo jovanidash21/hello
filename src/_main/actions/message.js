@@ -17,41 +17,12 @@ const baseURL = localtionArr[0] + "//" + localtionArr[2];
 export function fetchNewMessages(chatRoomID, userID) {
   let data = {
     chatRoomID: chatRoomID,
-    userID: userID,
-    skipCount: 0,
-    limit: 25
+    userID: userID
   };
 
   return dispatch => {
     return dispatch({
       type: FETCH_NEW_MESSAGES,
-      payload: axios.post(baseURL + '/api/message', data)
-    })
-    .catch((error) => {
-      if (error instanceof Error) {
-        console.log(error);
-      }
-    });
-  }
-}
-
-/**
- * Fetch old messages
- * @param {string} chatRoomID
- * @param {string} userID
- * @param {number} skipCount
- */
-export function fetchOldMessages(chatRoomID, userID, skipCount) {
-  let data = {
-    chatRoomID: chatRoomID,
-    userID: userID,
-    skipCount: skipCount,
-    limit: 10
-  };
-
-  return dispatch => {
-    return dispatch({
-      type: FETCH_OLD_MESSAGES,
       payload: axios.post(baseURL + '/api/message', data)
     })
     .catch((error) => {
