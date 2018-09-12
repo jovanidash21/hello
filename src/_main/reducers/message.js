@@ -78,7 +78,10 @@ const message = (state=initialState, action) => {
       if (message.chatRoom === activeChatRoom.data._id) {
         messages.push(message);
       }
-      messages = messages.slice(1);
+
+      if (messages.length > 20) {
+        messages = messages.slice(1);
+      }
 
       return {
         ...state,

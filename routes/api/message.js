@@ -155,7 +155,7 @@ router.post('/text', function(req, res, next) {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(10)
+          .skip(20)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -231,7 +231,7 @@ router.post('/file', fileUpload.single('file'), function(req, res, next) {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(10)
+          .skip(20)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -301,7 +301,7 @@ router.post('/image', imageUpload.single('image'), function(req, res, next) {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(10)
+          .skip(20)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -371,7 +371,7 @@ router.post('/audio', audioUpload.single('audio'), function(req, res, next) {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(10)
+          .skip(20)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
