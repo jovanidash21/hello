@@ -15,35 +15,38 @@ class MembersList extends Component {
     super(props);
 
     this.state = {
-      memberName: ''
+      members: [],
+      memberName: '',
+      selectedMemberIndex: -1
     }
   }
   componentDidUpdate(prevProps) {
+    if ( prevProps.member.isFetching && !this.props.member.isFetching ) {
+      this.setState({members: this.props.member.all});
+    }
+
     if ( prevProps.chatRoom.isCreating && this.props.chatRoom.isCreatingSuccess ) {
       const { handleRightSideDrawerToggleEvent } = this.props;
 
       handleRightSideDrawerToggleEvent();
+      this.setState({
+        memberName: '',
+        selectedMemberIndex: -1
+      });
     }
   }
   handleMembersListRender() {
     const {
       user,
-      chatRoom,
       member
     } = this.props;
-    const { memberName } = this.state;
+    const {
+      members,
+      memberName,
+      selectedMemberIndex
+    } = this.state;
 
     if ( !member.isFetching && member.isFetchingSuccess ) {
-      const activeChatRoom = chatRoom.active;
-      var members = [...member.all];
-      var query = memberName.trim().toLowerCase();
-
-      if ( query.length > 0 ) {
-        members = members.filter((singleMember) => {
-          return singleMember.name.toLowerCase().match(query);
-        });
-      }
-
       return (
         <div className="members-list-wrapper">
           <div className="members-count">
@@ -56,7 +59,11 @@ class MembersList extends Component {
               Online Members
             </h3>
           </div>
-          <ChatRoomMemberFilter onMemberNameChange={::this.onMemberNameChange} />
+          <ChatRoomMemberFilter
+            value={memberName}
+            onMemberNameChange={::this.onMemberNameChange}
+            onMemberNameKeyDown={::this.onMemberNameKeyDown}
+          />
           <div className="members-list">
             {
               members.length > 0 &&
@@ -76,13 +83,13 @@ class MembersList extends Component {
                 <ChatRoomMember
                   key={i}
                   user={user.active}
-                  activeChatRoom={activeChatRoom}
                   chatRoomMember={chatRoomMember}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                   handleBlockMember={::this.handleBlockMember}
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
                   handleMuteMember={::this.handleMuteMember}
+                  isActive={selectedMemberIndex === i}
                 />
               )
             }
@@ -96,11 +103,65 @@ class MembersList extends Component {
     }
   }
   onMemberNameChange(event) {
-    this.setState({memberName: event.target.value});
-  }
-  handleAddDirectChatRoom(event, memberID) {
-    event.preventDefault();
+    const { member } = this.props;
+    const {
+      members,
+      selectedMemberIndex
+    } = this.state;
+    var allMembers = [];
+    var memberName = event.target.value
+    var memberIndex = selectedMemberIndex;
 
+    if ( memberName.length > 0 ) {
+      allMembers = members.filter((singleMember) => {
+        return singleMember.name.toLowerCase().match(memberName);
+      });
+
+      if ( selectedMemberIndex === -1 ) {
+        memberIndex = 0;
+      }
+    } else {
+      allMembers = [...member.all];
+      memberIndex = -1;
+    }
+
+    this.setState({
+      members: allMembers,
+      memberName: memberName,
+      selectedMemberIndex: memberIndex
+    });
+  }
+  onMemberNameKeyDown(event) {
+    const {
+      members,
+      selectedMemberIndex
+    } = this.state;
+
+    if ( members.length > 0 ) {
+      if ( event.keyCode === 38 ) {
+        if ( selectedMemberIndex === -1 ) {
+          this.setState({selectedMemberIndex: members.length - 1});
+        } else {
+          this.setState({selectedMemberIndex: selectedMemberIndex - 1});
+        }
+      }
+
+      if ( event.keyCode === 40 ) {
+        if ( selectedMemberIndex === members.length - 1 ) {
+          this.setState({selectedMemberIndex: -1});
+        } else {
+          this.setState({selectedMemberIndex: selectedMemberIndex + 1});
+        }
+      }
+
+      if ( event.key === 'Enter' && selectedMemberIndex !== -1 ) {
+        const selectedMember = members[selectedMemberIndex];
+
+        ::this.handleAddDirectChatRoom(selectedMember._id);
+      }
+    }
+  }
+  handleAddDirectChatRoom(memberID) {
     const {
       user,
       chatRoom,
@@ -111,30 +172,37 @@ class MembersList extends Component {
     const userID = user.active._id;
     const chatRooms = chatRoom.all;
     const activeChatRoom = chatRoom.active;
-    var directChatRoomExists = false;
-    var directChatRoomData = {};
+    var chatRoomExists = false;
+    var existingChatRoomData = {};
 
     for ( var i = 0; i < chatRooms.length; i++ ) {
-      if ( chatRooms[i].data.chatType === 'direct' ) {
-        var isMembersMatch = chatRooms[i].data.members.some(member => member._id === memberID);
+      var singleChatRoom = chatRooms[i];
 
-        if ( isMembersMatch ) {
-          directChatRoomExists = true;
-          directChatRoomData = chatRooms[i];
-          break;
-        } else {
-          continue;
-        }
-      } else {
-        continue;
+      if (
+        ( singleChatRoom.data.chatType === 'private' && userID === memberID ) ||
+        ( singleChatRoom.data.chatType === 'direct' && singleChatRoom.data.members.some(member => member._id === memberID) )
+      ) {
+        chatRoomExists = true;
+        existingChatRoomData = singleChatRoom;
+        break;
       }
     }
 
-    if ( ! directChatRoomExists ) {
+    if ( !chatRoomExists ) {
       createDirectChatRoom(userID, memberID, activeChatRoom.data._id);
-    } else {
-      changeChatRoom(directChatRoomData, userID, activeChatRoom.data._id);
+    } else if ( Object.keys(existingChatRoomData).length > 0 && existingChatRoomData.constructor === Object ) {
+      changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id);
       handleRightSideDrawerToggleEvent();
+      this.setState({
+        memberName: '',
+        selectedMemberIndex: -1
+      });
+    } else {
+      handleRightSideDrawerToggleEvent();
+      this.setState({
+        memberName: '',
+        selectedMemberIndex: -1
+      });
     }
   }
   handleBlockMember(memberID) {
@@ -148,15 +216,17 @@ class MembersList extends Component {
       blockMember(memberID);
     }
   }
-  handleKickMember(chatRoomID, memberID) {
+  handleKickMember(memberID) {
     const {
       user,
+      chatRoom,
       kickMember
     } = this.props;
     const userData = user.active;
+    const activeChatRoom = chatRoom.active;
 
     if ( userData.role === 'owner' || userData.role === 'admin' ) {
-      kickMember(chatRoomID, memberID);
+      kickMember(activeChatRoom.data._id, memberID);
     }
   }
   handleUpdateMemberRole(memberID, role) {

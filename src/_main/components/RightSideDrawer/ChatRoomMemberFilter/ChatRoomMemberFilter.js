@@ -7,18 +7,26 @@ const ChatRoomMemberFilter = (props) => {
   return (
     <div className="chat-room-member-filter">
       <Input
+        value={props.value}
         type="text"
         autoComplete="off"
         floatingLabel={false}
         placeholder="Search"
         onChange={props.onMemberNameChange}
+        onKeyDown={props.onMemberNameKeyDown}
       />
     </div>
   );
 }
 
 ChatRoomMemberFilter.propTypes = {
-  onMemberNameChange: PropTypes.func.isRequired
+  value: PropTypes.string,
+  onMemberNameChange: PropTypes.func.isRequired,
+  onMemberNameKeyDown: PropTypes.func.isRequired
+}
+
+ChatRoomMemberFilter.defaultProps = {
+  value: ''
 }
 
 export default ChatRoomMemberFilter;

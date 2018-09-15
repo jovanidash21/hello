@@ -40,7 +40,7 @@ class ChatRoomMember extends Component {
       handleAddDirectChatRoom
     } = this.props;
 
-    handleAddDirectChatRoom(event, chatRoomMember._id);
+    handleAddDirectChatRoom(chatRoomMember._id);
   }
   handleBlockMember(event) {
     event.preventDefault();
@@ -56,12 +56,11 @@ class ChatRoomMember extends Component {
     event.preventDefault();
 
     const {
-      activeChatRoom,
       chatRoomMember,
       handleKickMember
     } = this.props;
 
-    handleKickMember(activeChatRoom.data._id, chatRoomMember._id);
+    handleKickMember(chatRoomMember._id);
   }
   handleUpdateMemberRole(event, role) {
     event.preventDefault();
@@ -86,7 +85,8 @@ class ChatRoomMember extends Component {
   render() {
     const {
       user,
-      chatRoomMember
+      chatRoomMember,
+      isActive
     } = this.props;
     const { isShowDropdownMenu } = this.state;
     var chatRoomMemberOptions = {};
@@ -100,7 +100,8 @@ class ChatRoomMember extends Component {
     return (
       <div
         className={"chat-room-member-wrapper " +
-          ( chatRoomMember.role === 'vip' ? 'special ' : '' )
+          (chatRoomMember.role === 'vip' ? 'special ' : ' ' ) +
+          (isActive ? 'active' : '')
         }
         title={chatRoomMember.name}
       >
@@ -267,13 +268,17 @@ class ChatRoomMember extends Component {
 
 ChatRoomMember.propTypes = {
   user: PropTypes.object.isRequired,
-  activeChatRoom: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleBlockMember: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,
-  handleMuteMember: PropTypes.func.isRequired
+  handleMuteMember: PropTypes.func.isRequired,
+  isActive: PropTypes.bool
+}
+
+ChatRoomMember.defaultProps = {
+  isActive: false
 }
 
 export default ChatRoomMember;
