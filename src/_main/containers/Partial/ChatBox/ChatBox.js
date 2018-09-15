@@ -72,9 +72,6 @@ class ChatBox extends Component {
                   key={singleMessage._id}
                   index={i}
                   message={singleMessage}
-                  isSender={(singleMessage.user._id === user.active._id) ? true : false }
-                  previousMessageSenderID={i-1 !== -1 ? message.all[i-1].user._id : ''}
-                  nextMessageSenderID={i !== message.all.length-1 ? message.all[i+1].user._id : ''}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                 />
               )
