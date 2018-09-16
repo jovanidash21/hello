@@ -14,7 +14,7 @@ class ChatRoomsList extends Component {
 
     this.state = {
       activeTab: 'group',
-      showModal: false
+      isModalOpen: false
     }
   }
   componentDidUpdate(prevProps) {
@@ -111,11 +111,13 @@ class ChatRoomsList extends Component {
 
     this.setState({activeTab: tab});
   }
-  handleActivateModal() {
-    this.setState({showModal: true});
+  handleOpenModal(event) {
+    event.preventDefault();
+
+    this.setState({isModalOpen: true});
   }
-  handleDeactivateModal() {
-    this.setState({showModal: false});
+  handleCloseModal() {
+    this.setState({isModalOpen: false});
   }
   handleTrashChatRoom(chatRoomID) {
     const {
@@ -133,7 +135,7 @@ class ChatRoomsList extends Component {
     } = this.props;
     const {
       activeTab,
-      showModal
+      isModalOpen
     } = this.state;
 
     return (
@@ -158,7 +160,7 @@ class ChatRoomsList extends Component {
                 (user.active.role === 'owner' ||
                 user.active.role === 'admin') &&
                 <div className="add-chat-room-icon"
-                  onClick={::this.handleActivateModal}
+                  onClick={::this.handleOpenModal}
                   title="Open a Direct Message"
                 >
                   <FontAwesome name="plus-circle" />
@@ -174,7 +176,7 @@ class ChatRoomsList extends Component {
                 (user.active.role === 'owner' ||
                 user.active.role === 'admin') &&
                 <div className="add-chat-room-icon"
-                  onClick={::this.handleActivateModal}
+                  onClick={::this.handleOpenModal}
                   title="Add Chat Room"
                 >
                   <FontAwesome name="plus-circle" />
@@ -185,12 +187,12 @@ class ChatRoomsList extends Component {
           </div>
         </div>
         {
-          showModal &&
+          isModalOpen &&
           <CreateChatRoomModal
+            isModalOpen={isModalOpen}
+            handleCloseModal={::this.handleCloseModal}
             chatType={activeTab}
-            handleDeactivateModal={::this.handleDeactivateModal}
             handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-            isLoading={chatRoom.isCreating}
           />
         }
       </div>
