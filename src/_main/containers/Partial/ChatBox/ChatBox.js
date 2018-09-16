@@ -80,17 +80,19 @@ class ChatBox extends Component {
                 No messages in this Chat Room
               </div>
           }
-          <div className="chat-typers">
-            {
-              typer.all.length > 0 &&
-              typer.all.map((singleTyper, i) =>
-                <ChatTyper
-                  key={i}
-                  typer={singleTyper}
-                />
-              )
-            }
-          </div>
+          {
+            typer.all.length > 0 &&
+            <div className="chat-typers">
+              {
+                typer.all.map((singleTyper, i) =>
+                  <ChatTyper
+                    key={i}
+                    typer={singleTyper}
+                  />
+                )
+              }
+            </div>
+          }
         </Container>
       )
     } else {

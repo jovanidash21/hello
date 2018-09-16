@@ -2,7 +2,7 @@
   display: flex;
   padding: 5px 0;
   &:not(:first-child) {
-    border-top: 1px solid $color-dusty-gray;
+    border-top: 1px solid $color-alto;
   }
   .uploading-icon {
     margin: 10px;
@@ -20,8 +20,9 @@
       margin: 5px 10px 0 15px;
       white-space: nowrap;
       @media screen and (max-width: $screen-mobile-max) {
+        float: none;
         font-size: 12px;
-        margin-top: 6px;
+        margin-top: 0;
       }
     }
     .chat-text,
@@ -35,7 +36,7 @@
       word-break: break-all;
       @media screen and (max-width: $screen-mobile-max) {
         font-size: 12px;
-        margin-top: 5px;
+        margin-top: 3px;
       }
       a {
         color: #000;
@@ -57,6 +58,10 @@
       font-size: 50px;
       line-height: 50px;
       padding: 3px 8px;
+      @media screen and (max-width: $screen-mobile-max) {
+        margin-left: 15px;
+        margin-top: 3px;
+      }
     }
     .plyr {
       min-width: 100px;
