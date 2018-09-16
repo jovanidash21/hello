@@ -7,30 +7,6 @@ import './styles.scss';
 class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isShowDropdownMenu: false
-    };
-  }
-  componentDidMount() {
-    ::this.handleShowDropdownMenu();
-  }
-  handleShowDropdownMenu() {
-    const {
-      user,
-      chatRoomMember
-    } = this.props;
-
-    if (
-      user._id !== chatRoomMember._id &&
-      user.accountType !== 'guest' &&
-      (
-        user.role !== 'ordinary' ||
-        chatRoomMember.role !== 'vip'
-      )
-    ) {
-      this.setState({isShowDropdownMenu: true});
-    }
   }
   handleAddDirectChatRoom(event) {
     event.preventDefault();
@@ -88,8 +64,19 @@ class ChatRoomMember extends Component {
       chatRoomMember,
       isActive
     } = this.props;
-    const { isShowDropdownMenu } = this.state;
+    var isShowDropdownMenu = false;
     var chatRoomMemberOptions = {};
+
+    if (
+      user._id !== chatRoomMember._id &&
+      user.accountType !== 'guest' &&
+      (
+        user.role !== 'ordinary' ||
+        chatRoomMember.role !== 'vip'
+      )
+    ) {
+      isShowDropdownMenu = true;
+    }
 
     if ( isShowDropdownMenu ) {
       chatRoomMemberOptions = {
