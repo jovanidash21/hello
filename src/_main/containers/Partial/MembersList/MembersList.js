@@ -56,7 +56,8 @@ class MembersList extends Component {
               size="2x"
             />
             <h3>
-              Online Members
+              {member.all.length}&nbsp;
+              {member.all.length > 1 ? 'Online Members' : 'Online Member'}
             </h3>
           </div>
           <ChatRoomMemberFilter
