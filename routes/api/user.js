@@ -20,16 +20,16 @@ router.get('/all', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
-    User.find({}, function(err, users) {
-      if (!err) {
+    User.find({_id: {$ne: null}})
+      .then((users) => {
         res.status(200).send(users);
-      } else {
+      })
+      .catch((error) => {
         res.status(500).send({
           success: false,
           message: 'Server Error!'
         });
-      }
-    });
+      });
   }
 });
 
