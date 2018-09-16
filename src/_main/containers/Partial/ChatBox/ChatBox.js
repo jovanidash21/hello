@@ -6,7 +6,7 @@ import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
-import { LoadingAnimation } from '../../../components/LoadingAnimation';
+import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import {
   ChatBubble,
   ChatTyper,

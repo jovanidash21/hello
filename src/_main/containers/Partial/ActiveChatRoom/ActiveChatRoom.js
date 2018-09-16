@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
-import { LoadingAnimation } from '../../../components/LoadingAnimation';
+import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../components/Avatar';
 import './styles.scss';
 

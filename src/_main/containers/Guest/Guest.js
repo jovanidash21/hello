@@ -10,7 +10,7 @@ import {
 } from 'muicss/react';
 import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../actions';
-import Head from '../../components/Head';
+import Head from '../../../components/Head';
 import {
   EmailInput,
   NameInput,
