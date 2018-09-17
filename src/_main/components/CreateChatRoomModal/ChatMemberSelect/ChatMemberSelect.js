@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
-import { Avatar } from '../../Avatar';
+import { Avatar } from '../../../../components/Avatar';
 import './styles.scss';
 
 class ChatMemberSelect extends Component {

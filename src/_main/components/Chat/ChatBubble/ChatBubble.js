@@ -7,7 +7,7 @@ import Plyr from 'react-plyr';
 import TimeAgo from 'react-timeago';
 import Lightbox from 'react-image-lightbox';
 import moment from 'moment';
-import { Avatar } from '../../Avatar';
+import { Avatar } from '../../../../components/Avatar';
 import 'react-image-lightbox/style.css';
 import './styles.scss';
 

@@ -5,7 +5,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
-import { Avatar } from '../../../components/Avatar';
+import { Avatar } from '../../../../components/Avatar';
 import './styles.scss';
 
 class ActiveChatRoom extends Component {

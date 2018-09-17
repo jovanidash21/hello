@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Avatar } from '../../Avatar';
+import { Avatar } from '../../../../components/Avatar';
 import './styles.scss';
 
 class ChatMember extends Component {
