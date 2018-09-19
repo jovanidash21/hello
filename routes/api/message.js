@@ -399,4 +399,34 @@ router.post('/audio', audioUpload.single('audio'), function(req, res, next) {
   }
 });
 
+router.post('/delete', function(req, res, next) {
+  var messageID = req.body.messageID;
+  var chatRoomID = req.body.chatRoomID;
+
+  if (
+    req.user === undefined &&
+    (req.user.role !== 'owner' || req.user.role !== 'admin' || req.user.role !== 'moderator')
+  ) {
+    res.status(401).send({
+      success: false,
+      message: 'Unauthorized'
+    });
+  } else {
+    Message.deleteOne({_id: messageID, chatRoom: chatRoomID})
+      .exec()
+      .then(() => {
+        res.status(200).send({
+          success: true,
+          message: 'Message Deleted'
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      });
+  }
+});
+
 module.exports = router;

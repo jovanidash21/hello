@@ -134,6 +134,41 @@ var sockets = function(io) {
               }
             });
           break;
+        case 'SOCKET_DELETE_MESSAGE':
+          var chatRoomClients = [];
+
+          io.in(action.chatRoomID).clients((err, clients) => {
+            if (!err) {
+              chatRoomClients = clients;
+            }
+          });
+
+          ChatRoom.findById(action.chatRoomID)
+            .populate('members')
+            .exec()
+            .then((chatRoom) => {
+              for (var i = 0; i < chatRoom.members.length; i++) {
+                var chatRoomMember = chatRoom.members[i];
+
+                User.findById(chatRoomMember)
+                  .then((user) => {
+                    if (chatRoomClients.indexOf(user.socketID) > -1) {
+                      socket.broadcast.to(user.socketID).emit('action', {
+                        type: 'SOCKET_BROADCAST_DELETE_MESSAGE',
+                        messageID: action.messageID,
+                        chatRoomID: action.chatRoomID
+                      });
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
         case 'SOCKET_BLOCK_MEMBER':
           User.findById(action.memberID, function(err, user) {
             if (!err) {

@@ -13,6 +13,7 @@ import {
   ChatInput,
   ChatAudioRecorder
 } from '../../../components/Chat';
+import { DeleteMessageModal } from '../DeleteMessageModal';
 import './styles.scss';
 
 class ChatBox extends Component {
@@ -22,7 +23,9 @@ class ChatBox extends Component {
     this.state = {
       isChatBoxScrollToBottom: false,
       scrollPosition: 0,
-      audioIndex: -1
+      audioIndex: -1,
+      isModalOpen: false,
+      selectedMessageID: ''
     };
   }
   componentDidMount() {
@@ -54,6 +57,9 @@ class ChatBox extends Component {
       chatRoom,
       message
     } = this.props;
+    const activeUser = user.active;
+    const canDeleteMessageUserRoles = ['owner', 'admin', 'moderator'];
+    const canDeleteMessage = canDeleteMessageUserRoles.indexOf(activeUser.role) > -1;
 
     if (chatRoom.all.length === 0) {
       return (
@@ -73,6 +79,8 @@ class ChatBox extends Component {
                   index={i}
                   message={singleMessage}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
+                  canDeleteMessage={canDeleteMessage}
+                  handleOpenModal={::this.handleOpenModal}
                 />
               )
               :
@@ -119,6 +127,18 @@ class ChatBox extends Component {
 
     this.setState({audioIndex: audioPlayingIndex});
   }
+  handleOpenModal(selectedMessageID) {
+    this.setState({
+      isModalOpen: true,
+      selectedMessageID: selectedMessageID
+    });
+  }
+  handleCloseModal() {
+    this.setState({
+      isModalOpen: false,
+      selectedMessageID: ''
+    });
+  }
   render() {
     const {
       user,
@@ -129,6 +149,10 @@ class ChatBox extends Component {
       socketIsNotTyping,
       isAudioRecorderOpen
     } = this.props;
+    const {
+      isModalOpen,
+      selectedMessageID
+    } = this.state;
 
     return (
       <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
@@ -142,6 +166,14 @@ class ChatBox extends Component {
             ref={(element) => { this.messagesBottom = element; }}
           />
         </div>
+        {
+          isModalOpen &&
+          <DeleteMessageModal
+            isModalOpen={isModalOpen}
+            selectedMessageID={selectedMessageID}
+            handleCloseModal={::this.handleCloseModal}
+          />
+        }
       </div>
     )
   }

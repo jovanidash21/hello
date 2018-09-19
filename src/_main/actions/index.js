@@ -31,7 +31,8 @@ import {
   sendTextMessage,
   sendFileMessage,
   sendImageMessage,
-  sendAudioMessage
+  sendAudioMessage,
+  deleteMessage
 } from './message';
 import {
   fetchMembers,
@@ -66,6 +67,7 @@ const actions = (dispatch) => {
     sendFileMessage,
     sendImageMessage,
     sendAudioMessage,
+    deleteMessage,
     fetchMembers,
     blockMember,
     kickMember,

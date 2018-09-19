@@ -52,7 +52,8 @@ class ChatBubble extends Component {
   handleChatBubbleRender() {
     const {
       index,
-      message
+      message,
+      canDeleteMessage
     } = this.props;
     const { isLightboxOpen } = this.state;
 
@@ -107,6 +108,16 @@ class ChatBubble extends Component {
               onCloseRequest={::this.handleLightboxToggle}
             />
           }
+          {
+            canDeleteMessage &&
+            <div
+              className="cross-icon"
+              title="Delete Message"
+              onClick={::this.handleOpenModal}
+            >
+              <FontAwesome name="times" />
+            </div>
+          }
         </div>
       )
     }
@@ -123,6 +134,19 @@ class ChatBubble extends Component {
     } = this.props;
 
     handleAudioPlayingToggle(index);
+  }
+  handleOpenModal(event) {
+    event.preventDefault();
+
+    const {
+      message,
+      canDeleteMessage,
+      handleOpenModal
+    } = this.props;
+
+    if ( canDeleteMessage ) {
+      handleOpenModal(message._id);
+    }
   }
   render() {
     const { message } = this.props;
@@ -145,7 +169,14 @@ class ChatBubble extends Component {
 ChatBubble.propTypes = {
   index: PropTypes.number.isRequired,
   message: PropTypes.object.isRequired,
-  handleAudioPlayingToggle: PropTypes.func.isRequired
+  handleAudioPlayingToggle: PropTypes.func.isRequired,
+  canDeleteMessage: PropTypes.bool,
+  handleOpenModal: PropTypes.func
+}
+
+ChatBubble.defaultProps = {
+  canDeleteMessage: false,
+  handleOpenModal: () => {}
 }
 
 export default ChatBubble;

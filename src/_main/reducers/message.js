@@ -1,7 +1,9 @@
 import {
   FETCH_NEW_MESSAGES,
   SEND_MESSAGE,
-  SOCKET_BROADCAST_SEND_MESSAGE
+  SOCKET_BROADCAST_SEND_MESSAGE,
+  DELETE_MESSAGE,
+  SOCKET_BROADCAST_DELETE_MESSAGE
 } from '../constants/message';
 import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
 
@@ -10,6 +12,8 @@ const initialState = {
   isFetchingNewSuccess: true,
   isSending: false,
   isSendingSuccess: true,
+  isDeleting: false,
+  isDeletingSuccess: true,
   activeChatRoom: {
     data: {}
   },
@@ -27,6 +31,11 @@ const message = (state=initialState, action) => {
       return {
         ...state,
         isSending: true,
+      };
+    case `${DELETE_MESSAGE}_LOADING`:
+      return {
+        ...state,
+        isDeleting: true,
       };
     case `${FETCH_NEW_MESSAGES}_SUCCESS`:
       return {
@@ -51,6 +60,18 @@ const message = (state=initialState, action) => {
           ...messages,
           newMessage
         ]
+      };
+    case `${DELETE_MESSAGE}_SUCCESS`:
+      var messages = [...state.all];
+      var messageID = action.meta;
+
+      messages = messages.filter((message) => message._id !== messageID);
+
+      return {
+        ...state,
+        isDeleting: false,
+        isDeletingSuccess: true,
+        all: messages
       };
     case `${FETCH_NEW_MESSAGES}_ERROR`:
       return {
@@ -81,6 +102,20 @@ const message = (state=initialState, action) => {
 
       if (messages.length > 20) {
         messages = messages.slice(1);
+      }
+
+      return {
+        ...state,
+        all: [...messages]
+      };
+    case SOCKET_BROADCAST_DELETE_MESSAGE:
+      var messageID = action.messageID;
+      var chatRoomID = action.chatRoomID;
+      var activeChatRoom = {...state.activeChatRoom};
+      var messages = [...state.all];
+
+      if ( activeChatRoom.data._id === chatRoomID ) {
+        messages = messages.filter((message) => message._id !== messageID);
       }
 
       return {
