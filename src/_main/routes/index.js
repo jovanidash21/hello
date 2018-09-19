@@ -9,6 +9,7 @@ import { Register } from '../containers/Register';
 import { Guest } from '../containers/Guest';
 import { Chat } from '../containers/Chat';
 import 'react-popup/style.css';
+import '../../styles/Common.scss';
 import '../styles/Common.scss';
 
 const routes = (

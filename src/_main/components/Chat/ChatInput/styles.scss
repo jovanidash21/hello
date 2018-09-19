@@ -120,7 +120,7 @@
         box-shadow: none;
       }
       &:hover {
-        color: $color-royal-purple;
+        color: $color-secondary;
       }
     }
     .audio-button,
@@ -163,7 +163,7 @@
   }
   .send-button {
     align-items: center;
-    background-color: $color-royal-purple;
+    background-color: $color-secondary;
     border-radius: 0;
     color: #fff;
     display: flex;

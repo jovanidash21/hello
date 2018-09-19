@@ -1,0 +1,47 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.loading-bar {
+  height: 3px;
+  background-color: $color-yellow-orange;
+  position: fixed;
+  z-index: 9999;
+}
+.button {
+  color: #fff;
+  &:active,
+  &:focus,
+  &:hover {
+    color: #fff;
+  }
+  &.button-default {
+    background-color: $color-alto;
+    color: #000;
+  }
+  &.button-primary {
+    background-color: $color-primary;
+  }
+}
+.mui-btn {
+  &.disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .6;
+    pointer-events: none;
+  }
+}
+.mui-btn--large {
+  font-size: 1rem;
+}
+.mm-popup__box__footer {
+  padding: 20px !important;
+}

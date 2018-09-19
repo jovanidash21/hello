@@ -6,17 +6,14 @@ import FontAwesome from 'react-fontawesome';
 const SocialButton = (props) => {
   return (
     <Button
-      className={`button button-${props.socialMedia}`}
+      className={`button button-social button-${props.socialMedia}`}
       size="large"
       variant="raised"
       onClick={props.handleSocialLogin}
       disabled={props.isDisabled}
     >
-      <div className="icon">
-        <FontAwesome
-          name={props.socialMedia}
-          size="2x"
-        />
+      <div className="social-icon">
+        <FontAwesome name={props.socialMedia} size="2x" />
       </div>
       {props.label}
     </Button>

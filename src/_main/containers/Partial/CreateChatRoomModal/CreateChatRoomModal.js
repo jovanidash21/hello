@@ -221,7 +221,14 @@ class CreateChatRoomModal extends Component {
             chatType === 'group' &&
             <Modal.Footer>
               <Button
-                className="modal-button"
+                className="button button-default"
+                onClick={handleCloseModal}
+                disabled={chatRoom.isCreating}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="button button-primary"
                 type="submit"
                 disabled={isButtonDisabled}
               >
