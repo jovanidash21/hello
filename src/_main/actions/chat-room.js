@@ -120,12 +120,13 @@ export function createGroupChatRoom(name, members, userID, activeChatRoomID) {
     name,
     members,
     userID,
+    chatType: 'group'
   };
 
   return dispatch => {
     return dispatch({
       type: CREATE_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/group', data)
+      payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
       dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
@@ -148,13 +149,14 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID) {
   let data = {
     name: '',
     members: [userID, memberID],
-    userID: userID,
+    userID,
+    chatType: 'direct'
   };
 
   return dispatch => {
     return dispatch({
       type: CREATE_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/direct', data)
+      payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
       dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
