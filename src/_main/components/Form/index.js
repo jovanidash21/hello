@@ -7,3 +7,4 @@ export { default as NameInput } from './Input/NameInput';
 export { default as PasswordInput } from './Input/PasswordInput';
 export { default as UsernameInput } from './Input/UsernameInput';
 export { default as GenderSelect } from './Select/GenderSelect';
+export { Checkbox } from './Checkbox';

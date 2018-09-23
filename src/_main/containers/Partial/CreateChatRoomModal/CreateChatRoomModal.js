@@ -12,6 +12,7 @@ import {
   ChatMember,
   ChatMemberSelect
 } from '../../../components/CreateChatRoomModal';
+import { Checkbox } from '../../../components/Form';
 import { Alert } from '../../../../components/Alert';
 import './styles.scss';
 
@@ -21,6 +22,7 @@ class CreateChatRoomModal extends Component {
 
     this.state = {
       chatRoomName: '',
+      isPublic: false,
       members: [this.props.user.active]
     }
   }
@@ -39,6 +41,9 @@ class CreateChatRoomModal extends Component {
     event.preventDefault();
 
     this.setState({chatRoomName: event.target.value});
+  }
+  onIsChatRoomPublicChange(event) {
+    this.setState({isPublic: event.target.checked});
   }
   onSuggestionSelected(event, suggestion) {
     event.preventDefault();
@@ -156,6 +161,7 @@ class CreateChatRoomModal extends Component {
     } = this.props;
     const {
       chatRoomName,
+      isPublic,
       members
     } = this.state;
     const isButtonDisabled =
@@ -192,6 +198,12 @@ class CreateChatRoomModal extends Component {
                 <ChatRoomNameInput
                   onChatRoomNameChange={::this.onChatRoomNameChange}
                   isDisabled={chatRoom.isCreating}
+                />
+                <Checkbox
+                  id="chat-room-public"
+                  label="Make this public"
+                  onChange={::this.onIsChatRoomPublicChange}
+                  isChecked={isPublic}
                 />
                 <div className="members-list-label">
                   Minimum of 3 members and maximum of 5 members only
