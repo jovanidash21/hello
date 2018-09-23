@@ -18,7 +18,7 @@ import {
   GuestButton,
   LoginButton,
   RegisterButton
-} from '../../components/AuthForm';
+} from '../../components/Form';
 import { Alert } from '../../../components/Alert';
 
 class Guest extends Component {

@@ -19,7 +19,7 @@ import {
   RegisterButton,
   LoginButton,
   GuestButton
-} from '../../components/AuthForm';
+} from '../../components/Form';
 import { Alert } from '../../../components/Alert';
 
 class Register extends Component {
