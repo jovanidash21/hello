@@ -93,20 +93,17 @@ class Guest extends Component {
                   onGenderChange={::this.onGenderChange}
                   isDisabled={auth.isLoading}
                 />
-                <GuestButton
-                  type="submit"
-                  isDisabled={auth.isLoading}
-                />
+                <GuestButton isDisabled={auth.isLoading} />
               </Form>
             </Col>
             <Col md="12">
               <Divider className="line" />
             </Col>
             <Col md="12">
-              <LoginButton isDisabled={auth.isLoading} />
+              <LoginButton link="/" isDisabled={auth.isLoading} />
             </Col>
             <Col md="12">
-              <RegisterButton isDisabled={auth.isLoading} />
+              <RegisterButton link="/register" isDisabled={auth.isLoading} />
             </Col>
           </Row>
         </Panel>

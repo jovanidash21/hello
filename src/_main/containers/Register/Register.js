@@ -125,20 +125,17 @@ class Register extends Component {
                   onPasswordChange={::this.onPasswordChange}
                   isDisabled={auth.isLoading}
                 />
-                <RegisterButton
-                  type="submit"
-                  isDisabled={auth.isLoading}
-                />
+                <RegisterButton isDisabled={auth.isLoading} />
               </Form>
             </Col>
             <Col md="12">
               <Divider className="line" />
             </Col>
             <Col md="12">
-              <LoginButton isDisabled={auth.isLoading} />
+              <LoginButton link="/" isDisabled={auth.isLoading} />
             </Col>
             <Col md="12">
-              <GuestButton isDisabled={auth.isLoading} />
+              <GuestButton link="/guest" isDisabled={auth.isLoading} />
             </Col>
           </Row>
         </Panel>
