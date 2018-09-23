@@ -7,7 +7,7 @@ import {
 } from 'muicss/react';
 import mapDispatchToProps from '../../../actions';
 import { Modal } from '../../../../components/Modal';
-import { ErrorCard } from '../../../components/AuthForm';
+import { Alert } from '../../../../components/Alert';
 
 class DeleteMessageModal extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class DeleteMessageModal extends Component {
             {
               !message.isDeleting &&
               !message.isDeletingSuccess &&
-              <ErrorCard label="Error! Please try again" />
+              <Alert label="Error! Please try again" />
             }
             <p>This action cannot be undone. Are you sure you want to delete this message?</p>
           </Modal.Body>

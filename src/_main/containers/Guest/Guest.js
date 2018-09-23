@@ -17,9 +17,9 @@ import {
   GenderSelect,
   GuestButton,
   LoginButton,
-  RegisterButton,
-  ErrorCard
+  RegisterButton
 } from '../../components/AuthForm';
+import { Alert } from '../../../components/Alert';
 
 class Guest extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class Guest extends Component {
             {
               auth.isGuestLoginError &&
               <Col md="12">
-                <ErrorCard label="Sorry! Guest name already taken." />
+                <Alert label="Sorry! Guest name already taken." center />
               </Col>
             }
             <Col md="12">
