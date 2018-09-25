@@ -69,18 +69,33 @@ router.post('/create', function(req, res, next) {
     var userID = req.body.userID;
     var name = req.body.name;
     var chatType = req.body.chatType;
-    var members = req.body.members;
+    var members = [];
     var chatRoomData = {
       name,
-      chatType,
-      members
+      chatType
     };
 
+    if ("members" in req.body && chatType !== 'private' && chatType !== 'public') {
+      members = req.body.members;
+      chatRoomData.members = members;
+    } else if (chatType === 'public') {
+      User.find({_id: {$ne: null}})
+        .distinct('_id')
+        .then((userIDs) => {
+          members = userIDs;
+          chatRoomData.members = members;
+        })
+        .catch((error) => {
+          res.status(500).send({
+            success: false,
+            message: 'Server Error!'
+          });
+        });
+    }
     if ("chatIcon" in req.body) {
       chatRoomData.chatIcon = req.body.chatIcon;
     }
-
-    if (chatType === 'private' || chatType === 'public') {
+    if (chatType === 'private') {
       res.status(401).send({
         success: false,
         message: 'Unauthorized'
@@ -96,7 +111,7 @@ router.post('/create', function(req, res, next) {
         message: 'Please select at least 3 and at most 5 members.'
       });
     } else {
-      ChatRoom.findOne({members: {$all: members}, chatType: 'direct'}, function(err, chatRoom) {
+      ChatRoom.findOne({_id: {$ne: null}, members: {$all: members}, chatType: 'direct'}, function(err, chatRoom) {
         if (!err) {
           if (chatRoom !== null) {
             var chatRoomID = chatRoom._id;

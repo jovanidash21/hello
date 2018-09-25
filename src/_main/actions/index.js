@@ -20,6 +20,7 @@ import {
 import {
   fetchChatRooms,
   changeChatRoom,
+  createPublicChatRoom,
   createGroupChatRoom,
   createDirectChatRoom,
   socketJoinChatRoom,
@@ -57,6 +58,7 @@ const actions = (dispatch) => {
     socketIsNotTyping,
     fetchChatRooms,
     changeChatRoom,
+    createPublicChatRoom,
     createGroupChatRoom,
     createDirectChatRoom,
     socketJoinChatRoom,

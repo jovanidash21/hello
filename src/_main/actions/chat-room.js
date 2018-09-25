@@ -109,6 +109,35 @@ function createChatRoom(userID, chatRoom, activeChatRoomID) {
 }
 
 /**
+ * Create public chat room
+ * @param {string} name
+ * @param {string} userID
+ * @param {string} activeChatRoomID
+ */
+export function createPublicChatRoom(name, userID, activeChatRoomID) {
+  let data = {
+    name,
+    userID,
+    chatType: 'public'
+  };
+
+  return dispatch => {
+    return dispatch({
+      type: CREATE_CHAT_ROOM,
+      payload: axios.post(baseURL + '/api/chat-room/create', data)
+    })
+    .then((response) => {
+      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    });
+  }
+}
+
+/**
  * Create group chat room
  * @param {string} name
  * @param {Array} members

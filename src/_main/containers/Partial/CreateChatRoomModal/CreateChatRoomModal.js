@@ -90,15 +90,19 @@ class CreateChatRoomModal extends Component {
       user,
       chatRoom,
       chatType,
+      createPublicChatRoom,
       createGroupChatRoom
     } = this.props;
     const {
       chatRoomName,
+      isPublic,
       members
     } = this.state;
     const activeChatRoom = chatRoom.active;
 
-    if (
+    if ( isPublic && chatRoomName.length > 0 ) {
+      createPublicChatRoom(chatRoomName, user.active._id, activeChatRoom._id);
+    } else if (
       chatType === 'group' &&
       chatRoomName.length > 0 &&
       members.length > 2 &&
@@ -166,8 +170,7 @@ class CreateChatRoomModal extends Component {
     } = this.state;
     const isButtonDisabled =
       chatRoomName.length === 0 ||
-      members.length < 3 ||
-      members.length === 5 ||
+      ( !isPublic && ( members.length < 3 || members.length === 5 ) ) ||
       chatRoom.isCreating;
 
     return (
@@ -205,29 +208,37 @@ class CreateChatRoomModal extends Component {
                   onChange={::this.onIsChatRoomPublicChange}
                   isChecked={isPublic}
                 />
-                <div className="members-list-label">
-                  Minimum of 3 members and maximum of 5 members only
-                </div>
-                <div className="members-list" disabled={chatRoom.isCreating}>
-                  {
-                    members.map((member, i) =>
-                      <ChatMember
-                        key={i}
-                        index={i}
-                        member={member}
-                        handleDeselectMember={::this.handleDeselectMember}
-                      />
-                    )
-                  }
-                </div>
+                {
+                  !isPublic &&
+                  <div>
+                    <div className="members-list-label">
+                      Minimum of 3 members and maximum of 5 members only
+                    </div>
+                    <div className="members-list" disabled={chatRoom.isCreating}>
+                      {
+                        members.map((member, i) =>
+                          <ChatMember
+                            key={i}
+                            index={i}
+                            member={member}
+                            handleDeselectMember={::this.handleDeselectMember}
+                          />
+                        )
+                      }
+                    </div>
+                  </div>
+                }
               </div>
             }
-            <ChatMemberSelect
-              user={user.active}
-              users={user.all}
-              onSuggestionSelected={::this.onSuggestionSelected}
-              isDisabled={members.length === 5 || chatRoom.isCreating}
-            />
+            {
+              !isPublic &&
+              <ChatMemberSelect
+                user={user.active}
+                users={user.all}
+                onSuggestionSelected={::this.onSuggestionSelected}
+                isDisabled={members.length === 5 || chatRoom.isCreating}
+              />
+            }
           </Modal.Body>
           {
             chatType === 'group' &&
