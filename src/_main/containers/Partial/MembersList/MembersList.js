@@ -21,7 +21,10 @@ class MembersList extends Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if ( prevProps.member.isFetching && !this.props.member.isFetching ) {
+    if (
+      ( prevProps.member.isFetching && !this.props.member.isFetching ) ||
+      ( prevProps.member.all.length !== this.props.member.all.length )
+    ) {
       this.setState({members: this.props.member.all});
     }
 
