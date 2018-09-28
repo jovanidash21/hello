@@ -20,10 +20,15 @@ const baseURL = localtionArr[0] + "//" + localtionArr[2];
  * @param {string} userID
  */
 export function fetchMembers(chatRoomID, userID) {
+  let data = {
+    chatRoomID,
+    userID
+  };
+
   return dispatch => {
     return dispatch({
       type: FETCH_MEMBERS,
-      payload: axios.get(baseURL + `/api/member/${chatRoomID}/${userID}`)
+      payload: axios.post(baseURL + '/api/member', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -32,7 +37,6 @@ export function fetchMembers(chatRoomID, userID) {
     });
   }
 }
-
 
 /**
  * Block member

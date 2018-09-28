@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 
-router.get('/:chatRoomID/:userID', function(req, res, next) {
-  var chatRoomID = req.params.chatRoomID;
-  var userID = req.params.userID;
+router.post('/', function(req, res, next) {
+  var chatRoomID = req.body.chatRoomID;
+  var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
     res.status(401).send({
@@ -20,15 +20,15 @@ router.get('/:chatRoomID/:userID', function(req, res, next) {
         }
       },
       isOnline: true
-    }, function(err, members) {
-      if (!err) {
-        res.status(200).send(members);
-      } else {
-        res.status(500).send({
-          success: false,
-          message: 'Server Error!'
-        });
-      }
+    })
+    .then((members) => {
+      res.status(200).send(members);
+    })
+    .catch((error) => {
+      res.status(500).send({
+        success: false,
+        message: 'Server Error!'
+      });
     });
   }
 });
@@ -48,18 +48,17 @@ router.post('/block', function(req, res, next) {
     User.findByIdAndUpdate(
       memberID,
       { $set: { block: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
-      { safe: true, upsert: true, new: true },
-      function(err, user) {
-        if (!err) {
+      { safe: true, upsert: true, new: true }
+    )
+    .then((user) => {
 
-        } else {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
-        }
-      }
-    );
+    })
+    .catch((error) => {
+      res.status(500).send({
+        success: false,
+        message: 'Server Error!'
+      });
+    });
   }
 });
 
@@ -79,21 +78,20 @@ router.post('/kick', function(req, res, next) {
     User.update(
       { _id: memberID, 'chatRooms.data': chatRoomID },
       { $set: { 'chatRooms.$.kick.data': true, 'chatRooms.$.kick.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
-      { safe: true, upsert: true, new: true },
-      function(err) {
-        if (!err) {
-          res.status(200).send({
-            success: true,
-            message: 'User kick out of the chat room.'
-          });
-        } else {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
-        }
-      }
-    );
+      { safe: true, upsert: true, new: true }
+    )
+    .then(() => {
+      res.status(200).send({
+        success: true,
+        message: 'User kick out of the chat room.'
+      });
+    })
+    .catch((error) => {
+      res.status(500).send({
+        success: false,
+        message: 'Server Error!'
+      });
+    });
   }
 });
 
@@ -113,21 +111,20 @@ router.post('/role', function(req, res, next) {
     User.findByIdAndUpdate(
       memberID,
       { $set: { role: role }},
-      { safe: true, upsert: true, new: true },
-      function(err) {
-        if (!err) {
-          res.status(200).send({
-            success: true,
-            message: 'User role updated.'
-          });
-        } else {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
-        }
-      }
-    );
+      { safe: true, upsert: true, new: true }
+    )
+    .then(() => {
+      res.status(200).send({
+        success: true,
+        message: 'User role updated.'
+      });
+    })
+    .catch((error) => {
+      res.status(500).send({
+        success: false,
+        message: 'Server Error!'
+      });
+    });
   }
 });
 
@@ -146,21 +143,20 @@ router.post('/mute', function(req, res, next) {
     User.findByIdAndUpdate(
       memberID,
       { $set: { mute: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
-      { safe: true, upsert: true, new: true },
-      function(err) {
-        if (!err) {
-          res.status(200).send({
-            success: true,
-            message: 'User muted.'
-          });
-        } else {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
-        }
-      }
-    );
+      { safe: true, upsert: true, new: true }
+    )
+    .then(() => {
+      res.status(200).send({
+        success: true,
+        message: 'User muted.'
+      });
+    })
+    .catch((error) => {
+      res.status(500).send({
+        success: false,
+        message: 'Server Error!'
+      });
+    });
   }
 });
 
