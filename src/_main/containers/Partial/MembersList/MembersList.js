@@ -16,16 +16,17 @@ class MembersList extends Component {
 
     this.state = {
       members: [],
-      memberName: '',
+      searchFilter: '',
       selectedMemberIndex: -1
     }
   }
   componentDidUpdate(prevProps) {
-    if (
-      ( prevProps.member.isFetching && !this.props.member.isFetching ) ||
-      ( prevProps.member.all.length !== this.props.member.all.length )
-    ) {
-      this.setState({members: this.props.member.all});
+    if ( prevProps.member.isFetching && !this.props.member.isFetching ) {
+      ::this.handleMembersListFilter();
+    }
+
+    if (  prevProps.member.all.length !== this.props.member.all.length ) {
+      ::this.handleMembersListFilter(this.state.searchFilter);
     }
 
     if ( prevProps.chatRoom.isCreating && this.props.chatRoom.isCreatingSuccess ) {
@@ -33,10 +34,34 @@ class MembersList extends Component {
 
       handleRightSideDrawerToggleEvent();
       this.setState({
-        memberName: '',
+        searchFilter: '',
         selectedMemberIndex: -1
       });
     }
+  }
+  handleMembersListFilter(searchFilter='') {
+    const { member } = this.props;
+    const { selectedMemberIndex } = this.state;
+    var allMembers = [...member.all];
+    var memberIndex = selectedMemberIndex;
+
+    if ( searchFilter.length > 0 ) {
+      allMembers = allMembers.filter((singleMember) => {
+        return singleMember.name.toLowerCase().match(searchFilter);
+      });
+
+      if ( selectedMemberIndex === -1 ) {
+        memberIndex = 0;
+      }
+    } else {
+      allMembers = [...member.all];
+      memberIndex = -1;
+    }
+
+    this.setState({
+      members: allMembers,
+      selectedMemberIndex: memberIndex
+    });
   }
   handleMembersListRender() {
     const {
@@ -45,7 +70,7 @@ class MembersList extends Component {
     } = this.props;
     const {
       members,
-      memberName,
+      searchFilter,
       selectedMemberIndex
     } = this.state;
 
@@ -64,7 +89,7 @@ class MembersList extends Component {
             </h3>
           </div>
           <ChatRoomMemberFilter
-            value={memberName}
+            value={searchFilter}
             onMemberNameChange={::this.onMemberNameChange}
             onMemberNameKeyDown={::this.onMemberNameKeyDown}
           />
@@ -107,33 +132,11 @@ class MembersList extends Component {
     }
   }
   onMemberNameChange(event) {
-    const { member } = this.props;
-    const {
-      members,
-      selectedMemberIndex
-    } = this.state;
-    var allMembers = [];
-    var memberName = event.target.value
-    var memberIndex = selectedMemberIndex;
+    const searchFilter = event.target.value;
 
-    if ( memberName.length > 0 ) {
-      allMembers = members.filter((singleMember) => {
-        return singleMember.name.toLowerCase().match(memberName);
-      });
+    this.setState({searchFilter: searchFilter});
 
-      if ( selectedMemberIndex === -1 ) {
-        memberIndex = 0;
-      }
-    } else {
-      allMembers = [...member.all];
-      memberIndex = -1;
-    }
-
-    this.setState({
-      members: allMembers,
-      memberName: memberName,
-      selectedMemberIndex: memberIndex
-    });
+    ::this.handleMembersListFilter(searchFilter);
   }
   onMemberNameKeyDown(event) {
     const {
@@ -198,13 +201,13 @@ class MembersList extends Component {
       changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id);
       handleRightSideDrawerToggleEvent();
       this.setState({
-        memberName: '',
+        searchFilter: '',
         selectedMemberIndex: -1
       });
     } else {
       handleRightSideDrawerToggleEvent();
       this.setState({
-        memberName: '',
+        searchFilter: '',
         selectedMemberIndex: -1
       });
     }
