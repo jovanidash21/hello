@@ -50,42 +50,25 @@ router.post('/', function(req, res, next) {
                     ChatRoom.findByIdAndUpdate(
                       chatLoungeID,
                       { $push: { members: userID }},
-                      { safe: true, upsert: true, new: true },
-                      function(err) {
-                        if (!err) {
-                          res.end();
-                        } else {
-                          res.end(err);
-                        }
-                      }
-                    );
+                      { safe: true, upsert: true, new: true }
+                    )
+                    .then(() => {
+                      User.findByIdAndUpdate(
+                        userID,
+                        { $push: { chatRooms: { data: chatLoungeID, unReadMessages: 0 } } },
+                        { safe: true, upsert: true, new: true }
+                      ).exec();
 
-                    User.findByIdAndUpdate(
-                      userID,
-                      { $push: {
-                        chatRooms: {
-                          data: chatLoungeID,
-                          unReadMessages: 0,
-                          kick: {},
-                          trash: {}
-                        }
-                      } },
-                      { safe: true, upsert: true, new: true },
-                      function(err) {
-                        if (!err) {
-                          res.end();
-                        } else {
-                          res.end(err);
-                        }
-                      }
-                    );
+                      res.status(200).send({
+                        success: true,
+                        message: 'Login Successful.',
+                        userData: user
+                      });
+                    })
+                    .catch((error) => {
+                      res.end(err);
+                    });
                   }
-
-                  res.status(200).send({
-                    success: true,
-                    message: 'Login Successful.',
-                    userData: user
-                  });
                 } else {
                   res.end(err);
                 }
