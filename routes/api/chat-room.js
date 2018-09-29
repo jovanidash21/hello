@@ -78,19 +78,6 @@ router.post('/create', function(req, res, next) {
     if ("members" in req.body && chatType !== 'private' && chatType !== 'public') {
       members = req.body.members;
       chatRoomData.members = members;
-    } else if (chatType === 'public') {
-      User.find({_id: {$ne: null}})
-        .distinct('_id')
-        .then((userIDs) => {
-          members = userIDs;
-          chatRoomData.members = members;
-        })
-        .catch((error) => {
-          res.status(500).send({
-            success: false,
-            message: 'Server Error!'
-          });
-        });
     }
     if ("chatIcon" in req.body) {
       chatRoomData.chatIcon = req.body.chatIcon;
@@ -151,9 +138,17 @@ router.post('/create', function(req, res, next) {
               });
             });
           } else {
-            var chatRoom = new ChatRoom(chatRoomData);
+            User.find({_id: {$ne: null}})
+              .distinct('_id')
+              .then((userIDs) => {
+                if (chatType === 'public') {
+                  chatRoomData.members = userIDs;
+                }
 
-            chatRoom.save()
+                var chatRoom = new ChatRoom(chatRoomData);
+
+                return chatRoom.save();
+              })
               .then((chatRoomData) => {
                 for (var i = 0; i < chatRoomData.members.length; i++) {
                   var chatRoomMember = chatRoomData.members[i];
