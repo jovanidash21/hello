@@ -25,7 +25,7 @@ class MembersList extends Component {
       ::this.handleMembersListFilter();
     }
 
-    if (  prevProps.member.all.length !== this.props.member.all.length ) {
+    if ( prevProps.member.all.length !== this.props.member.all.length ) {
       ::this.handleMembersListFilter(this.state.searchFilter);
     }
 
