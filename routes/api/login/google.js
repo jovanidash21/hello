@@ -49,7 +49,6 @@ passport.use(new Strategy({
 
         newUser.save()
           .then((userData) => {
-            var chatLoungeID = process.env.MONGODB_CHAT_LOUNGE_ID;
             var userID = userData._id;
             var chatRoomData = {
               name: newUser.name,
@@ -58,20 +57,6 @@ passport.use(new Strategy({
               chatType: 'private'
             };
             var chatRoom = new ChatRoom(chatRoomData);
-
-            if (chatLoungeID) {
-              ChatRoom.findByIdAndUpdate(
-                chatLoungeID,
-                { $push: { members: userID }},
-                { safe: true, upsert: true, new: true }
-              ).exec();
-
-              User.findByIdAndUpdate(
-                userID,
-                { $push: { chatRooms: { data: chatLoungeID, unReadMessages: 0, kick: {}, trash: {} } } },
-                { safe: true, upsert: true, new: true }
-              ).exec();
-            }
 
             return chatRoom.save();
           })
@@ -83,6 +68,26 @@ passport.use(new Strategy({
               { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
               { safe: true, upsert: true, new: true }
             ).exec();
+
+            return ChatRoom.find({_id: {$ne: null}, chatType: 'public'})
+              .distinct('_id');
+          })
+          .then((publicChatRooms) => {
+            for (var i = 0; i < publicChatRooms.length; i++) {
+              var publicChatRoomID = publicChatRooms[i];
+
+              ChatRoom.findByIdAndUpdate(
+                publicChatRoomID,
+                { $push: { members: userID }},
+                { safe: true, upsert: true, new: true }
+              ).exec();
+
+              User.findByIdAndUpdate(
+                userID,
+                { $push: { chatRooms: { data: publicChatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
+                { safe: true, upsert: true, new: true }
+              ).exec();
+            }
 
             return done(null, newUser);
           })

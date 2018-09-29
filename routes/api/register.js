@@ -21,7 +21,6 @@ router.post('/', function(req, res, next) {
       passport.authenticate('local', function(err, user) {
         req.logIn(user, function(err) {
           if (!err ) {
-            var chatLoungeID = process.env.MONGODB_CHAT_LOUNGE_ID;
             var userID = user._id;
             var chatRoomData = {
               name: user.name,
@@ -35,27 +34,32 @@ router.post('/', function(req, res, next) {
               .then((chatRoomData) => {
                 var chatRoomID = chatRoom._id;
 
-                if (chatLoungeID) {
+                User.findByIdAndUpdate(
+                  userID,
+                  { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
+                  { safe: true, upsert: true, new: true }
+                ).exec();
+
+                return ChatRoom.find({_id: {$ne: null}, chatType: 'public'})
+                  .distinct('_id');
+              })
+              .then((publicChatRooms) => {
+                for (var i = 0; i < publicChatRooms.length; i++) {
+                  var publicChatRoomID = publicChatRooms[i];
+
                   ChatRoom.findByIdAndUpdate(
-                    chatLoungeID,
+                    publicChatRoomID,
                     { $push: { members: userID }},
                     { safe: true, upsert: true, new: true }
                   ).exec();
 
                   User.findByIdAndUpdate(
                     userID,
-                    { $push: { chatRooms: { data: chatLoungeID, unReadMessages: 0, kick: {}, trash: {} } } },
+                    { $push: { chatRooms: { data: publicChatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
                     { safe: true, upsert: true, new: true }
                   ).exec();
                 }
 
-                User.findByIdAndUpdate(
-                  userID,
-                  { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
-                  { safe: true, upsert: true, new: true }
-                ).exec();
-              })
-              .then(() => {
                 res.status(200).send({
                   success: true,
                   message: 'Login Successful.',

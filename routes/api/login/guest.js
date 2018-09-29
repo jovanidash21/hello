@@ -43,32 +43,32 @@ router.post('/', function(req, res, next) {
             passport.authenticate('custom', function(err, user) {
               req.logIn(user, function(err) {
                 if (!err) {
-                  var chatLoungeID = process.env.MONGODB_CHAT_LOUNGE_ID;
                   var userID = newUser._id;
 
-                  if (chatLoungeID) {
-                    ChatRoom.findByIdAndUpdate(
-                      chatLoungeID,
-                      { $push: { members: userID }},
-                      { safe: true, upsert: true, new: true }
-                    )
-                    .then(() => {
-                      User.findByIdAndUpdate(
-                        userID,
-                        { $push: { chatRooms: { data: chatLoungeID, unReadMessages: 0 } } },
-                        { safe: true, upsert: true, new: true }
-                      ).exec();
+                  ChatRoom.find({_id: {$ne: null}, chatType: 'public'})
+                    .distinct('_id')
+                    .then((publicChatRooms) => {
+                      for (var i = 0; i < publicChatRooms.length; i++) {
+                        var publicChatRoomID = publicChatRooms[i];
 
-                      res.status(200).send({
-                        success: true,
-                        message: 'Login Successful.',
-                        userData: user
-                      });
+                        ChatRoom.findByIdAndUpdate(
+                          publicChatRoomID,
+                          { $push: { members: userID }},
+                          { safe: true, upsert: true, new: true }
+                        ).exec();
+
+                        User.findByIdAndUpdate(
+                          userID,
+                          { $push: { chatRooms: { data: publicChatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
+                          { safe: true, upsert: true, new: true }
+                        ).exec();
+                      }
+
+                      res.end();
                     })
                     .catch((error) => {
                       res.end(err);
                     });
-                  }
                 } else {
                   res.end(err);
                 }
