@@ -10,9 +10,8 @@ import {
 } from 'muicss/react';
 import mapDispatchToProps from '../../actions';
 import Head from '../../../components/Head';
+import { Input } from '../../../components/Form';
 import {
-  UsernameInput,
-  PasswordInput,
   LoginButton,
   RegisterButton,
   GuestButton,
@@ -33,22 +32,17 @@ class Login extends Component {
     document.body.className = '';
     document.body.classList.add('login-page');
   }
-  onUsernameChange(event) {
-    event.preventDefault();
-
-    this.setState({username: event.target.value});
-  }
-  onPasswordChange(event) {
-    event.preventDefault();
-
-    this.setState({password: event.target.value});
-  }
   handleHeadData() {
     const title = 'Chat App | Login';
 
     return (
       <Head title={title} />
     )
+  }
+  onInputChange(event) {
+    event.preventDefault();
+
+    this.setState({[event.target.name]: event.target.value});
   }
   handleLocalLogin(event) {
     event.preventDefault();
@@ -71,6 +65,10 @@ class Login extends Component {
       githubLogin,
       auth
     } = this.props;
+    const {
+      username,
+      password
+    } = this.state;
 
     return (
       <div>
@@ -88,14 +86,21 @@ class Login extends Component {
             }
             <Col md="12">
               <Form onSubmit={::this.handleLocalLogin}>
-                <UsernameInput
-                  onUsernameChange={::this.onUsernameChange}
-                  isDisabled={auth.isLoading}
-                />
-                <PasswordInput
-                  onPasswordChange={::this.onPasswordChange}
-                  isDisabled={auth.isLoading}
-                />
+              <Input
+                value={username}
+                label="Username"
+                name="username"
+                onChange={::this.onInputChange}
+                disabled={auth.isLoading}
+              />
+              <Input
+                value={password}
+                label="Password"
+                type="password"
+                name="password"
+                onChange={::this.onInputChange}
+                disabled={auth.isLoading}
+              />
                 <LoginButton isDisabled={auth.isLoading} />
               </Form>
             </Col>

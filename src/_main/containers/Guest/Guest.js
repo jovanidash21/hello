@@ -12,9 +12,10 @@ import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../actions';
 import Head from '../../../components/Head';
 import {
-  EmailInput,
-  NameInput,
-  GenderSelect,
+  Input,
+  Select
+} from '../../../components/Form';
+import {
   GuestButton,
   LoginButton,
   RegisterButton
@@ -34,22 +35,17 @@ class Guest extends Component {
     document.body.className = '';
     document.body.classList.add('guest-login-page');
   }
-  onNameChange(event) {
-    event.preventDefault();
-
-    this.setState({name: event.target.value});
-  }
-  onGenderChange(event) {
-    event.preventDefault();
-
-    this.setState({gender: event.target.value});
-  }
   handleHeadData() {
     const title = 'Chat App | Guest';
 
     return (
       <Head title={title} />
     )
+  }
+  onInputChange(event) {
+    event.preventDefault();
+
+    this.setState({[event.target.name]: event.target.value});
   }
   handleGuestLogin(event) {
     event.preventDefault();
@@ -66,7 +62,10 @@ class Guest extends Component {
   }
   render() {
     const { auth } = this.props;
-    const { gender } = this.state;
+    const {
+      name,
+      gender
+    } = this.state;
 
     return (
       <div>
@@ -84,14 +83,23 @@ class Guest extends Component {
             }
             <Col md="12">
               <Form onSubmit={::this.handleGuestLogin}>
-                <NameInput
-                  onNameChange={::this.onNameChange}
-                  isDisabled={auth.isLoading}
+                <Input
+                  value={name}
+                  label="Name"
+                  name="name"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
-                <GenderSelect
-                  defaultGender={gender}
-                  onGenderChange={::this.onGenderChange}
-                  isDisabled={auth.isLoading}
+                <Select
+                  options={[
+                    { value: 'male', label: 'Male' },
+                    { value: 'female', label: 'Female' },
+                  ]}
+                  defaultValue={gender}
+                  label="Gender"
+                  name="gender"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
                 <GuestButton isDisabled={auth.isLoading} />
               </Form>

@@ -11,11 +11,10 @@ import {
 import mapDispatchToProps from '../../actions';
 import Head from '../../../components/Head';
 import {
-  EmailInput,
-  NameInput,
-  UsernameInput,
-  GenderSelect,
-  PasswordInput,
+  Input,
+  Select
+} from '../../../components/Form';
+import {
   RegisterButton,
   LoginButton,
   GuestButton
@@ -38,37 +37,17 @@ class Register extends Component {
     document.body.className = '';
     document.body.classList.add('register-page');
   }
-  onEmailChange(event) {
-    event.preventDefault();
-
-    this.setState({email: event.target.value});
-  }
-  onNameChange(event) {
-    event.preventDefault();
-
-    this.setState({name: event.target.value});
-  }
-  onUsernameChange(event) {
-    event.preventDefault();
-
-    this.setState({username: event.target.value});
-  }
-  onGenderChange(event) {
-    event.preventDefault();
-
-    this.setState({gender: event.target.value});
-  }
-  onPasswordChange(event) {
-    event.preventDefault();
-
-    this.setState({password: event.target.value});
-  }
   handleHeadData() {
     const title = 'Chat App | Register';
 
     return (
       <Head title={title} />
     )
+  }
+  onInputChange(event) {
+    event.preventDefault();
+
+    this.setState({[event.target.name]: event.target.value});
   }
   handleRegister(event) {
     event.preventDefault();
@@ -86,7 +65,13 @@ class Register extends Component {
   }
   render() {
     const { auth } = this.props;
-    const { gender } = this.state;
+    const {
+      email,
+      name,
+      username,
+      gender,
+      password
+    } = this.state;
 
     return (
       <div>
@@ -104,26 +89,46 @@ class Register extends Component {
             }
             <Col md="12">
               <Form onSubmit={::this.handleRegister}>
-                <EmailInput
-                  onEmailChange={::this.onEmailChange}
-                  isDisabled={auth.isLoading}
+                <Input
+                  value={email}
+                  label="Email"
+                  type="email"
+                  name="email"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
-                <NameInput
-                  onNameChange={::this.onNameChange}
-                  isDisabled={auth.isLoading}
+                <Input
+                  value={name}
+                  label="Name"
+                  name="name"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
-                <UsernameInput
-                  onUsernameChange={::this.onUsernameChange}
-                  isDisabled={auth.isLoading}
+                <Input
+                  value={username}
+                  label="Username"
+                  name="username"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
-                <GenderSelect
-                  defaultGender={gender}
-                  onGenderChange={::this.onGenderChange}
-                  isDisabled={auth.isLoading}
+                <Select
+                  options={[
+                    { value: 'male', label: 'Male' },
+                    { value: 'female', label: 'Female' },
+                  ]}
+                  defaultValue={gender}
+                  label="Gender"
+                  name="gender"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
-                <PasswordInput
-                  onPasswordChange={::this.onPasswordChange}
-                  isDisabled={auth.isLoading}
+                <Input
+                  value={password}
+                  label="Password"
+                  type="password"
+                  name="password"
+                  onChange={::this.onInputChange}
+                  disabled={auth.isLoading}
                 />
                 <RegisterButton isDisabled={auth.isLoading} />
               </Form>

@@ -8,11 +8,13 @@ import {
 import mapDispatchToProps from '../../../actions';
 import { Modal } from '../../../../components/Modal';
 import {
-  ChatRoomNameInput,
   ChatMember,
   ChatMemberSelect
 } from '../../../components/CreateChatRoomModal';
-import { Checkbox } from '../../../components/Form';
+import {
+  Input,
+  Checkbox
+} from '../../../../components/Form';
 import { Alert } from '../../../../components/Alert';
 import './styles.scss';
 
@@ -37,10 +39,13 @@ class CreateChatRoomModal extends Component {
       handleLeftSideDrawerToggleEvent();
     }
   }
-  onChatRoomNameChange(event) {
+  onInputChange(event) {
     event.preventDefault();
 
-    this.setState({chatRoomName: event.target.value});
+    this.setState({[event.target.name]: event.target.value});
+  }
+  onCheckboxChange(event) {
+    this.setState({[event.target.name]: event.target.checked});
   }
   onIsChatRoomPublicChange(event) {
     this.setState({isPublic: event.target.checked});
@@ -198,15 +203,20 @@ class CreateChatRoomModal extends Component {
             {
               chatType === 'group' &&
               <div>
-                <ChatRoomNameInput
-                  onChatRoomNameChange={::this.onChatRoomNameChange}
-                  isDisabled={chatRoom.isCreating}
+                <Input
+                  value={chatRoomName}
+                  label="Chat Room Name"
+                  name="chatRoomName"
+                  onChange={::this.onInputChange}
+                  disabled={chatRoom.isCreating}
                 />
                 <Checkbox
                   id="chat-room-public"
                   label="Make this public"
-                  onChange={::this.onIsChatRoomPublicChange}
-                  isChecked={isPublic}
+                  name="isPublic"
+                  onChange={::this.onCheckboxChange}
+                  checked={isPublic}
+                  disabled={chatRoom.isCreating}
                 />
                 {
                   !isPublic &&
