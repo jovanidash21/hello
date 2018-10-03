@@ -120,8 +120,8 @@ class Chat extends Component {
       sendAudioMessage
     } = this.props;
 
-    if ( audio.size > 1024 * 1024 * 2 ) {
-      Popup.alert('Maximum upload file size is 2MB only');
+    if ( audio.size > 1024 * 1024 * 5 ) {
+      Popup.alert('Maximum upload file size is 5MB only');
     } else {
       sendAudioMessage(newMessageID, text, audio, user.active, chatRoom.active.data._id);
     }
@@ -133,8 +133,8 @@ class Chat extends Component {
       sendFileMessage
     } = this.props;
 
-    if ( file.size > 1024 * 1024 * 2 ) {
-      Popup.alert('Maximum upload file size is 2MB only');
+    if ( file.size > 1024 * 1024 * 5 ) {
+      Popup.alert('Maximum upload file size is 5MB only');
     } else {
       sendFileMessage(newMessageID, text, file, user.active, chatRoom.active.data._id);
     }
@@ -148,8 +148,8 @@ class Chat extends Component {
 
     if ( image.type.indexOf('image/') === -1 ) {
       Popup.alert('Please select an image file');
-    } else if ( image.size > 1024 * 1024 * 2 ) {
-      Popup.alert('Maximum upload file size is 2MB only');
+    } else if ( image.size > 1024 * 1024 * 5 ) {
+      Popup.alert('Maximum upload file size is 5MB only');
     } else {
       sendImageMessage(newMessageID, text, image, user.active, chatRoom.active.data._id);
     }

@@ -27,7 +27,7 @@ var audioStorage = multer.diskStorage({
 var fileUpload = multer({
   storage: fileImageStorage,
   limits: {
-    fileSize: 1024 * 1024 * 2
+    fileSize: 1024 * 1024 * 5
   }
 });
 
@@ -43,7 +43,7 @@ var imageUpload = multer({
   storage: fileImageStorage,
   fileFilter: imageFilter,
   limits: {
-    fileSize: 1024 * 1024 * 2
+    fileSize: 1024 * 1024 * 5
   }
 });
 
@@ -59,7 +59,7 @@ var audioUpload = multer({
   storage: audioStorage,
   fileFilter: audioFilter,
   limits: {
-    fileSize: 1024 * 1024 * 2
+    fileSize: 1024 * 1024 * 5
   }
 });
 
