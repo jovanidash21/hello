@@ -26,13 +26,10 @@ class ChatRoomsList extends Component {
       } = this.props;
       const allChatRooms = chatRoom.all.sort((a, b) => {
         var priority = a.priority - b.priority;
-        var name = a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase());
-        var date = new Date(b.data.createdAt) - new Date(a.data.createdAt);
+        var date = new Date(a.data.createdAt) - new Date(b.data.createdAt);
 
         if (priority !== 0) {
           return priority;
-        } else if ( name !== 0 ) {
-          return name;
         } else {
           return date;
         }
@@ -59,7 +56,15 @@ class ChatRoomsList extends Component {
             chatRoom.all.filter((singleChatRoom) =>
               singleChatRoom.data.chatType === 'private' ||
               singleChatRoom.data.chatType === 'direct'
-            ).map((singleChatRoom, i) =>
+            ).sort((a, b) =>  {
+              var n = a.priority - b.priority;
+
+              if (n !== 0) {
+                return n;
+              }
+
+              return new Date(a.data.createdAt) - new Date(b.data.createdAt);
+            }).map((singleChatRoom, i) =>
               <ChatRoom
                 key={i}
                 user={user.active}
@@ -85,7 +90,7 @@ class ChatRoomsList extends Component {
                 return n;
               }
 
-              return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase());
+              return new Date(a.data.createdAt) - new Date(b.data.createdAt);
             }).map((singleChatRoom, i) =>
               <ChatRoom
                 key={i}

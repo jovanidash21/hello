@@ -25,6 +25,10 @@ router.post('/', function(req, res, next) {
           return !chatRoom.kick.data && !chatRoom.trash.data;
         });
 
+        userChatRooms = userChatRooms.sort(function(a, b) {
+          return new Date(a.data.createdAt) - new Date(b.data.createdAt);
+        });
+
         for (var i = 0; i < userChatRooms.length; i++) {
           var chatRoom = userChatRooms[i].data;
 
