@@ -27,7 +27,7 @@ class ChatMember extends Component {
           <Avatar
             image={member.profilePicture}
             size="20px"
-            title={member.name}
+            name={member.name}
             role={member.role}
             accountType={member.accountType}
             badgeCloser

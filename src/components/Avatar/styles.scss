@@ -32,7 +32,8 @@
     }
     &.owner,
     &.admin,
-    &.moderator {
+    &.moderator,
+    &.public {
       background-color: $color-secondary;
       color: #fff;
     }

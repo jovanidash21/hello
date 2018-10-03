@@ -156,7 +156,7 @@ class ChatBubble extends Component {
         <Avatar
           image={message.user.profilePicture}
           size="25px"
-          title={message.user.name}
+          name={message.user.name}
           role={message.user.role}
           accountType={message.user.accountType}
         />

@@ -45,7 +45,7 @@ class ChatMemberSelect extends Component {
         <Avatar
           image={suggestion.profilePicture}
           size="27px"
-          title={suggestionText}
+          name={suggestionText}
           role={suggestion.role}
           accountType={suggestion.accountType}
           badgeCloser

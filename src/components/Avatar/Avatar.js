@@ -12,7 +12,7 @@ class Avatar extends Component {
     const {
       image,
       size,
-      title
+      name
     } = this.props;
     var avatarStyles = {
       height: size,
@@ -38,8 +38,8 @@ class Avatar extends Component {
     } else {
       var charCodeSum = 0;
 
-      for ( var i = 0; i < title.length; i++ ) {
-        charCodeSum += title.charCodeAt(i);
+      for ( var i = 0; i < name.length; i++ ) {
+        charCodeSum += name.charCodeAt(i);
       }
 
       const j = charCodeSum % colors.length;
@@ -52,26 +52,42 @@ class Avatar extends Component {
     return avatarStyles;
   }
   handleTopBadge(type) {
-    const { role } = this.props;
+    const {
+      role,
+      chatType
+    } = this.props;
     var icon = '';
     var title = '';
 
-    switch ( role ) {
-      case 'owner':
-        icon = 'shield';
-        title = 'This member is an owner';
-        break;
-      case 'admin':
-        icon = 'font';
-        title = 'This member is an admin';
-        break;
-      case 'moderator':
-        icon = 'forward';
-        title = 'This member is a moderator';
-        break;
-      default:
-        break;
+    if ( role.length > 0 ) {
+      switch ( role ) {
+        case 'owner':
+          icon = 'shield';
+          title = 'This member is an owner';
+          break;
+        case 'admin':
+          icon = 'font';
+          title = 'This member is an admin';
+          break;
+        case 'moderator':
+          icon = 'forward';
+          title = 'This member is a moderator';
+          break;
+        default:
+          break;
+      }
+    } else if ( chatType.length > 0 ) {
+      switch ( chatType ) {
+        case 'public':
+          icon = 'users';
+          title = 'This is a public chat room';
+          break;
+        default:
+          break;
+      }
     }
+
+
 
     if ( type === 'icon' ) {
       return icon;
@@ -99,14 +115,15 @@ class Avatar extends Component {
     const {
       image,
       size,
-      title,
+      name,
       role,
       accountType,
+      chatType,
       badgeBigger,
       badgeCloser
     } = this.props;
     const avatarStyles = ::this.handleAvatarStyles();
-    const nameAbbr = initials(title).substring(0,2);
+    const nameAbbr = initials(name).substring(0,2);
     const topBadgeIcon = ::this.handleTopBadge('icon');
     const topBadgeTitle = ::this.handleTopBadge('title');
     const bottomBadgeIcon = ::this.handleBottomBadgeIcon();
@@ -115,7 +132,7 @@ class Avatar extends Component {
       <div
         className="avatar"
         style={avatarStyles}
-        title={title}
+        title={name}
       >
         {
           image.length === 0 &&
@@ -128,7 +145,7 @@ class Avatar extends Component {
               "badge-logo top " +
               (badgeBigger ? 'bigger ' : '') +
               (badgeCloser ? 'closer ' : '') +
-              role
+              (role.length > 0 ? role : chatType)
             }
             title={topBadgeTitle}
           >
@@ -163,9 +180,10 @@ class Avatar extends Component {
 Avatar.propTypes = {
   image: PropTypes.string,
   size: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  role: PropTypes.string.isRequired,
-  accountType: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  role: PropTypes.string,
+  accountType: PropTypes.string,
+  chatType: PropTypes.string,
   badgeBigger: PropTypes.bool,
   badgeCloser: PropTypes.bool
 }
@@ -173,6 +191,10 @@ Avatar.propTypes = {
 Avatar.defaultProps = {
   image: '',
   size: '25px',
+  name: '',
+  role: '',
+  accountType: '',
+  chatType: '',
   badgeBigger: false,
   badgeCloser: false
 }

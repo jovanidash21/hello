@@ -18,7 +18,7 @@ class OptionsDropdown extends Component {
           <div className="user-details">
             <Avatar
               image={user.profilePicture}
-              title={user.name}
+              name={user.name}
               role={user.role}
               accountType={user.accountType}
             />

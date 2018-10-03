@@ -69,7 +69,7 @@ class ActiveChatRoom extends Component {
           <Avatar
             image={activeChatRoom.data.chatIcon}
             size="32px"
-            title={activeChatRoom.data.name}
+            name={activeChatRoom.data.name}
             role={::this.handleAvatar('role')}
             accountType={::this.handleAvatar('accountType')}
             badgeCloser
