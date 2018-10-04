@@ -9,8 +9,8 @@ import {
   guestLogin
 } from './auth';
 import {
-  fetchUser,
-  fetchUsers
+  fetchActiveUser,
+  searchUser
 } from './user';
 import { sendEmail } from './email';
 import {
@@ -52,8 +52,8 @@ const actions = (dispatch) => {
     twitterLogin,
     register,
     guestLogin,
-    fetchUser,
-    fetchUsers,
+    fetchActiveUser,
+    searchUser,
     socketIsTyping,
     socketIsNotTyping,
     fetchChatRooms,

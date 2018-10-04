@@ -1,6 +1,6 @@
 import {
-  FETCH_USER,
-  FETCH_USERS
+  FETCH_ACTIVE_USER,
+  SEARCH_USER
 } from '../constants/user';
 import {
   SOCKET_BROADCAST_MUTE_MEMBER,
@@ -8,36 +8,53 @@ import {
 } from '../constants/member';
 
 const initialState = {
-  isLoading: false,
+  isFetchingActive: false,
+  isFetchingActiveSuccess: false,
+  isSearching: false,
+  isSearchingSuccess: false,
   active: {},
-  all: []
+  search: []
 };
 
 const user = (state=initialState, action) => {
   switch(action.type) {
-    case `${FETCH_USER}_LOADING`:
+    case `${FETCH_ACTIVE_USER}_LOADING`:
       return {
         ...state,
-        isLoading: true
+        isFetchingActive: true
       };
-    case `${FETCH_USER}_SUCCESS`:
+    case `${SEARCH_USER}_LOADING`:
       return {
         ...state,
-        isLoading: false,
-        isSuccess: true,
+        isSearching: true,
+        search: []
+      };
+    case `${FETCH_ACTIVE_USER}_SUCCESS`:
+      return {
+        ...state,
+        isFetchingActive: false,
+        isFetchingActiveSuccess: true,
         active: action.payload.data
       };
-    case `${FETCH_USERS}_SUCCESS`:
+    case `${SEARCH_USER}_SUCCESS`:
       return {
         ...state,
-        isSuccess: true,
-        all: action.payload.data
+        isSearching: false,
+        isSearchingSuccess: true,
+        search: action.payload.data
       };
-    case `${FETCH_USER}_ERROR`:
+    case `${FETCH_ACTIVE_USER}_ERROR`:
       return {
         ...state,
-        isLoading: false,
-        isError: true
+        isFetchingActive: false,
+        isFetchingActiveSuccess: false
+      };
+    case `${SEARCH_USER}_ERROR`:
+      return {
+        ...state,
+        isSearching: false,
+        isSearchingSuccess: false,
+        search: []
       };
     case SOCKET_BROADCAST_MUTE_MEMBER:
       var memberID = action.memberID;

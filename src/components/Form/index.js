@@ -1,3 +1,4 @@
 export { Checkbox } from './Checkbox';
+export { UserSelect } from './UserSelect';
 export { default as Input } from './Input';
 export { default as Select } from './Select';

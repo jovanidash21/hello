@@ -10,13 +10,9 @@ class Layout extends Component {
     super(props);
   }
   componentWillMount() {
-    const {
-      fetchUser,
-      fetchUsers
-    } = this.props;
+    const { fetchActiveUser } = this.props;
 
-    fetchUser();
-    fetchUsers();
+    fetchActiveUser();
   }
   handleComponentRender(matchProps) {
     const {
@@ -24,7 +20,7 @@ class Layout extends Component {
       user
     } = this.props;
 
-    if (!user.isLoading && user.isSuccess) {
+    if (!user.isFetchingActive && user.isFetchingActiveSuccess) {
       return (
         <Content {...matchProps} />
       )

@@ -7,15 +7,12 @@ import {
 } from 'muicss/react';
 import mapDispatchToProps from '../../../actions';
 import { Modal } from '../../../../components/Modal';
-import {
-  ChatMember,
-  ChatMemberSelect
-} from '../../../components/CreateChatRoomModal';
+import { Alert } from '../../../../components/Alert';
 import {
   Input,
-  Checkbox
+  Checkbox,
+  UserSelect
 } from '../../../../components/Form';
-import { Alert } from '../../../../components/Alert';
 import './styles.scss';
 
 class CreateChatRoomModal extends Component {
@@ -164,6 +161,7 @@ class CreateChatRoomModal extends Component {
     const {
       user,
       chatRoom,
+      searchUser,
       isModalOpen,
       handleCloseModal,
       chatType
@@ -173,6 +171,9 @@ class CreateChatRoomModal extends Component {
       isPublic,
       members
     } = this.state;
+    const searchedUsers = user.search.filter((singleUser) => {
+      return !members.some((singleMember) => singleMember._id === singleUser._id);
+    });
     const isButtonDisabled =
       chatRoomName.length === 0 ||
       ( !isPublic && ( members.length < 3 || members.length === 5 ) ) ||
@@ -218,35 +219,22 @@ class CreateChatRoomModal extends Component {
                   checked={isPublic}
                   disabled={chatRoom.isCreating}
                 />
-                {
-                  !isPublic &&
-                  <div>
-                    <div className="members-list-label">
-                      Minimum of 3 members and maximum of 5 members only
-                    </div>
-                    <div className="members-list" disabled={chatRoom.isCreating}>
-                      {
-                        members.map((member, i) =>
-                          <ChatMember
-                            key={i}
-                            index={i}
-                            member={member}
-                            handleDeselectMember={::this.handleDeselectMember}
-                          />
-                        )
-                      }
-                    </div>
-                  </div>
-                }
               </div>
             }
             {
               !isPublic &&
-              <ChatMemberSelect
-                user={user.active}
-                users={user.all}
+              <UserSelect
+                label={chatType === 'group' ? 'Minimum of 3 members and maximum of 5 members only' : ''}
+                placeholder="Select a member"
+                showUsersList={chatType === 'group'}
+                handleSearchUser={searchUser}
+                selectedUsers={members}
+                searchedUsers={searchedUsers}
                 onSuggestionSelected={::this.onSuggestionSelected}
-                isDisabled={members.length === 5 || chatRoom.isCreating}
+                handleDeselectUser={::this.handleDeselectMember}
+                isListDisabled={chatRoom.isCreating}
+                isInputDisabled={chatRoom.isCreating}
+                isLoading={user.isSearching}
               />
             }
           </Modal.Body>

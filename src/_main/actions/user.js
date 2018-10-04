@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
-  FETCH_USER,
-  FETCH_USERS
+  FETCH_ACTIVE_USER,
+  SEARCH_USER
 } from '../constants/user';
 import { fetchChatRooms } from './chat-room';
 
@@ -11,10 +11,10 @@ const baseURL = localtionArr[0] + "//" + localtionArr[2];
 /**
  * Fetch user
  */
-export function fetchUser() {
+export function fetchActiveUser() {
   return dispatch => {
     return dispatch({
-      type: FETCH_USER,
+      type: FETCH_ACTIVE_USER,
       payload: axios.get(baseURL + '/api/user')
     })
     .then((response) => {
@@ -29,13 +29,15 @@ export function fetchUser() {
 }
 
 /**
- * Fetch users
+ * Search user
  */
-export function fetchUsers() {
+export function searchUser(query) {
+  let data = { query };
+
   return dispatch => {
     return dispatch({
-      type: FETCH_USERS,
-      payload: axios.get(baseURL + '/api/user/all')
+      type: SEARCH_USER,
+      payload: axios.post(baseURL + '/api/user/search', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
