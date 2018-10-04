@@ -4,10 +4,8 @@ import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
-import {
-  ChatRoomMemberFilter,
-  ChatRoomMember
-} from '../../../components/RightSideDrawer';
+import { SearchFilter } from '../../../../components/SearchFilter';
+import { ChatRoomMember } from '../../../components/RightSideDrawer';
 import './styles.scss';
 
 class MembersList extends Component {
@@ -63,6 +61,10 @@ class MembersList extends Component {
       selectedMemberIndex: memberIndex
     });
   }
+  handleClearSearchFilter() {
+    this.setState({searchFilter: ''});
+    ::this.handleMembersListFilter();
+  }
   handleMembersListRender() {
     const {
       user,
@@ -88,10 +90,12 @@ class MembersList extends Component {
               {member.all.length > 1 ? 'Online Members' : 'Online Member'}
             </h3>
           </div>
-          <ChatRoomMemberFilter
+          <SearchFilter
             value={searchFilter}
-            onMemberNameChange={::this.onMemberNameChange}
-            onMemberNameKeyDown={::this.onMemberNameKeyDown}
+            onChange={::this.onMemberNameChange}
+            onKeyDown={::this.onMemberNameKeyDown}
+            handleClearSearchFilter={::this.handleClearSearchFilter}
+            light
           />
           <div className="members-list">
             {

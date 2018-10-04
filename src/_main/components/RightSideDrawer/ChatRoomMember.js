@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
-import { Avatar } from '../../../../components/Avatar';
+import { Avatar } from '../../../components/Avatar';
 import './styles.scss';
 
 class ChatRoomMember extends Component {
