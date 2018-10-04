@@ -9,7 +9,6 @@ import {
   Divider
 } from 'muicss/react'
 import mapDispatchToProps from '../../actions';
-import Head from '../../../components/Head';
 import {
   Input,
   Select
@@ -36,13 +35,6 @@ class Register extends Component {
   componentWillMount() {
     document.body.className = '';
     document.body.classList.add('register-page');
-  }
-  handleHeadData() {
-    const title = 'Chat App | Register';
-
-    return (
-      <Head title={title} />
-    )
   }
   onInputChange(event) {
     event.preventDefault();
@@ -75,7 +67,6 @@ class Register extends Component {
 
     return (
       <div>
-        {::this.handleHeadData()}
         <Panel className="form-card">
           <Row>
             <Col md="12">

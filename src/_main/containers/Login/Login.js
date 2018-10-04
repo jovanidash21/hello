@@ -9,7 +9,6 @@ import {
   Divider
 } from 'muicss/react';
 import mapDispatchToProps from '../../actions';
-import Head from '../../../components/Head';
 import { Input } from '../../../components/Form';
 import {
   LoginButton,
@@ -31,13 +30,6 @@ class Login extends Component {
   componentWillMount() {
     document.body.className = '';
     document.body.classList.add('login-page');
-  }
-  handleHeadData() {
-    const title = 'Chat App | Login';
-
-    return (
-      <Head title={title} />
-    )
   }
   onInputChange(event) {
     event.preventDefault();
@@ -72,7 +64,6 @@ class Login extends Component {
 
     return (
       <div>
-        {::this.handleHeadData()}
         <Panel className="form-card">
           <Row>
             <Col md="12">

@@ -17,9 +17,9 @@ const routes = (
     <LoadingBar className="loading-bar" />
     <Popup />
     <Switch>
-      <AuthForm exact path="/" component={Login} />
-      <AuthForm exact path="/register" component={Register} />
-      <AuthForm exact path="/guest" component={Guest} />
+      <AuthForm exact path="/" component={Login} title="Login" />
+      <AuthForm exact path="/register" component={Register} title="Register" />
+      <AuthForm exact path="/guest" component={Guest} title="Guest" />
       <Layout exact path="/chat" component={Chat} />
     </Switch>
   </div>
