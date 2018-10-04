@@ -1,11 +1,12 @@
 .chat-room-member-wrapper {
-  border-bottom: 1px solid $color-english-walnut;
+  border-bottom: 1px solid $color-mirage;
   font-size: 14px;
   position: relative;
+  transition: all 0.2s ease;
   &:active,
   &:focus,
   &:hover {
-    background-color: $color-english-walnut;
+    background-color: $color-mirage;
   }
   &.active {
     background-color: $color-secondary;

@@ -1,6 +1,6 @@
 .chat-room {
   align-items: center;
-  border-bottom: 1px solid $color-goblin;
+  border-bottom: 1px solid $color-east-bay;
   color: $color-old-lace;
   cursor: pointer;
   display: flex;
@@ -10,10 +10,10 @@
   &:active,
   &:focus,
   &:hover {
-    background-color: $color-goblin;
+    background-color: $color-east-bay;
   }
   &.active {
-    background-color: $color-secondary;
+    background-color: $color-tertiary;
   }
   &.new-message {
     color: #fff;

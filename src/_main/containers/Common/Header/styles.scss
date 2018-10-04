@@ -1,5 +1,7 @@
 .header {
-  box-shadow: 0px 0px 5px 1px $color-emperor;
+  background-color: $color-primary;
+  border-right: 1px solid #fff;
+  box-shadow: 0 2px 5px rgba($color-emperor, 0.25);
   table {
     padding: 0 21px;
     @media screen and (max-width: $screen-mobile-max) {
