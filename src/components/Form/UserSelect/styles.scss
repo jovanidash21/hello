@@ -121,8 +121,11 @@
     .react-autosuggest__suggestion--highlighted {
       background-color: $color-primary !important;
       .suggestion-content {
-        .user-name.highlight {
-          color: #fff;
+        .user-name {
+          color: $color-dusty-gray;
+          &.highlight {
+            color: #fff;
+          }
         }
       }
     }
@@ -136,7 +139,6 @@
         color: #000;
         &.highlight {
           color: $color-primary;
-          font-weight: bold;
         }
       }
     }
