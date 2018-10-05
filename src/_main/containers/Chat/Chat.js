@@ -107,10 +107,19 @@ class Chat extends Component {
     const {
       user,
       chatRoom,
+      message,
       sendTextMessage
     } = this.props;
+    const allMessages = message.all;
+    const lastMessage = allMessages[allMessages.length - 1];
+    const today = new Date();
+    const lastMessageDate = new Date(lastMessage.createdAt);
 
-    sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id);
+    if ( ( today - lastMessageDate ) <= 2000 ) {
+      Popup.alert('Please take a break and send message slowly!');
+    } else {
+      sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id);
+    }
   }
   handleSendAudioMessage(newMessageID, text, audio) {
     const {

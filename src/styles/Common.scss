@@ -23,6 +23,9 @@ body {
   &.button-primary {
     @include button($color-primary);
   }
+  &.button-secondary {
+    @include button($color-secondary);
+  }
 }
 .mui-btn {
   &.disabled {
