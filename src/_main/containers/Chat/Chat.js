@@ -11,6 +11,7 @@ import {
   RightSideDrawer
 } from '../Common';
 import {
+  ChatRoomsMenu,
   ChatBox,
   ActiveChatRoom,
   ChatRoomsList,
@@ -40,13 +41,19 @@ class Chat extends Component {
     } = this.props;
 
     socketUserLogin(user.active);
-    document.body.className = '';
-    document.body.classList.add('chat-page');
   }
-  componentDidMount() {
-    ::this.calculateViewportHeight();
-    window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
-    window.addEventListener('resize', ::this.calculateViewportHeight, true);
+  componentDidUpdate(prevProps) {
+    if (
+      ( Object.keys(prevProps.chatRoom.active.data).length === 0 && prevProps.chatRoom.active.data.constructor === Object ) &&
+      ( Object.keys(this.props.chatRoom.active.data).length > 0 && this.props.chatRoom.active.data.constructor === Object )
+    ) {
+      document.body.className = '';
+      document.body.classList.add('chat-page');
+
+      ::this.calculateViewportHeight();
+      window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
+      window.addEventListener('resize', ::this.calculateViewportHeight, true);
+    }
   }
   calculateViewportHeight() {
     var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -207,54 +214,62 @@ class Chat extends Component {
     const isChatInputDisabled = chatRoom.isFetching || message.isFetchingNew;
 
     return (
-      <div
-        id="chat-section"
-        className={"chat-section " +
-          (
-            user.active.accountType === 'guest' ||
-            user.active.mute.data
-              ? 'no-chat-input' : ''
-          )
-        }
-      >
-        <LeftSideDrawer
-          handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
-          isLeftSideDrawerOpen={isLeftSideDrawerOpen}
-        >
-          <ChatRoomsList handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
-        </LeftSideDrawer>
-        {::this.handleRightSideDrawerRender()}
-        <Header>
-          <ActiveChatRoom
-            handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
-            handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
-          />
-        </Header>
-        <ChatBox isAudioRecorderOpen={isAudioRecorderOpen} />
+      <div className="chat-section-wrapper">
         {
-          user.active.accountType !== 'guest' &&
-          !user.active.mute.data && (
-            !isAudioRecorderOpen
-              ?
-              <ChatInput
-                user={user.active}
-                activeChatRoom={chatRoom.active}
-                handleSocketIsTyping={socketIsTyping}
-                handleSocketIsNotTyping={socketIsNotTyping}
-                handleSendTextMessage={::this.handleSendTextMessage}
-                handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
-                handleSendFileMessage={::this.handleSendFileMessage}
-                handleSendImageMessage={::this.handleSendImageMessage}
-                isDisabled={isChatInputDisabled}
-              />
-              :
-              <ChatAudioRecorder
-                handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
-                handleSendAudioMessage={::this.handleSendAudioMessage}
-              />
-          )
+          ( Object.keys(chatRoom.active.data).length > 0 && chatRoom.active.data.constructor === Object )
+            ?
+            <div
+              id="chat-section"
+              className={"chat-section " +
+                (
+                  user.active.accountType === 'guest' ||
+                  user.active.mute.data
+                    ? 'no-chat-input' : ''
+                )
+              }
+            >
+              <LeftSideDrawer
+                handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
+                isLeftSideDrawerOpen={isLeftSideDrawerOpen}
+              >
+                <ChatRoomsList handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
+              </LeftSideDrawer>
+              {::this.handleRightSideDrawerRender()}
+              <Header>
+                <ActiveChatRoom
+                  handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+                  handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
+                />
+              </Header>
+              <ChatBox isAudioRecorderOpen={isAudioRecorderOpen} />
+              {
+                user.active.accountType !== 'guest' &&
+                !user.active.mute.data && (
+                  !isAudioRecorderOpen
+                    ?
+                    <ChatInput
+                      user={user.active}
+                      activeChatRoom={chatRoom.active}
+                      handleSocketIsTyping={socketIsTyping}
+                      handleSocketIsNotTyping={socketIsNotTyping}
+                      handleSendTextMessage={::this.handleSendTextMessage}
+                      handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                      handleSendFileMessage={::this.handleSendFileMessage}
+                      handleSendImageMessage={::this.handleSendImageMessage}
+                      isDisabled={isChatInputDisabled}
+                    />
+                    :
+                    <ChatAudioRecorder
+                      handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                      handleSendAudioMessage={::this.handleSendAudioMessage}
+                    />
+                )
+              }
+              <NotificationPopUp handleViewMessage={::this.handleNotificationViewMessage} />
+            </div>
+            :
+            <ChatRoomsMenu />
         }
-        <NotificationPopUp handleViewMessage={::this.handleNotificationViewMessage} />
       </div>
     )
   }

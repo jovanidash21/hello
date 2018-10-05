@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
-import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { ChatRoom } from '../../../components/LeftSideDrawer';
 import { CreateChatRoomModal } from '../CreateChatRoomModal';
 import './styles.scss';
@@ -17,27 +16,6 @@ class ChatRoomsList extends Component {
       isModalOpen: false
     }
   }
-  componentDidUpdate(prevProps) {
-    if ( prevProps.chatRoom.isFetching && !this.props.chatRoom.isFetching ) {
-      const {
-        user,
-        chatRoom,
-        changeChatRoom
-      } = this.props;
-      const allChatRooms = chatRoom.all.sort((a, b) => {
-        var priority = a.priority - b.priority;
-        var date = new Date(a.data.createdAt) - new Date(b.data.createdAt);
-
-        if (priority !== 0) {
-          return priority;
-        } else {
-          return date;
-        }
-      });
-
-      changeChatRoom(allChatRooms[0], user.active._id, '');
-    }
-  }
   handleChatRoomsListRender(chatType) {
     const {
       user,
@@ -45,71 +23,64 @@ class ChatRoomsList extends Component {
       changeChatRoom,
       handleLeftSideDrawerToggleEvent
     } = this.props;
+    const activeChatRoom = chatRoom.active;
 
-    if ( !chatRoom.isFetching && chatRoom.isFetchingSuccess ) {
-      const activeChatRoom = chatRoom.active;
+    return (
+      <div className="chat-rooms-list">
+        {
+          chatType === 'direct' &&
+          chatRoom.all.filter((singleChatRoom) =>
+            singleChatRoom.data.chatType === 'private' ||
+            singleChatRoom.data.chatType === 'direct'
+          ).sort((a, b) =>  {
+            var n = a.priority - b.priority;
 
-      return (
-        <div className="chat-rooms-list">
-          {
-            chatType === 'direct' &&
-            chatRoom.all.filter((singleChatRoom) =>
-              singleChatRoom.data.chatType === 'private' ||
-              singleChatRoom.data.chatType === 'direct'
-            ).sort((a, b) =>  {
-              var n = a.priority - b.priority;
+            if (n !== 0) {
+              return n;
+            }
 
-              if (n !== 0) {
-                return n;
-              }
+            return new Date(a.data.createdAt) - new Date(b.data.createdAt);
+          }).map((singleChatRoom, i) =>
+            <ChatRoom
+              key={i}
+              user={user.active}
+              chatRoom={singleChatRoom}
+              activeChatRoom={activeChatRoom}
+              isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
+              handleChangeChatRoom={changeChatRoom}
+              handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+              handleTrashChatRoom={::this.handleTrashChatRoom}
+              isTrashingAChatRoom={chatRoom.isTrashing && chatRoom.isTrashingSuccess}
+            />
+          )
+        }
+        {
+          chatType === 'group' &&
+          chatRoom.all.filter((singleChatRoom) =>
+            singleChatRoom.data.chatType === 'public' ||
+            singleChatRoom.data.chatType === 'group'
+          ).sort((a, b) =>  {
+            var n = a.priority - b.priority;
 
-              return new Date(a.data.createdAt) - new Date(b.data.createdAt);
-            }).map((singleChatRoom, i) =>
-              <ChatRoom
-                key={i}
-                user={user.active}
-                chatRoom={singleChatRoom}
-                activeChatRoom={activeChatRoom}
-                isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
-                handleChangeChatRoom={changeChatRoom}
-                handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-                handleTrashChatRoom={::this.handleTrashChatRoom}
-                isTrashingAChatRoom={chatRoom.isTrashing && chatRoom.isTrashingSuccess}
-              />
-            )
-          }
-          {
-            chatType === 'group' &&
-            chatRoom.all.filter((singleChatRoom) =>
-              singleChatRoom.data.chatType === 'public' ||
-              singleChatRoom.data.chatType === 'group'
-            ).sort((a, b) =>  {
-              var n = a.priority - b.priority;
+            if (n !== 0) {
+              return n;
+            }
 
-              if (n !== 0) {
-                return n;
-              }
-
-              return new Date(a.data.createdAt) - new Date(b.data.createdAt);
-            }).map((singleChatRoom, i) =>
-              <ChatRoom
-                key={i}
-                user={user.active}
-                chatRoom={singleChatRoom}
-                activeChatRoom={activeChatRoom}
-                isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
-                handleChangeChatRoom={changeChatRoom}
-                handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-              />
-            )
-          }
-        </div>
-      )
-    } else {
-      return (
-        <LoadingAnimation name="ball-clip-rotate" color="white" />
-      )
-    }
+            return new Date(a.data.createdAt) - new Date(b.data.createdAt);
+          }).map((singleChatRoom, i) =>
+            <ChatRoom
+              key={i}
+              user={user.active}
+              chatRoom={singleChatRoom}
+              activeChatRoom={activeChatRoom}
+              isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
+              handleChangeChatRoom={changeChatRoom}
+              handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+            />
+          )
+        }
+      </div>
+    )
   }
   handleChangeTab(event, tab) {
     event.preventDefault();
