@@ -59,7 +59,7 @@ var audioUpload = multer({
   storage: audioStorage,
   fileFilter: audioFilter,
   limits: {
-    fileSize: 1024 * 1024 * 5
+    fileSize: 1024 * 1024 * 10
   }
 });
 
