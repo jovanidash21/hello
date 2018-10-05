@@ -72,6 +72,7 @@ class ActiveChatRoom extends Component {
             name={activeChatRoom.data.name}
             role={::this.handleAvatar('role')}
             accountType={::this.handleAvatar('accountType')}
+            chatType={activeChatRoom.data.chatType}
             badgeCloser
           />
           <div className="chat-room-detail">
