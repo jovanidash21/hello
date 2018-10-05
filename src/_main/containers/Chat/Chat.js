@@ -221,13 +221,7 @@ class Chat extends Component {
             ?
             <div
               id="chat-section"
-              className={"chat-section " +
-                (
-                  user.active.accountType === 'guest' ||
-                  user.active.mute.data
-                    ? 'no-chat-input' : ''
-                )
-              }
+              className={"chat-section " + (user.active.mute.data ? 'no-chat-input' : '')}
             >
               <LeftSideDrawer
                 handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
@@ -244,7 +238,6 @@ class Chat extends Component {
               </Header>
               <ChatBox isAudioRecorderOpen={isAudioRecorderOpen} />
               {
-                user.active.accountType !== 'guest' &&
                 !user.active.mute.data && (
                   !isAudioRecorderOpen
                     ?
