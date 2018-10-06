@@ -118,11 +118,8 @@ class Chat extends Component {
       sendTextMessage
     } = this.props;
     const allMessages = message.all;
-    const lastMessage = allMessages[allMessages.length - 1];
-    const today = new Date();
-    const lastMessageDate = new Date(lastMessage.createdAt);
 
-    if ( ( today - lastMessageDate ) <= 2000 ) {
+    if ( allMessages.length > 0 && ( new Date() - new Date(allMessages[allMessages.length - 1].createdAt) ) <= 2000 ) {
       Popup.alert('Please take a break and send message slowly!');
     } else {
       sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id);
