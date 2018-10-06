@@ -311,11 +311,10 @@ class ChatInput extends Component {
           <div>
             {
               emojiPicker &&
-              <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
-            }
-            {
-              emojiPicker &&
-              <div className="emoji-picker-overlay" onClick={::this.handleEmojiPickerToggle} />
+              <div>
+                <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
+                <div className="emoji-picker-overlay" onClick={::this.handleEmojiPickerToggle} />
+              </div>
             }
           </div>
         </MediaQuery>
