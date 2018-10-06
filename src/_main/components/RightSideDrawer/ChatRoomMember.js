@@ -69,7 +69,6 @@ class ChatRoomMember extends Component {
 
     if (
       user._id !== chatRoomMember._id &&
-      user.accountType !== 'guest' &&
       (
         user.role !== 'ordinary' ||
         chatRoomMember.role !== 'vip'
