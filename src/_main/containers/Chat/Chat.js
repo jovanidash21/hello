@@ -190,24 +190,6 @@ class Chat extends Component {
     ::this.handleLeftSideDrawerToggleEvent();
     ::this.handleRightSideDrawerToggleEvent();
   }
-  handleAudioPlayingToggle(audioPlayingIndex) {
-    const { audioIndex } = this.state;
-
-    if ( audioIndex > -1 && audioIndex !== audioPlayingIndex ) {
-      var previousAudio = document.getElementsByClassName('react-plyr-' + audioIndex)[0];
-
-      if (
-        previousAudio.currentTime > 0  &&
-        !previousAudio.paused &&
-        !previousAudio.ended &&
-        previousAudio.readyState > 2
-      ) {
-        previousAudio.pause();
-      }
-    }
-
-    this.setState({audioIndex: audioPlayingIndex});
-  }
   render() {
     const {
       user,

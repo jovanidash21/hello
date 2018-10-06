@@ -63,15 +63,15 @@ class Avatar extends Component {
       switch ( role ) {
         case 'owner':
           icon = 'shield';
-          title = 'This member is an owner';
+          title = 'This user is an owner';
           break;
         case 'admin':
           icon = 'font';
-          title = 'This member is an admin';
+          title = 'This user is an admin';
           break;
         case 'moderator':
           icon = 'forward';
-          title = 'This member is a moderator';
+          title = 'This user is a moderator';
           break;
         default:
           break;
