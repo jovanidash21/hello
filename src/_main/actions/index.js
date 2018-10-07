@@ -14,10 +14,6 @@ import {
 } from './user';
 import { sendEmail } from './email';
 import {
-  socketIsTyping,
-  socketIsNotTyping
-} from './typer';
-import {
   fetchChatRooms,
   changeChatRoom,
   createPublicChatRoom,
@@ -54,8 +50,6 @@ const actions = (dispatch) => {
     guestLogin,
     fetchActiveUser,
     searchUser,
-    socketIsTyping,
-    socketIsNotTyping,
     fetchChatRooms,
     changeChatRoom,
     createPublicChatRoom,

@@ -4,7 +4,6 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import auth from './auth';
 import user from './user';
 import email from './email';
-import typer from './typer';
 import chatRoom from './chat-room';
 import message from './message';
 import member from './member';
@@ -16,7 +15,6 @@ const appReducer = combineReducers({
   auth,
   user,
   email,
-  typer,
   chatRoom,
   message,
   member

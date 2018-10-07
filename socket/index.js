@@ -38,20 +38,6 @@ var sockets = function(io) {
         case 'SOCKET_LEAVE_CHAT_ROOM':
           socket.leave(action.chatRoomID);
           break;
-        case 'SOCKET_IS_TYPING':
-          socket.broadcast.to(action.chatRoomID).emit('action', {
-            type: 'SOCKET_BROADCAST_IS_TYPING',
-            typer: action.typer,
-            chatRoomID: action.chatRoomID
-          });
-          break;
-        case 'SOCKET_IS_NOT_TYPING':
-          socket.broadcast.to(action.chatRoomID).emit('action', {
-            type: 'SOCKET_BROADCAST_IS_NOT_TYPING',
-            typer: action.typer,
-            chatRoomID: action.chatRoomID
-          });
-          break;
         case 'SOCKET_CREATE_CHAT_ROOM':
           action.members.forEach(function (chatRoomMember) {
             User.findById(chatRoomMember, function(err, user) {

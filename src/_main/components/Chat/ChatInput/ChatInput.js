@@ -18,7 +18,6 @@ class ChatInput extends Component {
     this.state = {
       caretPosition: null,
       message: '',
-      typing: false,
       emojiPicker: false,
       validMessage: false,
       maxLengthReached: false
@@ -47,13 +46,10 @@ class ChatInput extends Component {
   onMessageKeyUp(event) {
     const {
       user,
-      activeChatRoom,
-      handleSocketIsTyping,
-      handleSocketIsNotTyping
+      activeChatRoom
     } = this.props;
     const {
       message,
-      typing,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -61,30 +57,18 @@ class ChatInput extends Component {
 
     if (
       message.trim().length > 0 &&
-      !typing &&
       !validMessage &&
       chatInputText.trim().length > 0
     ) {
-      this.setState({
-        typing: true,
-        validMessage: true
-      });
-
-      handleSocketIsTyping(user, activeChatRoom.data._id);
+      this.setState({validMessage: true});
     }
 
     if (
       message.trim().length === 0 &&
-      typing &&
       validMessage &&
       chatInputText.trim().length === 0
     ) {
-      this.setState({
-        typing: false,
-        validMessage: false
-      });
-
-      handleSocketIsNotTyping(user, activeChatRoom.data._id);
+      this.setState({validMessage: false});
     }
 
     if ( (event.key === 'Enter') && validMessage && !maxLengthReached ) {
@@ -92,7 +76,6 @@ class ChatInput extends Component {
 
       this.setState({
         message: '',
-        typing: false,
         emojiPicker: false,
         validMessage: false
       });
@@ -144,11 +127,9 @@ class ChatInput extends Component {
     const {
       user,
       activeChatRoom,
-      handleSocketIsTyping
     } = this.props;
     const {
       caretPosition,
-      typing,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -174,13 +155,8 @@ class ChatInput extends Component {
       ::this.handleInsertEmoji(emojiSelect);
     }
 
-    if ( !typing && !validMessage ) {
-      this.setState({
-        typing: true,
-        validMessage: true
-      });
-
-      handleSocketIsTyping(user, activeChatRoom.data._id);
+    if ( !validMessage ) {
+      this.setState({validMessage: true});
     }
   }
   handleInsertEmoji(emoji) {
@@ -253,14 +229,12 @@ class ChatInput extends Component {
     const {
       user,
       activeChatRoom,
-      handleSocketIsNotTyping,
       handleSendTextMessage
     } = this.props;
     const messageText = ::this.handleMessageText('text');
     const newMessageID = uuidv4();
 
     document.getElementById('chat-input').innerHTML = '';
-    handleSocketIsNotTyping(user, activeChatRoom.data._id);
     handleSendTextMessage(newMessageID, messageText);
   }
   handleSendTextMessageOnClick(event) {
@@ -269,7 +243,6 @@ class ChatInput extends Component {
     const {
       user,
       activeChatRoom,
-      handleSocketIsNotTyping,
       handleSendTextMessage
     } = this.props;
     const {
@@ -282,12 +255,10 @@ class ChatInput extends Component {
     if ( validMessage && !maxLengthReached ) {
       document.getElementById('chat-input').innerHTML = '';
       document.getElementById('chat-input').focus();
-      handleSocketIsNotTyping(user, activeChatRoom.data._id);
       handleSendTextMessage(newMessageID, messageText);
 
       this.setState({
         message: '',
-        typing: false,
         emojiPicker: false,
         validMessage: false
       });
@@ -388,8 +359,6 @@ class ChatInput extends Component {
 ChatInput.propTypes = {
   user: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
-  handleSocketIsTyping: PropTypes.func.isRequired,
-  handleSocketIsNotTyping: PropTypes.func.isRequired,
   handleSendTextMessage: PropTypes.func.isRequired,
   handleAudioRecorderToggle: PropTypes.func.isRequired,
   handleSendFileMessage: PropTypes.func.isRequired,

@@ -9,7 +9,6 @@ import mapDispatchToProps from '../../../actions';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import {
   ChatBubble,
-  ChatTyper,
   ChatInput,
   ChatAudioRecorder
 } from '../../../components/Chat';
@@ -53,7 +52,6 @@ class ChatBox extends Component {
   handleChatBoxRender() {
     const {
       user,
-      typer,
       chatRoom,
       message
     } = this.props;
@@ -87,19 +85,6 @@ class ChatBox extends Component {
               <div className="chat-no-messages">
                 No messages in this Chat Room
               </div>
-          }
-          {
-            typer.all.length > 0 &&
-            <div className="chat-typers">
-              {
-                typer.all.map((singleTyper, i) =>
-                  <ChatTyper
-                    key={i}
-                    typer={singleTyper}
-                  />
-                )
-              }
-            </div>
           }
         </Container>
       )
@@ -142,7 +127,6 @@ class ChatBox extends Component {
   render() {
     const {
       user,
-      typer,
       chatRoom,
       message,
       socketIsTyping,
@@ -182,7 +166,6 @@ class ChatBox extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    typer: state.typer,
     chatRoom: state.chatRoom,
     message: state.message
   }
