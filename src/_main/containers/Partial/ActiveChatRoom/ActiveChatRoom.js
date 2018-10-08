@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
+import { formatNumber } from '../../../../utils/number';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../../components/Avatar';
 import './styles.scss';
@@ -95,7 +96,7 @@ class ActiveChatRoom extends Component {
                     className="user-icon"
                     name="user"
                   />
-                  {member.all.length}
+                  {formatNumber(member.all.length)}
                 </div>
               }
             </MediaQuery>
