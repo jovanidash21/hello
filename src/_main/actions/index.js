@@ -19,8 +19,6 @@ import {
   createPublicChatRoom,
   createGroupChatRoom,
   createDirectChatRoom,
-  socketJoinChatRoom,
-  socketLeaveChatRoom,
   trashChatRoom
 } from './chat-room';
 import {
@@ -55,8 +53,6 @@ const actions = (dispatch) => {
     createPublicChatRoom,
     createGroupChatRoom,
     createDirectChatRoom,
-    socketJoinChatRoom,
-    socketLeaveChatRoom,
     trashChatRoom,
     fetchNewMessages,
     sendTextMessage,
