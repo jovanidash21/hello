@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
       if (user !== null) {
         res.status(401).send({
           success: false,
-          message: 'Guest name already exist.'
+          message: 'Sorry! Guest name already taken'
         });
       } else {
         userData.role = 'ordinary';
