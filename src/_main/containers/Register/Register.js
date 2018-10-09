@@ -71,9 +71,9 @@ class Register extends Component {
             <h1 className="mui--text-center">Create an Account</h1>
           </Col>
           {
-            auth.isRegisterError &&
+            auth.register.error &&
             <Col md="12">
-              <Alert label="Sorry! Username already taken." center />
+              <Alert label={auth.register.message} center />
             </Col>
           }
           <Col md="12">
@@ -84,21 +84,21 @@ class Register extends Component {
                 type="email"
                 name="email"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.register.loading}
               />
               <Input
                 value={name}
                 label="Name"
                 name="name"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.register.loading}
               />
               <Input
                 value={username}
                 label="Username"
                 name="username"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.register.loading}
               />
               <Select
                 options={[
@@ -109,7 +109,7 @@ class Register extends Component {
                 label="Gender"
                 name="gender"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.register.loading}
               />
               <Input
                 value={password}
@@ -117,19 +117,19 @@ class Register extends Component {
                 type="password"
                 name="password"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.register.loading}
               />
-              <RegisterButton isDisabled={auth.isLoading} />
+              <RegisterButton isDisabled={auth.register.loading} />
             </Form>
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <LoginButton link="/" isDisabled={auth.isLoading} />
+            <LoginButton link="/" isDisabled={auth.register.loading} />
           </Col>
           <Col md="12">
-            <GuestButton link="/guest" isDisabled={auth.isLoading} />
+            <GuestButton link="/guest" isDisabled={auth.register.loading} />
           </Col>
         </Row>
       </Panel>

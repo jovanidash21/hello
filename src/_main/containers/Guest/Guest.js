@@ -65,9 +65,9 @@ class Guest extends Component {
             <h1 className="mui--text-center">Create Identity</h1>
           </Col>
           {
-            auth.isGuestLoginError &&
+            auth.guestLogin.error &&
             <Col md="12">
-              <Alert label="Sorry! Guest name already taken." center />
+              <Alert label={auth.guestLogin.message} center />
             </Col>
           }
           <Col md="12">
@@ -77,7 +77,7 @@ class Guest extends Component {
                 label="Name"
                 name="name"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.guestLogin.loading}
               />
               <Select
                 options={[
@@ -88,19 +88,19 @@ class Guest extends Component {
                 label="Gender"
                 name="gender"
                 onChange={::this.onInputChange}
-                disabled={auth.isLoading}
+                disabled={auth.guestLogin.loading}
               />
-              <GuestButton isDisabled={auth.isLoading} />
+              <GuestButton isDisabled={auth.guestLogin.loading} />
             </Form>
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <LoginButton link="/" isDisabled={auth.isLoading} />
+            <LoginButton link="/" isDisabled={auth.guestLogin.loading} />
           </Col>
           <Col md="12">
-            <RegisterButton link="/register" isDisabled={auth.isLoading} />
+            <RegisterButton link="/register" isDisabled={auth.guestLogin.loading} />
           </Col>
         </Row>
       </Panel>

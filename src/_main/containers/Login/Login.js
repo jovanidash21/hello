@@ -68,9 +68,9 @@ class Login extends Component {
             <h1 className="mui--text-center">Chat App</h1>
           </Col>
           {
-            auth.isLoginError &&
+            auth.login.error &&
             <Col md="12">
-              <Alert label="Invalid username or password!" center />
+              <Alert label={auth.login.message} center />
             </Col>
           }
           <Col md="12">
@@ -80,7 +80,7 @@ class Login extends Component {
               label="Username"
               name="username"
               onChange={::this.onInputChange}
-              disabled={auth.isLoading}
+              disabled={auth.login.loading}
             />
             <Input
               value={password}
@@ -88,9 +88,9 @@ class Login extends Component {
               type="password"
               name="password"
               onChange={::this.onInputChange}
-              disabled={auth.isLoading}
+              disabled={auth.login.loading}
             />
-              <LoginButton isDisabled={auth.isLoading} />
+              <LoginButton isDisabled={auth.login.loading} />
             </Form>
           </Col>
           <Col md="12">
@@ -98,7 +98,7 @@ class Login extends Component {
               socialMedia="facebook"
               label="Login with Facebook"
               handleSocialLogin={facebookLogin}
-              isDisabled={auth.isLoading}
+              isDisabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
@@ -106,7 +106,7 @@ class Login extends Component {
               socialMedia="google"
               label="Login with Google"
               handleSocialLogin={googleLogin}
-              isDisabled={auth.isLoading}
+              isDisabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
@@ -114,17 +114,17 @@ class Login extends Component {
               socialMedia="twitter"
               label="Login with Twitter"
               handleSocialLogin={twitterLogin}
-              isDisabled={auth.isLoading}
+              isDisabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <RegisterButton link="/register" isDisabled={auth.isLoading} />
+            <RegisterButton link="/register" isDisabled={auth.login.loading} />
           </Col>
           <Col md="12">
-            <GuestButton link="/guest" isDisabled={auth.isLoading} />
+            <GuestButton link="/guest" isDisabled={auth.login.loading} />
           </Col>
         </Row>
       </Panel>

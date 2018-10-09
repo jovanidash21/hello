@@ -1,62 +1,121 @@
 import {
   LOGIN,
   REGISTER,
-  GUEST_LOGIN,
-  LOGOUT
+  GUEST_LOGIN
 } from '../constants/auth';
 
 const initialState = {
-  isLoading: false,
-  isAuthenticated: false
+  login: {
+    loading: false,
+    success: false,
+    error: false,
+    message: ''
+  },
+  register: {
+    loading: false,
+    success: false,
+    error: false,
+    message: ''
+  },
+  guestLogin: {
+    loading: false,
+    success: false,
+    error: false,
+    message: ''
+  }
 };
 
 const auth = (state=initialState, action) => {
   switch(action.type) {
     case `${LOGIN}_LOADING`:
-    case `${REGISTER}_LOADING`:
-    case `${GUEST_LOGIN}_LOADING`:
-    case `${LOGOUT}_LOADING`:
       return {
         ...state,
-        isLoading: true,
-        isAuthenticated: false
+        login: {
+          ...state.login,
+          loading: true
+        }
+      };
+    case `${REGISTER}_LOADING`:
+      return {
+        ...state,
+        register: {
+          ...state.register,
+          loading: true
+        }
+      };
+    case `${GUEST_LOGIN}_LOADING`:
+      return {
+        ...state,
+        guestLogin: {
+          ...state.guestLogin,
+          loading: true
+        }
       };
     case `${LOGIN}_SUCCESS`:
+      return {
+        ...state,
+        login: {
+          ...state.login,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        }
+      };
     case `${REGISTER}_SUCCESS`:
+      return {
+        ...state,
+        register: {
+          ...state.register,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        }
+      };
     case `${GUEST_LOGIN}_SUCCESS`:
       return {
         ...state,
-        isLoading: false,
-        isAuthenticated: true
-      };
-    case `${LOGOUT}_SUCCESS`:
-      return {
-        ...state,
-        isLoading: false,
-        isAuthenticated: false,
+        guestLogin: {
+          ...state.guestLogin,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        }
       };
     case `${LOGIN}_ERROR`:
       return {
         ...state,
-        isLoading: false,
-        isLoginError: true
+        login: {
+          ...state.login,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${REGISTER}_ERROR`:
       return {
         ...state,
-        isLoading: false,
-        isRegisterError: true
+        register: {
+          ...state.register,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${GUEST_LOGIN}_ERROR`:
       return {
         ...state,
-        isLoading: false,
-        isGuestLoginError: true
-      };
-    case `${LOGOUT}_ERROR`:
-      return {
-        ...state,
-        isLoading: false
+        guestLogin: {
+          ...state.guestLogin,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     default:
       return state;
