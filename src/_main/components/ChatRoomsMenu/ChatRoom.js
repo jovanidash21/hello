@@ -31,7 +31,7 @@ class ChatRoom extends Component {
                 image={chatRoomData.chatIcon}
                 size={matches ? '70px' : '25px'}
                 name={chatRoomData.name}
-                chatType={chatRoomData.chatType}
+                roleChatType={chatRoomData.chatType}
                 badgeBigger={matches}
                 badgeCloser={matches}
               />

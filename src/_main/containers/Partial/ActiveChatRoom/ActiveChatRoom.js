@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
+import { handleChatRoomAvatarBadges } from '../../../../utils/avatar';
 import { formatNumber } from '../../../../utils/number';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../../components/Avatar';
@@ -13,47 +14,9 @@ class ActiveChatRoom extends Component {
   constructor(props) {
     super(props);
   }
-  handleAvatar(type) {
-    const {
-      user,
-      chatRoom
-    } = this.props;
-    const activeUser = user.active;
-    const activeChatRoom = chatRoom.active;
-    var role = '';
-    var accountType = '';
-
-    switch ( activeChatRoom.data.chatType ) {
-      case 'private':
-        role = activeUser.role;
-        accountType = activeUser.accountType;
-        break;
-      case 'direct':
-        for ( var i = 0; i < activeChatRoom.data.members.length; i++ ) {
-          var member = activeChatRoom.data.members[i];
-
-          if ( member._id != activeUser._id ) {
-            role = member.role;
-            accountType = member.accountType;
-            break;
-          } else {
-            continue;
-          }
-        }
-        break;
-      default:
-        break;
-    }
-
-    if ( type === 'role' ) {
-      return role;
-    } else if ( type === 'accountType' ) {
-      return accountType;
-    }
-    return accountType;
-  }
   handleActiveChatRoomRender() {
     const {
+      user,
       chatRoom,
       member
     } = this.props;
@@ -71,9 +34,8 @@ class ActiveChatRoom extends Component {
             image={activeChatRoom.data.chatIcon}
             size="32px"
             name={activeChatRoom.data.name}
-            role={::this.handleAvatar('role')}
-            accountType={::this.handleAvatar('accountType')}
-            chatType={activeChatRoom.data.chatType}
+            roleChatType={handleChatRoomAvatarBadges(activeChatRoom.data, user.active, 'role-chat')}
+            accountType={handleChatRoomAvatarBadges(activeChatRoom.data, user.active)}
             badgeCloser
           />
           <div className="chat-room-detail">

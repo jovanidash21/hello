@@ -157,7 +157,7 @@ class ChatBubble extends Component {
           image={message.user.profilePicture}
           size="25px"
           name={message.user.name}
-          role={message.user.role}
+          roleChatType={message.user.role}
           accountType={message.user.accountType}
         />
         {::this.handleChatBubbleRender()}

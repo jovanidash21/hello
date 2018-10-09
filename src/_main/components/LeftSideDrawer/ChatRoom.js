@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import { handleChatRoomAvatarBadges } from '../../../utils/avatar';
 import { Avatar } from '../../../components/Avatar';
 import './styles.scss';
 
@@ -16,43 +17,6 @@ class ChatRoom extends Component {
     if (prevProps.isTrashingAChatRoom && !this.props.isTrashingAChatRoom) {
       this.setState({isTrashing: false});
     }
-  }
-  handleAvatar(type) {
-    const {
-      user,
-      chatRoom
-    } = this.props;
-    var role = '';
-    var accountType = '';
-
-    switch ( chatRoom.data.chatType ) {
-      case 'private':
-        role = user.role;
-        accountType = user.accountType;
-        break;
-      case 'direct':
-        for ( var i = 0; i < chatRoom.data.members.length; i++ ) {
-          var member = chatRoom.data.members[i];
-
-          if ( member._id != user._id ) {
-            role = member.role;
-            accountType = member.accountType;
-            break;
-          } else {
-            continue;
-          }
-        }
-        break;
-      default:
-        break;
-    }
-
-    if ( type === 'role' ) {
-      return role;
-    } else if ( type === 'accountType' ) {
-      return accountType;
-    }
-    return accountType;
   }
   handleChangeChatRoom(event) {
     event.preventDefault();
@@ -85,6 +49,7 @@ class ChatRoom extends Component {
   }
   render() {
     const {
+      user,
       chatRoom,
       isActive
     } = this.props;
@@ -104,9 +69,8 @@ class ChatRoom extends Component {
         <Avatar
           image={chatRoom.data.chatIcon}
           name={chatRoom.data.name}
-          role={::this.handleAvatar('role')}
-          accountType={::this.handleAvatar('accountType')}
-          chatType={chatRoom.data.chatType}
+          roleChatType={handleChatRoomAvatarBadges(chatRoom.data, user, 'role-chat')}
+          accountType={handleChatRoomAvatarBadges(chatRoom.data, user)}
         />
         <div className="chat-room-name">
           {chatRoom.data.name}

@@ -102,7 +102,7 @@ class ChatRoomMember extends Component {
             image={chatRoomMember.profilePicture}
             size="23px"
             name={chatRoomMember.name}
-            role={chatRoomMember.role}
+            roleChatType={chatRoomMember.role}
             accountType={chatRoomMember.accountType}
           />
           <div className="member-name">

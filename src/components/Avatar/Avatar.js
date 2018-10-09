@@ -51,64 +51,78 @@ class Avatar extends Component {
 
     return avatarStyles;
   }
-  handleTopBadge(type) {
-    const {
-      role,
-      chatType
-    } = this.props;
+  handleTopBadge(type='icon') {
+    const { roleChatType } = this.props;
     var icon = '';
     var title = '';
 
-    if ( role.length > 0 ) {
-      switch ( role ) {
-        case 'owner':
-          icon = 'shield';
-          title = 'This user is an owner';
-          break;
-        case 'admin':
-          icon = 'font';
-          title = 'This user is an admin';
-          break;
-        case 'moderator':
-          icon = 'forward';
-          title = 'This user is a moderator';
-          break;
-        default:
-          break;
-      }
-    } else if ( chatType.length > 0 ) {
-      switch ( chatType ) {
-        case 'public':
-          icon = 'users';
-          title = 'This is a public chat room';
-          break;
-        default:
-          break;
-      }
-    }
-
-
-
-    if ( type === 'icon' ) {
-      return icon;
-    } else if ( type === 'title' ) {
-      return title;
-    }
-  }
-  handleBottomBadgeIcon() {
-    const { accountType } = this.props;
-    var icon = accountType;
-
-    switch ( accountType ) {
-      case 'guest':
-        icon = 'star';
+    switch ( roleChatType ) {
+      case 'owner':
+        icon = 'shield';
+        title = 'This user is an owner';
         break;
-      case 'local':
-        icon = '';
+      case 'admin':
+        icon = 'font';
+        title = 'This user is an admin';
+        break;
+      case 'moderator':
+        icon = 'forward';
+        title = 'This user is a moderator';
+        break;
+      case 'public':
+        icon = 'users';
+        title = 'This is a public chat room';
+        break;
       default:
         break;
     }
 
+    if ( type === 'title' ) {
+      return title;
+    }
+    return icon;
+  }
+  handleBottomBadge(type='icon') {
+    const { accountType } = this.props;
+    var icon = '';
+    var title = '';
+
+    switch ( accountType ) {
+      case 'facebook':
+        icon = 'facebook';
+        title = 'Facebook';
+        break;
+      case 'google':
+        icon = 'google';
+        title = 'Google';
+        break;
+      case 'twitter':
+        icon = 'twitter';
+        title = 'Twitter';
+        break;
+      case 'instagram':
+        icon = 'instagram';
+        title = 'Instagram';
+        break;
+      case 'linkedin':
+        icon = 'linkedin';
+        title = 'LinkedIn'
+        break;
+      case 'github':
+        icon = 'github';
+        title = 'GitHub';
+        break;
+      case 'guest':
+        icon = 'star';
+        title = 'Guest';
+        break;
+      default:
+        break;
+    }
+
+    if ( type === 'title' ) {
+      return title;
+    }
     return icon;
   }
   render() {
@@ -116,17 +130,17 @@ class Avatar extends Component {
       image,
       size,
       name,
-      role,
+      roleChatType,
       accountType,
-      chatType,
       badgeBigger,
       badgeCloser
     } = this.props;
     const avatarStyles = ::this.handleAvatarStyles();
     const nameAbbr = initials(name).substring(0,2);
-    const topBadgeIcon = ::this.handleTopBadge('icon');
+    const topBadgeIcon = ::this.handleTopBadge();
     const topBadgeTitle = ::this.handleTopBadge('title');
-    const bottomBadgeIcon = ::this.handleBottomBadgeIcon();
+    const bottomBadgeIcon = ::this.handleBottomBadge();
+    const bottomBadgeTitle = ::this.handleBottomBadge('title');
 
     return (
       <div
@@ -145,7 +159,7 @@ class Avatar extends Component {
               "badge-logo top " +
               (badgeBigger ? 'bigger ' : '') +
               (badgeCloser ? 'closer ' : '') +
-              (role.length > 0 ? role : chatType)
+              roleChatType
             }
             title={topBadgeTitle}
           >
@@ -164,7 +178,7 @@ class Avatar extends Component {
               (badgeCloser ? 'closer ' : '') +
               accountType
             }
-            title={accountType}
+            title={bottomBadgeTitle}
           >
             <FontAwesome
               className="icon"
@@ -181,9 +195,8 @@ Avatar.propTypes = {
   image: PropTypes.string,
   size: PropTypes.string,
   name: PropTypes.string,
-  role: PropTypes.string,
+  roleChatType: PropTypes.string,
   accountType: PropTypes.string,
-  chatType: PropTypes.string,
   badgeBigger: PropTypes.bool,
   badgeCloser: PropTypes.bool
 }
@@ -192,9 +205,8 @@ Avatar.defaultProps = {
   image: '',
   size: '25px',
   name: '',
-  role: '',
+  roleChatType: '',
   accountType: '',
-  chatType: '',
   badgeBigger: false,
   badgeCloser: false
 }
