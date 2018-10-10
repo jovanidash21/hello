@@ -40,7 +40,7 @@ class ChatBox extends Component {
     }
   }
   handleScrollToBottom() {
-    this.messagesBottom.scrollIntoView();
+    this.chatBox.scrollTop = this.chatBox.scrollHeight;
   }
   handleChatBoxScroll() {
     if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
@@ -145,10 +145,6 @@ class ChatBox extends Component {
           ref={(element) => { this.chatBox = element; }}
         >
           {::this.handleChatBoxRender()}
-          <div
-            style={{float: "left", clear: "both"}}
-            ref={(element) => { this.messagesBottom = element; }}
-          />
         </div>
         {
           isModalOpen &&
