@@ -57,70 +57,71 @@ class ChatBubble extends Component {
     } = this.props;
     const { isLightboxOpen } = this.state;
 
-    if ( message.messageType !== 'text' && message.fileLink.length === 0 ) {
-      return (
-        <div className="uploading-icon">
-          <FontAwesome name="spinner" pulse />
+    return (
+      <div className="chat-bubble">
+        <div className="chat-user-name">
+          {message.user.name}
         </div>
-      )
-    } else {
-      return (
-        <div className="chat-bubble">
-          <div className="chat-user-name">
-            {message.user.name}
+        {
+          ( message.messageType === 'text' ||
+          ( message.messageType === 'file' && message.fileLink.length > 0 ) ) &&
+          <div className="chat-text">
+            {
+              message.messageType === 'file' &&
+              <div className="file-icon">
+                <FontAwesome name="file" />
+              </div>
+            }
+            {::this.handleMessageText()}
           </div>
-          {
-            ( message.messageType === 'text' || message.messageType === 'file' ) &&
-            <div className="chat-text">
-              {
-                message.messageType === 'file' &&
-                <div className="file-icon">
-                  <FontAwesome name="file" />
-                </div>
-              }
-              {::this.handleMessageText()}
-            </div>
-          }
-          {
-            message.messageType === 'image' &&
-            <div
-              className="image-logo"
-              onClick={::this.handleLightboxToggle}
-            >
-              <FontAwesome name="picture-o" />
-            </div>
-          }
-          {
-            message.messageType === 'audio' &&
-            <Plyr
-              className={"react-plyr-" + index}
-              type="audio"
-              url={message.fileLink}
-              volume={1}
-              onPlay={::this.handleAudioOnPlay}
-            />
-          }
-          {
-            message.messageType === 'image' &&
-            isLightboxOpen &&
-            <Lightbox
-              mainSrc={message.fileLink}
-              onCloseRequest={::this.handleLightboxToggle}
-            />
-          }
-          {
-            canDeleteMessage &&
-            <div
-              className="cross-icon"
-              title="Delete Message"
-              onClick={::this.handleOpenModal}
-            >
-              <FontAwesome name="times" />
-            </div>
-          }
-        </div>
-      )
-    }
+        }
+        {
+          message.messageType !== 'text' &&
+          message.fileLink.length === 0 &&
+          <div className="uploading-icon">
+            <FontAwesome name="spinner" pulse />
+          </div>
+        }
+        {
+          message.messageType === 'image' &&
+          message.fileLink.length > 0 &&
+          <div
+            className="image-logo"
+            onClick={::this.handleLightboxToggle}
+          >
+            <FontAwesome name="picture-o" />
+          </div>
+        }
+        {
+          message.messageType === 'audio' &&
+          <Plyr
+            className={"react-plyr-" + index}
+            type="audio"
+            url={message.fileLink}
+            volume={1}
+            onPlay={::this.handleAudioOnPlay}
+          />
+        }
+        {
+          message.messageType === 'image' &&
+          isLightboxOpen &&
+          <Lightbox
+            mainSrc={message.fileLink}
+            onCloseRequest={::this.handleLightboxToggle}
+          />
+        }
+        {
+          canDeleteMessage &&
+          <div
+            className="cross-icon"
+            title="Delete Message"
+            onClick={::this.handleOpenModal}
+          >
+            <FontAwesome name="times" />
+          </div>
+        }
+      </div>
+    )
   }
   handleLightboxToggle(event) {
     event.preventDefault();

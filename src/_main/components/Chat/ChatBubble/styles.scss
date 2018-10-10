@@ -11,9 +11,6 @@
   &:not(:first-child) {
     border-top: 1px solid $color-alto;
   }
-  .uploading-icon {
-    margin: 10px;
-  }
   .chat-bubble {
     position: relative;
     width: 100%;
@@ -33,9 +30,13 @@
         margin-top: 0;
       }
     }
+    .uploading-icon,
     .chat-text,
     .plyr {
       margin-left: 15px;
+    }
+    .uploading-icon {
+      margin-top: 3px;
     }
     .chat-text {
       color: #000;
