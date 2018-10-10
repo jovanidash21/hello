@@ -170,7 +170,7 @@ router.post('/text', function(req, res, next) {
       .then((messageData) => {
         res.status(200).send({
           success: true,
-          message: 'Message Sent.',
+          message: 'Message Sent',
           messageData: messageData
         });
       })
@@ -246,7 +246,7 @@ router.post('/file', fileUpload.single('file'), function(req, res, next) {
       .then((messageData) => {
         res.status(200).send({
           success: true,
-          message: 'Message Sent.',
+          message: 'Message Sent',
           messageData: messageData
         });
       })
@@ -316,7 +316,7 @@ router.post('/image', imageUpload.single('image'), function(req, res, next) {
       .then((messageData) => {
         res.status(200).send({
           success: true,
-          message: 'Message Sent.',
+          message: 'Message Sent',
           messageData: messageData
         });
       })
@@ -386,7 +386,7 @@ router.post('/audio', audioUpload.single('audio'), function(req, res, next) {
       .then((messageData) => {
         res.status(200).send({
           success: true,
-          message: 'Message Sent.',
+          message: 'Message Sent',
           messageData: messageData
         });
       })

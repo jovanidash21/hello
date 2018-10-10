@@ -94,12 +94,12 @@ router.post('/create', function(req, res, next) {
     } else if (chatType === 'direct' && members.length !== 2) {
       res.status(401).send({
         success: false,
-        message: 'Please select 2 members.'
+        message: 'Please select 2 members'
       });
     } else if (chatType === 'group' && (members.length < 3 || members.length > 5)) {
       res.status(401).send({
         success: false,
-        message: 'Please select at least 3 and at most 5 members.'
+        message: 'Please select at least 3 and at most 5 members'
       });
     } else {
       ChatRoom.findOne({_id: {$ne: null}, members: {$all: members}, chatType: 'direct'}, function(err, chatRoom) {
@@ -119,7 +119,7 @@ router.post('/create', function(req, res, next) {
                 .then((chatRoomData) => {
                   res.status(200).send({
                     success: true,
-                    message: 'Chat room already exist.',
+                    message: 'Chat room already exist',
                     chatRoom: {
                       data: chatRoomData,
                       unReadMessages: 0,
@@ -170,7 +170,7 @@ router.post('/create', function(req, res, next) {
               .then((chatRoomData) => {
                 res.status(200).send({
                   success: true,
-                  message: 'Chat Room Created.',
+                  message: 'Chat Room Created',
                   chatRoom: {
                     data: chatRoomData,
                     unReadMessages: 0
@@ -197,7 +197,6 @@ router.post('/create', function(req, res, next) {
 
 router.post('/trash', function(req, res, next) {
   var userID = req.body.userID;
-  var chatRoomID = req.body.chatRoomID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
     res.status(401).send({
@@ -205,6 +204,8 @@ router.post('/trash', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var chatRoomID = req.body.chatRoomID;
+
     User.update(
       { _id: userID, 'chatRooms.data': chatRoomID },
       { $set: { 'chatRooms.$.trash.data': true, 'chatRooms.$.trash.endDate': new Date( +new Date() + 2 * 60 * 1000 ) } },
@@ -213,7 +214,7 @@ router.post('/trash', function(req, res, next) {
     .then((user) => {
       res.status(200).send({
         success: true,
-        message: 'Chat Room Trashed.'
+        message: 'Chat Room Trashed'
       });
     })
     .catch((error) => {

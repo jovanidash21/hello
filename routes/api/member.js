@@ -3,7 +3,6 @@ var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 
 router.post('/', function(req, res, next) {
-  var chatRoomID = req.body.chatRoomID;
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
@@ -12,6 +11,8 @@ router.post('/', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var chatRoomID = req.body.chatRoomID;
+
     User.find({
       chatRooms: {
         $elemMatch: {
@@ -34,8 +35,6 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/block', function(req, res, next) {
-  var memberID = req.body.memberID;
-
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -45,6 +44,8 @@ router.post('/block', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var memberID = req.body.memberID;
+
     User.findByIdAndUpdate(
       memberID,
       { $set: { block: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
@@ -63,9 +64,6 @@ router.post('/block', function(req, res, next) {
 });
 
 router.post('/kick', function(req, res, next) {
-  var chatRoomID = req.body.chatRoomID;
-  var memberID = req.body.memberID;
-
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -75,6 +73,9 @@ router.post('/kick', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var chatRoomID = req.body.chatRoomID;
+    var memberID = req.body.memberID;
+
     User.update(
       { _id: memberID, 'chatRooms.data': chatRoomID },
       { $set: { 'chatRooms.$.kick.data': true, 'chatRooms.$.kick.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
@@ -83,7 +84,7 @@ router.post('/kick', function(req, res, next) {
     .then(() => {
       res.status(200).send({
         success: true,
-        message: 'User kick out of the chat room.'
+        message: 'User kick out of the chat room'
       });
     })
     .catch((error) => {
@@ -96,9 +97,6 @@ router.post('/kick', function(req, res, next) {
 });
 
 router.post('/role', function(req, res, next) {
-  var memberID = req.body.memberID;
-  var role = req.body.role;
-
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -108,6 +106,9 @@ router.post('/role', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var memberID = req.body.memberID;
+    var role = req.body.role;
+
     User.findByIdAndUpdate(
       memberID,
       { $set: { role: role }},
@@ -116,7 +117,7 @@ router.post('/role', function(req, res, next) {
     .then(() => {
       res.status(200).send({
         success: true,
-        message: 'User role updated.'
+        message: 'User role updated'
       });
     })
     .catch((error) => {
@@ -129,8 +130,6 @@ router.post('/role', function(req, res, next) {
 });
 
 router.post('/mute', function(req, res, next) {
-  var memberID = req.body.memberID;
-
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -140,6 +139,8 @@ router.post('/mute', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
+    var memberID = req.body.memberID;
+
     User.findByIdAndUpdate(
       memberID,
       { $set: { mute: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
@@ -148,7 +149,7 @@ router.post('/mute', function(req, res, next) {
     .then(() => {
       res.status(200).send({
         success: true,
-        message: 'User muted.'
+        message: 'User muted'
       });
     })
     .catch((error) => {
