@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import ReactSVG from 'react-svg';
 import { Avatar } from '../../../components/Avatar';
 import './styles.scss';
 
@@ -123,11 +124,8 @@ class ChatRoomMember extends Component {
           }
           {
             chatRoomMember.gender.length > 0 &&
-            <div className="gender-logo" title={chatRoomMember.gender}>
-              <FontAwesome
-                className="gender-icon"
-                name={chatRoomMember.gender}
-              />
+            <div className="gender-icon" title={chatRoomMember.gender}>
+              <ReactSVG src={'../images/' + chatRoomMember.gender + '.svg'} />
             </div>
           }
         </div>
