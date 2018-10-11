@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Appbar } from 'muicss/react/';
 import mapDispatchToProps from '../../../actions';
-import { OptionsDropdown } from '../../../components/Header';
+import { UserDropdown } from '../../../../components/UserDropdown';
 import './styles.scss';
 
 class Header extends Component {
@@ -27,7 +27,7 @@ class Header extends Component {
                 </div>
               </td>
               <td className="mui--appbar-height mui--text-right">
-                <OptionsDropdown user={user.active} />
+                <UserDropdown user={user.active} />
               </td>
             </tr>
           </tbody>
