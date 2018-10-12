@@ -49,7 +49,7 @@ class ChatRoomsMenu extends Component {
       )
     } else {
       return (
-        <LoadingAnimation name="ball-clip-rotate" color="black" />
+        <LoadingAnimation name="ball-clip-rotate" color="black" fullScreen />
       )
     }
   }

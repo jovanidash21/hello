@@ -1,10 +1,12 @@
-.chat-rooms-menu {
-  .menu-title {
-    background-color: $color-primary;
-    border-radius: 5px;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
-    color: #fff;
-    margin: 20px 0;
-    padding: 10px;
+.chat-rooms-menu-wrapper {
+  .chat-rooms-menu {
+    .menu-title {
+      background-color: $color-primary;
+      border-radius: 5px;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
+      color: #fff;
+      margin: 20px 0;
+      padding: 10px;
+    }
   }
 }

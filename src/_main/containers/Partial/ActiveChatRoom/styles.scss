@@ -1,6 +1,7 @@
 .active-chat-room {
   align-items: center;
   display: flex;
+  min-width: 120px;
   .hamburger-icon {
     cursor: pointer;
     margin-right: 10px;
