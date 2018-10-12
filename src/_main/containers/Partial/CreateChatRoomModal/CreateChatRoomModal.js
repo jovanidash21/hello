@@ -26,7 +26,7 @@ class CreateChatRoomModal extends Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if ( prevProps.chatRoom.isCreating && this.props.chatRoom.isCreatingSuccess ) {
+    if ( prevProps.chatRoom.create.loading && this.props.chatRoom.create.success ) {
       const {
         handleCloseModal,
         handleLeftSideDrawerToggleEvent
@@ -171,13 +171,13 @@ class CreateChatRoomModal extends Component {
       isPublic,
       members
     } = this.state;
-    const searchedUsers = user.search.filter((singleUser) => {
+    const searchedUsers = user.searched.filter((singleUser) => {
       return !members.some((singleMember) => singleMember._id === singleUser._id);
     });
     const isButtonDisabled =
       chatRoomName.length === 0 ||
       ( !isPublic && ( members.length < 3 || members.length === 5 ) ) ||
-      chatRoom.isCreating;
+      chatRoom.create.loading;
 
     return (
       <Modal
@@ -197,9 +197,8 @@ class CreateChatRoomModal extends Component {
           </Modal.Header>
           <Modal.Body>
             {
-              !chatRoom.isCreating &&
-              !chatRoom.isCreatingSuccess &&
-              <Alert label="Error! Please try again" />
+              chatRoom.create.error &&
+              <Alert label={chatRoom.create.message} />
             }
             {
               chatType === 'group' &&
@@ -209,7 +208,7 @@ class CreateChatRoomModal extends Component {
                   label="Chat Room Name"
                   name="chatRoomName"
                   onChange={::this.onInputChange}
-                  disabled={chatRoom.isCreating}
+                  disabled={chatRoom.create.loading}
                 />
                 <Checkbox
                   id="chat-room-public"
@@ -217,7 +216,7 @@ class CreateChatRoomModal extends Component {
                   name="isPublic"
                   onChange={::this.onCheckboxChange}
                   checked={isPublic}
-                  disabled={chatRoom.isCreating}
+                  disabled={chatRoom.create.loading}
                 />
               </div>
             }
@@ -232,9 +231,9 @@ class CreateChatRoomModal extends Component {
                 searchedUsers={searchedUsers}
                 onSuggestionSelected={::this.onSuggestionSelected}
                 handleDeselectUser={::this.handleDeselectMember}
-                isListDisabled={chatRoom.isCreating}
-                isInputDisabled={chatRoom.isCreating}
-                isLoading={user.isSearching}
+                isListDisabled={chatRoom.create.loading}
+                isInputDisabled={chatRoom.create.loading}
+                isLoading={user.search.loading}
               />
             }
           </Modal.Body>
@@ -244,7 +243,7 @@ class CreateChatRoomModal extends Component {
               <Button
                 className="button button-default"
                 onClick={handleCloseModal}
-                disabled={chatRoom.isCreating}
+                disabled={chatRoom.create.loading}
               >
                 Cancel
               </Button>

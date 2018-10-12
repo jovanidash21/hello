@@ -7,13 +7,18 @@ import {
   SOCKET_BROADCAST_UNMUTE_MEMBER
 } from '../constants/member';
 
+const commonStateFlags = {
+  loading: false,
+  success: false,
+  error: false,
+  message: ''
+};
+
 const initialState = {
-  isFetchingActive: false,
-  isFetchingActiveSuccess: false,
-  isSearching: false,
-  isSearchingSuccess: false,
+  fetchActive: {...commonStateFlags},
+  search: {...commonStateFlags},
   active: {},
-  search: []
+  searched: []
 };
 
 const user = (state=initialState, action) => {
@@ -21,40 +26,66 @@ const user = (state=initialState, action) => {
     case `${FETCH_ACTIVE_USER}_LOADING`:
       return {
         ...state,
-        isFetchingActive: true
+        fetchActive: {
+          ...state.fetchActive,
+          loading: true
+        }
       };
     case `${SEARCH_USER}_LOADING`:
       return {
         ...state,
-        isSearching: true,
-        search: []
+        search: {
+          ...state.search,
+          loading: true
+        },
+        searched: []
       };
     case `${FETCH_ACTIVE_USER}_SUCCESS`:
       return {
         ...state,
-        isFetchingActive: false,
-        isFetchingActiveSuccess: true,
-        active: action.payload.data
+        fetchActive: {
+          ...state.fetchActive,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        active: action.payload.data.user
       };
     case `${SEARCH_USER}_SUCCESS`:
       return {
         ...state,
-        isSearching: false,
-        isSearchingSuccess: true,
-        search: action.payload.data
+        search: {
+          ...state.search,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        searched: action.payload.data.users
       };
     case `${FETCH_ACTIVE_USER}_ERROR`:
       return {
         ...state,
-        isFetchingActive: false,
-        isFetchingActiveSuccess: false
+        fetchActive: {
+          ...state.fetchActive,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${SEARCH_USER}_ERROR`:
       return {
         ...state,
-        isSearching: false,
-        isSearchingSuccess: false,
-        search: []
+        search: {
+          ...state.search,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        },
+        searched: []
       };
     case SOCKET_BROADCAST_MUTE_MEMBER:
       var memberID = action.memberID;

@@ -18,7 +18,7 @@ export function fetchActiveUser() {
       payload: axios.get(baseURL + '/api/user')
     })
     .then((response) => {
-      dispatch(fetchChatRooms(response.value.data._id));
+      dispatch(fetchChatRooms(response.value.data.user._id));
     })
     .catch((error) => {
       if (error instanceof Error) {

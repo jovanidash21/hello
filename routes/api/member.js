@@ -23,7 +23,11 @@ router.post('/', function(req, res, next) {
       isOnline: true
     })
     .then((members) => {
-      res.status(200).send(members);
+      res.status(200).send({
+        success: true,
+        message: 'Members Fetched',
+        members: members
+      });
     })
     .catch((error) => {
       res.status(500).send({

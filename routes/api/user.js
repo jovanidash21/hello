@@ -9,7 +9,11 @@ router.get('/', function(req, res, next) {
       message: 'Unauthorized'
     });
   } else {
-    res.status(200).json(req.user);
+    res.status(200).send({
+      success: true,
+      message: 'User Fetched',
+      user: req.user
+    });
   }
 });
 
@@ -24,7 +28,11 @@ router.post('/search', function(req, res, next) {
   } else {
     User.find({_id: {$ne: null}, name: {$regex: '\\b' + query, $options: 'i'}})
       .then((users) => {
-        res.status(200).send(users);
+        res.status(200).send({
+          success: true,
+          message: 'Users Fetched',
+          users: users
+        });
       })
       .catch((error) => {
         res.status(500).send({
@@ -44,7 +52,11 @@ router.get('/all', function(req, res, next) {
   } else {
     User.find({_id: {$ne: null}})
       .then((users) => {
-        res.status(200).send(users);
+        res.status(200).send({
+          success: true,
+          message: 'Users Fetched',
+          users: users
+        });
       })
       .catch((error) => {
         res.status(500).send({

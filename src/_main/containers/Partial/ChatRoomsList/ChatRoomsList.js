@@ -50,7 +50,7 @@ class ChatRoomsList extends Component {
               handleChangeChatRoom={changeChatRoom}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
               handleTrashChatRoom={::this.handleTrashChatRoom}
-              isTrashingAChatRoom={chatRoom.isTrashing && chatRoom.isTrashingSuccess}
+              isTrashingAChatRoom={chatRoom.trash.loading && chatRoom.trash.success}
             />
           )
         }

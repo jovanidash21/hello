@@ -34,13 +34,17 @@ const chatRoomPriority = (chatRoom) => {
   return priority;
 }
 
+const commonStateFlags = {
+  loading: false,
+  success: false,
+  error: false,
+  message: ''
+};
+
 const initialState = {
-  isFetching: false,
-  isFetchingSuccess: true,
-  isCreating: false,
-  isCreatingSuccess: true,
-  isTrashing: false,
-  isTrashingSuccess: true,
+  fetch: {...commonStateFlags},
+  create: {...commonStateFlags},
+  trash: {...commonStateFlags},
   active: {
     data: {}
   },
@@ -52,20 +56,29 @@ const chatRoom = (state=initialState, action) => {
     case `${FETCH_CHAT_ROOMS}_LOADING`:
       return {
         ...state,
-        isFetching: true
+        fetch: {
+          ...state.fetch,
+          loading: true
+        }
       };
     case `${CREATE_CHAT_ROOM}_LOADING`:
       return {
         ...state,
-        isCreating: true
+        create: {
+          ...state.create,
+          loading: true
+        }
       };
     case `${TRASH_CHAT_ROOM}_LOADING`:
       return {
         ...state,
-        isTrashing: true
+        trash: {
+          ...state.trash,
+          loading: true
+        }
       };
     case `${FETCH_CHAT_ROOMS}_SUCCESS`:
-      var chatRooms = [...action.payload.data];
+      var chatRooms = [...action.payload.data.chatRooms];
 
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
@@ -75,15 +88,25 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        isFetching: false,
-        isFetchingSuccess: true,
+        fetch: {
+          ...state.fetch,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
         all: [...chatRooms]
       };
     case `${CREATE_CHAT_ROOM}_SUCCESS`:
       return {
         ...state,
-        isCreating: false,
-        isCreatingSuccess: true
+        create: {
+          ...state.create,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        }
       };
     case `${TRASH_CHAT_ROOM}_SUCCESS`:
       var activeChatRoom = {...state.active};
@@ -100,27 +123,47 @@ const chatRoom = (state=initialState, action) => {
 
       return {
         ...state,
-        isTrashing: false,
-        isTrashingSuccess: true,
+        trash: {
+          ...state.trash,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
         all: [...chatRooms]
       };
     case `${FETCH_CHAT_ROOMS}_ERROR`:
       return {
         ...state,
-        isFetching: false,
-        isFetchingSuccess: false
+        fetch: {
+          ...state.fetch,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${CREATE_CHAT_ROOM}_ERROR`:
       return {
         ...state,
-        isCreating: false,
-        isCreatingSuccess: false
+        create: {
+          ...state.create,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${TRASH_CHAT_ROOM}_ERROR`:
       return {
         ...state,
-        isTrashing: false,
-        isTrashingSuccess: false
+        trash: {
+          ...state.trash,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case CHANGE_CHAT_ROOM:
       return {

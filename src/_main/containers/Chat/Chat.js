@@ -201,7 +201,7 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       isAudioRecorderOpen
     } = this.state;
-    const isChatInputDisabled = chatRoom.isFetching || message.isFetchingNew;
+    const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
 
     return (
       <div className="chat-section-wrapper">

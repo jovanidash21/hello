@@ -32,8 +32,8 @@ class ChatBox extends Component {
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.message.isFetchingNew && !this.props.message.isFetchingNew ) ||
-      ( !prevProps.message.isSending && this.props.message.isSending ) ||
+      ( prevProps.message.fetchNew.loading && !this.props.message.fetchNew.loading ) ||
+      ( !prevProps.message.send.loading && this.props.message.send.loading ) ||
       this.state.isChatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
@@ -65,7 +65,7 @@ class ChatBox extends Component {
           Hi! Welcome, create a Chat Room now.
         </div>
       )
-    } else if ( !message.isFetchingNew && message.isFetchingNewSuccess ) {
+    } else if ( !message.fetchNew.loading && message.fetchNew.success ) {
       return (
         <Container fluid>
           {

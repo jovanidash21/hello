@@ -18,7 +18,7 @@ class ChatRoomsMenu extends Component {
   handleChatRoomsMenuRender() {
     const { chatRoom } = this.props;
 
-    if ( !chatRoom.isFetching && chatRoom.isFetchingSuccess ) {
+    if ( !chatRoom.fetch.loading && chatRoom.fetch.success ) {
       return (
         <div className="chat-rooms-menu">
           <Container>

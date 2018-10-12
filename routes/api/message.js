@@ -104,7 +104,11 @@ router.post('/', function(req, res, next) {
           { safe: true, upsert: true, new: true }
         ).exec();
 
-        res.status(200).send(chatRoomMessages);
+        res.status(200).send({
+          success: true,
+          message: 'Messages Fetched',
+          messages: chatRoomMessages
+        });
       })
       .catch((error) => {
         res.status(500).send({

@@ -49,7 +49,11 @@ router.post('/', function(req, res, next) {
             }
           }
         }
-        res.status(200).send(userChatRooms);
+        res.status(200).send({
+          success: true,
+          message: 'Chat Rooms Fetched',
+          chatRooms: userChatRooms
+        });
       })
       .catch((error) => {
         res.status(500).send({

@@ -7,13 +7,17 @@ import {
 } from '../constants/message';
 import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
 
+const commonStateFlags = {
+  loading: false,
+  success: false,
+  error: false,
+  message: ''
+};
+
 const initialState = {
-  isFetchingNew: false,
-  isFetchingNewSuccess: true,
-  isSending: false,
-  isSendingSuccess: true,
-  isDeleting: false,
-  isDeletingSuccess: true,
+  fetchNew: {...commonStateFlags},
+  send: {...commonStateFlags},
+  delete: {...commonStateFlags},
   activeChatRoom: {
     data: {}
   },
@@ -25,24 +29,38 @@ const message = (state=initialState, action) => {
     case `${FETCH_NEW_MESSAGES}_LOADING`:
       return {
         ...state,
-        isFetchingNew: true
+        fetchNew: {
+          ...state.fetchNew,
+          loading: true
+        }
       };
     case `${SEND_MESSAGE}_LOADING`:
       return {
         ...state,
-        isSending: true,
+        send: {
+          ...state.send,
+          loading: true
+        }
       };
     case `${DELETE_MESSAGE}_LOADING`:
       return {
         ...state,
-        isDeleting: true,
+        delete: {
+          ...state.delete,
+          loading: true
+        }
       };
     case `${FETCH_NEW_MESSAGES}_SUCCESS`:
       return {
         ...state,
-        isFetchingNew: false,
-        isFetchingNewSuccess: true,
-        all: action.payload.data
+        fetchNew: {
+          ...state.fetchNew,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        all: action.payload.data.messages
       };
     case `${SEND_MESSAGE}_SUCCESS`:
       var messages = [...state.all];
@@ -54,8 +72,13 @@ const message = (state=initialState, action) => {
 
       return {
         ...state,
-        isSending: false,
-        isSendingSuccess: true,
+        send: {
+          ...state.send,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
         all: [
           ...messages,
           newMessage
@@ -69,21 +92,47 @@ const message = (state=initialState, action) => {
 
       return {
         ...state,
-        isDeleting: false,
-        isDeletingSuccess: true,
+        delete: {
+          ...state.delete,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
         all: messages
       };
     case `${FETCH_NEW_MESSAGES}_ERROR`:
       return {
         ...state,
-        isFetchingNew: false,
-        isFetchingNewSuccess: false
+        fetchNew: {
+          ...state.fetchNew,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case `${SEND_MESSAGE}_ERROR`:
       return {
         ...state,
-        isSending: false,
-        isSendingSuccess: false
+        send: {
+          ...state.send,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
+      };
+    case `${DELETE_MESSAGE}_ERROR`:
+      return {
+        ...state,
+        delete: {
+          ...state.delete,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case CHANGE_CHAT_ROOM:
       return {

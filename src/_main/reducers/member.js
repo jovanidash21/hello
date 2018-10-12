@@ -49,9 +49,15 @@ const memberPriority = (member) => {
   return priority;
 }
 
+const commonStateFlags = {
+  loading: false,
+  success: false,
+  error: false,
+  message: ''
+};
+
 const initialState = {
-  isFetching: false,
-  isFetchingSuccess: true,
+  fetch: {...commonStateFlags},
   activeChatRoom: {
     data: {}
   },
@@ -63,10 +69,13 @@ const member = (state=initialState, action) => {
     case `${FETCH_MEMBERS}_LOADING`:
       return {
         ...state,
-        isFetching: true
+        fetch: {
+          ...state.fetch,
+          loading: true
+        }
       };
     case `${FETCH_MEMBERS}_SUCCESS`:
-      var members = [...action.payload.data];
+      var members = [...action.payload.data.members];
 
       for (var i = 0; i < members.length; i++) {
         var member = members[i];
@@ -76,15 +85,25 @@ const member = (state=initialState, action) => {
 
       return {
         ...state,
-        isFetching: false,
-        isFetchingSuccess: true,
+        fetch: {
+          ...state.fetch,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
         all: [...members]
       };
     case `${FETCH_MEMBERS}_ERROR`:
       return {
         ...state,
-        isFetching: false,
-        isFetchingSuccess: false
+        fetch: {
+          ...state.fetch,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
       };
     case CHANGE_CHAT_ROOM:
       return {
