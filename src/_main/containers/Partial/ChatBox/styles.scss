@@ -16,9 +16,11 @@
   }
   .chat-box {
     @include scrollbar($color-mine-shaft);
-    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    &.loading {
+      height: 100%;
+    }
   }
   .user-no-chat-rooms {
     font-size: 21px;

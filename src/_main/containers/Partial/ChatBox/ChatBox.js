@@ -141,7 +141,7 @@ class ChatBox extends Component {
     return (
       <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
         <div
-          className="chat-box"
+          className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
           ref={(element) => { this.chatBox = element; }}
         >
           {::this.handleChatBoxRender()}
