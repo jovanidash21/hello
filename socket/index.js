@@ -34,10 +34,104 @@ var sockets = function(io) {
           });
           break;
         case 'SOCKET_JOIN_CHAT_ROOM':
-          socket.join(action.chatRoomID);
+          var chatRoomClients = [];
+
+          io.in(action.chatRoomID).clients((err, clients) => {
+            if (!err) {
+              chatRoomClients = clients;
+            }
+          });
+
+          User.findByIdAndUpdate(
+            action.userID, {
+              $set: { connectedChatRoom: action.chatRoomID }
+            }, { safe: true, upsert: true, new: true },
+          )
+          .then((user) => {
+            return ChatRoom.findById(action.chatRoomID)
+              .populate('members')
+              .exec();
+          })
+          .then((chatRoom) => {
+            socket.join(action.chatRoomID);
+
+            if (chatRoom.chatType === 'public') {
+              for (var i = 0; i < chatRoom.members.length; i++) {
+                var chatRoomMember = chatRoom.members[i];
+
+                if (chatRoomMember._id !== action.userID) {
+                  User.findById(chatRoomMember._id)
+                    .then((user) => {
+                      if (chatRoomClients.indexOf(user.socketID) > -1) {
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
+                          chatRoomID: action.chatRoomID,
+                          user: user
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                }
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
           break;
         case 'SOCKET_LEAVE_CHAT_ROOM':
-          socket.leave(action.chatRoomID);
+          var chatRoomClients = [];
+
+          io.in(action.chatRoomID).clients((err, clients) => {
+            if (!err) {
+              chatRoomClients = clients;
+            }
+          });
+
+          User.findByIdAndUpdate(
+            action.userID, {
+              $set: { connectedChatRoom: null }
+            }, { safe: true, upsert: true, new: true },
+          )
+          .then((user) => {
+            if (action.chatRoomID !== '') {
+              return ChatRoom.findById(action.chatRoomID)
+                .populate('members')
+                .exec();
+            }
+
+            return {};
+          })
+          .then((chatRoom) => {
+            socket.leave(action.chatRoomID);
+
+            if (chatRoom.chatType === 'public') {
+              for (var i = 0; i < chatRoom.members.length; i++) {
+                var chatRoomMember = chatRoom.members[i];
+
+                if (chatRoomMember._id !== action.userID) {
+                  User.findById(chatRoomMember._id)
+                    .then((user) => {
+                      if (chatRoomClients.indexOf(user.socketID) > -1) {
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_LEAVE_CHAT_ROOM',
+                          chatRoomID: action.chatRoomID,
+                          userID: user._id
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                }
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
           break;
         case 'SOCKET_CREATE_CHAT_ROOM':
           for (var i = 0; i < action.members.length; i++) {
@@ -219,7 +313,7 @@ var sockets = function(io) {
     socket.on('disconnect', function() {
       User.findByIdAndUpdate(
         users[socket.id],
-        { $set: { isOnline: false, ipAddress: '', socketID: ''} },
+        { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
         { safe: true, upsert: true, new: true },
       )
       .then((user) => {

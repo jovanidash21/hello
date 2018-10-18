@@ -61,6 +61,10 @@ var userSchema = new Schema (
       default: '',
     },
     chatRooms: [userChatRoomSchema],
+    connectedChatRoom: {
+      type: Schema.Types.ObjectId,
+      ref: 'ChatRoom',
+    },
     accountType: {
       type: String,
       enum: [

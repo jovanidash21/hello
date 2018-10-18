@@ -13,7 +13,11 @@ import {
   SOCKET_UNBLOCK_MEMBER,
   SOCKET_BROADCAST_UNBLOCK_MEMBER
 } from '../constants/member';
-import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
+import {
+  CHANGE_CHAT_ROOM,
+  SOCKET_BROADCAST_JOIN_CHAT_ROOM,
+  SOCKET_BROADCAST_LEAVE_CHAT_ROOM
+} from '../constants/chat-room';
 import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
@@ -110,6 +114,40 @@ const member = (state=initialState, action) => {
         ...state,
         activeChatRoom: action.chatRoom
       };
+    case SOCKET_BROADCAST_JOIN_CHAT_ROOM:
+      var chatRoomID = action.chatRoomID;
+      var user = action.user;
+      var activeChatRoom = {...state.activeChatRoom};
+      var members = [...state.all];
+
+      if ( activeChatRoom.data._id === chatRoomID && activeChatRoom.data.chatType === 'public' ) {
+        members = members.filter(singleMember =>
+          singleMember._id !== user._id
+        );
+        user.priority = memberPriority(user);
+        members.push(user);
+      }
+
+      return {
+        ...state,
+        all: [...members]
+      }
+    case SOCKET_BROADCAST_LEAVE_CHAT_ROOM:
+      var chatRoomID = action.chatRoomID;
+      var userID = action.userID;
+      var activeChatRoom = {...state.activeChatRoom};
+      var members = [...state.all];
+
+      if ( activeChatRoom.data._id === chatRoomID && activeChatRoom.data.chatType === 'public' ) {
+        members = members.filter(singleMember =>
+          singleMember._id !== userID
+        );
+      }
+
+      return {
+        ...state,
+        all: [...members]
+      }
     case SOCKET_KICK_MEMBER:
     case SOCKET_BROADCAST_KICK_MEMBER:
       var chatRoomID = action.chatRoomID;
@@ -133,11 +171,10 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      members = members.filter(singleMember =>
-        singleMember._id !== member._id
-      );
-
       if ( activeChatRoom.data._id === chatRoomID ) {
+        members = members.filter(singleMember =>
+          singleMember._id !== member._id
+        );
         member.priority = memberPriority(member);
         members.push(member);
       }
@@ -213,20 +250,22 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      members = members.filter(member =>
-        member._id !== userID
-      );
+      if ( activeChatRoom.data.chatType !== 'public' ) {
+        members = members.filter(member =>
+          member._id !== userID
+        );
 
-      for ( var i = 0; i < user.chatRooms.length; i++ ) {
-        var chatRoom = user.chatRooms[i];
+        for ( var i = 0; i < user.chatRooms.length; i++ ) {
+          var chatRoom = user.chatRooms[i];
 
-        if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.kick.data ) {
-          user.isOnline = true;
-          user.priority = memberPriority(user);
-          members.push(user);
-          break;
-        } else {
-          continue
+          if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.kick.data ) {
+            user.isOnline = true;
+            user.priority = memberPriority(user);
+            members.push(user);
+            break;
+          } else {
+            continue
+          }
         }
       }
 

@@ -69,6 +69,7 @@ class MembersList extends Component {
   handleMembersListRender() {
     const {
       user,
+      chatRoom,
       member
     } = this.props;
     const {
@@ -76,6 +77,7 @@ class MembersList extends Component {
       searchFilter,
       selectedMemberIndex
     } = this.state;
+    const activeChatRoom = chatRoom.active;
 
     if ( !member.fetch.loading && member.fetch.success ) {
       return (
@@ -88,7 +90,8 @@ class MembersList extends Component {
             />
             <h3>
               {formatNumber(member.all.length)}&nbsp;
-              {member.all.length > 1 ? 'Online Members' : 'Online Member'}
+              {activeChatRoom.data.chatType === 'public' ? 'Connected' : 'Online'}&nbsp;
+              {member.all.length > 1 ? 'Members' : 'Member'}
             </h3>
           </div>
           <SearchFilter

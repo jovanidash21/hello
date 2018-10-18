@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
+var ChatRoom = require('../../models/ChatRoom');
 
 router.post('/', function(req, res, next) {
   var userID = req.body.userID;
@@ -13,28 +14,37 @@ router.post('/', function(req, res, next) {
   } else {
     var chatRoomID = req.body.chatRoomID;
 
-    User.find({
-      chatRooms: {
-        $elemMatch: {
-          data: chatRoomID,
-          'kick.data': false
+    ChatRoom.findById(chatRoomID)
+      .then((chatRoom) => {
+        var findParams = {
+          chatRooms: {
+            $elemMatch: {
+              data: chatRoomID,
+              'kick.data': false
+            }
+          },
+          isOnline: true
+        };
+
+        if (chatRoom.chatType === 'public') {
+          findParams.connectedChatRoom = chatRoomID;
         }
-      },
-      isOnline: true
-    })
-    .then((members) => {
-      res.status(200).send({
-        success: true,
-        message: 'Members Fetched',
-        members: members
+
+        return User.find(findParams);
+      })
+      .then((members) => {
+        res.status(200).send({
+          success: true,
+          message: 'Members Fetched',
+          members: members
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
       });
-    })
-    .catch((error) => {
-      res.status(500).send({
-        success: false,
-        message: 'Server Error!'
-      });
-    });
   }
 });
 

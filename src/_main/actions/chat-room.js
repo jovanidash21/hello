@@ -46,8 +46,8 @@ export function changeChatRoom(chatRoom, userID, activeChatRoomID) {
       type: CHANGE_CHAT_ROOM,
       chatRoom: chatRoom
     });
-    dispatch(leaveChatRoom(activeChatRoomID));
-    dispatch(joinChatRoom(chatRoom.data._id));
+    dispatch(leaveChatRoom(activeChatRoomID, userID));
+    dispatch(joinChatRoom(chatRoom.data._id, userID));
     dispatch(fetchNewMessages(chatRoom.data._id, userID));
     dispatch(fetchMembers(chatRoom.data._id, userID));
   }
@@ -201,22 +201,26 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID) {
 /**
  * Socket join chat room
  * @param {string} chatRoomID
+ * @param {string} userID
  */
-export function joinChatRoom(chatRoomID) {
+export function joinChatRoom(chatRoomID, userID) {
   return {
     type: SOCKET_JOIN_CHAT_ROOM,
-    chatRoomID: chatRoomID
+    chatRoomID: chatRoomID,
+    userID: userID
   };
 }
 
 /**
  * Socket leave chat room
  * @param {string} chatRoomID
+ * @param {string} userID
  */
-export function leaveChatRoom(chatRoomID) {
+export function leaveChatRoom(chatRoomID, userID) {
   return {
     type: SOCKET_LEAVE_CHAT_ROOM,
-    chatRoomID: chatRoomID
+    chatRoomID: chatRoomID,
+    userID: userID
   };
 }
 
