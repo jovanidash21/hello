@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/User');
+var ChatRoom = require('../models/ChatRoom');
+var Message = require('../models/Message');
 
 router.get('/', function(req, res, next) {
   if (!req.user) {
@@ -10,6 +13,57 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/logout', function(req, res) {
+  if (req.user !== 'undefined' && req.user.accountType === 'guest') {
+    var userID = req.user._id;
+
+    ChatRoom.find({members: {$in: userID}, chatType: {$in: ["private", "direct"]}})
+      .then((chatRooms) => {
+        for (var j = 0; j < chatRooms.length; j++) {
+          var chatRoom = chatRooms[j];
+          var chatRoomID = chatRoom._id;
+
+          for (var k = 0; k < chatRoom.members.length; k++) {
+            var memberID = chatRoom.members[k];
+
+            if (memberID != userID) {
+              User.findByIdAndUpdate(
+                memberID,
+                { $pull: {chatRooms: {data: chatRoomID}} },
+                { new: true, upsert: true }
+              ).exec();
+            }
+          }
+
+          Message.deleteMany({chatRoom: chatRoomID}).exec();
+          ChatRoom.deleteOne({_id: chatRoomID}).exec();
+        }
+
+        return ChatRoom.find({members: {$in: userID}, chatType: {$in: ["group", "public"]}});
+      })
+      .then((chatRooms) => {
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var chatRoomID = chatRoom._id;
+
+          Message.deleteMany({user: userID, chatRoom: chatRoomID}).exec();
+          Message.update(
+            { user: {$ne: userID}, chatRoom: chatRoomID },
+            { $pull: {readBy: userID} },
+            { safe: true }
+          ).exec();
+          ChatRoom.findByIdAndUpdate(
+            chatRoomID,
+            { $pull: {members: userID} },
+            { new: true, upsert: true }
+          ).exec();
+        }
+
+        User.deleteOne({_id: userID}).exec();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   req.logout();
   res.redirect('/');
 });
