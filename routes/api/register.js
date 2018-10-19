@@ -36,7 +36,7 @@ router.post('/', function(req, res, next) {
 
                 User.findByIdAndUpdate(
                   userID,
-                  { $push: { chatRooms: { data: chatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
+                  { $push: { chatRooms: { data: chatRoomID, kick: {}, trash: {} } } },
                   { safe: true, upsert: true, new: true }
                 ).exec();
 
@@ -55,7 +55,7 @@ router.post('/', function(req, res, next) {
 
                   User.findByIdAndUpdate(
                     userID,
-                    { $push: { chatRooms: { data: publicChatRoomID, unReadMessages: 0, kick: {}, trash: {} } } },
+                    { $push: { chatRooms: { data: publicChatRoomID, kick: {}, trash: {} } } },
                     { safe: true, upsert: true, new: true }
                   ).exec();
                 }

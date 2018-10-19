@@ -35,6 +35,7 @@ var sockets = function(io) {
           break;
         case 'SOCKET_JOIN_CHAT_ROOM':
           var chatRoomClients = [];
+          var connectedUser = {};
 
           io.in(action.chatRoomID).clients((err, clients) => {
             if (!err) {
@@ -48,6 +49,8 @@ var sockets = function(io) {
             }, { safe: true, upsert: true, new: true },
           )
           .then((user) => {
+            connectedUser = user;
+
             return ChatRoom.findById(action.chatRoomID)
               .populate('members')
               .exec();
@@ -61,12 +64,12 @@ var sockets = function(io) {
 
                 if (chatRoomMember._id !== action.userID) {
                   User.findById(chatRoomMember._id)
-                    .then((user) => {
-                      if (chatRoomClients.indexOf(user.socketID) > -1) {
-                        socket.broadcast.to(user.socketID).emit('action', {
+                    .then((member) => {
+                      if (chatRoomClients.indexOf(member.socketID) > -1) {
+                        socket.broadcast.to(member.socketID).emit('action', {
                           type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
                           chatRoomID: action.chatRoomID,
-                          user: user
+                          user: connectedUser
                         });
                       }
                     })
@@ -83,6 +86,7 @@ var sockets = function(io) {
           break;
         case 'SOCKET_LEAVE_CHAT_ROOM':
           var chatRoomClients = [];
+          var disconnectedUser = {};
 
           io.in(action.chatRoomID).clients((err, clients) => {
             if (!err) {
@@ -96,6 +100,8 @@ var sockets = function(io) {
             }, { safe: true, upsert: true, new: true },
           )
           .then((user) => {
+            disconnectedUser = user;
+
             if (action.chatRoomID !== '') {
               return ChatRoom.findById(action.chatRoomID)
                 .populate('members')
@@ -113,12 +119,12 @@ var sockets = function(io) {
 
                 if (chatRoomMember._id !== action.userID) {
                   User.findById(chatRoomMember._id)
-                    .then((user) => {
-                      if (chatRoomClients.indexOf(user.socketID) > -1) {
-                        socket.broadcast.to(user.socketID).emit('action', {
+                    .then((member) => {
+                      if (chatRoomClients.indexOf(member.socketID) > -1) {
+                        socket.broadcast.to(member.socketID).emit('action', {
                           type: 'SOCKET_BROADCAST_LEAVE_CHAT_ROOM',
                           chatRoomID: action.chatRoomID,
-                          userID: user._id
+                          userID: disconnectedUser._id
                         });
                       }
                     })
@@ -170,6 +176,10 @@ var sockets = function(io) {
                   { $set: { 'chatRooms.$.trash.data': false, 'chatRooms.$.trash.endDate': new Date() } },
                   { safe: true, upsert: true, new: true },
                 )
+                .populate({
+                  path: 'chatRooms.data'
+                })
+                .exec()
                 .then((user) => {
                   if (chatRoomClients.indexOf(user.socketID) > -1) {
                     Message.findOneAndUpdate(
@@ -192,18 +202,25 @@ var sockets = function(io) {
                     if (chatRoom.chatType === 'direct') {
                       chatRoom.name = action.message.user.name;
 
-                      socket.broadcast.to(user.socketID).emit('action', {
-                        type: 'SOCKET_BROADCAST_CREATE_CHAT_ROOM',
-                        chatRoom: {data: chatRoom, unReadMessages: 0},
-                      });
+                      for (var j = 0; j < user.chatRooms.length; j++) {
+                        var singleChatRoom = user.chatRooms[j];
 
-                      socket.broadcast.to(user.socketID).emit('action', {
-                        type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
-                        chatRoom: {data: chatRoom, unReadMessages: 0},
-                        chatRoomID: action.chatRoomID,
-                        chatRoomName: chatRoom.name,
-                        senderName: action.message.user.name
-                      });
+                        if ( singleChatRoom.data._id == action.chatRoomID ) {
+                          socket.broadcast.to(user.socketID).emit('action', {
+                            type: 'SOCKET_BROADCAST_CREATE_CHAT_ROOM',
+                            chatRoom: singleChatRoom,
+                          });
+
+                          socket.broadcast.to(user.socketID).emit('action', {
+                            type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
+                            chatRoom: singleChatRoom,
+                            chatRoomID: action.chatRoomID,
+                            chatRoomName: chatRoom.name,
+                            senderName: action.message.user.name
+                          });
+                          break;
+                        }
+                      }
                     }
                   }
                 })

@@ -120,7 +120,7 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom.data._id === chatRoomID && activeChatRoom.data.chatType === 'public' ) {
+      if ( ( activeChatRoom.data._id === chatRoomID ) && ( activeChatRoom.data.chatType === 'public' ) ) {
         members = members.filter(singleMember =>
           singleMember._id !== user._id
         );
@@ -138,7 +138,7 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom.data._id === chatRoomID && activeChatRoom.data.chatType === 'public' ) {
+      if ( ( activeChatRoom.data._id === chatRoomID ) && ( activeChatRoom.data.chatType === 'public' ) ) {
         members = members.filter(singleMember =>
           singleMember._id !== userID
         );
