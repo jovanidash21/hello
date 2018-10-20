@@ -25,7 +25,7 @@ router.post('/', function(req, res, next) {
     accountType: 'guest'
   };
 
-  User.findOne({name: req.body.name, accountType: 'guest'}, function(err, user) {
+  User.findOne({name: req.body.name, accountType: 'guest', isOnline: true}, function(err, user) {
     if (!err) {
       if (user !== null) {
         res.status(401).send({

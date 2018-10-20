@@ -37,28 +37,6 @@ router.get('/logout', function(req, res) {
           Message.deleteMany({chatRoom: chatRoomID}).exec();
           ChatRoom.deleteOne({_id: chatRoomID}).exec();
         }
-
-        return ChatRoom.find({members: {$in: userID}, chatType: {$in: ["group", "public"]}});
-      })
-      .then((chatRooms) => {
-        for (var i = 0; i < chatRooms.length; i++) {
-          var chatRoom = chatRooms[i];
-          var chatRoomID = chatRoom._id;
-
-          Message.deleteMany({user: userID, chatRoom: chatRoomID}).exec();
-          Message.update(
-            { user: {$ne: userID}, chatRoom: chatRoomID },
-            { $pull: {readBy: userID} },
-            { safe: true }
-          ).exec();
-          ChatRoom.findByIdAndUpdate(
-            chatRoomID,
-            { $pull: {members: userID} },
-            { new: true, upsert: true }
-          ).exec();
-        }
-
-        User.deleteOne({_id: userID}).exec();
       })
       .catch((error) => {
         console.log(error);
