@@ -58,7 +58,7 @@ class Chat extends Component {
   calculateViewportHeight() {
     var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-    document.getElementById('chat-section').setAttribute('style', 'height:' + viewportHeight + 'px;');
+    this.chatSection.setAttribute('style', 'height:' + viewportHeight + 'px;');
   }
   handleChatBoxScroll() {
     if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
@@ -209,8 +209,8 @@ class Chat extends Component {
           ( Object.keys(chatRoom.active.data).length > 0 && chatRoom.active.data.constructor === Object )
             ?
             <div
-              id="chat-section"
               className={"chat-section " + (user.active.mute.data ? 'no-chat-input' : '')}
+              ref={(element) => { this.chatSection = element; }}
             >
               <LeftSideDrawer
                 handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
