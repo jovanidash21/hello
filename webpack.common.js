@@ -12,7 +12,7 @@ const extractSassBundle = new ExtractTextPlugin({
 
 module.exports = {
   entry: {
-    main: ['babel-polyfill', path.resolve(__dirname, 'src/_main/index.js')],
+    main: path.resolve(__dirname, 'src/_main/index.js'),
   },
   plugins: [
     extractSassBundle,
