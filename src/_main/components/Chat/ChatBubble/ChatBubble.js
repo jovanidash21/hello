@@ -94,6 +94,7 @@ class ChatBubble extends Component {
         }
         {
           message.messageType === 'audio' &&
+          message.fileLink.length > 0 &&
           <Plyr
             className={"react-plyr-" + index}
             type="audio"
