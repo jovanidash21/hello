@@ -96,6 +96,30 @@ var cron = function(socket) {
       .catch((error) => {
         console.log(error);
       });
+
+    ChatRoom.find({_id: {$ne: null}, chatType: 'private'})
+      .then((chatRooms) => {
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var chatRoomID = chatRoom._id;
+
+          for (var j = 0; j < chatRoom.members.length; j++) {
+            var memberID = chatRoom.members[j];
+
+            User.findByIdAndUpdate(
+              memberID,
+              { $pull: {chatRooms: {data: chatRoomID}} },
+              { new: true, upsert: true }
+            ).exec();
+          }
+
+          Message.deleteMany({chatRoom: chatRoomID}).exec();
+          ChatRoom.deleteOne({_id: chatRoomID}).exec();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, null, true);
 
   var day = new CronJob('0 0 0 * * *', function() {

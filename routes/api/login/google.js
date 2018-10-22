@@ -49,30 +49,12 @@ passport.use(new Strategy({
 
         newUser.save()
           .then((userData) => {
-            var userID = userData._id;
-            var chatRoomData = {
-              name: newUser.name,
-              chatIcon: '',
-              members: [userID],
-              chatType: 'private'
-            };
-            var chatRoom = new ChatRoom(chatRoomData);
-
-            return chatRoom.save();
-          })
-          .then((chatRoomData) => {
-            var chatRoomID = chatRoomData._id;
-
-            User.findByIdAndUpdate(
-              newUser._id,
-              { $push: { chatRooms: { data: chatRoomID, kick: {}, trash: {} } } },
-              { safe: true, upsert: true, new: true }
-            ).exec();
-
             return ChatRoom.find({_id: {$ne: null}, chatType: 'public'})
               .distinct('_id');
           })
           .then((publicChatRooms) => {
+            var userID = userData._id;
+
             for (var i = 0; i < publicChatRooms.length; i++) {
               var publicChatRoomID = publicChatRooms[i];
 

@@ -24,7 +24,6 @@ var chatRoomSchema = new Schema (
     chatType: {
       type: String,
       enum: [
-        'private',
         'direct',
         'group',
         'public',
