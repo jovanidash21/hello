@@ -3,7 +3,7 @@ var ChatRoom = require('../models/ChatRoom');
 var Message = require('../models/Message');
 var cron = require('../cron');
 
-var users = {};
+var connectedUsers = {};
 
 var sockets = function(io) {
   io.sockets.on('connection', function (socket) {
@@ -22,7 +22,7 @@ var sockets = function(io) {
             }, { safe: true, upsert: true, new: true },
           )
           .then((user) => {
-            users[socket.id] = action.user._id;
+            connectedUsers[socket.id] = action.user._id;
 
             socket.broadcast.emit('action', {
               type: 'SOCKET_BROADCAST_USER_LOGIN',
@@ -326,25 +326,42 @@ var sockets = function(io) {
         default:
           break;
       }
-    });
-    socket.on('disconnect', function() {
-      User.findByIdAndUpdate(
-        users[socket.id],
-        { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
-        { safe: true, upsert: true, new: true },
-      )
-      .then((user) => {
-        socket.broadcast.emit('action', {
-          type: 'SOCKET_BROADCAST_USER_LOGOUT',
-          userID: users[socket.id]
-        });
+      socket.on('disconnect', function() {
+        User.findByIdAndUpdate(
+          connectedUsers[socket.id],
+          { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
+          { safe: true, upsert: true, new: true },
+        )
+        .then((user) => {
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_USER_LOGOUT',
+            userID: connectedUsers[socket.id]
+          });
 
-        delete users[socket.id];
+          delete connectedUsers[socket.id];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      });
+    });
+    User.find({_id: {$ne: null}})
+      .then((users) => {
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+
+          if (!(user.socketID in connectedUsers) && connectedUsers[user.socketID] != user._id) {
+            User.findByIdAndUpdate(
+              user._id,
+              { $set: { isOnline: false, socketID: ''} },
+              { safe: true, upsert: true, new: true },
+            ).exec();
+          }
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-    });
   });
 };
 
