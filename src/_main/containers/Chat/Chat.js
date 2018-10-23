@@ -206,7 +206,7 @@ class Chat extends Component {
     return (
       <div className="chat-section-wrapper">
         {
-          ( Object.keys(chatRoom.active.data).length > 0 && chatRoom.active.data.constructor === Object )
+          ( ( chatRoom.fetch.success && chatRoom.all.length === 0 ) || ( Object.keys(chatRoom.active.data).length > 0 && chatRoom.active.data.constructor === Object ) )
             ?
             <div
               className={"chat-section " + (user.active.mute.data ? 'no-chat-input' : '')}
