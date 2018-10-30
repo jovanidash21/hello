@@ -6,7 +6,6 @@ import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
-import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import {
   ChatBubble,
   ChatInput,
@@ -87,10 +86,6 @@ class ChatBox extends Component {
               </div>
           }
         </Container>
-      )
-    } else {
-      return (
-        <LoadingAnimation name="ball-clip-rotate" color="black" />
       )
     }
   }

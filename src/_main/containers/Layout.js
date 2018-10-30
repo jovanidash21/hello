@@ -19,14 +19,18 @@ class Layout extends Component {
     const {
       component: Content,
       title,
-      user
+      user,
+      chatRoom
     } = this.props;
 
     return (
       <div>
         <Head title={"Chat App " + (title.length > 0 ? '| ' + title : '')} />
         {
-          !user.fetchActive.loading && user.fetchActive.success
+          !user.fetchActive.loading &&
+          user.fetchActive.success &&
+          !chatRoom.fetch.loading &&
+          chatRoom.fetch.success
             ?
             <Content {...matchProps} />
             :
@@ -46,7 +50,8 @@ class Layout extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    chatRoom: state.chatRoom
   }
 }
 
