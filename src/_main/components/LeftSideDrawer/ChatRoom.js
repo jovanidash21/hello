@@ -44,8 +44,10 @@ class ChatRoom extends Component {
       handleTrashChatRoom
     } = this.props;
 
-    this.setState({isTrashing: true});
-    handleTrashChatRoom(chatRoom.data._id);
+    if ( chatRoom.data.chatType === 'direct' ) {
+      this.setState({isTrashing: true});
+      handleTrashChatRoom(chatRoom.data._id);
+    }
   }
   render() {
     const {
@@ -82,13 +84,7 @@ class ChatRoom extends Component {
             className="new-messages-count"
             title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
           >
-            {
-              chatRoom.unReadMessages <= 100
-                ?
-                chatRoom.unReadMessages
-                :
-                '100 +'
-            }
+            {chatRoom.unReadMessages <= 100 ? chatRoom.unReadMessages : '100 +'}
           </div>
         }
         {
