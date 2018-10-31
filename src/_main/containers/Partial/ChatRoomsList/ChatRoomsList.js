@@ -30,7 +30,6 @@ class ChatRoomsList extends Component {
         {
           chatType === 'direct' &&
           chatRoom.all.filter((singleChatRoom) =>
-            singleChatRoom.data.chatType === 'private' ||
             singleChatRoom.data.chatType === 'direct'
           ).sort((a, b) =>  {
             var n = a.priority - b.priority;

@@ -194,7 +194,7 @@ class MembersList extends Component {
       var singleChatRoom = chatRooms[i];
 
       if (
-        ( singleChatRoom.data.chatType === 'private' && userID === memberID ) ||
+        userID === memberID ||
         ( singleChatRoom.data.chatType === 'direct' && singleChatRoom.data.members.some(member => member._id === memberID) )
       ) {
         chatRoomExists = true;

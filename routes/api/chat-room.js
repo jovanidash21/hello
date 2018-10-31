@@ -35,11 +35,7 @@ router.post('/', function(req, res, next) {
           for (var j = 0; j < chatRoom.members.length; j++) {
             var member = chatRoom.members[j];
 
-            if (chatRoom.chatType === 'private') {
-              if (member._id == userID) {
-                chatRoom.chatIcon = member.profilePicture;
-              }
-            } else if (chatRoom.chatType === 'direct') {
+            if (chatRoom.chatType === 'direct') {
               if (member._id != userID) {
                 chatRoom.name = member.name;
                 chatRoom.chatIcon = member.profilePicture;
@@ -83,19 +79,14 @@ router.post('/create', function(req, res, next) {
       chatType
     };
 
-    if ("members" in req.body && chatType !== 'private' && chatType !== 'public') {
+    if ("members" in req.body && chatType !== 'public') {
       members = req.body.members;
       chatRoomData.members = members;
     }
     if ("chatIcon" in req.body) {
       chatRoomData.chatIcon = req.body.chatIcon;
     }
-    if (chatType === 'private') {
-      res.status(401).send({
-        success: false,
-        message: 'Unauthorized'
-      });
-    } else if (chatType === 'direct' && members.length !== 2) {
+    if (chatType === 'direct' && members.length !== 2) {
       res.status(401).send({
         success: false,
         message: 'Please select 2 members'

@@ -23,11 +23,8 @@ const chatRoomPriority = (chatRoom) => {
     case 'public':
       priority = 1;
       break;
-    case 'private':
-      priority = 2;
-      break;
     default:
-      priority = 3;
+      priority = 2;
       break;
   }
 

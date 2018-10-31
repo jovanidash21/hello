@@ -74,10 +74,6 @@ class ChatRoom extends Component {
         />
         <div className="chat-room-name">
           {chatRoom.data.name}
-          {
-            chatRoom.data.chatType === 'private' &&
-            <span className="you-label">(you)</span>
-          }
         </div>
         {
           chatRoom.unReadMessages > 0 &&

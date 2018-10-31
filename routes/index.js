@@ -16,7 +16,7 @@ router.get('/logout', function(req, res) {
   if (req.user !== 'undefined' && req.user.accountType === 'guest') {
     var userID = req.user._id;
 
-    ChatRoom.find({members: {$in: userID}, chatType: {$in: ["private", "direct"]}})
+    ChatRoom.find({members: {$in: userID}, chatType: "direct"})
       .then((chatRooms) => {
         for (var j = 0; j < chatRooms.length; j++) {
           var chatRoom = chatRooms[j];

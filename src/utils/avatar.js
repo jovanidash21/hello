@@ -17,12 +17,6 @@ export function handleChatRoomAvatarBadges(chatRoom={}, user={}, type="account")
 
   if ( !isChatRoomEmpty ) {
     switch ( chatRoom.chatType ) {
-      case 'private':
-        if ( chatRoom.members.length > 0 ) {
-          roleChatType = chatRoom.members[0].role;
-          accountType = chatRoom.members[0].accountType;
-        }
-        break;
       case 'direct':
         if ( !isUserEmpty ) {
           for ( var i = 0; i < chatRoom.members.length; i++ ) {
