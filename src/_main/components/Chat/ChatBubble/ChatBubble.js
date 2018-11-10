@@ -20,6 +20,16 @@ class ChatBubble extends Component {
       isLightboxOpen: false
     };
   }
+  handleTextFormat(text, tag, slice=1) {
+    if ( tag !== '' ) {
+      return ReactHtmlParser('<' + tag + '>' + text.slice(slice, -slice) + '</' + tag + '>')[0];
+    }
+  }
+  handleTextFormat(text, tag, slice=1) {
+    if ( tag !== '' ) {
+      return ReactHtmlParser('<' + tag + '>' + text.slice(slice, -slice) + '</' + tag + '>')[0];
+    }
+  }
   handleMessageText() {
     const { message } = this.props;
     var messageText = message.text;
@@ -34,8 +44,35 @@ class ChatBubble extends Component {
         };
 
         messageText = messageText.replace(/ /g, "\u00a0");
-        messageText = emojify(messageText, options);
-        messageText = (<Linkify properties={{target: '_blank'}}>{messageText}</Linkify>);
+        messageText = messageText.split(/(\*[A-z0-9]+\*|\_[A-z0-9]+\_|\~[A-z0-9]+\~|\`\`\`[A-z0-9]+\`\`\`|\`[A-z0-9]+\`)/);
+
+        for (var i = 0; i < messageText.length; i++) {
+          var tag = '';
+          var slice = 1;
+
+          if ( /\*[A-z0-9]+\*/gi.test(messageText[i]) ) {
+            tag = 'b';
+          } else if ( /\_[A-z0-9]+\_/gi.test(messageText[i]) ) {
+            tag = 'i';
+          } else if ( /\~[A-z0-9]+\~/gi.test(messageText[i]) ) {
+            tag = 'strike';
+          } else if ( /\`\`\`[A-z0-9]+\`\`\`/gi.test(messageText[i]) ) {
+            tag = 'pre';
+            slice = 3;
+          } else if ( /\`[A-z0-9]+\`/gi.test(messageText[i]) ) {
+            tag = 'code';
+          }
+
+          if ( tag.length > 0 ) {
+            const formatText = ::this.handleTextFormat(messageText[i], tag, slice);
+
+            messageText[i] = {...formatText};
+            messageText[i].key = i;
+          } else {
+            messageText[i] = emojify(messageText[i], options);
+            messageText[i] = (<Linkify key={i} properties={{target: '_blank'}}>{messageText[i]}</Linkify>);
+          }
+        }
         break;
       case 'file':
         messageText = '<a download="' + messageText + '" href="' + message.fileLink + '" target="_blank">' + messageText + '</a>';
