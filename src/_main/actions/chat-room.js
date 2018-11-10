@@ -39,15 +39,17 @@ export function fetchChatRooms(userID) {
  * @param {Object} chatRoom
  * @param {string} userID
  * @param {string} activeChatRoomID
+ * @param {string} connectedChatRoomID
  */
-export function changeChatRoom(chatRoom, userID, activeChatRoomID) {
+export function changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChatRoomID) {
   return dispatch => {
     dispatch({
       type: CHANGE_CHAT_ROOM,
-      chatRoom: chatRoom
+      chatRoom: chatRoom,
+      userID: userID
     });
     dispatch(leaveChatRoom(activeChatRoomID, userID));
-    dispatch(joinChatRoom(chatRoom.data._id, userID));
+    dispatch(joinChatRoom(chatRoom.data._id, userID, connectedChatRoomID));
     dispatch(fetchNewMessages(chatRoom.data._id, userID));
     dispatch(fetchMembers(chatRoom.data._id, userID));
   }
@@ -58,8 +60,9 @@ export function changeChatRoom(chatRoom, userID, activeChatRoomID) {
  * @param {string} userID
  * @param {Object} chatRoom
  * @param {string} activeChatRoomID
+ * @param {string} connectedChatRoomID
  */
-function createChatRoom(userID, chatRoom, activeChatRoomID) {
+function createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID) {
   return dispatch => {
     var chatRoomBroadcast = {...chatRoom};
     var membersBroadcast = chatRoomBroadcast.data.members.slice();
@@ -104,7 +107,7 @@ function createChatRoom(userID, chatRoom, activeChatRoomID) {
       chatRoomBroadcast: chatRoomBroadcast,
       members: membersBroadcast
     });
-    dispatch(changeChatRoom(chatRoom, userID, activeChatRoomID));
+    dispatch(changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChatRoomID));
   }
 }
 
@@ -113,8 +116,9 @@ function createChatRoom(userID, chatRoom, activeChatRoomID) {
  * @param {string} name
  * @param {string} userID
  * @param {string} activeChatRoomID
+ * @param {string} connectedChatRoomID
  */
-export function createPublicChatRoom(name, userID, activeChatRoomID) {
+export function createPublicChatRoom(name, userID, activeChatRoomID, connectedChatRoomID) {
   let data = {
     name,
     userID,
@@ -127,7 +131,7 @@ export function createPublicChatRoom(name, userID, activeChatRoomID) {
       payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
-      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
+      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, connectedChatRoomID));
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -143,8 +147,9 @@ export function createPublicChatRoom(name, userID, activeChatRoomID) {
  * @param {Array} members
  * @param {string} userID
  * @param {string} activeChatRoomID
+ * @param {string} connectedChatRoomID
  */
-export function createGroupChatRoom(name, members, userID, activeChatRoomID) {
+export function createGroupChatRoom(name, members, userID, activeChatRoomID, connectedChatRoomID) {
   let data = {
     name,
     members,
@@ -158,7 +163,7 @@ export function createGroupChatRoom(name, members, userID, activeChatRoomID) {
       payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
-      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
+      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, connectedChatRoomID));
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -202,12 +207,14 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID) {
  * Socket join chat room
  * @param {string} chatRoomID
  * @param {string} userID
+ * @param {string} connectedChatRoomID
  */
-export function joinChatRoom(chatRoomID, userID) {
+export function joinChatRoom(chatRoomID, userID, connectedChatRoomID) {
   return {
     type: SOCKET_JOIN_CHAT_ROOM,
     chatRoomID: chatRoomID,
-    userID: userID
+    userID: userID,
+    connectedChatRoomID: connectedChatRoomID
   };
 }
 

@@ -2,6 +2,7 @@ import {
   FETCH_ACTIVE_USER,
   SEARCH_USER
 } from '../constants/user';
+import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
 import {
   SOCKET_BROADCAST_MUTE_MEMBER,
   SOCKET_BROADCAST_UNMUTE_MEMBER
@@ -86,6 +87,18 @@ const user = (state=initialState, action) => {
           message: action.payload.response.data.message
         },
         searched: []
+      };
+    case CHANGE_CHAT_ROOM:
+      var chatRoom = action.chatRoom;
+      var user = {...state.active};
+
+      if ( chatRoom.data.chatType === 'public' ) {
+        user.connectedChatRoom = chatRoom.data._id;
+      }
+
+      return {
+        ...state,
+        active: {...user}
       };
     case SOCKET_BROADCAST_MUTE_MEMBER:
       var memberID = action.memberID;

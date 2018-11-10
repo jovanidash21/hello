@@ -35,7 +35,9 @@ var sockets = function(io) {
           break;
         case 'SOCKET_JOIN_CHAT_ROOM':
           var chatRoomClients = [];
+          var connectedChatRoomClients = [];
           var connectedUser = {};
+          var joinedChatRoom = {};
 
           io.in(action.chatRoomID).clients((err, clients) => {
             if (!err) {
@@ -43,29 +45,41 @@ var sockets = function(io) {
             }
           });
 
-          User.findByIdAndUpdate(
-            action.userID, {
-              $set: { connectedChatRoom: action.chatRoomID }
-            }, { safe: true, upsert: true, new: true },
-          )
-          .then((user) => {
-            connectedUser = user;
+          io.in(action.connectedChatRoomID).clients((err, clients) => {
+            if (!err) {
+              connectedChatRoomClients = clients;
+            }
+          });
 
-            return ChatRoom.findById(action.chatRoomID)
-              .populate('members')
-              .exec();
-          })
-          .then((chatRoom) => {
-            socket.join(action.chatRoomID);
+          User.findById(action.userID)
+            .then((user) => {
+              connectedUser = user;
 
-            if (chatRoom.chatType === 'public') {
-              for (var i = 0; i < chatRoom.members.length; i++) {
-                var chatRoomMember = chatRoom.members[i];
+              return ChatRoom.findById(action.chatRoomID)
+                .populate('members')
+                .exec();
+            })
+            .then((chatRoom) => {
+              socket.join(action.chatRoomID);
 
-                if (chatRoomMember._id !== action.userID) {
+              joinedChatRoom = chatRoom;
+
+              if (chatRoom.chatType === 'public') {
+                User.findByIdAndUpdate(
+                  action.userID, {
+                    $set: { connectedChatRoom: action.chatRoomID }
+                  }, { safe: true, upsert: true, new: true },
+                ).exec();
+
+                for (var i = 0; i < chatRoom.members.length; i++) {
+                  var chatRoomMember = chatRoom.members[i];
+
                   User.findById(chatRoomMember._id)
                     .then((member) => {
-                      if (chatRoomClients.indexOf(member.socketID) > -1) {
+                      if (
+                        member._id === action.userID ||
+                        chatRoomClients.indexOf(member.socketID) > -1
+                      ) {
                         socket.broadcast.to(member.socketID).emit('action', {
                           type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
                           chatRoomID: action.chatRoomID,
@@ -78,66 +92,75 @@ var sockets = function(io) {
                     });
                 }
               }
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-          break;
-        case 'SOCKET_LEAVE_CHAT_ROOM':
-          var chatRoomClients = [];
-          var disconnectedUser = {};
 
-          io.in(action.chatRoomID).clients((err, clients) => {
-            if (!err) {
-              chatRoomClients = clients;
-            }
-          });
+              if (action.connectedChatRoomID !== '') {
+                return ChatRoom.findById(action.connectedChatRoomID)
+                  .populate('members')
+                  .exec();
+              }
 
-          User.findByIdAndUpdate(
-            action.userID, {
-              $set: { connectedChatRoom: null }
-            }, { safe: true, upsert: true, new: true },
-          )
-          .then((user) => {
-            disconnectedUser = user;
+              return {};
+            })
+            .then((chatRoom) => {
+              if (
+                Object.keys(chatRoom).length > 0 &&
+                Object.keys(joinedChatRoom).length > 0 &&
+                action.chatRoomID !== action.connectedChatRoomID &&
+                joinedChatRoom.chatType === 'public'
+              ) {
+                for (var i = 0; i < chatRoom.members.length; i++) {
+                  var chatRoomMember = chatRoom.members[i];
 
-            if (action.chatRoomID !== '') {
-              return ChatRoom.findById(action.chatRoomID)
-                .populate('members')
-                .exec();
-            }
-
-            return {};
-          })
-          .then((chatRoom) => {
-            socket.leave(action.chatRoomID);
-
-            if (chatRoom.chatType === 'public') {
-              for (var i = 0; i < chatRoom.members.length; i++) {
-                var chatRoomMember = chatRoom.members[i];
-
-                if (chatRoomMember._id !== action.userID) {
-                  User.findById(chatRoomMember._id)
-                    .then((member) => {
-                      if (chatRoomClients.indexOf(member.socketID) > -1) {
-                        socket.broadcast.to(member.socketID).emit('action', {
-                          type: 'SOCKET_BROADCAST_LEAVE_CHAT_ROOM',
-                          chatRoomID: action.chatRoomID,
-                          userID: disconnectedUser._id
-                        });
-                      }
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
+                  if (chatRoomMember._id !== action.userID) {
+                    User.findById(chatRoomMember._id)
+                      .then((member) => {
+                        if (connectedChatRoomClients.indexOf(member.socketID) > -1) {
+                          socket.broadcast.to(member.socketID).emit('action', {
+                            type: 'SOCKET_BROADCAST_LEAVE_CHAT_ROOM',
+                            chatRoomID: action.connectedChatRoomID,
+                            userID: connectedUser._id
+                          });
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
                 }
               }
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
+        case 'SOCKET_LEAVE_CHAT_ROOM':
+          User.findById(action.userID)
+            .then((user) => {
+              if (action.chatRoomID !== '') {
+                return ChatRoom.findById(action.chatRoomID)
+                  .populate('members')
+                  .exec();
+              }
+
+              return {};
+            })
+            .then((chatRoom) => {
+              socket.leave(action.chatRoomID);
+
+              if (
+                Object.keys(chatRoom).length > 0 &&
+                chatRoom.chatType === 'public'
+              ) {
+                User.findByIdAndUpdate(
+                  action.userID, {
+                    $set: { connectedChatRoom: null }
+                  }, { safe: true, upsert: true, new: true },
+                ).exec();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         case 'SOCKET_CREATE_CHAT_ROOM':
           for (var i = 0; i < action.members.length; i++) {
@@ -353,7 +376,7 @@ var sockets = function(io) {
           if (!(user.socketID in connectedUsers) && connectedUsers[user.socketID] != user._id) {
             User.findByIdAndUpdate(
               user._id,
-              { $set: { isOnline: false, socketID: ''} },
+              { $set: { connectedChatRoom: null, isOnline: false, socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
           }

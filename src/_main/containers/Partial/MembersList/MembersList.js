@@ -184,7 +184,8 @@ class MembersList extends Component {
       changeChatRoom,
       handleRightSideDrawerToggleEvent
     } = this.props;
-    const userID = user.active._id;
+    const activeUser = useer.active;
+    const userID = activeUser._id;
     const chatRooms = chatRoom.all;
     const activeChatRoom = chatRoom.active;
     var chatRoomExists = false;
@@ -206,7 +207,7 @@ class MembersList extends Component {
     if ( !chatRoomExists ) {
       createDirectChatRoom(userID, memberID, activeChatRoom.data._id);
     } else if ( Object.keys(existingChatRoomData).length > 0 && existingChatRoomData.constructor === Object ) {
-      changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id);
+      changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
       handleRightSideDrawerToggleEvent();
       this.setState({
         searchFilter: '',

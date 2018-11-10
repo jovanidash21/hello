@@ -100,17 +100,18 @@ class CreateChatRoomModal extends Component {
       isPublic,
       members
     } = this.state;
+    const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
 
     if ( isPublic && chatRoomName.length > 0 ) {
-      createPublicChatRoom(chatRoomName, user.active._id, activeChatRoom._id);
+      createPublicChatRoom(chatRoomName, activeUser._id, activeChatRoom._id, activeUser.connectedChatRoom);
     } else if (
       chatType === 'group' &&
       chatRoomName.length > 0 &&
       members.length > 2 &&
       members.length < 6
     ) {
-      createGroupChatRoom(chatRoomName, members, user.active._id, activeChatRoom._id);
+      createGroupChatRoom(chatRoomName, members, activeUser._id, activeChatRoom._id, activeUser.connectedChatRoom);
     }
   }
   handleAddDirectChatRoom(event, memberID) {
@@ -125,7 +126,8 @@ class CreateChatRoomModal extends Component {
       handleCloseModal,
       handleLeftSideDrawerToggleEvent
     } = this.props;
-    const userID = user.active._id;
+    const activeUser = user.active;
+    const userID = activeUser._id;
     const chatRooms = chatRoom.all;
     const activeChatRoom = chatRoom.active;
     var directChatRoomExists = false;
@@ -151,7 +153,7 @@ class CreateChatRoomModal extends Component {
       if ( !directChatRoomExists ) {
         createDirectChatRoom(userID, memberID, activeChatRoom._id);
       } else {
-        changeChatRoom(directChatRoomData, userID, activeChatRoom._id);
+        changeChatRoom(directChatRoomData, userID, activeChatRoom._id, activeUser.connectedChatRoom);
         handleCloseModal();
         handleLeftSideDrawerToggleEvent();
       }

@@ -59,7 +59,7 @@ class ChatRoomsMenu extends Component {
       changeChatRoom
     } = this.props;
 
-    changeChatRoom(chatRoom, user.active._id, '');
+    changeChatRoom(chatRoom, user.active._id, '', '');
   }
   render() {
     const { chatRoom } = this.props;

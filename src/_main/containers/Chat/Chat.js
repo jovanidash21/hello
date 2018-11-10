@@ -185,8 +185,9 @@ class Chat extends Component {
       chatRoom,
       changeChatRoom
     } = this.props;
+    const activeUser = user.active;
 
-    changeChatRoom(chatRoomObj, user.active._id, chatRoom.active.data._id);
+    changeChatRoom(chatRoomObj, activeUser._id, chatRoom.active.data._id, activeUser.connectedChatRoom);
     ::this.handleLeftSideDrawerToggleEvent();
     ::this.handleRightSideDrawerToggleEvent();
   }

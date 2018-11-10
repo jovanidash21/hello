@@ -29,7 +29,7 @@ class ChatRoom extends Component {
       handleLeftSideDrawerToggleEvent
     } = this.props;
 
-    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id);
+    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id, user.connectedChatRoom);
     handleLeftSideDrawerToggleEvent();
   }
   handleTrashChatRoom(event) {
