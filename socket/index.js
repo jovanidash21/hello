@@ -74,22 +74,21 @@ var sockets = function(io) {
                 for (var i = 0; i < chatRoom.members.length; i++) {
                   var chatRoomMember = chatRoom.members[i];
 
-                  User.findById(chatRoomMember._id)
-                    .then((member) => {
-                      if (
-                        member._id === action.userID ||
-                        chatRoomClients.indexOf(member.socketID) > -1
-                      ) {
-                        socket.broadcast.to(member.socketID).emit('action', {
-                          type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
-                          chatRoomID: action.chatRoomID,
-                          user: connectedUser
-                        });
-                      }
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
+                  if (chatRoomMember._id !== action.userID) {
+                    User.findById(chatRoomMember._id)
+                      .then((member) => {
+                        if (chatRoomClients.indexOf(member.socketID) > -1) {
+                          socket.broadcast.to(member.socketID).emit('action', {
+                            type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
+                            chatRoomID: action.chatRoomID,
+                            user: connectedUser
+                          });
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
                 }
               }
 

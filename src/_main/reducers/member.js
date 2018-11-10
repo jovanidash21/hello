@@ -1,3 +1,4 @@
+import { FETCH_ACTIVE_USER } from '../constants/user';
 import {
   FETCH_MEMBERS,
   SOCKET_KICK_MEMBER,
@@ -62,6 +63,7 @@ const commonStateFlags = {
 
 const initialState = {
   fetch: {...commonStateFlags},
+  activeUser: {},
   activeChatRoom: {
     data: {}
   },
@@ -80,6 +82,13 @@ const member = (state=initialState, action) => {
       };
     case `${FETCH_MEMBERS}_SUCCESS`:
       var members = [...action.payload.data.members];
+      var activeUser = {...state.activeUser};
+
+      members = members.filter(singleMember =>
+        singleMember._id !== activeUser._id
+      );
+      activeUser.priority = memberPriority(activeUser);
+      members.push(activeUser);
 
       for (var i = 0; i < members.length; i++) {
         var member = members[i];
@@ -108,6 +117,11 @@ const member = (state=initialState, action) => {
           error: true,
           message: action.payload.response.data.message
         }
+      };
+    case `${FETCH_ACTIVE_USER}_SUCCESS`:
+      return {
+        ...state,
+        activeUser: action.payload.data.user
       };
     case CHANGE_CHAT_ROOM:
       return {
