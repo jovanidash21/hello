@@ -87,6 +87,7 @@ const member = (state=initialState, action) => {
       members = members.filter(singleMember =>
         singleMember._id !== activeUser._id
       );
+      activeUser.isOnline = true;
       activeUser.priority = memberPriority(activeUser);
       members.push(activeUser);
 

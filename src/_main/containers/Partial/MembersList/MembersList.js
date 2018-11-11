@@ -184,7 +184,7 @@ class MembersList extends Component {
       changeChatRoom,
       handleRightSideDrawerToggleEvent
     } = this.props;
-    const activeUser = useer.active;
+    const activeUser = user.active;
     const userID = activeUser._id;
     const chatRooms = chatRoom.all;
     const activeChatRoom = chatRoom.active;
