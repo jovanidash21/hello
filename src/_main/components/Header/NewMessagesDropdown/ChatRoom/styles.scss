@@ -1,0 +1,39 @@
+.new-messages-dropdown-chat-room {
+  align-items: center;
+  color: #000;
+  cursor: pointer;
+  display: flex;
+  padding: 5px 10px;
+  transition: all 0.2s ease-in-out;
+  &:not(:last-child) {
+    border-bottom: 1px solid $color-alto;
+  }
+  &:hover {
+    background-color: $color-primary;
+    color: #fff;
+  }
+  .avatar {
+    margin-right: 14px;
+  }
+  .chat-room-name {
+    flex: 1;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .new-messages-count {
+    align-items: center;
+    background-color: $color-punch;
+    border-radius: 16px;
+    color: #fff;
+    display: flex;
+    font-size: 10px;
+    font-weight: bold;
+    height: 18px;
+    justify-content: center;
+    line-height: 18px;
+    margin-left: 3px;
+    padding: 0 9px;
+  }
+}

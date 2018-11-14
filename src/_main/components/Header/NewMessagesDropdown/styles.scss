@@ -1,0 +1,45 @@
+.new-messages-dropdown-wrapper {
+  $transition: all 0.2s ease-in-out;
+  margin-right: 5px;
+  .new-messages-dropdown {
+    .message-icon {
+      color: #fff;
+      cursor: pointer;
+      font-size: 17px;
+      padding: 10px;
+    }
+    .new-messages-count {
+      align-items: center;
+      background-color: $color-punch;
+      border-radius: 16px;
+      color: #fff;
+      display: flex;
+      font-size: 10px;
+      font-weight: bold;
+      height: 15px;
+      justify-content: center;
+      line-height: 18px;
+      margin-left: 3px;
+      padding: 0 5px;
+      position: absolute;
+      right: 0;
+      top: 3px;
+    }
+  }
+  .dropdown-menu {
+    .dropdown-chat-rooms-list {
+      @include scrollbar($color-mine-shaft, rgba($color-mine-shaft, 0.2));
+      max-height: 250px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 230px;
+    }
+    .no-new-messages {
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 5px;
+      text-align: center;
+    }
+  }
+}

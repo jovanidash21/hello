@@ -3,12 +3,56 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Appbar } from 'muicss/react/';
 import mapDispatchToProps from '../../../actions';
+import { NewMessagesDropdown } from '../../../components/Header';
 import { UserDropdown } from '../../../../components/UserDropdown';
 import './styles.scss';
 
 class Header extends Component {
   constructor(props) {
     super(props);
+  }
+  handleNewMessagesDropdownRender() {
+    const {
+      user,
+      chatRoom,
+      changeChatRoom,
+      children
+    } = this.props;
+    const newMessagesChatRooms = chatRoom.all.filter((singleChatRoom) =>
+      singleChatRoom.data.chatType !== 'public' &&
+      singleChatRoom.unReadMessages > 0
+    ).sort((a, b) => {
+      var date = new Date(b.data.latestMessageDate) - new Date(a.data.latestMessageDate);
+      var name = a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase());
+      var priority = a.priority - b.priority;
+
+      if ( date !== 0 ) {
+        return date;
+      } else if ( name !== 0 ) {
+        return name
+      } else {
+        return priority;
+      }
+    });
+
+    if ( !chatRoom.fetch.loading && chatRoom.fetch.success ) {
+      return (
+        <NewMessagesDropdown count={newMessagesChatRooms.length}>
+          {
+            newMessagesChatRooms.length > 0 &&
+            newMessagesChatRooms.map((singleChatRoom, i) =>
+              <NewMessagesDropdown.ChatRoom
+                key={i}
+                user={user.active}
+                chatRoom={singleChatRoom}
+                activeChatRoom={chatRoom.active}
+                handleChangeChatRoom={changeChatRoom}
+              />
+            )
+          }
+        </NewMessagesDropdown>
+      )
+    }
   }
   render() {
     const {
@@ -27,6 +71,7 @@ class Header extends Component {
                 </div>
               </td>
               <td className="mui--appbar-height mui--text-right">
+                {::this.handleNewMessagesDropdownRender()}
                 <UserDropdown user={user.active} />
               </td>
             </tr>
@@ -39,7 +84,8 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    chatRoom: state.chatRoom
   }
 }
 

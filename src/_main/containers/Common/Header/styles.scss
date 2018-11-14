@@ -11,6 +11,12 @@
   .mui--appbar-height {
     position: relative;
     width: 10px;
+    &.mui--text-right {
+      align-items: center;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
   }
   .left-part-header {
     position: relative;
