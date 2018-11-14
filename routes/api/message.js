@@ -140,7 +140,10 @@ router.post('/text', function(req, res, next) {
 
     message.save()
       .then((messageData) => {
-        return ChatRoom.findById(chatRoomID);
+        return ChatRoom.findByIdAndUpdate(chatRoomID,
+          { $set: { latestMessageDate: messageData.createdAt } },
+          { safe: true, upsert: true, new: true }
+        ).exec();
       })
       .then((chatRoom) => {
         for (var i = 0; i < chatRoom.members.length; i++) {
@@ -216,7 +219,10 @@ router.post('/file', fileUpload.single('file'), function(req, res, next) {
 
     message.save()
       .then((messageData) => {
-        return ChatRoom.findById(chatRoomID);
+        return ChatRoom.findByIdAndUpdate(chatRoomID,
+          { $set: { latestMessageDate: messageData.createdAt } },
+          { safe: true, upsert: true, new: true }
+        ).exec();
       })
       .then((chatRoom) => {
         for (var i = 0; i < chatRoom.members.length; i++) {
@@ -286,7 +292,10 @@ router.post('/image', imageUpload.single('image'), function(req, res, next) {
 
     message.save()
       .then((messageData) => {
-        return ChatRoom.findById(chatRoomID);
+        return ChatRoom.findByIdAndUpdate(chatRoomID,
+          { $set: { latestMessageDate: messageData.createdAt } },
+          { safe: true, upsert: true, new: true }
+        ).exec();
       })
       .then((chatRoom) => {
         for (var i = 0; i < chatRoom.members.length; i++) {
@@ -356,7 +365,10 @@ router.post('/audio', audioUpload.single('audio'), function(req, res, next) {
 
     message.save()
       .then((messageData) => {
-        return ChatRoom.findById(chatRoomID);
+        return ChatRoom.findByIdAndUpdate(chatRoomID,
+          { $set: { latestMessageDate: messageData.createdAt } },
+          { safe: true, upsert: true, new: true }
+        ).exec();
       })
       .then((chatRoom) => {
         for (var i = 0; i < chatRoom.members.length; i++) {
