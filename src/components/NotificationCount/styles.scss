@@ -1,0 +1,19 @@
+.notification-count {
+  align-items: center;
+  background-color: $color-amaranth;
+  border-radius: 16px;
+  color: #fff;
+  display: flex;
+  font-size: 10px;
+  font-weight: bold;
+  height: 18px;
+  justify-content: center;
+  line-height: 10px;
+  padding: 0 9px;
+  &.small {
+    font-size: 9px;
+    height: 15px;
+    line-height: 9px;
+    padding: 0 5px;
+  }
+}

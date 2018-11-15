@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { handleChatRoomAvatarBadges } from '../../../utils/avatar';
 import { Avatar } from '../../../components/Avatar';
+import { NotificationCount } from '../../../components/NotificationCount';
 import './styles.scss';
 
 class ChatRoom extends Component {
@@ -80,12 +81,10 @@ class ChatRoom extends Component {
         {
           chatRoom.unReadMessages > 0 &&
           chatRoom.data.chatType === 'direct' &&
-          <div
-            className="new-messages-count"
+          <NotificationCount
+            count={chatRoom.unReadMessages}
             title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
-          >
-            {chatRoom.unReadMessages <= 100 ? chatRoom.unReadMessages : '100 +'}
-          </div>
+          />
         }
         {
           chatRoom.data.chatType === 'direct' &&
