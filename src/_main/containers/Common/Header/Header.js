@@ -19,7 +19,7 @@ class Header extends Component {
       children
     } = this.props;
     const newMessagesChatRooms = chatRoom.all.filter((singleChatRoom) =>
-      singleChatRoom.data.chatType !== 'public' &&
+      singleChatRoom.data.chatType === 'direct' &&
       singleChatRoom.unReadMessages > 0
     ).sort((a, b) => {
       var date = new Date(b.data.latestMessageDate) - new Date(a.data.latestMessageDate);
@@ -29,7 +29,7 @@ class Header extends Component {
       if ( date !== 0 ) {
         return date;
       } else if ( name !== 0 ) {
-        return name
+        return name;
       } else {
         return priority;
       }
@@ -37,22 +37,23 @@ class Header extends Component {
 
     if ( !chatRoom.fetch.loading && chatRoom.fetch.success ) {
       return (
-        <NewMessagesDropdown count={newMessagesChatRooms.length}>
-          {
-            newMessagesChatRooms.length > 0 &&
-            newMessagesChatRooms.map((singleChatRoom, i) =>
-              <NewMessagesDropdown.ChatRoom
-                key={i}
-                user={user.active}
-                chatRoom={singleChatRoom}
-                activeChatRoom={chatRoom.active}
-                handleChangeChatRoom={changeChatRoom}
-              />
-            )
-          }
-        </NewMessagesDropdown>
+        <NewMessagesDropdown
+          user={user.active}
+          chatRooms={newMessagesChatRooms}
+          activeChatRoom={chatRoom.active}
+          handleChangeChatRoom={changeChatRoom}
+          handleClearChatRoomUnreadMessages={::this.handleClearChatRoomUnreadMessages}
+        />
       )
     }
+  }
+  handleClearChatRoomUnreadMessages(chatRoomIDs) {
+    const {
+      user,
+      clearChatRoomUnreadMessages
+    } = this.props;
+
+    clearChatRoomUnreadMessages(user.active._id, chatRoomIDs);
   }
   render() {
     const {

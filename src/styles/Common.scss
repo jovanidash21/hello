@@ -38,3 +38,10 @@ body {
 .mm-popup__box__footer {
   padding: 20px !important;
 }
+.dropdown-menu {
+  .divider {
+    background-color: $color-alto;
+    height: 1px;
+    margin: 5px 0;
+  }
+}

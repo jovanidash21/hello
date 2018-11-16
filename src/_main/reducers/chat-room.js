@@ -4,6 +4,7 @@ import {
   CREATE_CHAT_ROOM,
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_BROADCAST_CREATE_CHAT_ROOM,
+  CLEAR_CHAT_ROOM_UNREAD_MESSAGES,
   TRASH_CHAT_ROOM
 } from '../constants/chat-room';
 import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
@@ -41,6 +42,7 @@ const commonStateFlags = {
 const initialState = {
   fetch: {...commonStateFlags},
   create: {...commonStateFlags},
+  clear: {...commonStateFlags},
   trash: {...commonStateFlags},
   active: {
     data: {}
@@ -63,6 +65,14 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         create: {
           ...state.create,
+          loading: true
+        }
+      };
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_LOADING`:
+      return {
+        ...state,
+        clear: {
+          ...state.clear,
           loading: true
         }
       };
@@ -105,6 +115,29 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_SUCCESS`:
+      var chatRoomIDs = action.payload.data.chatRoomIDs;
+      var chatRooms = [...state.all];
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        if ( chatRoomIDs.indexOf(chatRoom.data._id) > -1 ) {
+          chatRoom.unReadMessages = 0;
+        }
+      }
+
+      return {
+        ...state,
+        clear: {
+          ...state.clear,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        all: [...chatRooms]
+      };
     case `${TRASH_CHAT_ROOM}_SUCCESS`:
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
@@ -145,6 +178,17 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         create: {
           ...state.create,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
+      };
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_ERROR`:
+      return {
+        ...state,
+        clear: {
+          ...state.clear,
           loading: false,
           success: false,
           error: true,

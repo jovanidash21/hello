@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import { handleChatRoomAvatarBadges } from '../../../../../utils/avatar';
 import { Avatar } from '../../../../../components/Avatar';
 import { NotificationCount } from '../../../../../components/NotificationCount';
@@ -19,7 +20,21 @@ class NewMessagesDropdownChatRoom extends Component {
       handleChangeChatRoom
     } = this.props;
 
-    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id, user.connectedChatRoom);
+    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id);
+  }
+  handleClearChatRoomUnreadMessages(event) {
+    event.preventDefault();
+
+    if ( event.stopPropagation ) {
+      event.stopPropagation();
+    }
+
+    const {
+      chatRoom,
+      handleClearChatRoomUnreadMessages
+    } = this.props;
+
+    handleClearChatRoomUnreadMessages([chatRoom.data._id]);
   }
   render() {
     const {
@@ -49,6 +64,9 @@ class NewMessagesDropdownChatRoom extends Component {
             title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
           />
         }
+        <div className="clear-icon" onClick={::this.handleClearChatRoomUnreadMessages}>
+          <FontAwesome name="times" />
+        </div>
       </div>
     )
   }
@@ -58,7 +76,8 @@ NewMessagesDropdownChatRoom.propTypes = {
   user: PropTypes.object.isRequired,
   chatRoom: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
-  handleChangeChatRoom: PropTypes.func.isRequired
+  handleChangeChatRoom: PropTypes.func.isRequired,
+  handleClearChatRoomUnreadMessages: PropTypes.func.isRequired
 }
 
 export default NewMessagesDropdownChatRoom;

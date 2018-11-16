@@ -190,6 +190,43 @@ router.post('/create', function(req, res, next) {
   }
 });
 
+router.post('/clear-unread', function(req, res, next) {
+  if (req.user === undefined) {
+    res.status(401).send({
+      success: false,
+      message: 'Unauthorized'
+    });
+  } else {
+    var userID = req.body.userID;
+    var chatRoomIDs = req.body.chatRoomIDs;
+
+    User.findById(userID)
+      .then((user) => {
+        for (var i = 0; i < chatRoomIDs.length; i++) {
+          var chatRoomID = chatRoomIDs[i];
+
+          User.update(
+            { _id: userID, 'chatRooms.data': chatRoomID },
+            { $set: { 'chatRooms.$.unReadMessages': 0 } },
+            { safe: true, upsert: true, new: true }
+          ).exec();
+        }
+
+        res.status(200).send({
+          success: true,
+          message: 'Chat Room Unread Messages Cleared',
+          chatRoomIDs: chatRoomIDs
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      });
+  }
+});
+
 router.post('/trash', function(req, res, next) {
   var userID = req.body.userID;
 
