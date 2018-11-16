@@ -39,9 +39,29 @@ body {
   padding: 20px !important;
 }
 .dropdown-menu {
+  $transition: all 0.2s ease-in-out;
+  a {
+    transition: $transition;
+    &:hover {
+      background-color: $color-primary !important;
+      &,
+      .option-icon {
+        color: #fff !important;
+      }
+    }
+  }
   .divider {
     background-color: $color-alto;
     height: 1px;
     margin: 5px 0;
+  }
+  .option-icon {
+    color: $color-primary;
+    display: inline-block;
+    font-size: 15px;
+    margin-right: 5px;
+    width: 21px;
+    transition: $transition;
+    vertical-align: middle;
   }
 }

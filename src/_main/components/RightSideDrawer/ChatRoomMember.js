@@ -131,7 +131,7 @@ class ChatRoomMember extends Component {
         </div>
         {
           isShowDropdownMenu &&
-          <ul className="mui-dropdown__menu mui-dropdown__menu--right">
+          <ul className="dropdown-menu mui-dropdown__menu mui-dropdown__menu--right">
             {
               (
                 user.role === 'owner' ||

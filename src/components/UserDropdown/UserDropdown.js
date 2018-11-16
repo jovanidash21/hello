@@ -31,9 +31,12 @@ class UserDropdown extends Component {
           <button className="mui-btn mui-btn--small mui-btn--fab" data-mui-toggle="dropdown">
             <FontAwesome className="icon" name="ellipsis-v" size="2x" />
           </button>
-          <ul className="mui-dropdown__menu mui-dropdown__menu--right">
+          <ul className="dropdown-menu mui-dropdown__menu mui-dropdown__menu--right">
             <li>
               <a href="/logout">
+                <div className="option-icon">
+                  <FontAwesome name="sign-out" />
+                </div>
                 Logout
               </a>
             </li>
