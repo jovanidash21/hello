@@ -41,7 +41,7 @@
   .notification-count {
     margin-left: 3px;
   }
-  .trash-chat-room-button {
+  .trash-icon {
     align-items: center;
     cursor: pointer;
     color: $color-alto;
@@ -55,11 +55,12 @@
     transition: all 0.2s ease;
     width: 0;
     &:hover {
+      color: $color-punch;
       opacity: 1;
     }
   }
   &:hover {
-    .trash-chat-room-button {
+    .trash-icon {
       width: 12px;
     }
   }

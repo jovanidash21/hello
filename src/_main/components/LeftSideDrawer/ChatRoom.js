@@ -88,8 +88,11 @@ class ChatRoom extends Component {
         }
         {
           chatRoom.data.chatType === 'direct' &&
-          <div className="trash-chat-room-button" onClick={::this.handleTrashChatRoom}>
-            <FontAwesome name="times" />
+          <div
+            className="trash-icon"
+            title="Trash ChatRoom"
+            onClick={::this.handleTrashChatRoom}>
+            <FontAwesome name="trash" />
           </div>
         }
       </div>
