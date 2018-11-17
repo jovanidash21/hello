@@ -17,7 +17,6 @@ body.chat-page {
   .chat-box-wrapper,
   .chat-input,
   .chat-audio-recorder {
-    padding-left: 0;
     @media screen and (min-width: $screen-tablet-min) {
       margin-right: 250px;
     }

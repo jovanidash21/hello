@@ -5,7 +5,6 @@ import { Appbar } from 'muicss/react/';
 import mapDispatchToProps from '../../../actions';
 import { NewMessagesDropdown } from '../../../components/Header';
 import { UserDropdown } from '../../../../components/UserDropdown';
-import './styles.scss';
 
 class Header extends Component {
   constructor(props) {
@@ -63,21 +62,11 @@ class Header extends Component {
 
     return (
       <Appbar className="header">
-        <table width="100%">
-          <tbody>
-            <tr style={{verticalAlign: 'middle'}}>
-              <td className="mui--appbar-height">
-                <div className="left-part-header">
-                  {children}
-                </div>
-              </td>
-              <td className="mui--appbar-height mui--text-right">
-                {::this.handleNewMessagesDropdownRender()}
-                <UserDropdown user={user.active} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="content">
+          {children}
+        </div>
+        {::this.handleNewMessagesDropdownRender()}
+        <UserDropdown user={user.active} />
       </Appbar>
     )
   }

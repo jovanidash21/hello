@@ -38,7 +38,7 @@ class NewMessagesDropdown extends Component {
     return (
       <div className="mui-dropdown new-messages-dropdown-wrapper">
         <div className="dropdown-toggle new-messages-dropdown" data-mui-toggle="dropdown">
-          <div className="message-icon">
+          <div className="message-icon header-item-icon">
             <FontAwesome name="comment" />
           </div>
           {
