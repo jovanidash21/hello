@@ -94,6 +94,32 @@ class ChatRoomsList extends Component {
   handleCloseModal() {
     this.setState({isModalOpen: false});
   }
+  handleClearChatRoomUnreadMessages(event) {
+    event.preventDefault();
+
+    const {
+      user,
+      chatRoom,
+      clearChatRoomUnreadMessages
+    } = this.props;
+    const chatRooms = chatRoom.all;
+    const newMessagesChatRooms = chatRooms.filter((singleChatRoom) =>
+      singleChatRoom.data.chatType === 'direct' &&
+      singleChatRoom.unReadMessages > 0
+    );
+
+    if ( newMessagesChatRooms.length > 0 ) {
+      var chatRoomIDs = [];
+
+      for (var i = 0; i < newMessagesChatRooms.length; i++) {
+        var singleChatRoom = newMessagesChatRooms[i];
+
+        chatRoomIDs.push(singleChatRoom.data._id);
+      }
+
+      clearChatRoomUnreadMessages(user.active._id, chatRoomIDs);
+    }
+  }
   handleTrashChatRoom(chatRoomID) {
     const {
       user,
@@ -142,6 +168,16 @@ class ChatRoomsList extends Component {
                 </div>
               }
             </div>
+            <div className="clear-all-button" onClick={::this.handleClearChatRoomUnreadMessages}>
+              <div
+                className="trash-icon"
+                title="Clear All New Messages"
+              >
+                <FontAwesome name="trash" />
+              </div>
+              Clear All Unread
+            </div>
+            <div className="divider" />
             {::this.handleChatRoomsListRender('direct')}
           </div>
           <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">

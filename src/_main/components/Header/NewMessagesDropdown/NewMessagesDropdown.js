@@ -12,10 +12,6 @@ class NewMessagesDropdown extends Component {
   handleClearChatRoomUnreadMessages(event) {
     event.preventDefault();
 
-    if ( event.stopPropagation ) {
-      event.stopPropagation();
-    }
-
     const {
       chatRooms,
       handleClearChatRoomUnreadMessages
@@ -62,7 +58,7 @@ class NewMessagesDropdown extends Component {
                   >
                     <FontAwesome name="trash" />
                   </div>
-                  Clear
+                  Clear All
                 </div>
                 <div className="divider" />
                 <div className="dropdown-chat-rooms-list">
