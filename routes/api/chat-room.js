@@ -258,4 +258,48 @@ router.post('/trash', function(req, res, next) {
   }
 });
 
+router.post('/trash-all', function(req, res, next) {
+  var userID = req.body.userID;
+
+  if ((req.user === undefined) || (req.user._id != userID)) {
+    res.status(401).send({
+      success: false,
+      message: 'Unauthorized'
+    });
+  } else {
+    var chatRoomID = req.body.chatRoomID;
+
+    User.findById(userID, 'chatRooms')
+      .populate({
+        path: 'chatRooms.data'
+      })
+      .then((user) => {
+        var userChatRooms = user.chatRooms;
+
+        for (var i = 0; i < userChatRooms.length; i++) {
+          var chatRoom = userChatRooms[i].data;
+
+          if ( chatRoom.chatType === 'direct' ) {
+            User.update(
+              { _id: userID, 'chatRooms.data': chatRoom._id },
+              { $set: { 'chatRooms.$.trash.data': true, 'chatRooms.$.trash.endDate': new Date( +new Date() + 2 * 60 * 1000 ) } },
+              { safe: true, upsert: true, new: true }
+            ).exec();
+          }
+        }
+
+        res.status(200).send({
+          success: true,
+          message: 'Chat Rooms Trashed'
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      });
+  }
+});
+
 module.exports = router;

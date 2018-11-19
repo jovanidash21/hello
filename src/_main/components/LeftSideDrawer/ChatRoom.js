@@ -54,7 +54,8 @@ class ChatRoom extends Component {
     const {
       user,
       chatRoom,
-      isActive
+      isActive,
+      isTrashingAllChatRooms,
     } = this.props;
     const { isTrashing } = this.state;
 
@@ -64,7 +65,7 @@ class ChatRoom extends Component {
           "chat-room " +
           (isActive ? 'active ' : '') +
           (chatRoom.unReadMessages > 0 ? 'new-message ' : '') +
-          (isTrashing ? 'is-trashing' : '')
+          ((isTrashingAllChatRooms || isTrashing) ? 'is-trashing' : '')
         }
         onClick={::this.handleChangeChatRoom}
         title={chatRoom.data.name}
@@ -106,6 +107,7 @@ ChatRoom.propTypes = {
   activeChatRoom: PropTypes.object.isRequired,
   isActive: PropTypes.bool,
   handleChangeChatRoom: PropTypes.func.isRequired,
+  isTrashingAllChatRooms: PropTypes.bool,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
   handleTrashChatRoom: PropTypes.func,
   isTrashingAChatRoom: PropTypes.bool.isRequired
@@ -113,6 +115,7 @@ ChatRoom.propTypes = {
 
 ChatRoom.defaultProps = {
   isActive: false,
+  isTrashingAllChatRooms: false,
   handleTrashChatRoom: () => {},
   isTrashingAChatRoom: false
 }

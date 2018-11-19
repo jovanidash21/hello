@@ -65,6 +65,11 @@
     &:hover {
       background-color: $color-punch;
     }
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      pointer-events: none;
+    }
     .trash-icon {
       margin-right: 5px;
     }

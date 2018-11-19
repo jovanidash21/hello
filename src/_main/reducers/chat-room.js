@@ -5,6 +5,7 @@ import {
   SOCKET_CREATE_CHAT_ROOM,
   SOCKET_BROADCAST_CREATE_CHAT_ROOM,
   CLEAR_CHAT_ROOM_UNREAD_MESSAGES,
+  TRASH_ALL_CHAT_ROOMS,
   TRASH_CHAT_ROOM
 } from '../constants/chat-room';
 import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
@@ -43,6 +44,7 @@ const initialState = {
   fetch: {...commonStateFlags},
   create: {...commonStateFlags},
   clear: {...commonStateFlags},
+  trashAll: {...commonStateFlags},
   trash: {...commonStateFlags},
   active: {
     data: {}
@@ -73,6 +75,14 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         clear: {
           ...state.clear,
+          loading: true
+        }
+      };
+    case `${TRASH_ALL_CHAT_ROOMS}_LOADING`:
+      return {
+        ...state,
+        trashAll: {
+          ...state.trashAll,
           loading: true
         }
       };
@@ -131,6 +141,29 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         clear: {
           ...state.clear,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        all: [...chatRooms]
+      };
+    case `${TRASH_ALL_CHAT_ROOMS}_SUCCESS`:
+      var activeChatRoom = {...state.active};
+      var chatRooms = [...state.all];
+
+      if ( activeChatRoom.data.chatType === 'direct' ) {
+        location.reload();
+      }
+
+      chatRooms = chatRooms.filter(chatRoom =>
+        chatRoom.data.chatType !== 'direct'
+      );
+
+      return {
+        ...state,
+        trashAll: {
+          ...state.trashAll,
           loading: false,
           success: true,
           error: false,
@@ -200,6 +233,17 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         trash: {
           ...state.trash,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
+      };
+    case `${TRASH_ALL_CHAT_ROOMS}_ERROR`:
+      return {
+        ...state,
+        trashAll: {
+          ...state.trashAll,
           loading: false,
           success: false,
           error: true,

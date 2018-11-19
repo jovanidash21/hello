@@ -20,6 +20,7 @@ import {
   createGroupChatRoom,
   createDirectChatRoom,
   clearChatRoomUnreadMessages,
+  trashAllChatRooms,
   trashChatRoom
 } from './chat-room';
 import {
@@ -55,6 +56,7 @@ const actions = (dispatch) => {
     createGroupChatRoom,
     createDirectChatRoom,
     clearChatRoomUnreadMessages,
+    trashAllChatRooms,
     trashChatRoom,
     fetchNewMessages,
     sendTextMessage,

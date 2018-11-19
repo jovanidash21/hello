@@ -48,8 +48,9 @@ class ChatRoomsList extends Component {
               isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
               handleChangeChatRoom={changeChatRoom}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+              isTrashingAllChatRooms={chatRoom.trashAll.loading}
               handleTrashChatRoom={::this.handleTrashChatRoom}
-              isTrashingAChatRoom={chatRoom.trash.loading && chatRoom.trash.success}
+              isTrashingAChatRoom={chatRoom.trash.loading}
             />
           )
         }
@@ -94,30 +95,18 @@ class ChatRoomsList extends Component {
   handleCloseModal() {
     this.setState({isModalOpen: false});
   }
-  handleClearChatRoomUnreadMessages(event) {
-    event.preventDefault();
-
+  handleTrashAllChatRooms(chatRoomID) {
     const {
       user,
       chatRoom,
-      clearChatRoomUnreadMessages
+      trashAllChatRooms
     } = this.props;
-    const chatRooms = chatRoom.all;
-    const newMessagesChatRooms = chatRooms.filter((singleChatRoom) =>
-      singleChatRoom.data.chatType === 'direct' &&
-      singleChatRoom.unReadMessages > 0
+    const directChatRooms = chatRoom.all.filter((singleChatRoom) =>
+      singleChatRoom.data.chatType === 'direct'
     );
 
-    if ( newMessagesChatRooms.length > 0 ) {
-      var chatRoomIDs = [];
-
-      for (var i = 0; i < newMessagesChatRooms.length; i++) {
-        var singleChatRoom = newMessagesChatRooms[i];
-
-        chatRoomIDs.push(singleChatRoom.data._id);
-      }
-
-      clearChatRoomUnreadMessages(user.active._id, chatRoomIDs);
+    if ( directChatRooms.length > 0 ) {
+      trashAllChatRooms(user.active._id);
     }
   }
   handleTrashChatRoom(chatRoomID) {
@@ -168,14 +157,17 @@ class ChatRoomsList extends Component {
                 </div>
               }
             </div>
-            <div className="clear-all-button" onClick={::this.handleClearChatRoomUnreadMessages}>
+            <div
+              className={"clear-all-button " + (chatRoom.trashAll.loading ? 'disabled' : '')}
+              onClick={::this.handleTrashAllChatRooms}
+            >
               <div
                 className="trash-icon"
                 title="Clear All New Messages"
               >
                 <FontAwesome name="trash" />
               </div>
-              Clear All Unread
+              Clear All
             </div>
             <div className="divider" />
             {::this.handleChatRoomsListRender('direct')}

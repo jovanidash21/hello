@@ -7,6 +7,7 @@ import {
   SOCKET_JOIN_CHAT_ROOM,
   SOCKET_LEAVE_CHAT_ROOM,
   CLEAR_CHAT_ROOM_UNREAD_MESSAGES,
+  TRASH_ALL_CHAT_ROOMS,
   TRASH_CHAT_ROOM
 } from '../constants/chat-room';
 import { fetchNewMessages } from './message';
@@ -247,6 +248,26 @@ export function clearChatRoomUnreadMessages(userID, chatRoomIDs) {
     return dispatch({
       type: CLEAR_CHAT_ROOM_UNREAD_MESSAGES,
       payload: axios.post(baseURL + '/api/chat-room/clear-unread', data)
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+      }
+    });
+  }
+}
+
+/**
+ * Trash all chat rooms
+ * @param {string} userID
+ */
+export function trashAllChatRooms(userID) {
+  let data = { userID };
+
+  return dispatch => {
+    return dispatch({
+      type: TRASH_ALL_CHAT_ROOMS,
+      payload: axios.post(baseURL + '/api/chat-room/trash-all', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
