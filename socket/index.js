@@ -102,6 +102,8 @@ var sockets = function(io) {
             })
             .then((chatRoom) => {
               if (
+                chatRoom !== null &&
+                chatRoom !== 'undefined' &&
                 Object.keys(chatRoom).length > 0 &&
                 Object.keys(joinedChatRoom).length > 0 &&
                 action.chatRoomID !== action.connectedChatRoomID &&
@@ -147,6 +149,8 @@ var sockets = function(io) {
               socket.leave(action.chatRoomID);
 
               if (
+                chatRoom !== null &&
+                chatRoom !== 'undefined' &&
                 Object.keys(chatRoom).length > 0 &&
                 chatRoom.chatType === 'public'
               ) {
