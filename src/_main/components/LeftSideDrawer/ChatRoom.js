@@ -53,7 +53,10 @@ class ChatRoom extends Component {
         className={
           "chat-room " +
           (isActive ? 'active ' : '') +
-          (chatRoom.unReadMessages > 0 ? 'new-message ' : '') +
+          (
+            (chatRoom.unReadMessages > 0 && chatRoom.data.chatType === 'direct')
+            ? 'new-message ' : ''
+          ) +
           (isTrashing ? 'is-trashing' : '')
         }
         onClick={::this.handleChangeChatRoom}
