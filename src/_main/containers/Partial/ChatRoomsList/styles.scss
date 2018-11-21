@@ -51,32 +51,14 @@
       }
     }
   }
-  .clear-all-button {
-    align-items: center;
-    background-color: transparent;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    font-size: 15px;
-    font-weight: bold;
-    justify-content: center;
-    padding: 5px 15px;
-    transition: all 0.2s ease-in-out;
-    &:hover {
-      background-color: $color-punch;
-    }
-    &.disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-      pointer-events: none;
+  .clear-all-button-wrapper {
+    padding: 0 15px;
+    .button {
+      width: 100%;
     }
     .trash-icon {
+      display: inline-block;
       margin-right: 5px;
     }
-  }
-  .divider {
-    background-color: $color-east-bay;
-    height: 2px;
-    margin: 3px 0;
   }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
+import { Button } from 'muicss/react';
 import mapDispatchToProps from '../../../actions';
 import { ChatRoom } from '../../../components/LeftSideDrawer';
 import { CreateChatRoomModal } from '../CreateChatRoomModal';
@@ -48,9 +49,8 @@ class ChatRoomsList extends Component {
               isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
               handleChangeChatRoom={changeChatRoom}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
-              isTrashingAllChatRooms={chatRoom.trashAll.loading}
               handleTrashChatRoom={::this.handleTrashChatRoom}
-              isTrashingAChatRoom={chatRoom.trash.loading}
+              isTrashing={chatRoom.trashAll.loading || (chatRoom.trash.loading && chatRoom.trash.chatRoomID === singleChatRoom.data._id)}
             />
           )
         }
@@ -157,19 +157,21 @@ class ChatRoomsList extends Component {
                 </div>
               }
             </div>
-            <div
-              className={"clear-all-button " + (chatRoom.trashAll.loading ? 'disabled' : '')}
-              onClick={::this.handleTrashAllChatRooms}
-            >
-              <div
-                className="trash-icon"
-                title="Clear All New Messages"
+            <div className="clear-all-button-wrapper">
+              <Button
+                className="button"
+                color="danger"
+                size="small"
+                title="Clear All Chat Rooms"
+                disabled={chatRoom.trashAll.loading}
+                onClick={::this.handleTrashAllChatRooms}
               >
-                <FontAwesome name="trash" />
-              </div>
-              Clear All
+                <div className="trash-icon" >
+                  <FontAwesome name="trash" />
+                </div>
+                Clear All
+              </Button>
             </div>
-            <div className="divider" />
             {::this.handleChatRoomsListRender('direct')}
           </div>
           <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">

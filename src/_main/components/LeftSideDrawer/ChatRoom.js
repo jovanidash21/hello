@@ -9,15 +9,6 @@ import './styles.scss';
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isTrashing: false
-    };
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.isTrashingAChatRoom && !this.props.isTrashingAChatRoom) {
-      this.setState({isTrashing: false});
-    }
   }
   handleChangeChatRoom(event) {
     event.preventDefault();
@@ -46,7 +37,6 @@ class ChatRoom extends Component {
     } = this.props;
 
     if ( chatRoom.data.chatType === 'direct' ) {
-      this.setState({isTrashing: true});
       handleTrashChatRoom(chatRoom.data._id);
     }
   }
@@ -55,9 +45,8 @@ class ChatRoom extends Component {
       user,
       chatRoom,
       isActive,
-      isTrashingAllChatRooms,
+      isTrashing,
     } = this.props;
-    const { isTrashing } = this.state;
 
     return (
       <div
@@ -65,7 +54,7 @@ class ChatRoom extends Component {
           "chat-room " +
           (isActive ? 'active ' : '') +
           (chatRoom.unReadMessages > 0 ? 'new-message ' : '') +
-          ((isTrashingAllChatRooms || isTrashing) ? 'is-trashing' : '')
+          (isTrashing ? 'is-trashing' : '')
         }
         onClick={::this.handleChangeChatRoom}
         title={chatRoom.data.name}
@@ -107,17 +96,15 @@ ChatRoom.propTypes = {
   activeChatRoom: PropTypes.object.isRequired,
   isActive: PropTypes.bool,
   handleChangeChatRoom: PropTypes.func.isRequired,
-  isTrashingAllChatRooms: PropTypes.bool,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
   handleTrashChatRoom: PropTypes.func,
-  isTrashingAChatRoom: PropTypes.bool.isRequired
+  isTrashing: PropTypes.bool
 }
 
 ChatRoom.defaultProps = {
   isActive: false,
-  isTrashingAllChatRooms: false,
   handleTrashChatRoom: () => {},
-  isTrashingAChatRoom: false
+  isTrashing: false
 }
 
 export default ChatRoom;

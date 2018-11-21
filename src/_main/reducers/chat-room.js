@@ -45,7 +45,10 @@ const initialState = {
   create: {...commonStateFlags},
   clear: {...commonStateFlags},
   trashAll: {...commonStateFlags},
-  trash: {...commonStateFlags},
+  trash: {
+    chatRoomID: '',
+    ...commonStateFlags
+  },
   active: {
     data: {}
   },
@@ -87,10 +90,13 @@ const chatRoom = (state=initialState, action) => {
         }
       };
     case `${TRASH_CHAT_ROOM}_LOADING`:
+      var chatRoomID = action.meta;
+
       return {
         ...state,
         trash: {
           ...state.trash,
+          chatRoomID: chatRoomID,
           loading: true
         }
       };
@@ -188,6 +194,7 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         trash: {
           ...state.trash,
+          chatRoomID: '',
           loading: false,
           success: true,
           error: false,
