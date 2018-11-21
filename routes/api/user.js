@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   if (req.user === undefined) {
     res.status(401).send({
       success: false,
@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   }
 });
 
-router.post('/search', function(req, res, next) {
+router.post('/search', (req, res, next) => {
   var query = req.body.query;
 
   if (req.user === undefined) {
@@ -43,7 +43,7 @@ router.post('/search', function(req, res, next) {
   }
 });
 
-router.get('/all', function(req, res, next) {
+router.get('/all', (req, res, next) => {
   if (req.user === undefined) {
     res.status(401).send({
       success: false,

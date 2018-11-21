@@ -6,8 +6,8 @@ var User = require('../../../models/User');
 var ChatRoom = require('../../../models/ChatRoom');
 
 passport.use(new Strategy(
-  function(req, done) {
-    User.findOne({username: req.body.username}, function (err, user) {
+  (req, done) => {
+    User.findOne({username: req.body.username}, (err, user) => {
       if (!err) {
         return done(null, user);
       } else {
@@ -17,7 +17,7 @@ passport.use(new Strategy(
   }
 ));
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
   var userData = {
     username: req.body.username,
     name: req.body.name,
@@ -25,7 +25,7 @@ router.post('/', function(req, res, next) {
     accountType: 'guest'
   };
 
-  User.findOne({name: req.body.name, accountType: 'guest', isOnline: true}, function(err, user) {
+  User.findOne({name: req.body.name, accountType: 'guest', isOnline: true}, (err, user) => {
     if (!err) {
       if (user !== null) {
         res.status(401).send({
@@ -38,10 +38,10 @@ router.post('/', function(req, res, next) {
         userData.mute = {};
         var newUser = new User(userData);
 
-        newUser.save(function(err) {
+        newUser.save((err) => {
           if (!err) {
-            passport.authenticate('custom', function(err, user) {
-              req.logIn(user, function(err) {
+            passport.authenticate('custom', (err, user) => {
+              req.logIn(user, (err) => {
                 if (!err) {
                   var userID = newUser._id;
 

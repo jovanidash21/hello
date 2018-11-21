@@ -4,7 +4,7 @@ var User = require('../models/User');
 var ChatRoom = require('../models/ChatRoom');
 var Message = require('../models/Message');
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   if (!req.user) {
     res.render('index', { title: 'Chat App | Login' });
   } else {
@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   }
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', (req, res) => {
   if (req.user !== 'undefined' && req.user.accountType === 'guest') {
     var userID = req.user._id;
 
@@ -46,7 +46,7 @@ router.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-router.get('/register', function(req, res, next) {
+router.get('/register', (req, res, next) => {
   if (!req.user) {
     res.render('index', { title: 'Chat App | Register' });
   } else {
@@ -54,7 +54,7 @@ router.get('/register', function(req, res, next) {
   }
 });
 
-router.get('/guest', function(req, res, next) {
+router.get('/guest', (req, res, next) => {
   if (!req.user) {
     res.render('index', { title: 'Chat App | Guest' });
   } else {
@@ -62,7 +62,7 @@ router.get('/guest', function(req, res, next) {
   }
 });
 
-router.get('/chat', function(req, res, next) {
+router.get('/chat', (req, res, next) => {
   if (req.user) {
     res.render('index', { title: 'Chat App' });
   } else {
@@ -70,7 +70,7 @@ router.get('/chat', function(req, res, next) {
   }
 });
 
-router.get('/admin', function(req, res, next) {
+router.get('/admin', (req, res, next) => {
   if (req.user && (req.user.role == 'owner' || req.user.role == 'admin')) {
     res.render('index', { title: 'Chat App | Admin' });
   } else {

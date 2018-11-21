@@ -3,7 +3,7 @@ var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 var ChatRoom = require('../../models/ChatRoom');
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
@@ -48,7 +48,7 @@ router.post('/', function(req, res, next) {
   }
 });
 
-router.post('/block', function(req, res, next) {
+router.post('/block', (req, res, next) => {
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -77,7 +77,7 @@ router.post('/block', function(req, res, next) {
   }
 });
 
-router.post('/kick', function(req, res, next) {
+router.post('/kick', (req, res, next) => {
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -110,7 +110,7 @@ router.post('/kick', function(req, res, next) {
   }
 });
 
-router.post('/role', function(req, res, next) {
+router.post('/role', (req, res, next) => {
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -143,7 +143,7 @@ router.post('/role', function(req, res, next) {
   }
 });
 
-router.post('/mute', function(req, res, next) {
+router.post('/mute', (req, res, next) => {
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')

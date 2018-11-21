@@ -3,7 +3,7 @@ var router = express.Router({mergeParams: true});
 var User = require('../../models/User');
 var ChatRoom = require('../../models/ChatRoom');
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
@@ -21,11 +21,11 @@ router.post('/', function(req, res, next) {
       })
       .exec()
       .then((user) => {
-        var userChatRooms = user.chatRooms.filter(function(chatRoom) {
+        var userChatRooms = user.chatRooms.filter((chatRoom) => {
           return !chatRoom.kick.data && !chatRoom.trash.data;
         });
 
-        userChatRooms = userChatRooms.sort(function(a, b) {
+        userChatRooms = userChatRooms.sort((a, b) => {
           return new Date(a.data.createdAt) - new Date(b.data.createdAt);
         });
 
@@ -60,7 +60,7 @@ router.post('/', function(req, res, next) {
   }
 });
 
-router.post('/create', function(req, res, next) {
+router.post('/create', (req, res, next) => {
   if (
     req.user === undefined &&
     (req.user.role !== 'owner' || req.user.role !== 'admin')
@@ -97,7 +97,7 @@ router.post('/create', function(req, res, next) {
         message: 'Please select at least 3 and at most 5 members'
       });
     } else {
-      ChatRoom.findOne({_id: {$ne: null}, members: {$all: members}, chatType: 'direct'}, function(err, chatRoom) {
+      ChatRoom.findOne({_id: {$ne: null}, members: {$all: members}, chatType: 'direct'}, (err, chatRoom) => {
         if (!err) {
           if (chatRoom !== null) {
             var chatRoomID = chatRoom._id;
@@ -190,7 +190,7 @@ router.post('/create', function(req, res, next) {
   }
 });
 
-router.post('/clear-unread', function(req, res, next) {
+router.post('/clear-unread', (req, res, next) => {
   if (req.user === undefined) {
     res.status(401).send({
       success: false,
@@ -227,7 +227,7 @@ router.post('/clear-unread', function(req, res, next) {
   }
 });
 
-router.post('/trash', function(req, res, next) {
+router.post('/trash', (req, res, next) => {
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
@@ -258,7 +258,7 @@ router.post('/trash', function(req, res, next) {
   }
 });
 
-router.post('/trash-all', function(req, res, next) {
+router.post('/trash-all', (req, res, next) => {
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
