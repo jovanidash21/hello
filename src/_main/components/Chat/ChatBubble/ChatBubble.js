@@ -5,7 +5,6 @@ import Linkify from 'react-linkify';
 import ReactHtmlParser from 'react-html-parser';
 import FontAwesome from 'react-fontawesome';
 import Plyr from 'react-plyr';
-import TimeAgo from 'react-timeago';
 import Lightbox from 'react-image-lightbox';
 import moment from 'moment';
 import { Avatar } from '../../../../components/Avatar';
