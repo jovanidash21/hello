@@ -7,12 +7,16 @@ var ChatRoom = require('../../../models/ChatRoom');
 
 passport.use(new Strategy(
   (req, done) => {
-    User.findOne({username: req.body.username}, (err, user) => {
-      if (!err) {
-        return done(null, user);
-      } else {
-        return done(err);
-      }
+    User.findOne({
+      username: req.body.username,
+      name: req.body.name,
+      accountType: 'guest'
+    })
+    .then((user) => {
+      return done(null, user);
+    })
+    .catch((error) => {
+      return done(err);
     });
   }
 ));
@@ -67,7 +71,7 @@ router.post('/', (req, res, next) => {
                       res.end();
                     })
                     .catch((error) => {
-                      res.end(err);
+                      res.end(error);
                     });
                 } else {
                   res.end(err);
