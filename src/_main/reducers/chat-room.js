@@ -302,7 +302,11 @@ const chatRoom = (state=initialState, action) => {
       var chatRooms = [...state.all];
       var chatRoomID = action.chatRoomID;
 
-      if ( activeChatRoom.data._id === chatRoomID ) {
+      if (
+        ( activeChatRoom.data._id === chatRoomID ) &&
+        ( activeChatRoom.data.connectedMembers >= 0 ) &&
+        ( activeChatRoom.data.connectedMembers < 500 )
+      ) {
         activeChatRoom.data.connectedMembers++;
         break;
       }
@@ -310,7 +314,11 @@ const chatRoom = (state=initialState, action) => {
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
 
-        if ( chatRoom.data._id === chatRoomID ) {
+        if (
+          ( chatRoom.data._id === chatRoomID ) &&
+          ( chatRoom.data.connectedMembers >= 0 ) &&
+          ( chatRoom.data.connectedMembers < 500 )
+        ) {
           chatRoom.data.connectedMembers++;
           break;
         } else {
@@ -328,7 +336,11 @@ const chatRoom = (state=initialState, action) => {
       var chatRooms = [...state.all];
       var chatRoomID = action.chatRoomID;
 
-      if ( activeChatRoom.data._id === chatRoomID ) {
+      if (
+        ( activeChatRoom.data._id === chatRoomID ) &&
+        ( activeChatRoom.data.connectedMembers > 0 ) &&
+        ( activeChatRoom.data.connectedMembers <= 500 )
+      ) {
         activeChatRoom.data.connectedMembers--;
         break;
       }
@@ -336,7 +348,11 @@ const chatRoom = (state=initialState, action) => {
       for (var i = 0; i < chatRooms.length; i++) {
         var chatRoom = chatRooms[i];
 
-        if ( chatRoom.data._id === chatRoomID ) {
+        if (
+          ( chatRoom.data._id === chatRoomID ) &&
+          ( chatRoom.data.connectedMembers > 0 ) &&
+          ( chatRoom.data.connectedMembers <= 500 )
+        ) {
           chatRoom.data.connectedMembers--;
           break;
         } else {
