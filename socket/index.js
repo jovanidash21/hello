@@ -65,6 +65,14 @@ var sockets = function(io) {
               joinedChatRoom = chatRoom;
 
               if (chatRoom.chatType === 'public') {
+                if (action.chatRoomID !== action.connectedChatRoomID) {
+                  ChatRoom.findByIdAndUpdate(
+                    action.chatRoomID,
+                    { $inc: { connectedMembers: 1 } },
+                    { safe: true, upsert: true, new: true }
+                  ).exec();
+                }
+
                 User.findByIdAndUpdate(
                   action.userID, {
                     $set: { connectedChatRoom: action.chatRoomID }
@@ -90,6 +98,11 @@ var sockets = function(io) {
                       });
                   }
                 }
+
+                socket.broadcast.emit('action', {
+                  type: 'SOCKET_BROADCAST_CONNECTED_MEMBER',
+                  chatRoomID: action.chatRoomID
+                });
               }
 
               if (action.connectedChatRoomID !== '') {
@@ -109,6 +122,12 @@ var sockets = function(io) {
                 action.chatRoomID !== action.connectedChatRoomID &&
                 joinedChatRoom.chatType === 'public'
               ) {
+                ChatRoom.findByIdAndUpdate(
+                  action.connectedChatRoomID,
+                  { $inc: { connectedMembers: -1 } },
+                  { safe: true, upsert: true, new: true }
+                ).exec();
+
                 for (var i = 0; i < chatRoom.members.length; i++) {
                   var chatRoomMember = chatRoom.members[i];
 
@@ -128,6 +147,11 @@ var sockets = function(io) {
                       });
                   }
                 }
+
+                socket.broadcast.emit('action', {
+                  type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+                  chatRoomID: action.connectedChatRoomID
+                });
               }
             })
             .catch((error) => {
@@ -353,22 +377,37 @@ var sockets = function(io) {
           break;
       }
       socket.on('disconnect', function() {
-        User.findByIdAndUpdate(
-          connectedUsers[socket.id],
-          { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
-          { safe: true, upsert: true, new: true },
-        )
-        .then((user) => {
-          socket.broadcast.emit('action', {
-            type: 'SOCKET_BROADCAST_USER_LOGOUT',
-            userID: connectedUsers[socket.id]
-          });
+        User.findById(connectedUsers[socket.id])
+          .then((user) => {
+            if (user.connectedChatRoom !== null) {
+              ChatRoom.findByIdAndUpdate(
+                user.connectedChatRoom,
+                { $inc: { connectedMembers: -1 } },
+                { safe: true, upsert: true, new: true }
+              ).exec();
 
-          delete connectedUsers[socket.id];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+              User.update(
+                { _id: user._id },
+                { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
+                { safe: true, upsert: true, new: true },
+              ).exec();
+
+              socket.broadcast.emit('action', {
+                type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+                chatRoomID: user.connectedChatRoom
+              });
+            }
+
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_USER_LOGOUT',
+              userID: connectedUsers[socket.id]
+            });
+
+            delete connectedUsers[socket.id];
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
     });
     User.find({_id: {$ne: null}})
@@ -377,6 +416,12 @@ var sockets = function(io) {
           var user = users[i];
 
           if (!(user.socketID in connectedUsers) && connectedUsers[user.socketID] != user._id) {
+            ChatRoom.findByIdAndUpdate(
+              user.connectedChatRoom,
+              { $inc: { connectedMembers: -1 } },
+              { safe: true, upsert: true, new: true }
+            ).exec();
+
             User.findByIdAndUpdate(
               user._id,
               { $set: { connectedChatRoom: null, isOnline: false, socketID: ''} },

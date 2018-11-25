@@ -10,6 +10,10 @@ import {
 } from '../constants/chat-room';
 import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
 import {
+  SOCKET_BROADCAST_CONNECTED_MEMBER,
+  SOCKET_BROADCAST_DISCONNECTED_MEMBER
+} from '../constants/member';
+import {
   FETCH_NEW_MESSAGES,
   SOCKET_BROADCAST_NOTIFY_MESSAGE
 } from '../constants/message';
@@ -292,6 +296,58 @@ const chatRoom = (state=initialState, action) => {
       return {
         ...state,
         active: {...activeChatRoom}
+      }
+    case SOCKET_BROADCAST_CONNECTED_MEMBER:
+      var activeChatRoom = {...state.active};
+      var chatRooms = [...state.all];
+      var chatRoomID = action.chatRoomID;
+
+      if ( activeChatRoom.data._id === chatRoomID ) {
+        activeChatRoom.data.connectedMembers++;
+        break;
+      }
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        if ( chatRoom.data._id === chatRoomID ) {
+          chatRoom.data.connectedMembers++;
+          break;
+        } else {
+          continue;
+        }
+      }
+
+      return {
+        ...state,
+        active: {...activeChatRoom},
+        all: [...chatRooms]
+      }
+    case SOCKET_BROADCAST_DISCONNECTED_MEMBER:
+      var activeChatRoom = {...state.active};
+      var chatRooms = [...state.all];
+      var chatRoomID = action.chatRoomID;
+
+      if ( activeChatRoom.data._id === chatRoomID ) {
+        activeChatRoom.data.connectedMembers--;
+        break;
+      }
+
+      for (var i = 0; i < chatRooms.length; i++) {
+        var chatRoom = chatRooms[i];
+
+        if ( chatRoom.data._id === chatRoomID ) {
+          chatRoom.data.connectedMembers--;
+          break;
+        } else {
+          continue;
+        }
+      }
+
+      return {
+        ...state,
+        active: {...activeChatRoom},
+        all: [...chatRooms]
       }
     case `${FETCH_NEW_MESSAGES}_SUCCESS`:
       var activeChatRoom = {...state.active};

@@ -24,11 +24,6 @@ class ChatBubble extends Component {
       return ReactHtmlParser('<' + tag + '>' + text.slice(slice, -slice) + '</' + tag + '>')[0];
     }
   }
-  handleTextFormat(text, tag, slice=1) {
-    if ( tag !== '' ) {
-      return ReactHtmlParser('<' + tag + '>' + text.slice(slice, -slice) + '</' + tag + '>')[0];
-    }
-  }
   handleMessageText() {
     const { message } = this.props;
     var messageText = message.text;

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
+import FontAwesome from 'react-fontawesome';
+import Popup from 'react-popup';
 import { Avatar } from '../../../components/Avatar';
 import './styles.scss';
 
@@ -16,7 +18,11 @@ class ChatRoom extends Component {
       handleSelectChatRoom
     } = this.props;
 
-    handleSelectChatRoom(chatRoom);
+    if ( chatRoom.data.connectedMembers < 500 ) {
+      handleSelectChatRoom(chatRoom);
+    } else {
+      Popup.alert('Sorry, maximum of 500 users only per Public Chat Room!');
+    }
   }
   render() {
     const { chatRoom } = this.props;
@@ -38,9 +44,17 @@ class ChatRoom extends Component {
             )
           }}
         </MediaQuery>
-
         <div className="chat-room-name">
           {chatRoom.data.name}
+        </div>
+        <div
+          className="connected-members-count"
+          title={chatRoom.data.connectedMembers + " Connected Members"}
+        >
+          <div className="user-icon">
+            <FontAwesome name="user" />
+          </div>
+          {chatRoom.data.connectedMembers}/500
         </div>
       </div>
     )
