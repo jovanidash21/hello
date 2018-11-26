@@ -176,7 +176,7 @@ class ChatRoomsList extends Component {
           </div>
           <div className="chat-room-pane mui-tabs__pane mui--is-active" id="group-chat-rooms">
             <div className="chat-rooms-options">
-              <h3>Group Messages</h3>
+              <h3>Room Messages</h3>
               {
                 (user.active.role === 'owner' ||
                 user.active.role === 'admin') &&

@@ -48,7 +48,8 @@ export function changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChat
     dispatch({
       type: CHANGE_CHAT_ROOM,
       chatRoom: chatRoom,
-      userID: userID
+      userID: userID,
+      connectedChatRoomID: connectedChatRoomID
     });
     dispatch(leaveChatRoom(activeChatRoomID, userID));
     dispatch(joinChatRoom(chatRoom.data._id, userID, connectedChatRoomID));

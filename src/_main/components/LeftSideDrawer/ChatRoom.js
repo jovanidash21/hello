@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import Popup from 'react-popup';
 import { handleChatRoomAvatarBadges } from '../../../utils/avatar';
 import { Avatar } from '../../../components/Avatar';
 import { NotificationCount } from '../../../components/NotificationCount';
@@ -21,8 +22,15 @@ class ChatRoom extends Component {
       handleLeftSideDrawerToggleEvent
     } = this.props;
 
-    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id, user.connectedChatRoom);
-    handleLeftSideDrawerToggleEvent();
+    if (
+      ( chatRoom.data.chatType === 'public' ) &&
+      ( chatRoom.data.connectedMembers.length >= 500 )
+    ) {
+      Popup.alert('Sorry, maximum of 500 users only per Public Chat Room!');
+    } else {
+      handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id, user.connectedChatRoom);
+      handleLeftSideDrawerToggleEvent();
+    }
   }
   handleTrashChatRoom(event) {
     event.preventDefault();
@@ -57,7 +65,12 @@ class ChatRoom extends Component {
             (chatRoom.unReadMessages > 0 && chatRoom.data.chatType === 'direct')
             ? 'new-message ' : ''
           ) +
-          (isTrashing ? 'is-trashing' : '')
+          (
+            isTrashing ||
+            (chatRoom.data.chatType === 'public' && chatRoom.data.connectedMembers.length >= 500)
+            ? 'disabled'
+            : ''
+          )
         }
         onClick={::this.handleChangeChatRoom}
         title={chatRoom.data.name}
@@ -86,6 +99,18 @@ class ChatRoom extends Component {
             title="Trash ChatRoom"
             onClick={::this.handleTrashChatRoom}>
             <FontAwesome name="trash" />
+          </div>
+        }
+        {
+          chatRoom.data.chatType === 'public' &&
+          <div
+            className="connected-members-count"
+            title={chatRoom.data.connectedMembers.length + " Connected Members"}
+          >
+            <div className="user-icon">
+              <FontAwesome name="user" />
+            </div>
+            {chatRoom.data.connectedMembers.length}
           </div>
         }
       </div>

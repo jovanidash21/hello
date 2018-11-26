@@ -262,9 +262,63 @@ const chatRoom = (state=initialState, action) => {
         }
       };
     case CHANGE_CHAT_ROOM:
+      var chatRooms = [...state.all];
+      var activeChatRoom = {...action.chatRoom};
+      var userID = action.userID;
+      var connectedChatRoomID = action.connectedChatRoomID;
+
+      if (
+        ( activeChatRoom.data.chatType === 'public' ) &&
+        ( activeChatRoom.data._id !== connectedChatRoomID )
+      ) {
+        if (
+          ( activeChatRoom.data.connectedMembers.length >= 0 ) &&
+          ( activeChatRoom.data.connectedMembers.length < 500 ) &&
+          ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
+        ) {
+          activeChatRoom.data.connectedMembers.push(userID);
+        }
+
+        var activeChatRoomFound = false;
+        var connectedChatRoomFound = false;
+
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+
+          if (
+            ( ! activeChatRoomFound ) &&
+            ( chatRoom.data._id === activeChatRoom.data._id ) &&
+            ( chatRoom.data.chatType === 'public' ) &&
+            ( chatRoom.data.connectedMembers.length >= 0 ) &&
+            ( chatRoom.data.connectedMembers.length < 500 ) &&
+            ( chatRoom.data.connectedMembers.indexOf(userID) === -1 )
+          ) {
+            chatRoom.data.connectedMembers.push(userID);
+            activeChatRoomFound = true;
+          } else if (
+            ( ! connectedChatRoomFound ) &&
+            ( chatRoom.data._id === connectedChatRoomID ) &&
+            ( chatRoom.data.chatType === 'public' ) &&
+            ( chatRoom.data.connectedMembers.length > 0 ) &&
+            ( chatRoom.data.connectedMembers.length <= 500 ) &&
+            ( chatRoom.data.connectedMembers.indexOf(userID) > -1 )
+          ) {
+            chatRoom.data.connectedMembers = chatRoom.data.connectedMembers.filter(memberID =>
+              memberID !== userID
+            );
+            connectedChatRoomFound = true;
+          }
+
+          if ( activeChatRoomFound && connectedChatRoomFound ) {
+            break;
+          }
+        }
+      }
+
       return {
         ...state,
-        active: action.chatRoom
+        active: {...activeChatRoom},
+        all: [...chatRooms]
       };
     case SOCKET_CREATE_CHAT_ROOM:
     case SOCKET_BROADCAST_CREATE_CHAT_ROOM:
@@ -305,6 +359,7 @@ const chatRoom = (state=initialState, action) => {
 
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
+        ( activeChatRoom.data.chatType === 'public' ) &&
         ( activeChatRoom.data.connectedMembers.length >= 0 ) &&
         ( activeChatRoom.data.connectedMembers.length < 500 ) &&
         ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
@@ -318,6 +373,7 @@ const chatRoom = (state=initialState, action) => {
 
         if (
           ( chatRoom.data._id === chatRoomID ) &&
+          ( chatRoom.data.chatType === 'public' ) &&
           ( chatRoom.data.connectedMembers.length >= 0 ) &&
           ( chatRoom.data.connectedMembers.length < 500 ) &&
           ( chatRoom.data.connectedMembers.indexOf(userID) === -1 )
@@ -342,6 +398,7 @@ const chatRoom = (state=initialState, action) => {
 
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
+        ( activeChatRoom.data.chatType === 'public' ) &&
         ( activeChatRoom.data.connectedMembers.length > 0 ) &&
         ( activeChatRoom.data.connectedMembers.length <= 500 ) &&
         ( activeChatRoom.data.connectedMembers.indexOf(userID) > -1 )
@@ -357,6 +414,7 @@ const chatRoom = (state=initialState, action) => {
 
         if (
           ( chatRoom.data._id === chatRoomID ) &&
+          ( chatRoom.data.chatType === 'public' ) &&
           ( chatRoom.data.connectedMembers.length > 0 ) &&
           ( chatRoom.data.connectedMembers.length <= 500 ) &&
           ( chatRoom.data.connectedMembers.indexOf(userID) > -1 )
