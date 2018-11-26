@@ -300,14 +300,16 @@ const chatRoom = (state=initialState, action) => {
     case SOCKET_BROADCAST_CONNECTED_MEMBER:
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
+      var userID = action.userID;
       var chatRoomID = action.chatRoomID;
 
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
-        ( activeChatRoom.data.connectedMembers >= 0 ) &&
-        ( activeChatRoom.data.connectedMembers < 500 )
+        ( activeChatRoom.data.connectedMembers.length >= 0 ) &&
+        ( activeChatRoom.data.connectedMembers.length < 500 ) &&
+        ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
       ) {
-        activeChatRoom.data.connectedMembers++;
+        activeChatRoom.data.connectedMembers.push(userID);
         break;
       }
 
@@ -316,10 +318,11 @@ const chatRoom = (state=initialState, action) => {
 
         if (
           ( chatRoom.data._id === chatRoomID ) &&
-          ( chatRoom.data.connectedMembers >= 0 ) &&
-          ( chatRoom.data.connectedMembers < 500 )
+          ( chatRoom.data.connectedMembers.length >= 0 ) &&
+          ( chatRoom.data.connectedMembers.length < 500 ) &&
+          ( chatRoom.data.connectedMembers.indexOf(userID) === -1 )
         ) {
-          chatRoom.data.connectedMembers++;
+          chatRoom.data.connectedMembers.push(userID);
           break;
         } else {
           continue;
@@ -334,14 +337,18 @@ const chatRoom = (state=initialState, action) => {
     case SOCKET_BROADCAST_DISCONNECTED_MEMBER:
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
+      var userID = action.userID;
       var chatRoomID = action.chatRoomID;
 
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
-        ( activeChatRoom.data.connectedMembers > 0 ) &&
-        ( activeChatRoom.data.connectedMembers <= 500 )
+        ( activeChatRoom.data.connectedMembers.length > 0 ) &&
+        ( activeChatRoom.data.connectedMembers.length <= 500 ) &&
+        ( activeChatRoom.data.connectedMembers.indexOf(userID) > -1 )
       ) {
-        activeChatRoom.data.connectedMembers--;
+        activeChatRoom.data.connectedMembers = activeChatRoom.data.connectedMembers.filter(memberID =>
+          memberID !== userID
+        );
         break;
       }
 
@@ -350,10 +357,13 @@ const chatRoom = (state=initialState, action) => {
 
         if (
           ( chatRoom.data._id === chatRoomID ) &&
-          ( chatRoom.data.connectedMembers > 0 ) &&
-          ( chatRoom.data.connectedMembers <= 500 )
+          ( chatRoom.data.connectedMembers.length > 0 ) &&
+          ( chatRoom.data.connectedMembers.length <= 500 ) &&
+          ( chatRoom.data.connectedMembers.indexOf(userID) > -1 )
         ) {
-          chatRoom.data.connectedMembers--;
+          chatRoom.data.connectedMembers = chatRoom.data.connectedMembers.filter(memberID =>
+            memberID !== userID
+          );
           break;
         } else {
           continue;

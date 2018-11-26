@@ -30,12 +30,12 @@ var chatRoomSchema = new Schema (
       ],
       default: 'group',
     },
-    connectedMembers: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 500,
-    },
+    connectedMembers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     latestMessageDate: {
       type: Date,
       default: Date.now,

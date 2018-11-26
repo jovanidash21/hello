@@ -18,7 +18,7 @@ class ChatRoom extends Component {
       handleSelectChatRoom
     } = this.props;
 
-    if ( chatRoom.data.connectedMembers < 500 ) {
+    if ( chatRoom.data.connectedMembers.length < 500 ) {
       handleSelectChatRoom(chatRoom);
     } else {
       Popup.alert('Sorry, maximum of 500 users only per Public Chat Room!');
@@ -49,12 +49,12 @@ class ChatRoom extends Component {
         </div>
         <div
           className="connected-members-count"
-          title={chatRoom.data.connectedMembers + " Connected Members"}
+          title={chatRoom.data.connectedMembers.length + " Connected Members"}
         >
           <div className="user-icon">
             <FontAwesome name="user" />
           </div>
-          {chatRoom.data.connectedMembers}/500
+          {chatRoom.data.connectedMembers.length}/500
         </div>
       </div>
     )

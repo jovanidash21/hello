@@ -68,7 +68,7 @@ var sockets = function(io) {
                 if (action.chatRoomID !== action.connectedChatRoomID) {
                   ChatRoom.findByIdAndUpdate(
                     action.chatRoomID,
-                    { $inc: { connectedMembers: 1 } },
+                    { $addToSet: { connectedMembers: action.userID } },
                     { safe: true, upsert: true, new: true }
                   ).exec();
                 }
@@ -101,6 +101,7 @@ var sockets = function(io) {
 
                 socket.broadcast.emit('action', {
                   type: 'SOCKET_BROADCAST_CONNECTED_MEMBER',
+                  userID: action.userID,
                   chatRoomID: action.chatRoomID
                 });
               }
@@ -124,7 +125,7 @@ var sockets = function(io) {
               ) {
                 ChatRoom.findByIdAndUpdate(
                   action.connectedChatRoomID,
-                  { $inc: { connectedMembers: -1 } },
+                  { $unset: { connectedMembers: action.userID } },
                   { safe: true, upsert: true, new: true }
                 ).exec();
 
@@ -150,6 +151,7 @@ var sockets = function(io) {
 
                 socket.broadcast.emit('action', {
                   type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+                  userID: action.userID,
                   chatRoomID: action.connectedChatRoomID
                 });
               }
@@ -382,7 +384,7 @@ var sockets = function(io) {
             if (user.connectedChatRoom !== null) {
               ChatRoom.findByIdAndUpdate(
                 user.connectedChatRoom,
-                { $inc: { connectedMembers: -1 } },
+                { $unset: { connectedMembers: user._id } },
                 { safe: true, upsert: true, new: true }
               ).exec();
 
@@ -394,6 +396,7 @@ var sockets = function(io) {
 
               socket.broadcast.emit('action', {
                 type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+                userID: user._id,
                 chatRoomID: user.connectedChatRoom
               });
             }
@@ -418,7 +421,7 @@ var sockets = function(io) {
           if (!(user.socketID in connectedUsers) && connectedUsers[user.socketID] != user._id) {
             ChatRoom.findByIdAndUpdate(
               user.connectedChatRoom,
-              { $inc: { connectedMembers: -1 } },
+              { $unset: { connectedMembers: user._id } },
               { safe: true, upsert: true, new: true }
             ).exec();
 
@@ -427,6 +430,12 @@ var sockets = function(io) {
               { $set: { connectedChatRoom: null, isOnline: false, socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
+
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+              userID: user._id,
+              chatRoomID: user.connectedChatRoom
+            });
           }
         }
       })
