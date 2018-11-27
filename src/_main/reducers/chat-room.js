@@ -365,7 +365,6 @@ const chatRoom = (state=initialState, action) => {
         ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
       ) {
         activeChatRoom.data.connectedMembers.push(userID);
-        break;
       }
 
       for (var i = 0; i < chatRooms.length; i++) {
@@ -406,7 +405,6 @@ const chatRoom = (state=initialState, action) => {
         activeChatRoom.data.connectedMembers = activeChatRoom.data.connectedMembers.filter(memberID =>
           memberID !== userID
         );
-        break;
       }
 
       for (var i = 0; i < chatRooms.length; i++) {
