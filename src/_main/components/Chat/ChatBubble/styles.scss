@@ -46,6 +46,13 @@
       @media screen and (max-width: $screen-mobile-max) {
         font-size: 14px;
       }
+      & > .Linkify {
+        &:first-child {
+          & + pre {
+            margin-top: 30px;
+          }
+        }
+      }
       a {
         color: #000;
       }
