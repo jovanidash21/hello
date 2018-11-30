@@ -277,7 +277,7 @@ class ChatInput extends Component {
     } = this.state;
 
     return (
-      <div className={"chat-input " + (isDisabled ? 'disabled' : '')}>
+      <div className={"chat-input-wrapper " + (isDisabled ? 'disabled' : '')}>
         <MediaQuery query="(min-width: 768px)">
           <div>
             {
@@ -289,57 +289,61 @@ class ChatInput extends Component {
             }
           </div>
         </MediaQuery>
-        <ContentEditable
-          className="textfield single-line"
-          id="chat-input"
-          placeholder="Type here"
-          autoComplete="off"
-          html={message}
-          tagName="span"
-          onClick={::this.handleSaveCaretPosition}
-          onChange={::this.onMessageChange}
-          onKeyPress={::this.onMessageKeyPress}
-          onKeyUp={::this.onMessageKeyUp}
-          onPaste={::this.onMessagePaste}
-          contentEditable="plaintext-only"
-        />
-        <div className="extra-buttons">
-          <div
-            className="audio-button"
-            onClick={handleAudioRecorderToggle}
-            title="Send Voice Message"
-          >
-            <FontAwesome name="microphone" />
-          </div>
-          <div className="image-button" title="Add an image">
-            <input
-              id="image-button"
-              type="file"
-              onChange={::this.handleImageUploadSelect}
-            />
-            <label htmlFor="image-button">
-              <FontAwesome name="camera" />
-            </label>
-          </div>
-          <div className="file-button" title="Add a File">
-            <input
-              id="file-button"
-              type="file"
-              onChange={::this.handleFileUploadSelect}
-            />
-            <label htmlFor="file-button">
-              <FontAwesome name="paperclip" />
-            </label>
-          </div>
-          <MediaQuery query="(min-width: 768px)">
-            <div
-              className="emoji-button"
-              onClick={::this.handleEmojiPickerToggle}
-              title="Add Emoji"
-            >
-              <FontAwesome name="smile-o" />
+        <div className="chat-input">
+          <ContentEditable
+            className="textfield single-line"
+            id="chat-input"
+            placeholder="Type here"
+            autoComplete="off"
+            html={message}
+            tagName="span"
+            onClick={::this.handleSaveCaretPosition}
+            onChange={::this.onMessageChange}
+            onKeyPress={::this.onMessageKeyPress}
+            onKeyUp={::this.onMessageKeyUp}
+            onPaste={::this.onMessagePaste}
+            contentEditable="plaintext-only"
+          />
+          <div className="extras">
+            <div className="extra-buttons">
+              <div
+                className="audio-button"
+                onClick={handleAudioRecorderToggle}
+                title="Send Voice Message"
+              >
+                <FontAwesome name="microphone" />
+              </div>
+              <div className="image-button" title="Add an image">
+                <input
+                  id="image-button"
+                  type="file"
+                  onChange={::this.handleImageUploadSelect}
+                />
+                <label htmlFor="image-button">
+                  <FontAwesome name="camera" />
+                </label>
+              </div>
+              <div className="file-button" title="Add a File">
+                <input
+                  id="file-button"
+                  type="file"
+                  onChange={::this.handleFileUploadSelect}
+                />
+                <label htmlFor="file-button">
+                  <FontAwesome name="paperclip" />
+                </label>
+              </div>
+              <MediaQuery query="(min-width: 768px)">
+                <div
+                  className="emoji-button"
+                  onClick={::this.handleEmojiPickerToggle}
+                  title="Add Emoji"
+                >
+                  <FontAwesome name="smile-o" />
+                </div>
+              </MediaQuery>
             </div>
-          </MediaQuery>
+          </div>
         </div>
         <Button
           className="button button-secondary send-button"

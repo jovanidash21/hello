@@ -15,7 +15,7 @@ body.chat-page {
   }
   .header,
   .chat-box-wrapper,
-  .chat-input,
+  .chat-input-wrapper,
   .chat-audio-recorder {
     @media screen and (min-width: $screen-tablet-min) {
       margin-right: 250px;
@@ -45,7 +45,7 @@ body.chat-page {
   .header {
     flex-shrink: 0;
   }
-  .chat-input,
+  .chat-input-wrapper,
   .chat-audio-recorder {
     flex-shrink: 0;
   }

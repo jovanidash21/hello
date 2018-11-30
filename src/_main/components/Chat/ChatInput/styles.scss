@@ -1,8 +1,8 @@
-.chat-input {
+.chat-input-wrapper {
   align-items: center;
   background-color: $color-gallery;
   display: flex;
-  flex-shrink: 0;
+  height: 65px;
   position: relative;
   &.disabled {
     cursor: not-allowed;
@@ -15,57 +15,17 @@
   .send-button {
     z-index: 2;
   }
-  .textfield[contenteditable=true] {
-    appearance: textfield;
-    border: 0;
-    color: #000;
-    cursor: text;
-    flex: 19;
-    font-size: 15px;
-    line-height: 24px;
-    overflow-x: auto;
-    padding: 10px 27px;
-    user-select: text;
-    @media screen and (max-width: $screen-mobile-max) {
-      padding: 10px;
-    }
-    &:empty:before {
-      color: $color-dusty-gray;
-      content: attr(placeholder);
-      display: inline;
-    }
-    &:focus {
-      outline: none;
-    }
-    &.single-line {
-      overflow: hidden;
-      white-space: nowrap;
-      br {
-        display: none;
-      }
-      * {
-        display: inline;
-        white-space: nowrap;
-      }
-    }
-    .emojione {
-      $emoji-size: 24px;
-      height: $emoji-size;
-      vertical-align: bottom;
-      width: $emoji-size;
-    }
-  }
   .emoji-dialog {
     border-radius: 0;
     bottom: 65px;
     box-shadow: 0 5px 5px -5px #000;
     height: 300px !important;
+    left: 20px;
     position: absolute;
-    right: 0;
-    width: 100% !important;
-    @media screen and (min-width: $screen-mobile-min) {
-      width: 350px !important;
-      right: 20px;
+    width: 350px !important;
+    @media screen and (max-width: $screen-mobile-max) {
+      left: 0;
+      width: 100% !important;
     }
     .emoji-dialog-header {
       ul {
@@ -94,70 +54,116 @@
     width: 100%;
     z-index: 1;
   }
-  .extra-buttons {
+  .chat-input {
     display: flex;
-    flex: 0 0 50px;
-    margin-right: 10px;
-    .audio-button,
-    .image-button,
-    .file-button,
-    .emoji-button {
-      align-items: center;
-      backface-visibility: hidden;
+    flex-direction: column;
+    flex: 19;
+    margin-left: 10px;
+    .textfield[contenteditable=true] {
+      border: 0;
       color: #000;
-      cursor: pointer;
+      cursor: text;
+      font-size: 15px;
+      line-height: 24px;
+      overflow-x: auto;
+      padding: 3px 7px;
+      user-select: text;
+      &:empty:before {
+        color: $color-dusty-gray;
+        content: attr(placeholder);
+        display: inline;
+      }
+      &:focus {
+        outline: none;
+      }
+      &.single-line {
+        overflow: hidden;
+        white-space: nowrap;
+        br {
+          display: none;
+        }
+        * {
+          display: inline;
+          white-space: nowrap;
+        }
+      }
+      .emojione {
+        $emoji-size: 24px;
+        height: $emoji-size;
+        vertical-align: bottom;
+        width: $emoji-size;
+      }
+    }
+    .extras {
+      align-items: center;
       display: flex;
-      margin: 0;
-      padding: 7px;
-      text-align: center;
-      transition: all 0.3s ease;
-      @media screen and (max-width: $screen-mobile-max) {
-        padding: 5px;
-      }
-      &:active,
-      &:focus,
-      &:hover {
-        box-shadow: none;
-      }
-      &:hover {
-        color: $color-secondary;
-      }
+      justify-content: space-between;
     }
-    .audio-button,
-    .image-button,
-    .emoji-button {
-      &:hover {
-        transform: scale(1.25);
-      }
-    }
-    .image-button,
-    .file-button {
-      input {
-        height: 0.1px;
-        opacity: 0;
-      	overflow: hidden;
-      	position: absolute;
-        width: 0.1px;
-      	z-index: -1;
-      }
-      label {
+    .extra-buttons {
+      display: flex;
+      flex: 0 0 50px;
+      margin-right: 10px;
+      .audio-button,
+      .image-button,
+      .file-button,
+      .emoji-button {
+        align-items: center;
+        backface-visibility: hidden;
+        color: #000;
         cursor: pointer;
+        display: flex;
+        margin: 0;
+        padding: 4px 7px;
+        text-align: center;
+        transition: all 0.3s ease;
+        @media screen and (max-width: $screen-mobile-max) {
+          padding: 5px;
+        }
+        &:active,
+        &:focus,
+        &:hover {
+          box-shadow: none;
+        }
+        &:hover {
+          color: $color-secondary;
+        }
       }
-    }
-    .file-button,
-    .emoji-button {
-      font-size: 25px;
-    }
-    .audio-button {
-      font-size: 22px;
-    }
-    .image-button {
-      font-size: 20px;
-    }
-    .file-button {
-      transform: rotate(180deg) scaleX(-1);
-      &:hover {
-        transform: rotate(180deg) scaleX(-1) scale(1.25);
+      .audio-button,
+      .image-button,
+      .emoji-button {
+        &:hover {
+          transform: scale(1.25);
+        }
+      }
+      .image-button,
+      .file-button {
+        input {
+          height: 0.1px;
+          opacity: 0;
+        	overflow: hidden;
+        	position: absolute;
+          width: 0.1px;
+        	z-index: -1;
+        }
+        label {
+          cursor: pointer;
+        }
+      }
+      .file-button,
+      .emoji-button {
+        font-size: 17px;
+      }
+      .audio-button {
+        font-size: 16px;
+      }
+      .image-button {
+        font-size: 14px;
+      }
+      .file-button {
+        transform: rotate(180deg) scaleX(-1);
+        &:hover {
+          transform: rotate(180deg) scaleX(-1) scale(1.25);
+        }
       }
     }
   }
