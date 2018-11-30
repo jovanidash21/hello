@@ -166,6 +166,22 @@
         }
       }
     }
+    .extra-notes {
+      align-items: center;
+      color: $color-mine-shaft;
+      display: flex;
+      font-size: 11px;
+      user-select: none;
+      @media screen and (max-width: $screen-mobile-max) {
+        display: none;
+      }
+      .note {
+        margin-right: 3px;
+        code {
+          color: inherit;
+        }
+      }
+    }
   }
   .send-button {
     align-items: center;

@@ -343,6 +343,23 @@ class ChatInput extends Component {
                 </div>
               </MediaQuery>
             </div>
+            <div className="extra-notes">
+              <div className="note">
+                <b>*bold*</b>
+              </div>
+              <div className="note">
+                <i>_italic_</i>
+              </div>
+              <div className="note">
+                ~strike~
+              </div>
+              <div className="note">
+                <code>`code`</code>
+              </div>
+              <div className="note">
+                <code>```preformatted```</code>
+              </div>
+            </div>
           </div>
         </div>
         <Button
