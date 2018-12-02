@@ -7,6 +7,7 @@ import emojione from 'emojione';
 import EmojiPicker from 'emojione-picker';
 import FontAwesome from 'react-fontawesome';
 import Popup from 'react-popup';
+import { TextFormatPicker } from '../../../../components/TextFormatPicker';
 import uuidv4 from 'uuid/v4';
 import 'emojione-picker/css/picker.css';
 import './styles.scss';
@@ -19,6 +20,8 @@ class ChatInput extends Component {
       caretPosition: null,
       message: '',
       emojiPicker: false,
+      textFormatPicker: false,
+      fontStyle: 'normal',
       validMessage: false,
       maxLengthReached: false
     };
@@ -77,6 +80,7 @@ class ChatInput extends Component {
       this.setState({
         message: '',
         emojiPicker: false,
+        textFormatPicker: false,
         validMessage: false
       });
     }
@@ -121,7 +125,15 @@ class ChatInput extends Component {
   handleEmojiPickerToggle(event) {
     event.preventDefault();
 
-    this.setState({emojiPicker: !this.state.emojiPicker});
+    const {
+      emojiPicker,
+      textFormatPicker
+    } = this.state;
+
+    this.setState({
+      emojiPicker: !emojiPicker,
+      textFormatPicker: false
+    });
   }
   handleEmojiPickerSelect(emoji) {
     const {
@@ -195,6 +207,19 @@ class ChatInput extends Component {
       this.setState({caretPosition: document.selection.createRange()});
     }
   }
+  handleTextFormatPickerToggle(event) {
+    event.preventDefault();
+
+    const { textFormatPicker } = this.state;
+
+    this.setState({
+      emojiPicker: false,
+      textFormatPicker: !textFormatPicker
+    });
+  }
+  handleFontStyle(fontStyle) {
+    this.setState({fontStyle: fontStyle});
+  }
   handleMessageTextLength() {
     const messageTextLength = ::this.handleMessageText('length');
 
@@ -205,6 +230,7 @@ class ChatInput extends Component {
     }
   }
   handleMessageText(type) {
+    const { fontStyle } = this.state;
     var emojis = document.getElementById('chat-input').getElementsByClassName('emojione');
     var chatInputText = document.getElementById('chat-input').innerHTML;
 
@@ -220,7 +246,16 @@ class ChatInput extends Component {
     var messageText = element.textContent || element.innerText || "";
 
     if ( type === 'text' ) {
-      return messageText;
+      switch ( fontStyle ) {
+        case 'bold':
+          return '*' + messageText + '*';
+        case 'italic':
+          return '_' + messageText + '_';
+        case 'strike':
+          return '~' + messageText + '~';
+        default:
+          return messageText;
+      }
     } else if ( type === 'length' ) {
       return messageText.length;
     }
@@ -260,6 +295,7 @@ class ChatInput extends Component {
       this.setState({
         message: '',
         emojiPicker: false,
+        textFormatPicker: false,
         validMessage: false
       });
     }
@@ -272,6 +308,7 @@ class ChatInput extends Component {
     const {
       message,
       emojiPicker,
+      textFormatPicker,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -284,11 +321,22 @@ class ChatInput extends Component {
               emojiPicker &&
               <div>
                 <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
-                <div className="emoji-picker-overlay" onClick={::this.handleEmojiPickerToggle} />
+                <div className="picker-overlay" onClick={::this.handleEmojiPickerToggle} />
               </div>
             }
           </div>
         </MediaQuery>
+        <div>
+          {
+            textFormatPicker &&
+            <div>
+              <TextFormatPicker
+                handleFontStyle={::this.handleFontStyle}
+              />
+              <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
+            </div>
+          }
+        </div>
         <div className="chat-input">
           <ContentEditable
             className="textfield single-line"
@@ -342,6 +390,13 @@ class ChatInput extends Component {
                   <FontAwesome name="smile-o" />
                 </div>
               </MediaQuery>
+              <div
+                className="text-format-button"
+                onClick={::this.handleTextFormatPickerToggle}
+                title="Format Message"
+              >
+                <FontAwesome name="font" />
+              </div>
             </div>
             <div className="extra-notes">
               <div className="note">
