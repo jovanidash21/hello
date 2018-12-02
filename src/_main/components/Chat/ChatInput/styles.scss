@@ -21,11 +21,11 @@
     bottom: 65px;
     box-shadow: 0 5px 5px -5px #000;
     height: 300px !important;
-    left: 20px;
     position: absolute;
+    right: 20px;
     width: 350px !important;
     @media screen and (max-width: $screen-mobile-max) {
-      left: 0;
+      right: 0;
       width: 100% !important;
     }
     .emoji-dialog-header {
@@ -49,10 +49,10 @@
   }
   .text-format-picker {
     bottom: 65px;
-    left: 20px;
+    right: 50px;
     position: absolute;
     @media screen and (max-width: $screen-mobile-max) {
-      left: 0;
+      right: 0;
     }
   }
   .picker-overlay {
@@ -65,13 +65,16 @@
   }
   .chat-input {
     display: flex;
-    flex-direction: column;
     flex: 19;
     margin-left: 10px;
+    @media screen and (max-width: $screen-mobile-max) {
+      flex-direction: column;
+    }
     .textfield[contenteditable=true] {
       border: 0;
       color: #000;
       cursor: text;
+      flex: 1;
       font-size: 15px;
       line-height: 24px;
       overflow-x: auto;
@@ -175,22 +178,6 @@
         transform: rotate(180deg) scaleX(-1);
         &:hover {
           transform: rotate(180deg) scaleX(-1) scale(1.25);
-        }
-      }
-    }
-    .extra-notes {
-      align-items: center;
-      color: $color-mine-shaft;
-      display: flex;
-      font-size: 11px;
-      user-select: none;
-      @media screen and (max-width: $screen-mobile-max) {
-        display: none;
-      }
-      .note {
-        margin-right: 3px;
-        code {
-          color: inherit;
         }
       }
     }
