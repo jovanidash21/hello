@@ -12,24 +12,15 @@ class TextFormatPicker extends Component {
       fontStyle: 'normal'
     };
   }
-  handleFontStyle(event, fontStyleClick) {
+  handleFontStyle(event, fontStyle) {
     event.preventDefault();
 
     const { handleFontStyle } = this.props;
-    const { fontStyle } = this.state;
-    var fontStyleSelect = 'normal';
 
-    if ( fontStyleClick === fontStyle ) {
-      fontStyleSelect = 'normal';
-    } else {
-      fontStyleSelect = fontStyleClick;
-    }
-
-    this.setState({fontStyle: fontStyleSelect});
-    handleFontStyle(fontStyleSelect);
+    handleFontStyle(fontStyle);
   }
   render() {
-    const { fontStyle } = this.state;
+    const { fontStyle } = this.props;
 
     return (
       <div className="text-format-picker">
@@ -63,7 +54,12 @@ class TextFormatPicker extends Component {
 }
 
 TextFormatPicker.propTypes = {
+  fontStyle: PropTypes.string,
   handleFontStyle: PropTypes.func.isRequired
+}
+
+TextFormatPicker.defautProps = {
+  fontStyle: 'normal'
 }
 
 export default TextFormatPicker;

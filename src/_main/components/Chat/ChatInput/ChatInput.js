@@ -217,8 +217,17 @@ class ChatInput extends Component {
       textFormatPicker: !textFormatPicker
     });
   }
-  handleFontStyle(fontStyle) {
-    this.setState({fontStyle: fontStyle});
+  handleFontStyle(fontStyleClick) {
+    const { fontStyle } = this.state;
+    var fontStyleSelect = 'normal';
+
+    if ( fontStyleClick === fontStyle ) {
+      fontStyleSelect = 'normal';
+    } else {
+      fontStyleSelect = fontStyleClick;
+    }
+
+    this.setState({fontStyle: fontStyleSelect});
   }
   handleMessageTextLength() {
     const messageTextLength = ::this.handleMessageText('length');
@@ -309,6 +318,7 @@ class ChatInput extends Component {
       message,
       emojiPicker,
       textFormatPicker,
+      fontStyle,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -331,6 +341,7 @@ class ChatInput extends Component {
             textFormatPicker &&
             <div>
               <TextFormatPicker
+                fontStyle={fontStyle}
                 handleFontStyle={::this.handleFontStyle}
               />
               <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
