@@ -42,11 +42,12 @@ export function fetchNewMessages(chatRoomID, userID) {
  * @param {Object} user
  * @param {string} chatRoomID
  */
-export function sendTextMessage(newMessageID, text, user, chatRoomID) {
+export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor) {
   let data = {
     text: text,
     userID: user._id,
     chatRoomID: chatRoomID,
+    textColor: textColor
   };
 
   return dispatch => {
@@ -58,7 +59,8 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID) {
         text: text,
         user: user,
         chatRoom: chatRoomID,
-        messageType: 'text'
+        messageType: 'text',
+        textColor: textColor
       }
     });
     dispatch({

@@ -134,7 +134,8 @@ router.post('/text', (req, res, next) => {
       user: userID,
       chatRoom: chatRoomID,
       readBy: [userID],
-      messageType: 'text'
+      messageType: 'text',
+      textColor: req.body.textColor
     };
     var message = new Message(messageData);
 

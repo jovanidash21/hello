@@ -16,6 +16,10 @@ var messageSchema = new Schema (
       type: Schema.Types.ObjectId,
       ref: 'ChatRoom',
     },
+    textColor: {
+      type: String,
+      default: '#000000',
+    },
     messageType: {
       type: String,
       enum: [
