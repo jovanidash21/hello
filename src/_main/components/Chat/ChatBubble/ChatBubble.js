@@ -98,7 +98,7 @@ class ChatBubble extends Component {
         {
           ( message.messageType === 'text' ||
           ( message.messageType === 'file' && message.fileLink.length > 0 ) ) &&
-          <div className="chat-text">
+          <div className="chat-text" style={{ color: 'textColor' in message > 0 ? message.textColor : '#000000' }}>
             {
               message.messageType === 'file' &&
               <div className="file-icon">

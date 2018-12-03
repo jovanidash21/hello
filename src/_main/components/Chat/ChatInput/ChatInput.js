@@ -7,7 +7,7 @@ import emojione from 'emojione';
 import EmojiPicker from 'emojione-picker';
 import FontAwesome from 'react-fontawesome';
 import Popup from 'react-popup';
-import { TextFormatPicker } from '../../../../components/TextFormatPicker';
+import { TextFormatPicker } from './TextFormatPicker';
 import uuidv4 from 'uuid/v4';
 import 'emojione-picker/css/picker.css';
 import './styles.scss';
@@ -21,7 +21,8 @@ class ChatInput extends Component {
       message: '',
       emojiPicker: false,
       textFormatPicker: false,
-      fontStyle: 'normal',
+      textColor: '#000000',
+      textStyle: 'normal',
       validMessage: false,
       maxLengthReached: false
     };
@@ -217,17 +218,20 @@ class ChatInput extends Component {
       textFormatPicker: !textFormatPicker
     });
   }
-  handleFontStyle(fontStyleClick) {
-    const { fontStyle } = this.state;
-    var fontStyleSelect = 'normal';
+  handleTextColor(textColor) {
+    this.setState({textColor: textColor});
+  }
+  handleTextStyle(textStyleClick) {
+    const { textStyle } = this.state;
+    var textStyleSelect = 'normal';
 
-    if ( fontStyleClick === fontStyle ) {
-      fontStyleSelect = 'normal';
+    if ( textStyleClick === textStyle ) {
+      textStyleSelect = 'normal';
     } else {
-      fontStyleSelect = fontStyleClick;
+      textStyleSelect = textStyleClick;
     }
 
-    this.setState({fontStyle: fontStyleSelect});
+    this.setState({textStyle: textStyleSelect});
   }
   handleMessageTextLength() {
     const messageTextLength = ::this.handleMessageText('length');
@@ -239,7 +243,7 @@ class ChatInput extends Component {
     }
   }
   handleMessageText(type) {
-    const { fontStyle } = this.state;
+    const { textStyle } = this.state;
     var emojis = document.getElementById('chat-input').getElementsByClassName('emojione');
     var chatInputText = document.getElementById('chat-input').innerHTML;
 
@@ -255,7 +259,7 @@ class ChatInput extends Component {
     var messageText = element.textContent || element.innerText || "";
 
     if ( type === 'text' ) {
-      switch ( fontStyle ) {
+      switch ( textStyle ) {
         case 'bold':
           return '*' + messageText + '*';
         case 'italic':
@@ -275,11 +279,12 @@ class ChatInput extends Component {
       activeChatRoom,
       handleSendTextMessage
     } = this.props;
+    const { textColor } = this.state;
     const messageText = ::this.handleMessageText('text');
     const newMessageID = uuidv4();
 
     document.getElementById('chat-input').innerHTML = '';
-    handleSendTextMessage(newMessageID, messageText);
+    handleSendTextMessage(newMessageID, messageText, textColor);
   }
   handleSendTextMessageOnClick(event) {
     event.preventDefault();
@@ -290,6 +295,7 @@ class ChatInput extends Component {
       handleSendTextMessage
     } = this.props;
     const {
+      textColor,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -299,7 +305,7 @@ class ChatInput extends Component {
     if ( validMessage && !maxLengthReached ) {
       document.getElementById('chat-input').innerHTML = '';
       document.getElementById('chat-input').focus();
-      handleSendTextMessage(newMessageID, messageText);
+      handleSendTextMessage(newMessageID, messageText, textColor);
 
       this.setState({
         message: '',
@@ -318,7 +324,8 @@ class ChatInput extends Component {
       message,
       emojiPicker,
       textFormatPicker,
-      fontStyle,
+      textColor,
+      textStyle,
       validMessage,
       maxLengthReached
     } = this.state;
@@ -341,8 +348,10 @@ class ChatInput extends Component {
             textFormatPicker &&
             <div>
               <TextFormatPicker
-                fontStyle={fontStyle}
-                handleFontStyle={::this.handleFontStyle}
+                textColor={textColor}
+                textStyle={textStyle}
+                handleTextColor={::this.handleTextColor}
+                handleTextStyle={::this.handleTextStyle}
               />
               <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
             </div>
