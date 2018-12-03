@@ -110,7 +110,7 @@ class Chat extends Component {
 
     this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
   }
-  handleSendTextMessage(newMessageID, text) {
+  handleSendTextMessage(newMessageID, text, textColor) {
     const {
       user,
       chatRoom,
@@ -134,7 +134,7 @@ class Chat extends Component {
     if ( !validMessage ) {
       Popup.alert('Please take a break and send message slowly!');
     } else {
-      sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id);
+      sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id, textColor);
     }
   }
   handleSendAudioMessage(newMessageID, text, audio) {
