@@ -130,8 +130,7 @@ class ChatBox extends Component {
       chatRoom,
       message,
       socketIsTyping,
-      socketIsNotTyping,
-      isAudioRecorderOpen
+      socketIsNotTyping
     } = this.props;
     const {
       isModalOpen,
@@ -139,13 +138,11 @@ class ChatBox extends Component {
     } = this.state;
 
     return (
-      <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
-        <div
-          className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
-          ref={(element) => { this.chatBox = element; }}
-        >
-          {::this.handleChatBoxRender()}
-        </div>
+      <div
+        className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
+        ref={(element) => { this.chatBox = element; }}
+      >
+        {::this.handleChatBoxRender()}
         {
           isModalOpen &&
           <DeleteMessageModal
@@ -165,14 +162,6 @@ const mapStateToProps = (state) => {
     chatRoom: state.chatRoom,
     message: state.message
   }
-}
-
-ChatBox.propTypes = {
-  isAudioRecorderOpen: PropTypes.bool
-}
-
-ChatBox.defaultProps = {
-  isAudioRecorderOpen: false
 }
 
 export default connect(

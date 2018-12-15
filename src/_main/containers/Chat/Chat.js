@@ -229,7 +229,12 @@ class Chat extends Component {
                   handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
                 />
               </Header>
-              <ChatBox isAudioRecorderOpen={isAudioRecorderOpen} />
+              <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+                <ChatBox />
+                <div className="chat-popup-window-wrapper">
+
+                </div>
+              </div>
               {
                 !user.active.mute.data && (
                   !isAudioRecorderOpen
