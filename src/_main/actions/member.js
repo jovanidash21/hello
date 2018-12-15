@@ -7,7 +7,6 @@ import {
   SOCKET_UPDATE_MEMBER_ROLE,
   MUTE_MEMBER,
   SOCKET_MUTE_MEMBER,
-  BLOCK_MEMBER,
   SOCKET_BLOCK_MEMBER
 } from '../constants/member';
 import { getBaseURL } from '../../utils/url';
