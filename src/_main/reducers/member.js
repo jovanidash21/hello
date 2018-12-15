@@ -204,16 +204,11 @@ const member = (state=initialState, action) => {
       var role = action.role;
       var members = [...state.all];
 
-      for (var i = 0; i < members.length; i++) {
-        var member = members[i];
+      var memberIndex = members.findIndex(singleMember => singleMember._id === memberID);
 
-        if ( member._id === memberID ) {
-          member.role = role;
-          member.priority = memberPriority(member);
-          break;
-        } else {
-          continue
-        }
+      if ( memberIndex > -1 ) {
+        members[memberIndex].role = role;
+        members[memberIndex].priority = memberPriority(members[memberIndex]);
       }
 
       return {
@@ -225,15 +220,10 @@ const member = (state=initialState, action) => {
       var memberID = action.memberID;
       var members = [...state.all];
 
-      for (var i = 0; i < members.length; i++) {
-        var member = members[i];
+      var memberIndex = members.findIndex(singleMember => singleMember._id === memberID);
 
-        if ( member._id === memberID ) {
-          member.mute.data = true;
-          break;
-        } else {
-          continue
-        }
+      if ( memberIndex > -1 ) {
+        members[memberIndex].mute.data = true;
       }
 
       return {
@@ -244,15 +234,10 @@ const member = (state=initialState, action) => {
       var memberID = action.memberID;
       var members = [...state.all];
 
-      for (var i = 0; i < members.length; i++) {
-        var member = members[i];
+      var memberIndex = members.findIndex(singleMember => singleMember._id === memberID && singleMember.mute.data );
 
-        if ( member._id === memberID && member.mute.data ) {
-          member.mute.data = false;
-          break;
-        } else {
-          continue
-        }
+      if ( memberIndex > -1 ) {
+        members[memberIndex].mute.data = false;
       }
 
       return {
@@ -270,17 +255,12 @@ const member = (state=initialState, action) => {
           member._id !== userID
         );
 
-        for ( var i = 0; i < user.chatRooms.length; i++ ) {
-          var chatRoom = user.chatRooms[i];
+        var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => singleChatRoom.data === activeChatRoom.data._id && !singleChatRoom.kick.data);
 
-          if ( chatRoom.data === activeChatRoom.data._id && !chatRoom.kick.data ) {
-            user.isOnline = true;
-            user.priority = memberPriority(user);
-            members.push(user);
-            break;
-          } else {
-            continue
-          }
+        if ( chatRoomIndex > -1 ) {
+          user.isOnline = true;
+          user.priority = memberPriority(user);
+          members.push(user);
         }
       }
 
