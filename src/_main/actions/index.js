@@ -24,6 +24,10 @@ import {
   trashChatRoom
 } from './chat-room';
 import {
+  openPopUpChatRoom,
+  closePopUpChatRoom
+} from './popup-chat-room';
+import {
   fetchNewMessages,
   sendTextMessage,
   sendFileMessage,
@@ -58,6 +62,8 @@ const actions = (dispatch) => {
     clearChatRoomUnreadMessages,
     trashAllChatRooms,
     trashChatRoom,
+    openPopUpChatRoom,
+    closePopUpChatRoom,
     fetchNewMessages,
     sendTextMessage,
     sendFileMessage,

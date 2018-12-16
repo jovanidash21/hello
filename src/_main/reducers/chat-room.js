@@ -10,6 +10,9 @@ import {
 } from '../constants/chat-room';
 import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
 import {
+  FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES
+} from '../constants/popup-chat-room';
+import {
   SOCKET_BROADCAST_CONNECTED_MEMBER,
   SOCKET_BROADCAST_DISCONNECTED_MEMBER
 } from '../constants/member';
@@ -440,6 +443,20 @@ const chatRoom = (state=initialState, action) => {
       if ( chatRoomIndex > -1 ) {
         chatRooms[chatRoomIndex].unReadMessages = 0;
         activeChatRoom.unReadMessages = 0;
+      }
+
+      return {
+        ...state,
+        all: [...chatRooms]
+      }
+    case `${FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES}_SUCCESS`:
+      var chatRoomID = action.meta;
+      var chatRooms = [...state.all];
+
+      var chatRoomIndex = chatRooms.findIndex(singleChatRoom => singleChatRoom.data._id === chatRoomID);
+
+      if ( chatRoomIndex > -1 ) {
+        chatRooms[chatRoomIndex].unReadMessages = 0;
       }
 
       return {
