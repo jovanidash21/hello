@@ -271,7 +271,10 @@ export function deleteMessage(messageID, chatRoomID) {
     return dispatch({
       type: DELETE_MESSAGE,
       payload: axios.post(baseURL + '/api/message/delete', data),
-      meta: messageID
+      meta: {
+        messageID: messageID,
+        chatRoomID: chatRoomID
+      }
     })
     .then((response) => {
       dispatch({

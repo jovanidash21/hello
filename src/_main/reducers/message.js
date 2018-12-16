@@ -16,7 +16,6 @@ const commonStateFlags = {
 
 const initialState = {
   fetchNew: {...commonStateFlags},
-  send: {...commonStateFlags},
   delete: {...commonStateFlags},
   activeChatRoom: {
     data: {}
@@ -31,14 +30,6 @@ const message = (state=initialState, action) => {
         ...state,
         fetchNew: {
           ...state.fetchNew,
-          loading: true
-        }
-      };
-    case `${SEND_MESSAGE}_LOADING`:
-      return {
-        ...state,
-        send: {
-          ...state.send,
           loading: true
         }
       };
@@ -64,21 +55,17 @@ const message = (state=initialState, action) => {
       };
     case `${SEND_MESSAGE}_SUCCESS`:
       var messages = [...state.all];
+      var activeChatRoom = {...state.activeChatRoom};
       var messageID = action.meta;
       var newMessage = action.payload.data.messageData;
 
-      messages = messages.filter((message) => message._id !== messageID);
-      newMessage.isSending = false;
+      if ( newMessage.chatRoom === activeChatRoom.data._id ) {
+        messages = messages.filter((message) => message._id !== messageID);
+        newMessage.isSending = false;
+      }
 
       return {
         ...state,
-        send: {
-          ...state.send,
-          loading: false,
-          success: true,
-          error: false,
-          message: action.payload.data.message
-        },
         all: [
           ...messages,
           newMessage
@@ -86,9 +73,13 @@ const message = (state=initialState, action) => {
       };
     case `${DELETE_MESSAGE}_SUCCESS`:
       var messages = [...state.all];
-      var messageID = action.meta;
+      var activeChatRoom = {...state.activeChatRoom};
+      var messageID = action.meta.messageID;
+      var chatRoomID = action.meta.chatRoomID;
 
-      messages = messages.filter((message) => message._id !== messageID);
+      if ( chatRoomID === activeChatRoom.data._id ) {
+        messages = messages.filter((message) => message._id !== messageID);
+      }
 
       return {
         ...state,
@@ -106,17 +97,6 @@ const message = (state=initialState, action) => {
         ...state,
         fetchNew: {
           ...state.fetchNew,
-          loading: false,
-          success: false,
-          error: true,
-          message: action.payload.response.data.message
-        }
-      };
-    case `${SEND_MESSAGE}_ERROR`:
-      return {
-        ...state,
-        send: {
-          ...state.send,
           loading: false,
           success: false,
           error: true,
@@ -145,12 +125,12 @@ const message = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var messages = [...state.all];
 
-      if (message.chatRoom === activeChatRoom.data._id) {
+      if ( message.chatRoom === activeChatRoom.data._id ) {
         messages.push(message);
-      }
 
-      if (messages.length > 20) {
-        messages = messages.slice(1);
+        if ( messages.length > 20 ) {
+          messages = messages.slice(1);
+        }
       }
 
       return {
