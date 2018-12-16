@@ -15,6 +15,7 @@ class Header extends Component {
       user,
       chatRoom,
       changeChatRoom,
+      handleOpenPopUpChatRoom,
       children
     } = this.props;
     const newMessagesChatRooms = chatRoom.all.filter((singleChatRoom) =>
@@ -40,6 +41,7 @@ class Header extends Component {
           user={user.active}
           chatRooms={newMessagesChatRooms}
           activeChatRoom={chatRoom.active}
+          handleOpenPopUpChatRoom={handleOpenPopUpChatRoom}
           handleChangeChatRoom={changeChatRoom}
           handleClearChatRoomUnreadMessages={::this.handleClearChatRoomUnreadMessages}
         />
@@ -77,6 +79,10 @@ const mapStateToProps = (state) => {
     user: state.user,
     chatRoom: state.chatRoom
   }
+}
+
+Header.propTypes = {
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired
 }
 
 export default connect(

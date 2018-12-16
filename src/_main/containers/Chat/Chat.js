@@ -13,6 +13,7 @@ import {
 import {
   ChatRoomsMenu,
   ChatBox,
+  ChatPopUpWindow,
   ActiveChatRoom,
   ChatRoomsList,
   MembersList
@@ -31,6 +32,7 @@ class Chat extends Component {
     this.state = {
       isLeftSideDrawerOpen: false,
       isRightSideDrawerOpen: false,
+      activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false
     };
   }
@@ -104,6 +106,34 @@ class Chat extends Component {
   }
   handleRightSideDrawerToggleState(state) {
     this.setState({isRightSideDrawerOpen: state.isOpen});
+  }
+  handleOpenPopUpChatRoom(selectedChatRoom) {
+    const {
+      user,
+      chatRoom,
+      popUpChatRoom,
+      openPopUpChatRoom,
+      closePopUpChatRoom
+    } = this.props;
+    const activeUser = user.active;
+    const activeChatRoom = chatRoom.active;
+    const allPopUpChatRooms = popUpChatRoom.all;
+
+    var popUpChatRoomIndex = allPopUpChatRooms.findIndex(singleChatRoom => singleChatRoom.data._id === selectedChatRoom.data._id);
+
+    if ( popUpChatRoomIndex === -1  ) {
+      if ( allPopUpChatRooms.length >= 5 ) {
+        closePopUpChatRoom(allPopUpChatRooms[0].data._id);
+      }
+
+      openPopUpChatRoom(selectedChatRoom, activeUser._id, activeChatRoom.data._id);
+      this.setState({activeChatPopUpWindow: allPopUpChatRooms.length});
+    } else {
+      this.setState({activeChatPopUpWindow: popUpChatRoomIndex});
+    }
+  }
+  handleActiveChatPopUpWindow(popUpIndex) {
+    this.setState({activeChatPopUpWindow: popUpIndex});
   }
   handleAudioRecorderToggle(event) {
     event.preventDefault();
@@ -196,10 +226,12 @@ class Chat extends Component {
       user,
       typer,
       chatRoom,
+      popUpChatRoom,
       message
     } = this.props;
     const {
       isLeftSideDrawerOpen,
+      activeChatPopUpWindow,
       isAudioRecorderOpen
     } = this.state;
     const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
@@ -223,17 +255,30 @@ class Chat extends Component {
                 <ChatRoomsList handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
               </LeftSideDrawer>
               {::this.handleRightSideDrawerRender()}
-              <Header>
+              <Header handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}>
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
                   handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
                 />
               </Header>
               <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
-                <ChatBox />
-                <div className="chat-popup-window-wrapper">
-
-                </div>
+                <ChatBox message={message} />
+                {
+                  popUpChatRoom.all.length > 0 &&
+                  <div className="chat-popup-window-wrapper">
+                    {
+                      popUpChatRoom.all.map((singlePopUpChatRoom, i) =>
+                        <ChatPopUpWindow
+                          key={i}
+                          index={i}
+                          popUpChatRoom={singlePopUpChatRoom}
+                          handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
+                          active={activeChatPopUpWindow === i}
+                        />
+                      )
+                    }
+                  </div>
+                }
               </div>
               {
                 !user.active.mute.data && (
@@ -269,6 +314,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user,
     chatRoom: state.chatRoom,
+    popUpChatRoom: state.popUpChatRoom,
     message: state.message
   }
 }

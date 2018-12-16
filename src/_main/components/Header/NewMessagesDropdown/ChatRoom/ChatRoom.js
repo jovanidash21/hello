@@ -10,17 +10,15 @@ class NewMessagesDropdownChatRoom extends Component {
   constructor(props) {
     super(props);
   }
-  handleChangeChatRoom(event) {
+  handleOpenPopUpChatRoom(event) {
     event.preventDefault();
 
     const {
-      user,
       chatRoom,
-      activeChatRoom,
-      handleChangeChatRoom
+      handleOpenPopUpChatRoom
     } = this.props;
 
-    handleChangeChatRoom(chatRoom, user._id, activeChatRoom.data._id);
+    handleOpenPopUpChatRoom(chatRoom);
   }
   handleClearChatRoomUnreadMessages(event) {
     event.preventDefault();
@@ -45,7 +43,7 @@ class NewMessagesDropdownChatRoom extends Component {
     return (
       <div
         className="new-messages-dropdown-chat-room"
-        onClick={::this.handleChangeChatRoom}
+        onClick={::this.handleOpenPopUpChatRoom}
         title={chatRoom.data.name}
       >
         <Avatar
@@ -76,6 +74,7 @@ NewMessagesDropdownChatRoom.propTypes = {
   user: PropTypes.object.isRequired,
   chatRoom: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired,
   handleChangeChatRoom: PropTypes.func.isRequired,
   handleClearChatRoomUnreadMessages: PropTypes.func.isRequired
 }

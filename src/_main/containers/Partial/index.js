@@ -1,5 +1,6 @@
 export { ActiveChatRoom } from './ActiveChatRoom';
 export { ChatBox } from './ChatBox';
+export { ChatPopUpWindow } from './ChatPopUpWindow';
 export { ChatRoomsList } from './ChatRoomsList';
 export { ChatRoomsMenu } from './ChatRoomsMenu';
 export { CreateChatRoomModal } from './CreateChatRoomModal';

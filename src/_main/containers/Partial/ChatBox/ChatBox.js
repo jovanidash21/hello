@@ -159,9 +159,12 @@ class ChatBox extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom,
-    message: state.message
+    chatRoom: state.chatRoom
   }
+}
+
+ChatBox.propTypes = {
+  message: PropTypes.object.isRequired
 }
 
 export default connect(
