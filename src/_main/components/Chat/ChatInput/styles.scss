@@ -9,6 +9,34 @@
     opacity: 0.6;
     pointer-events: none;
   }
+  &.small {
+    height: 60px;
+    .chat-input {
+      flex-direction: column;
+      .textfield[contenteditable=true] {
+        font-size: 14px;
+        line-height: 20px;
+        .emojione {
+          $emoji-size: 20px;
+          height: $emoji-size;
+          width: $emoji-size;
+        }
+      }
+      .extra-buttons {
+        .extra-button {
+          padding: 4px;
+        }
+      }
+    }
+    .emoji-dialog,
+    .text-format-picker {
+      bottom: 60px;
+    }
+    .send-button {
+      flex: 0 0 50px;
+      font-size: 9px;
+    }
+  }
   .textfield[contenteditable=true],
   .extra-buttons,
   .emoji-dialog,
@@ -115,11 +143,7 @@
       display: flex;
       flex: 0 0 50px;
       margin-right: 10px;
-      .audio-button,
-      .image-button,
-      .file-button,
-      .emoji-button,
-      .text-format-button {
+      .extra-button {
         align-items: center;
         backface-visibility: hidden;
         color: #000;
@@ -187,7 +211,7 @@
     border-radius: 0;
     display: flex;
     flex: 0 0 90px;
-    height: 65px;
+    height: 100%;
     justify-content: center;
     margin: 0;
     padding: 0;

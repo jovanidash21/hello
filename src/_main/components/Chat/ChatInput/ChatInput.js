@@ -27,6 +27,16 @@ class ChatInput extends Component {
       maxLengthReached: false
     };
   }
+  handleDivID(divID) {
+    const { id } = this.props;
+
+
+    if ( id.length > 0 ) {
+      return divID + '-' + id;
+    } else {
+      return divID;
+    }
+  }
   onMessageChange(event, value) {
     event.preventDefault();
 
@@ -54,7 +64,7 @@ class ChatInput extends Component {
       validMessage,
       maxLengthReached
     } = this.state;
-    const chatInputText = document.getElementById('chat-input').innerHTML;
+    const chatInputText = document.getElementById(::this.handleDivID('chat-input')).innerHTML;
 
     if (
       message.trim().length > 0 &&
@@ -160,7 +170,7 @@ class ChatInput extends Component {
       }
     }
 
-    document.getElementById('chat-input').focus();
+    document.getElementById(::this.handleDivID('chat-input')).focus();
 
     if ( maxLengthReached || messageTextLength >= 399 ) {
       Popup.alert('Sorry, maximum of 400 characters only!');
@@ -244,8 +254,8 @@ class ChatInput extends Component {
   }
   handleMessageText(type) {
     const { textStyle } = this.state;
-    var emojis = document.getElementById('chat-input').getElementsByClassName('emojione');
-    var chatInputText = document.getElementById('chat-input').innerHTML;
+    var emojis = document.getElementById(::this.handleDivID('chat-input')).getElementsByClassName('emojione');
+    var chatInputText = document.getElementById(::this.handleDivID('chat-input')).innerHTML;
 
     var nth = 0;
     chatInputText = chatInputText.replace(/<img class="emojione" alt="(.*?)" title="(.*?)" src="(.*?)"[^>]*>/g, (match, i, original) => {
@@ -283,7 +293,7 @@ class ChatInput extends Component {
     const messageText = ::this.handleMessageText('text');
     const newMessageID = uuidv4();
 
-    document.getElementById('chat-input').innerHTML = '';
+    document.getElementById(::this.handleDivID('chat-input')).innerHTML = '';
     handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
   }
   handleSendTextMessageOnClick(event) {
@@ -303,8 +313,8 @@ class ChatInput extends Component {
     const newMessageID = uuidv4();
 
     if ( validMessage && !maxLengthReached ) {
-      document.getElementById('chat-input').innerHTML = '';
-      document.getElementById('chat-input').focus();
+      document.getElementById(::this.handleDivID('chat-input')).innerHTML = '';
+      document.getElementById(::this.handleDivID('chat-input')).focus();
       handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
 
       this.setState({
@@ -318,7 +328,8 @@ class ChatInput extends Component {
   render() {
     const {
       handleAudioRecorderToggle,
-      isDisabled
+      disabled,
+      small
     } = this.props;
     const {
       message,
@@ -331,7 +342,13 @@ class ChatInput extends Component {
     } = this.state;
 
     return (
-      <div className={"chat-input-wrapper " + (isDisabled ? 'disabled' : '')}>
+      <div
+        className={
+          "chat-input-wrapper " +
+          (disabled ? 'disabled ' : '') +
+          (small ? 'small' : '')
+        }
+      >
         <MediaQuery query="(min-width: 768px)">
           <div>
             {
@@ -360,7 +377,7 @@ class ChatInput extends Component {
         <div className="chat-input">
           <ContentEditable
             className="textfield single-line"
-            id="chat-input"
+            id={::this.handleDivID('chat-input')}
             placeholder="Type here"
             autoComplete="off"
             html={message}
@@ -375,35 +392,35 @@ class ChatInput extends Component {
           <div className="extras">
             <div className="extra-buttons">
               <div
-                className="audio-button"
+                className="extra-button audio-button"
                 onClick={handleAudioRecorderToggle}
                 title="Send Voice Message"
               >
                 <FontAwesome name="microphone" />
               </div>
-              <div className="image-button" title="Add an image">
+              <div className="extra-button image-button" title="Add an image">
                 <input
-                  id="image-button"
+                  id={::this.handleDivID('image-button')}
                   type="file"
                   onChange={::this.handleImageUploadSelect}
                 />
-                <label htmlFor="image-button">
+                <label htmlFor={::this.handleDivID('image-button')}>
                   <FontAwesome name="camera" />
                 </label>
               </div>
-              <div className="file-button" title="Add a File">
+              <div className="extra-button file-button" title="Add a File">
                 <input
-                  id="file-button"
+                  id={::this.handleDivID('file-button')}
                   type="file"
                   onChange={::this.handleFileUploadSelect}
                 />
-                <label htmlFor="file-button">
+                <label htmlFor={::this.handleDivID('file-button')}>
                   <FontAwesome name="paperclip" />
                 </label>
               </div>
               <MediaQuery query="(min-width: 768px)">
                 <div
-                  className="emoji-button"
+                  className="extra-button emoji-button"
                   onClick={::this.handleEmojiPickerToggle}
                   title="Add Emoji"
                 >
@@ -411,7 +428,7 @@ class ChatInput extends Component {
                 </div>
               </MediaQuery>
               <div
-                className="text-format-button"
+                className="extra-button text-format-button"
                 onClick={::this.handleTextFormatPickerToggle}
                 title="Format Message"
               >
@@ -436,13 +453,21 @@ class ChatInput extends Component {
 }
 
 ChatInput.propTypes = {
+  id: PropTypes.string,
   user: PropTypes.object.isRequired,
   chatRoom: PropTypes.object.isRequired,
   handleSendTextMessage: PropTypes.func.isRequired,
   handleAudioRecorderToggle: PropTypes.func.isRequired,
   handleSendFileMessage: PropTypes.func.isRequired,
   handleSendImageMessage: PropTypes.func.isRequired,
-  isDisabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  small: PropTypes.bool
+}
+
+ChatInput.defaultProps = {
+  id: '',
+  disabled: false,
+  small: false
 }
 
 export default ChatInput;

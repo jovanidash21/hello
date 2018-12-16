@@ -170,7 +170,6 @@ class Chat extends Component {
   handleSendAudioMessage(newMessageID, text, audio, chatRoomID) {
     const {
       user,
-      chatRoom,
       sendAudioMessage
     } = this.props;
     const audioLength = new Date(audio.stopTime) - new Date(audio.startTime);
@@ -178,7 +177,7 @@ class Chat extends Component {
     if ( audioLength > ( 5 * 60 * 1000 ) ) {
       Popup.alert('Maximum of 5 minutes audio only');
     } else {
-      sendAudioMessage(newMessageID, text, audio.blob, user.active, chatRoom.active.data._id);
+      sendAudioMessage(newMessageID, text, audio.blob, user.active, chatRoomID);
     }
   }
   handleSendFileMessage(newMessageID, text, file, chatRoomID) {
@@ -299,7 +298,7 @@ class Chat extends Component {
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendFileMessage={::this.handleSendFileMessage}
                       handleSendImageMessage={::this.handleSendImageMessage}
-                      isDisabled={isChatInputDisabled}
+                      disabled={isChatInputDisabled}
                     />
                     :
                     <ChatAudioRecorder

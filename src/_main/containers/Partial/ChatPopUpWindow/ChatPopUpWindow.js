@@ -53,11 +53,14 @@ class ChatPopUpWindow extends Component {
     const {
       user,
       popUpChatRoom,
+      index,
       handleSendTextMessage,
       handleSendFileMessage,
       handleSendImageMessage,
+      handleSendAudioMessage,
       active
     } = this.props;
+    const { isAudioRecorderOpen } = this.state;
     const isChatInputDisabled = popUpChatRoom.message.fetchNew.loading;
 
     return (
@@ -91,7 +94,30 @@ class ChatPopUpWindow extends Component {
             />
           </div>
           <div className="popup-footer">
-            
+            {
+              !user.active.mute.data && (
+                !isAudioRecorderOpen
+                  ?
+                  <ChatInput
+                    id={"popup-" + index}
+                    user={user.active}
+                    chatRoom={popUpChatRoom}
+                    handleSendTextMessage={handleSendTextMessage}
+                    handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                    handleSendFileMessage={handleSendFileMessage}
+                    handleSendImageMessage={handleSendImageMessage}
+                    disabled={isChatInputDisabled}
+                    small
+                  />
+                  :
+                  <ChatAudioRecorder
+                    chatRoom={popUpChatRoom}
+                    handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                    handleSendAudioMessage={handleSendAudioMessage}
+                    small
+                  />
+              )
+            }
           </div>
         </div>
       </Draggable>
