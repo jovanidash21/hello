@@ -25,15 +25,19 @@ class ChatBubble extends Component {
     }
   }
   handleMessageText() {
-    const { message } = this.props;
+    const {
+      message,
+      small
+    } = this.props;
     var messageText = message.text;
 
     switch (message.messageType) {
       case 'text':
+        const emojiSize = !small ? 25 : 20;
         const options = {
           style: {
-            height: 25,
-            width: 25
+            height: emojiSize,
+            width: emojiSize
           }
         };
 
@@ -86,15 +90,19 @@ class ChatBubble extends Component {
     const {
       index,
       message,
-      canDeleteMessage
+      canDeleteMessage,
+      small
     } = this.props;
     const { isLightboxOpen } = this.state;
 
     return (
-      <div className="chat-bubble">
-        <div className="chat-user-name">
-          {message.user.name}
-        </div>
+      <div className={"chat-bubble " + (small ? 'small' : '')}>
+        {
+          !small &&
+          <div className="chat-user-name">
+            {message.user.name}
+          </div>
+        }
         {
           ( message.messageType === 'text' ||
           ( message.messageType === 'file' && message.fileLink.length > 0 ) ) &&
@@ -206,12 +214,13 @@ ChatBubble.propTypes = {
   message: PropTypes.object.isRequired,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
   canDeleteMessage: PropTypes.bool,
-  handleOpenModal: PropTypes.func
+  small: PropTypes.bool
 }
 
 ChatBubble.defaultProps = {
   canDeleteMessage: false,
-  handleOpenModal: () => {}
+  handleOpenModal: () => {},
+  small: false
 }
 
 export default ChatBubble;

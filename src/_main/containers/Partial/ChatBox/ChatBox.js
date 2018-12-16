@@ -28,7 +28,7 @@ class ChatBox extends Component {
     };
   }
   componentDidMount() {
-    this.chatBox.addEventListener('scroll', ::this.handleChatBoxScroll, true);
+    document.getElementById(::this.handleDivID()).addEventListener('scroll', ::this.handleChatBoxScroll, true);
   }
   componentDidUpdate(prevProps) {
     if (
@@ -38,12 +38,22 @@ class ChatBox extends Component {
       ::this.handleScrollToBottom();
     }
   }
+  handleDivID() {
+    const { id } = this.props;
+    const chatBoxID = 'chat-box';
+
+    if ( id.length > 0 ) {
+      return chatBoxID + '-' + id;
+    } else {
+      return chatBoxID;
+    }
+  }
   handleScrollToBottom() {
-    console.log(this.chatBox.scrollHeight);
-    this.chatBox.scrollTop = this.chatBox.scrollHeight;
+    console.log(document.getElementById(::this.handleDivID()).scrollHeight);
+    document.getElementById(::this.handleDivID()).scrollTop = document.getElementById(::this.handleDivID()).scrollHeight;
   }
   handleChatBoxScroll() {
-    if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
+    if ( document.getElementById(::this.handleDivID()).scrollTop === (document.getElementById(::this.handleDivID()).scrollHeight - document.getElementById(::this.handleDivID()).offsetHeight)) {
       this.setState({isChatBoxScrollToBottom: true});
     } else {
       this.setState({isChatBoxScrollToBottom: false});
@@ -52,7 +62,8 @@ class ChatBox extends Component {
   handleChatBoxRender() {
     const {
       user,
-      message
+      message,
+      small
     } = this.props;
     const activeUser = user.active;
     const canDeleteMessageUserRoles = ['owner', 'admin', 'moderator'];
@@ -72,6 +83,7 @@ class ChatBox extends Component {
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
                   handleOpenModal={::this.handleOpenModal}
+                  small={small}
                 />
               )
               :
@@ -91,7 +103,7 @@ class ChatBox extends Component {
     const { audioIndex } = this.state;
 
     if ( audioIndex > -1 && audioIndex !== audioPlayingIndex ) {
-      var previousAudio = this.chatBox.getElementsByClassName('react-plyr-' + audioIndex)[0];
+      var previousAudio = document.getElementById(::this.handleDivID()).getElementsByClassName('react-plyr-' + audioIndex)[0];
 
       if (
         previousAudio.currentTime > 0  &&
@@ -132,8 +144,8 @@ class ChatBox extends Component {
 
     return (
       <div
+        id={::this.handleDivID()}
         className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
-        ref={(element) => { this.chatBox = element; }}
       >
         {::this.handleChatBoxRender()}
         {
@@ -157,8 +169,15 @@ const mapStateToProps = (state) => {
 }
 
 ChatBox.propTypes = {
+  id: PropTypes.string,
   chatRoom: PropTypes.object.isRequired,
-  message: PropTypes.object.isRequired
+  message: PropTypes.object.isRequired,
+  small: PropTypes.bool
+}
+
+ChatBox.defaultProps = {
+  id: '',
+  small: false
 }
 
 export default connect(

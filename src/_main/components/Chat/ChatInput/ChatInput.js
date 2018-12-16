@@ -30,7 +30,6 @@ class ChatInput extends Component {
   handleDivID(divID) {
     const { id } = this.props;
 
-
     if ( id.length > 0 ) {
       return divID + '-' + id;
     } else {

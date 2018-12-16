@@ -15,6 +15,11 @@
     position: relative;
     width: 100%;
     word-wrap: break-word;
+    &.small {
+      .chat-text {
+        font-size: 14px;
+      }
+    }
     .chat-user-name {
       color: #000;
       float: left;

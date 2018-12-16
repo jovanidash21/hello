@@ -89,8 +89,10 @@ class ChatPopUpWindow extends Component {
           </div>
           <div className="popup-body">
             <ChatBox
+              id={"popup-" + index}
               chatRoom={popUpChatRoom}
               message={popUpChatRoom.message}
+              small
             />
           </div>
           <div className="popup-footer">
