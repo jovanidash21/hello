@@ -33,13 +33,13 @@ class ChatBox extends Component {
   componentDidUpdate(prevProps) {
     if (
       ( prevProps.message.fetchNew.loading && !this.props.message.fetchNew.loading ) ||
-      ( !prevProps.message.send.loading && this.props.message.send.loading ) ||
       this.state.isChatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
     }
   }
   handleScrollToBottom() {
+    console.log(this.chatBox.scrollHeight);
     this.chatBox.scrollTop = this.chatBox.scrollHeight;
   }
   handleChatBoxScroll() {
@@ -52,20 +52,13 @@ class ChatBox extends Component {
   handleChatBoxRender() {
     const {
       user,
-      chatRoom,
       message
     } = this.props;
     const activeUser = user.active;
     const canDeleteMessageUserRoles = ['owner', 'admin', 'moderator'];
     const canDeleteMessage = canDeleteMessageUserRoles.indexOf(activeUser.role) > -1;
 
-    if (chatRoom.all.length === 0) {
-      return (
-        <div className="user-no-chat-rooms">
-          Hi! Welcome, create a Chat Room now.
-        </div>
-      )
-    } else if ( !message.fetchNew.loading && message.fetchNew.success ) {
+    if ( !message.fetchNew.loading && message.fetchNew.success ) {
       return (
         <Container fluid>
           {
@@ -98,7 +91,7 @@ class ChatBox extends Component {
     const { audioIndex } = this.state;
 
     if ( audioIndex > -1 && audioIndex !== audioPlayingIndex ) {
-      var previousAudio = document.getElementsByClassName('react-plyr-' + audioIndex)[0];
+      var previousAudio = this.chatBox.getElementsByClassName('react-plyr-' + audioIndex)[0];
 
       if (
         previousAudio.currentTime > 0  &&
@@ -147,6 +140,7 @@ class ChatBox extends Component {
           isModalOpen &&
           <DeleteMessageModal
             isModalOpen={isModalOpen}
+            chatRoomID={chatRoom.data._id}
             selectedMessageID={selectedMessageID}
             handleCloseModal={::this.handleCloseModal}
           />
@@ -158,12 +152,12 @@ class ChatBox extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
-    chatRoom: state.chatRoom
+    user: state.user
   }
 }
 
 ChatBox.propTypes = {
+  chatRoom: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired
 }
 

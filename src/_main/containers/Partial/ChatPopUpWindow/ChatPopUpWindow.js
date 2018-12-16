@@ -3,17 +3,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Draggable from 'react-draggable';
 import FontAwesome from 'react-fontawesome';
+import Popup from 'react-popup';
 import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../../actions';
 import { handleChatRoomAvatarBadges } from '../../../../utils/avatar';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../../components/Avatar';
 import { ChatBox } from '../ChatBox';
+import {
+  ChatInput,
+  ChatAudioRecorder
+} from '../../../components/Chat';
 import './styles.scss';
 
 class ChatPopUpWindow extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isAudioRecorderOpen: false
+    };
   }
   handleActiveChatPopUpWindow(event) {
     event.preventDefault();
@@ -24,6 +33,11 @@ class ChatPopUpWindow extends Component {
     } = this.props;
 
     handleActiveChatPopUpWindow(index);
+  }
+  handleAudioRecorderToggle(event) {
+    event.preventDefault();
+
+    this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
   }
   handleClosePopUpChatRoom(event) {
     event.preventDefault();
@@ -39,8 +53,12 @@ class ChatPopUpWindow extends Component {
     const {
       user,
       popUpChatRoom,
+      handleSendTextMessage,
+      handleSendFileMessage,
+      handleSendImageMessage,
       active
     } = this.props;
+    const isChatInputDisabled = popUpChatRoom.message.fetchNew.loading;
 
     return (
       <Draggable bounds="parent" handle=".popup-header" onDrag={::this.handleActiveChatPopUpWindow}>
@@ -68,12 +86,12 @@ class ChatPopUpWindow extends Component {
           </div>
           <div className="popup-body">
             <ChatBox
+              chatRoom={popUpChatRoom}
               message={popUpChatRoom.message}
-              handleDragDropBoxToggle={() => {}}
             />
           </div>
           <div className="popup-footer">
-
+            
           </div>
         </div>
       </Draggable>
@@ -93,6 +111,10 @@ const mapStateToProps = (state) => {
 ChatPopUpWindow.propTypes = {
   index: PropTypes.number.isRequired,
   popUpChatRoom: PropTypes.object.isRequired,
+  handleSendTextMessage: PropTypes.func.isRequired,
+  handleSendFileMessage: PropTypes.func.isRequired,
+  handleSendImageMessage: PropTypes.func.isRequired,
+  handleSendAudioMessage: PropTypes.func.isRequired,
   handleActiveChatPopUpWindow: PropTypes.func.isRequired,
   active: PropTypes.bool
 }

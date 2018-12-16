@@ -48,10 +48,7 @@ class ChatInput extends Component {
     }
   }
   onMessageKeyUp(event) {
-    const {
-      user,
-      activeChatRoom
-    } = this.props;
+    const { user } = this.props;
     const {
       message,
       validMessage,
@@ -96,18 +93,24 @@ class ChatInput extends Component {
     }
   }
   handleImageUploadSelect(event) {
-    const { handleSendImageMessage } = this.props;
+    const {
+      chatRoom,
+      handleSendImageMessage
+    } = this.props;
     const newMessageID = uuidv4();
     const imageName = event.target.value.split(/(\\|\/)/g).pop();
 
-    handleSendImageMessage(newMessageID, imageName, event.target.files[0]);
+    handleSendImageMessage(newMessageID, imageName, event.target.files[0], chatRoom.data._id);
   }
   handleFileUploadSelect(event) {
-    const { handleSendFileMessage } = this.props;
+    const {
+      chatRoom,
+      handleSendFileMessage
+    } = this.props;
     const newMessageID = uuidv4();
     const fileName = event.target.value.split(/(\\|\/)/g).pop();
 
-    handleSendFileMessage(newMessageID, fileName, event.target.files[0]);
+    handleSendFileMessage(newMessageID, fileName, event.target.files[0], chatRoom.data._id);
   }
   handleSaveCaretPosition(event) {
     event.preventDefault();
@@ -137,10 +140,7 @@ class ChatInput extends Component {
     });
   }
   handleEmojiPickerSelect(emoji) {
-    const {
-      user,
-      activeChatRoom,
-    } = this.props;
+    const { user } = this.props;
     const {
       caretPosition,
       validMessage,
@@ -276,7 +276,7 @@ class ChatInput extends Component {
   handleSendTextMessageOnChange(event) {
     const {
       user,
-      activeChatRoom,
+      chatRoom,
       handleSendTextMessage
     } = this.props;
     const { textColor } = this.state;
@@ -284,14 +284,14 @@ class ChatInput extends Component {
     const newMessageID = uuidv4();
 
     document.getElementById('chat-input').innerHTML = '';
-    handleSendTextMessage(newMessageID, messageText, textColor);
+    handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
   }
   handleSendTextMessageOnClick(event) {
     event.preventDefault();
 
     const {
       user,
-      activeChatRoom,
+      chatRoom,
       handleSendTextMessage
     } = this.props;
     const {
@@ -305,7 +305,7 @@ class ChatInput extends Component {
     if ( validMessage && !maxLengthReached ) {
       document.getElementById('chat-input').innerHTML = '';
       document.getElementById('chat-input').focus();
-      handleSendTextMessage(newMessageID, messageText, textColor);
+      handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
 
       this.setState({
         message: '',
@@ -437,7 +437,7 @@ class ChatInput extends Component {
 
 ChatInput.propTypes = {
   user: PropTypes.object.isRequired,
-  activeChatRoom: PropTypes.object.isRequired,
+  chatRoom: PropTypes.object.isRequired,
   handleSendTextMessage: PropTypes.func.isRequired,
   handleAudioRecorderToggle: PropTypes.func.isRequired,
   handleSendFileMessage: PropTypes.func.isRequired,

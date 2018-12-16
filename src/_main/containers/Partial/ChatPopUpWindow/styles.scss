@@ -5,7 +5,7 @@
   flex-direction: column;
   height: 300px;
   position: absolute;
-  width: 300px;
+  width: 400px;
   @for $i from 0 to 5 {
     &:nth-child(#{$i + 1}) {
       left: #{$i * 15}px;
@@ -44,13 +44,11 @@
     }
   }
   .popup-body {
-    @include scrollbar($color-mine-shaft);
+    display: flex;
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
-    &.loading {
-      height: 100%;
-    }
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
   }
   .popup-footer {
     background-color: $color-gallery;

@@ -22,14 +22,13 @@ class DeleteMessageModal extends Component {
     event.preventDefault();
 
     const {
-      chatRoom,
       deleteMessage,
+      chatRoomID,
       selectedMessageID
     } = this.props;
-    const activeChatRoom = chatRoom.active;
 
-    if ( selectedMessageID.length > 0 ) {
-      deleteMessage(selectedMessageID, activeChatRoom.data._id);
+    if ( chatRoomID.length > 0 && selectedMessageID.length > 0 ) {
+      deleteMessage(selectedMessageID, chatRoomID);
     }
   }
   render() {
@@ -46,7 +45,7 @@ class DeleteMessageModal extends Component {
         handleCloseModal={handleCloseModal}
         isDanger
       >
-        <Form onSubmit={::this.handleDeleteMessage}>
+        <Form>
           <Modal.Header>
             <h3 className="modal-title">Delete Message</h3>
           </Modal.Header>
@@ -67,7 +66,7 @@ class DeleteMessageModal extends Component {
             </Button>
             <Button
               color="danger"
-              type="submit"
+              onClick={::this.handleDeleteMessage}
               disabled={message.delete.loading}
             >
               Yes, Delete Message
@@ -88,12 +87,14 @@ const mapStateToProps = (state) => {
 
 DeleteMessageModal.propTypes = {
   isModalOpen: PropTypes.bool,
+  chatRoomID: PropTypes.string,
   selectedMessageID: PropTypes.string,
   handleCloseModal: PropTypes.func.isRequired
 }
 
 DeleteMessageModal.defaultProps = {
   isModalOpen: false,
+  chatRoomID: PropTypes.string,
   selectedMessageID: ''
 }
 

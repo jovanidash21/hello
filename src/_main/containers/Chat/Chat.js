@@ -140,7 +140,7 @@ class Chat extends Component {
 
     this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
   }
-  handleSendTextMessage(newMessageID, text, textColor) {
+  handleSendTextMessage(newMessageID, text, chatRoomID, textColor) {
     const {
       user,
       chatRoom,
@@ -164,10 +164,10 @@ class Chat extends Component {
     if ( !validMessage ) {
       Popup.alert('Please take a break and send message slowly!');
     } else {
-      sendTextMessage(newMessageID, text, user.active, chatRoom.active.data._id, textColor);
+      sendTextMessage(newMessageID, text, user.active, chatRoomID, textColor);
     }
   }
-  handleSendAudioMessage(newMessageID, text, audio) {
+  handleSendAudioMessage(newMessageID, text, audio, chatRoomID) {
     const {
       user,
       chatRoom,
@@ -181,7 +181,7 @@ class Chat extends Component {
       sendAudioMessage(newMessageID, text, audio.blob, user.active, chatRoom.active.data._id);
     }
   }
-  handleSendFileMessage(newMessageID, text, file) {
+  handleSendFileMessage(newMessageID, text, file, chatRoomID) {
     const {
       user,
       chatRoom,
@@ -191,10 +191,10 @@ class Chat extends Component {
     if ( file.size > 1024 * 1024 * 5 ) {
       Popup.alert('Maximum upload file size is 5MB only');
     } else {
-      sendFileMessage(newMessageID, text, file, user.active, chatRoom.active.data._id);
+      sendFileMessage(newMessageID, text, file, user.active, chatRoomID);
     }
   }
-  handleSendImageMessage(newMessageID, text, image) {
+  handleSendImageMessage(newMessageID, text, image, chatRoomID) {
     const {
       user,
       chatRoom,
@@ -206,7 +206,7 @@ class Chat extends Component {
     } else if ( image.size > 1024 * 1024 * 5 ) {
       Popup.alert('Maximum upload file size is 5MB only');
     } else {
-      sendImageMessage(newMessageID, text, image, user.active, chatRoom.active.data._id);
+      sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
   handleNotificationViewMessage(chatRoomObj) {
@@ -234,6 +234,7 @@ class Chat extends Component {
       activeChatPopUpWindow,
       isAudioRecorderOpen
     } = this.state;
+    const activeChatRoom = chatRoom.active;
     const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
 
     return (
@@ -262,7 +263,10 @@ class Chat extends Component {
                 />
               </Header>
               <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
-                <ChatBox message={message} />
+                <ChatBox
+                  chatRoom={activeChatRoom}
+                  message={message}
+                />
                 {
                   popUpChatRoom.all.length > 0 &&
                   <div className="chat-popup-window-wrapper">
@@ -272,6 +276,10 @@ class Chat extends Component {
                           key={i}
                           index={i}
                           popUpChatRoom={singlePopUpChatRoom}
+                          handleSendTextMessage={::this.handleSendTextMessage}
+                          handleSendFileMessage={::this.handleSendFileMessage}
+                          handleSendImageMessage={::this.handleSendImageMessage}
+                          handleSendAudioMessage={::this.handleSendAudioMessage}
                           handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
                           active={activeChatPopUpWindow === i}
                         />
@@ -286,7 +294,7 @@ class Chat extends Component {
                     ?
                     <ChatInput
                       user={user.active}
-                      activeChatRoom={chatRoom.active}
+                      chatRoom={chatRoom.active}
                       handleSendTextMessage={::this.handleSendTextMessage}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendFileMessage={::this.handleSendFileMessage}
@@ -295,6 +303,7 @@ class Chat extends Component {
                     />
                     :
                     <ChatAudioRecorder
+                      chatRoom={chatRoom.active}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendAudioMessage={::this.handleSendAudioMessage}
                     />
