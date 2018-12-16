@@ -62,14 +62,12 @@ const message = (state=initialState, action) => {
       if ( newMessage.chatRoom === activeChatRoom.data._id ) {
         messages = messages.filter((message) => message._id !== messageID);
         newMessage.isSending = false;
+        messages.push(newMessage);
       }
 
       return {
         ...state,
-        all: [
-          ...messages,
-          newMessage
-        ]
+        all: [...messages]
       };
     case `${DELETE_MESSAGE}_SUCCESS`:
       var messages = [...state.all];

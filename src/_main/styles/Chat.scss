@@ -13,10 +13,10 @@ body.chat-page {
       }
     }
   }
-  .header,
-  .chat-box-wrapper,
-  .chat-input-wrapper,
-  .chat-audio-recorder {
+  & > .header,
+  & > .chat-box-wrapper,
+  & > .chat-input-wrapper,
+  & > .chat-audio-recorder {
     @media screen and (min-width: $screen-tablet-min) {
       margin-right: 250px;
     }
