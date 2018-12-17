@@ -265,6 +265,7 @@ class Chat extends Component {
                 <ChatBox
                   chatRoom={activeChatRoom}
                   message={message}
+                  loading={message.fetchNew.loading}
                 />
                 {
                   popUpChatRoom.all.length > 0 &&

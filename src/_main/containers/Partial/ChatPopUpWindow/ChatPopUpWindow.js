@@ -92,6 +92,7 @@ class ChatPopUpWindow extends Component {
               id={"popup-" + index}
               chatRoom={popUpChatRoom}
               message={popUpChatRoom.message}
+              loading={popUpChatRoom.message.fetchNew.loading}
               small
             />
           </div>

@@ -32,7 +32,7 @@ class ChatBox extends Component {
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.message.fetchNew.loading && !this.props.message.fetchNew.loading ) ||
+      ( prevProps.loading && !this.loading ) ||
       this.state.isChatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
@@ -63,13 +63,14 @@ class ChatBox extends Component {
     const {
       user,
       message,
+      loading,
       small
     } = this.props;
     const activeUser = user.active;
     const canDeleteMessageUserRoles = ['owner', 'admin', 'moderator'];
     const canDeleteMessage = canDeleteMessageUserRoles.indexOf(activeUser.role) > -1;
 
-    if ( !message.fetchNew.loading && message.fetchNew.success ) {
+    if ( !loading ) {
       return (
         <Container fluid>
           {
@@ -93,7 +94,7 @@ class ChatBox extends Component {
           }
         </Container>
       )
-    } else if ( message.fetchNew.loading ) {
+    } else {
       return (
         <LoadingAnimation name="ball-clip-rotate" color="black" />
       )
@@ -172,11 +173,13 @@ ChatBox.propTypes = {
   id: PropTypes.string,
   chatRoom: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
+  loading: PropTypes.bool,
   small: PropTypes.bool
 }
 
 ChatBox.defaultProps = {
   id: '',
+  loading: false,
   small: false
 }
 
