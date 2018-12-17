@@ -49,7 +49,6 @@ class ChatBox extends Component {
     }
   }
   handleScrollToBottom() {
-    console.log(document.getElementById(::this.handleDivID()).scrollHeight);
     document.getElementById(::this.handleDivID()).scrollTop = document.getElementById(::this.handleDivID()).scrollHeight;
   }
   handleChatBoxScroll() {

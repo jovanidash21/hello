@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import ContentEditable from 'react-simple-contenteditable';
+import FileReaderInput from 'react-file-reader-input';
 import { Button } from 'muicss/react';
 import emojione from 'emojione';
 import EmojiPicker from 'emojione-picker';
@@ -27,13 +28,14 @@ class ChatInput extends Component {
       maxLengthReached: false
     };
   }
-  handleDivID(divID) {
+  handleDivID() {
     const { id } = this.props;
+    const chatInputID = 'chat-input';
 
     if ( id.length > 0 ) {
-      return divID + '-' + id;
+      return chatInputID + '-' + id;
     } else {
-      return divID;
+      return chatInputID;
     }
   }
   onMessageChange(event, value) {
@@ -63,7 +65,7 @@ class ChatInput extends Component {
       validMessage,
       maxLengthReached
     } = this.state;
-    const chatInputText = document.getElementById(::this.handleDivID('chat-input')).innerHTML;
+    const chatInputText = document.getElementById(::this.handleDivID()).innerHTML;
 
     if (
       message.trim().length > 0 &&
@@ -101,25 +103,27 @@ class ChatInput extends Component {
       Popup.alert('Sorry, maximum of 400 characters only!');
     }
   }
-  handleImageUploadSelect(event) {
+  handleImageUploadSelect(event, results) {
     const {
       chatRoom,
       handleSendImageMessage
     } = this.props;
     const newMessageID = uuidv4();
-    const imageName = event.target.value.split(/(\\|\/)/g).pop();
+    const image = results[0][1];
+    const imageName = image.name;
 
-    handleSendImageMessage(newMessageID, imageName, event.target.files[0], chatRoom.data._id);
+    handleSendImageMessage(newMessageID, imageName, image, chatRoom.data._id);
   }
-  handleFileUploadSelect(event) {
+  handleFileUploadSelect(event, results) {
     const {
       chatRoom,
       handleSendFileMessage
     } = this.props;
     const newMessageID = uuidv4();
-    const fileName = event.target.value.split(/(\\|\/)/g).pop();
+    const file = results[0][1];
+    const fileName = file.name;
 
-    handleSendFileMessage(newMessageID, fileName, event.target.files[0], chatRoom.data._id);
+    handleSendFileMessage(newMessageID, fileName, file, chatRoom.data._id);
   }
   handleSaveCaretPosition(event) {
     event.preventDefault();
@@ -169,7 +173,7 @@ class ChatInput extends Component {
       }
     }
 
-    document.getElementById(::this.handleDivID('chat-input')).focus();
+    document.getElementById(::this.handleDivID()).focus();
 
     if ( maxLengthReached || messageTextLength >= 399 ) {
       Popup.alert('Sorry, maximum of 400 characters only!');
@@ -253,8 +257,8 @@ class ChatInput extends Component {
   }
   handleMessageText(type) {
     const { textStyle } = this.state;
-    var emojis = document.getElementById(::this.handleDivID('chat-input')).getElementsByClassName('emojione');
-    var chatInputText = document.getElementById(::this.handleDivID('chat-input')).innerHTML;
+    var emojis = document.getElementById(::this.handleDivID()).getElementsByClassName('emojione');
+    var chatInputText = document.getElementById(::this.handleDivID()).innerHTML;
 
     var nth = 0;
     chatInputText = chatInputText.replace(/<img class="emojione" alt="(.*?)" title="(.*?)" src="(.*?)"[^>]*>/g, (match, i, original) => {
@@ -292,7 +296,7 @@ class ChatInput extends Component {
     const messageText = ::this.handleMessageText('text');
     const newMessageID = uuidv4();
 
-    document.getElementById(::this.handleDivID('chat-input')).innerHTML = '';
+    document.getElementById(::this.handleDivID()).innerHTML = '';
     handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
   }
   handleSendTextMessageOnClick(event) {
@@ -312,8 +316,8 @@ class ChatInput extends Component {
     const newMessageID = uuidv4();
 
     if ( validMessage && !maxLengthReached ) {
-      document.getElementById(::this.handleDivID('chat-input')).innerHTML = '';
-      document.getElementById(::this.handleDivID('chat-input')).focus();
+      document.getElementById(::this.handleDivID()).innerHTML = '';
+      document.getElementById(::this.handleDivID()).focus();
       handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
 
       this.setState({
@@ -376,7 +380,7 @@ class ChatInput extends Component {
         <div className="chat-input">
           <ContentEditable
             className="textfield single-line"
-            id={::this.handleDivID('chat-input')}
+            id={::this.handleDivID()}
             placeholder="Type here"
             autoComplete="off"
             html={message}
@@ -398,24 +402,14 @@ class ChatInput extends Component {
                 <FontAwesome name="microphone" />
               </div>
               <div className="extra-button image-button" title="Add an image">
-                <input
-                  id={::this.handleDivID('image-button')}
-                  type="file"
-                  onChange={::this.handleImageUploadSelect}
-                />
-                <label htmlFor={::this.handleDivID('image-button')}>
+                <FileReaderInput onChange={::this.handleImageUploadSelect}>
                   <FontAwesome name="camera" />
-                </label>
+                </FileReaderInput>
               </div>
               <div className="extra-button file-button" title="Add a File">
-                <input
-                  id={::this.handleDivID('file-button')}
-                  type="file"
-                  onChange={::this.handleFileUploadSelect}
-                />
-                <label htmlFor={::this.handleDivID('file-button')}>
+                <FileReaderInput onChange={::this.handleFileUploadSelect}>
                   <FontAwesome name="paperclip" />
-                </label>
+                </FileReaderInput>
               </div>
               <MediaQuery query="(min-width: 768px)">
                 <div
