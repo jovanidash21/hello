@@ -15,6 +15,11 @@
   &.active {
     z-index: 500;
   }
+  &.no-chat-input {
+    .popup-body {
+      max-height: 361px;
+    }
+  }
   .popup-header {
     align-items: center;
     background-color: $color-primary;
@@ -48,6 +53,10 @@
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
+    max-height: 301px;
     position: relative;
+    &.audio-recorder-open {
+      max-height: 271px;
+    }
   }
 }

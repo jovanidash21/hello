@@ -66,7 +66,11 @@ class ChatPopUpWindow extends Component {
     return (
       <Draggable bounds="parent" handle=".popup-header" onDrag={::this.handleActiveChatPopUpWindow}>
         <div
-          className={"chat-popup-window " + (active ? 'active' : '')}
+          className={
+            "chat-popup-window " +
+            (active ? 'active ' : '') +
+            (user.active.mute.data ? 'no-chat-input' : '')
+          }
           onClick={::this.handleActiveChatPopUpWindow}
         >
           <div className="popup-header">
@@ -87,7 +91,7 @@ class ChatPopUpWindow extends Component {
               <FontAwesome name="times" />
             </div>
           </div>
-          <div className="popup-body">
+          <div className={"popup-body " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
             <ChatBox
               id={"popup-" + index}
               chatRoom={popUpChatRoom}

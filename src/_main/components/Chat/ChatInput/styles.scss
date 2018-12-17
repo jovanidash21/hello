@@ -163,13 +163,6 @@
         }
         &:hover {
           color: $color-secondary;
-        }
-      }
-      .audio-button,
-      .image-button,
-      .emoji-button,
-      .text-format-button {
-        &:hover {
           transform: scale(1.25);
         }
       }
@@ -187,12 +180,6 @@
       .image-button,
       .text-format-button {
         font-size: 14px;
-      }
-      .file-button {
-        transform: rotate(180deg) scaleX(-1);
-        &:hover {
-          transform: rotate(180deg) scaleX(-1) scale(1.25);
-        }
       }
     }
   }
