@@ -71,7 +71,6 @@ class ChatPopUpWindow extends Component {
             (active ? 'active ' : '') +
             (user.active.mute.data ? 'no-chat-input' : '')
           }
-          onClick={::this.handleActiveChatPopUpWindow}
         >
           <div className="popup-header">
             <Avatar
