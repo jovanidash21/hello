@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { Container } from 'muicss/react';
 import Popup from 'react-popup';
-import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../actions';
 import {
   Header,
@@ -252,7 +251,10 @@ class Chat extends Component {
                 handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
                 isLeftSideDrawerOpen={isLeftSideDrawerOpen}
               >
-                <ChatRoomsList handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent} />
+                <ChatRoomsList
+                  handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+                  handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+                />
               </LeftSideDrawer>
               {::this.handleRightSideDrawerRender()}
               <Header handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}>
@@ -262,31 +264,33 @@ class Chat extends Component {
                 />
               </Header>
               <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+                <MediaQuery query="(min-width: 768px)">
+                  {
+                    popUpChatRoom.all.length > 0 &&
+                    <div className="chat-popup-window-wrapper">
+                      {
+                        popUpChatRoom.all.map((singlePopUpChatRoom, i) =>
+                          <ChatPopUpWindow
+                            key={i}
+                            index={i}
+                            popUpChatRoom={singlePopUpChatRoom}
+                            handleSendTextMessage={::this.handleSendTextMessage}
+                            handleSendFileMessage={::this.handleSendFileMessage}
+                            handleSendImageMessage={::this.handleSendImageMessage}
+                            handleSendAudioMessage={::this.handleSendAudioMessage}
+                            handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
+                            active={activeChatPopUpWindow === i}
+                          />
+                        )
+                      }
+                    </div>
+                  }
+                </MediaQuery>
                 <ChatBox
                   chatRoom={activeChatRoom}
                   message={message}
                   loading={message.fetchNew.loading}
                 />
-                {
-                  popUpChatRoom.all.length > 0 &&
-                  <div className="chat-popup-window-wrapper">
-                    {
-                      popUpChatRoom.all.map((singlePopUpChatRoom, i) =>
-                        <ChatPopUpWindow
-                          key={i}
-                          index={i}
-                          popUpChatRoom={singlePopUpChatRoom}
-                          handleSendTextMessage={::this.handleSendTextMessage}
-                          handleSendFileMessage={::this.handleSendFileMessage}
-                          handleSendImageMessage={::this.handleSendImageMessage}
-                          handleSendAudioMessage={::this.handleSendAudioMessage}
-                          handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
-                          active={activeChatPopUpWindow === i}
-                        />
-                      )
-                    }
-                  </div>
-                }
               </div>
               {
                 !user.active.mute.data && (

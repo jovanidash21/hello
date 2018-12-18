@@ -3,9 +3,10 @@
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 350px;
   position: absolute;
   width: 400px;
+  z-index: 400;
   @for $i from 0 to 5 {
     &:nth-child(#{$i + 1}) {
       left: #{$i * 15}px;
@@ -53,10 +54,10 @@
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
-    max-height: 301px;
+    max-height: 251px;
     position: relative;
     &.audio-recorder-open {
-      max-height: 271px;
+      max-height: 221px;
     }
   }
 }

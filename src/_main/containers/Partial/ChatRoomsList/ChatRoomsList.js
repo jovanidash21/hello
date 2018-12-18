@@ -22,7 +22,8 @@ class ChatRoomsList extends Component {
       user,
       chatRoom,
       changeChatRoom,
-      handleLeftSideDrawerToggleEvent
+      handleLeftSideDrawerToggleEvent,
+      handleOpenPopUpChatRoom
     } = this.props;
     const activeChatRoom = chatRoom.active;
 
@@ -47,6 +48,7 @@ class ChatRoomsList extends Component {
               chatRoom={singleChatRoom}
               activeChatRoom={activeChatRoom}
               isActive={(activeChatRoom.data._id === singleChatRoom.data._id) ? true : false}
+              handleOpenPopUpChatRoom={handleOpenPopUpChatRoom}
               handleChangeChatRoom={changeChatRoom}
               handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
               handleTrashChatRoom={::this.handleTrashChatRoom}
@@ -213,7 +215,8 @@ const mapStateToProps = (state) => {
 }
 
 ChatRoomsList.propTypes = {
-  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired
+  handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired
 }
 
 export default connect(

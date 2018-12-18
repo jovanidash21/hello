@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import Popup from 'react-popup';
 import { handleChatRoomAvatarBadges } from '../../../utils/avatar';
@@ -10,6 +11,20 @@ import './styles.scss';
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
+  }
+  handleOpenPopUpChatRoom(event) {
+    event.preventDefault();
+
+    const {
+      chatRoom,
+      handleOpenPopUpChatRoom,
+      handleLeftSideDrawerToggleEvent
+    } = this.props;
+
+    if ( chatRoom.data.chatType === 'direct' ) {
+      handleOpenPopUpChatRoom(chatRoom);
+      handleLeftSideDrawerToggleEvent();
+    }
   }
   handleChangeChatRoom(event) {
     event.preventDefault();
@@ -57,63 +72,69 @@ class ChatRoom extends Component {
     } = this.props;
 
     return (
-      <div
-        className={
-          "chat-room " +
-          (isActive ? 'active ' : '') +
-          (
-            (chatRoom.unReadMessages > 0 && chatRoom.data.chatType === 'direct')
-            ? 'new-message ' : ''
-          ) +
-          (
-            isTrashing ||
-            (chatRoom.data.chatType === 'public' && chatRoom.data.connectedMembers.length >= 500)
-            ? 'disabled'
-            : ''
-          )
-        }
-        onClick={::this.handleChangeChatRoom}
-        title={chatRoom.data.name}
-      >
-        <Avatar
-          image={chatRoom.data.chatIcon}
-          name={chatRoom.data.name}
-          roleChatType={handleChatRoomAvatarBadges(chatRoom.data, user, 'role-chat')}
-          accountType={handleChatRoomAvatarBadges(chatRoom.data, user)}
-        />
-        <div className="chat-room-name">
-          {chatRoom.data.name}
-        </div>
-        {
-          chatRoom.unReadMessages > 0 &&
-          chatRoom.data.chatType === 'direct' &&
-          <NotificationCount
-            count={chatRoom.unReadMessages}
-            title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
-          />
-        }
-        {
-          chatRoom.data.chatType === 'direct' &&
-          <div
-            className="trash-icon"
-            title="Trash ChatRoom"
-            onClick={::this.handleTrashChatRoom}>
-            <FontAwesome name="trash" />
-          </div>
-        }
-        {
-          chatRoom.data.chatType === 'public' &&
-          <div
-            className="connected-members-count"
-            title={chatRoom.data.connectedMembers.length + " Connected Members"}
-          >
-            <div className="user-icon">
-              <FontAwesome name="user" />
+      <MediaQuery query="(max-width: 767px)">
+        {(matches) => {
+          return (
+            <div
+              className={
+                "chat-room " +
+                (isActive ? 'active ' : '') +
+                (
+                  (chatRoom.unReadMessages > 0 && chatRoom.data.chatType === 'direct')
+                  ? 'new-message ' : ''
+                ) +
+                (
+                  isTrashing ||
+                  (chatRoom.data.chatType === 'public' && chatRoom.data.connectedMembers.length >= 500)
+                  ? 'disabled'
+                  : ''
+                )
+              }
+              onClick={!matches && chatRoom.data.chatType === 'direct' ? ::this.handleOpenPopUpChatRoom : ::this.handleChangeChatRoom}
+              title={chatRoom.data.name}
+            >
+              <Avatar
+                image={chatRoom.data.chatIcon}
+                name={chatRoom.data.name}
+                roleChatType={handleChatRoomAvatarBadges(chatRoom.data, user, 'role-chat')}
+                accountType={handleChatRoomAvatarBadges(chatRoom.data, user)}
+              />
+              <div className="chat-room-name">
+                {chatRoom.data.name}
+              </div>
+              {
+                chatRoom.unReadMessages > 0 &&
+                chatRoom.data.chatType === 'direct' &&
+                <NotificationCount
+                  count={chatRoom.unReadMessages}
+                  title={chatRoom.unReadMessages + " New " + (chatRoom.unReadMessages > 1 ? 'Messages' : 'Message')}
+                />
+              }
+              {
+                chatRoom.data.chatType === 'direct' &&
+                <div
+                  className="trash-icon"
+                  title="Trash ChatRoom"
+                  onClick={::this.handleTrashChatRoom}>
+                  <FontAwesome name="trash" />
+                </div>
+              }
+              {
+                chatRoom.data.chatType === 'public' &&
+                <div
+                  className="connected-members-count"
+                  title={chatRoom.data.connectedMembers.length + " Connected Members"}
+                >
+                  <div className="user-icon">
+                    <FontAwesome name="user" />
+                  </div>
+                  {chatRoom.data.connectedMembers.length}
+                </div>
+              }
             </div>
-            {chatRoom.data.connectedMembers.length}
-          </div>
-        }
-      </div>
+          )
+        }}
+      </MediaQuery>
     )
   }
 }
@@ -123,6 +144,7 @@ ChatRoom.propTypes = {
   chatRoom: PropTypes.object.isRequired,
   activeChatRoom: PropTypes.object.isRequired,
   isActive: PropTypes.bool,
+  handleOpenPopUpChatRoom: PropTypes.func,
   handleChangeChatRoom: PropTypes.func.isRequired,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
   handleTrashChatRoom: PropTypes.func,
@@ -131,6 +153,7 @@ ChatRoom.propTypes = {
 
 ChatRoom.defaultProps = {
   isActive: false,
+  handleOpenPopUpChatRoom: () => {},
   handleTrashChatRoom: () => {},
   isTrashing: false
 }
