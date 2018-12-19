@@ -13,8 +13,14 @@ router.post('/', (req, res, next) => {
     });
   } else {
     var chatRoomID = req.body.chatRoomID;
+    var userRole = '';
 
-    ChatRoom.findById(chatRoomID)
+    User.findById(userID)
+      .then((user) => {
+        userRole = user.role;
+
+        return ChatRoom.findById(chatRoomID);
+      })
       .then((chatRoom) => {
         var findParams = {
           chatRooms: {
@@ -33,6 +39,12 @@ router.post('/', (req, res, next) => {
         return User.find(findParams);
       })
       .then((members) => {
+        for (var i = 0; i < members.length; i++) {
+          if (userRole.length > 0 && userRole !== 'admin' && userRole !=='owner') {
+            members[i].ipAddress = null;
+          }
+        }
+
         res.status(200).send({
           success: true,
           message: 'Members Fetched',
