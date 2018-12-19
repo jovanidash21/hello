@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import ReactSVG from 'react-svg';
 import { Avatar } from '../../../components/Avatar';
@@ -9,7 +10,7 @@ class ChatRoomMember extends Component {
   constructor(props) {
     super(props);
   }
-  handleAddDirectChatRoom(event) {
+  handleAddDirectChatRoom(event, mobile) {
     event.preventDefault();
 
     const {
@@ -17,7 +18,7 @@ class ChatRoomMember extends Component {
       handleAddDirectChatRoom
     } = this.props;
 
-    handleAddDirectChatRoom(chatRoomMember._id);
+    handleAddDirectChatRoom(chatRoomMember._id, mobile);
   }
   handleBlockMember(event) {
     event.preventDefault();
@@ -138,11 +139,17 @@ class ChatRoomMember extends Component {
                 user.role === 'admin' ||
                 chatRoomMember.role !== 'vip'
               ) &&
-              <li>
-                <a href="#" onClick={::this.handleAddDirectChatRoom}>
-                  Direct Messages
-                </a>
-              </li>
+              <MediaQuery query="(max-width: 767px)">
+                {(matches) => {
+                  return (
+                    <li>
+                      <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, matches)}}>
+                        Direct Messages
+                      </a>
+                    </li>
+                  )
+                }}
+              </MediaQuery>
             }
             {
               ( user.role === 'owner' ||

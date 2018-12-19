@@ -87,7 +87,10 @@ class Chat extends Component {
               isRightSideDrawerOpen={matches ? isRightSideDrawerOpen : true}
               noOverlay={matches ? false : true}
             >
-              <MembersList handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent} />
+              <MembersList
+                handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
+                handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+              />
             </RightSideDrawer>
           )
         }}

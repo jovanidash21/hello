@@ -64,8 +64,9 @@ export function changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChat
  * @param {Object} chatRoom
  * @param {string} activeChatRoomID
  * @param {string} connectedChatRoomID
+ * @param {boolean} noChangeChatRoom
  */
-function createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID) {
+function createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID, noChangeChatRoom=false) {
   return dispatch => {
     var chatRoomBroadcast = {...chatRoom};
     var membersBroadcast = chatRoomBroadcast.data.members.slice();
@@ -110,7 +111,12 @@ function createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID)
       chatRoomBroadcast: chatRoomBroadcast,
       members: membersBroadcast
     });
-    dispatch(changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChatRoomID));
+
+    console.log(noChangeChatRoom);
+
+    if ( ! noChangeChatRoom ) {
+      dispatch(changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChatRoomID));
+    }
   }
 }
 
@@ -181,8 +187,9 @@ export function createGroupChatRoom(name, members, userID, activeChatRoomID, con
  * @param {string} userID
  * @param {string} memberID
  * @param {string} activeChatRoomID
+ * @param {boolean} noChangeChatRoom
  */
-export function createDirectChatRoom(userID, memberID, activeChatRoomID) {
+export function createDirectChatRoom(userID, memberID, activeChatRoomID, noChangeChatRoom=false) {
   let data = {
     name: '',
     members: [userID, memberID],
@@ -196,7 +203,7 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID) {
       payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
-      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID));
+      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, noChangeChatRoom));
     })
     .catch((error) => {
       if (error instanceof Error) {

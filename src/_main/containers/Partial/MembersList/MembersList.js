@@ -176,13 +176,14 @@ class MembersList extends Component {
       }
     }
   }
-  handleAddDirectChatRoom(memberID) {
+  handleAddDirectChatRoom(memberID, mobile=true) {
     const {
       user,
       chatRoom,
       createDirectChatRoom,
       changeChatRoom,
-      handleRightSideDrawerToggleEvent
+      handleRightSideDrawerToggleEvent,
+      handleOpenPopUpChatRoom
     } = this.props;
     const activeUser = user.active;
     const userID = activeUser._id;
@@ -205,9 +206,14 @@ class MembersList extends Component {
     }
 
     if ( !chatRoomExists ) {
-      createDirectChatRoom(userID, memberID, activeChatRoom.data._id);
+      createDirectChatRoom(userID, memberID, activeChatRoom.data._id, !mobile);
     } else if ( Object.keys(existingChatRoomData).length > 0 && existingChatRoomData.constructor === Object ) {
-      changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
+      if ( mobile ) {
+        changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
+      } else {
+        handleOpenPopUpChatRoom(existingChatRoomData);
+      }
+
       handleRightSideDrawerToggleEvent();
       this.setState({
         searchFilter: '',
@@ -291,7 +297,8 @@ const mapStateToProps = (state) => {
 }
 
 MembersList.propTypes = {
-  handleRightSideDrawerToggleEvent: PropTypes.func.isRequired
+  handleRightSideDrawerToggleEvent: PropTypes.func.isRequired,
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired
 }
 
 export default connect(
