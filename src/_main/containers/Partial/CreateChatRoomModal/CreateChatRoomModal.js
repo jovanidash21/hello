@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import MediaQuery from 'react-responsive';
 import {
   Form,
   Button
@@ -47,7 +48,7 @@ class CreateChatRoomModal extends Component {
   onIsChatRoomPublicChange(event) {
     this.setState({isPublic: event.target.checked});
   }
-  onSuggestionSelected(event, suggestion) {
+  onSuggestionSelected(event, suggestion, mobile) {
     event.preventDefault();
 
     const { chatType } = this.props;
@@ -73,7 +74,7 @@ class CreateChatRoomModal extends Component {
         });
       }
     } else if ( chatType === 'direct' ) {
-      ::this.handleAddDirectChatRoom(event, selectedMember._id);
+      ::this.handleAddDirectChatRoom(selectedMember._id, mobile);
     }
   }
   handleDeselectMember(member) {
@@ -114,9 +115,7 @@ class CreateChatRoomModal extends Component {
       createGroupChatRoom(chatRoomName, members, activeUser._id, activeChatRoom._id, activeUser.connectedChatRoom);
     }
   }
-  handleAddDirectChatRoom(event, memberID) {
-    event.preventDefault();
-
+  handleAddDirectChatRoom(memberID, mobile) {
     const {
       user,
       chatRoom,
@@ -124,7 +123,8 @@ class CreateChatRoomModal extends Component {
       changeChatRoom,
       chatType,
       handleCloseModal,
-      handleLeftSideDrawerToggleEvent
+      handleLeftSideDrawerToggleEvent,
+      handleOpenPopUpChatRoom
     } = this.props;
     const activeUser = user.active;
     const userID = activeUser._id;
@@ -151,9 +151,19 @@ class CreateChatRoomModal extends Component {
       }
 
       if ( !directChatRoomExists ) {
-        createDirectChatRoom(userID, memberID, activeChatRoom._id);
+        createDirectChatRoom(userID, memberID, activeChatRoom._id, activeUser.connectedChatRoom, !mobile)
+          .then((chatRoom) => {
+            if ( ! mobile ) {
+              handleOpenPopUpChatRoom(chatRoom);
+            }
+          });
       } else {
-        changeChatRoom(directChatRoomData, userID, activeChatRoom._id, activeUser.connectedChatRoom);
+        if ( mobile ) {
+          changeChatRoom(directChatRoomData, userID, activeChatRoom._id, activeUser.connectedChatRoom);
+        } else {
+          handleOpenPopUpChatRoom(directChatRoomData);
+        }
+
         handleCloseModal();
         handleLeftSideDrawerToggleEvent();
       }
@@ -224,19 +234,25 @@ class CreateChatRoomModal extends Component {
             }
             {
               !isPublic &&
-              <UserSelect
-                label={chatType === 'group' ? 'Minimum of 3 members and maximum of 5 members only' : ''}
-                placeholder="Select a member"
-                showUsersList={chatType === 'group'}
-                handleSearchUser={searchUser}
-                selectedUsers={members}
-                searchedUsers={searchedUsers}
-                onSuggestionSelected={::this.onSuggestionSelected}
-                handleDeselectUser={::this.handleDeselectMember}
-                isListDisabled={chatRoom.create.loading}
-                isInputDisabled={chatRoom.create.loading}
-                isLoading={user.search.loading}
-              />
+              <MediaQuery query="(max-width: 767px)">
+                {(matches) => {
+                  return (
+                    <UserSelect
+                      label={chatType === 'group' ? 'Minimum of 3 members and maximum of 5 members only' : ''}
+                      placeholder="Select a member"
+                      showUsersList={chatType === 'group'}
+                      handleSearchUser={searchUser}
+                      selectedUsers={members}
+                      searchedUsers={searchedUsers}
+                      onSuggestionSelected={(e, suggestion) => {::this.onSuggestionSelected(e, suggestion, matches)}}
+                      handleDeselectUser={::this.handleDeselectMember}
+                      isListDisabled={chatRoom.create.loading}
+                      isInputDisabled={chatRoom.create.loading}
+                      isLoading={user.search.loading}
+                    />
+                  )
+                }}
+              </MediaQuery>
             }
           </Modal.Body>
           {
@@ -275,6 +291,7 @@ CreateChatRoomModal.propTypes = {
   isModalOpen: PropTypes.bool,
   handleCloseModal: PropTypes.func.isRequired,
   handleLeftSideDrawerToggleEvent: PropTypes.func.isRequired,
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired,
   chatType: PropTypes.string.isRequired
 }
 

@@ -123,7 +123,8 @@ class ChatRoomsList extends Component {
     const {
       user,
       chatRoom,
-      handleLeftSideDrawerToggleEvent
+      handleLeftSideDrawerToggleEvent,
+      handleOpenPopUpChatRoom
     } = this.props;
     const {
       activeTab,
@@ -200,6 +201,7 @@ class ChatRoomsList extends Component {
             handleCloseModal={::this.handleCloseModal}
             chatType={activeTab}
             handleLeftSideDrawerToggleEvent={handleLeftSideDrawerToggleEvent}
+            handleOpenPopUpChatRoom={handleOpenPopUpChatRoom}
           />
         }
       </div>

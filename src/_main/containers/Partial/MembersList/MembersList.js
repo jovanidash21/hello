@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
@@ -94,13 +95,19 @@ class MembersList extends Component {
               {member.all.length > 1 ? 'Members' : 'Member'}
             </h3>
           </div>
-          <SearchFilter
-            value={searchFilter}
-            onChange={::this.onMemberNameChange}
-            onKeyDown={::this.onMemberNameKeyDown}
-            handleClearSearchFilter={::this.handleClearSearchFilter}
-            light
-          />
+          <MediaQuery query="(max-width: 767px)">
+            {(matches) => {
+              return (
+                <SearchFilter
+                  value={searchFilter}
+                  onChange={::this.onMemberNameChange}
+                  onKeyDown={(e) => {::this.onMemberNameKeyDown(e, matches)}}
+                  handleClearSearchFilter={::this.handleClearSearchFilter}
+                  light
+                />
+              )
+            }}
+          </MediaQuery>
           <div className="members-list">
             {
               members.length > 0 &&
@@ -146,7 +153,7 @@ class MembersList extends Component {
 
     ::this.handleMembersListFilter(searchFilter);
   }
-  onMemberNameKeyDown(event) {
+  onMemberNameKeyDown(event, mobile) {
     const {
       members,
       selectedMemberIndex
@@ -172,11 +179,11 @@ class MembersList extends Component {
       if ( event.key === 'Enter' && selectedMemberIndex !== -1 ) {
         const selectedMember = members[selectedMemberIndex];
 
-        ::this.handleAddDirectChatRoom(selectedMember._id);
+        ::this.handleAddDirectChatRoom(selectedMember._id, mobile);
       }
     }
   }
-  handleAddDirectChatRoom(memberID, mobile=true) {
+  handleAddDirectChatRoom(memberID, mobile) {
     const {
       user,
       chatRoom,
@@ -206,7 +213,12 @@ class MembersList extends Component {
     }
 
     if ( !chatRoomExists ) {
-      createDirectChatRoom(userID, memberID, activeChatRoom.data._id, !mobile);
+      createDirectChatRoom(userID, memberID, activeChatRoom.data._id, activeUser.connectedChatRoom, !mobile)
+        .then((chatRoom) => {
+          if ( ! mobile ) {
+            handleOpenPopUpChatRoom(chatRoom);
+          }
+        });
     } else if ( Object.keys(existingChatRoomData).length > 0 && existingChatRoomData.constructor === Object ) {
       if ( mobile ) {
         changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
@@ -215,12 +227,14 @@ class MembersList extends Component {
       }
 
       handleRightSideDrawerToggleEvent();
+      ::this.handleMembersListFilter();
       this.setState({
         searchFilter: '',
         selectedMemberIndex: -1
       });
     } else {
       handleRightSideDrawerToggleEvent();
+      ::this.handleMembersListFilter();
       this.setState({
         searchFilter: '',
         selectedMemberIndex: -1
