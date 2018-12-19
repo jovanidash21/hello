@@ -112,8 +112,6 @@ function createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID,
       members: membersBroadcast
     });
 
-    console.log(noChangeChatRoom);
-
     if ( ! noChangeChatRoom ) {
       dispatch(changeChatRoom(chatRoom, userID, activeChatRoomID, connectedChatRoomID));
     }
@@ -187,9 +185,10 @@ export function createGroupChatRoom(name, members, userID, activeChatRoomID, con
  * @param {string} userID
  * @param {string} memberID
  * @param {string} activeChatRoomID
+ * @param {string} connectedChatRoomID
  * @param {boolean} noChangeChatRoom
  */
-export function createDirectChatRoom(userID, memberID, activeChatRoomID, noChangeChatRoom=false) {
+export function createDirectChatRoom(userID, memberID, activeChatRoomID, connectedChatRoomID, noChangeChatRoom=false) {
   let data = {
     name: '',
     members: [userID, memberID],
@@ -203,7 +202,11 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID, noChang
       payload: axios.post(baseURL + '/api/chat-room/create', data)
     })
     .then((response) => {
-      dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, noChangeChatRoom));
+      const chatRoom = response.action.payload.data.chatRoom;
+
+      dispatch(createChatRoom(userID, chatRoom, activeChatRoomID, connectedChatRoomID, noChangeChatRoom));
+
+      return chatRoom;
     })
     .catch((error) => {
       if (error instanceof Error) {
