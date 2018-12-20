@@ -29,6 +29,7 @@ class ChatBox extends Component {
   }
   componentDidMount() {
     document.getElementById(::this.handleDivID()).addEventListener('scroll', ::this.handleChatBoxScroll, true);
+    document.getElementById(::this.handleDivID('chat-input')).addEventListener('focus', ::this.handleScrollToBottom, true);
   }
   componentDidUpdate(prevProps) {
     if (
@@ -38,14 +39,13 @@ class ChatBox extends Component {
       ::this.handleScrollToBottom();
     }
   }
-  handleDivID() {
+  handleDivID(divID='chat-box') {
     const { id } = this.props;
-    const chatBoxID = 'chat-box';
 
     if ( id.length > 0 ) {
-      return chatBoxID + '-' + id;
+      return divID + '-' + id;
     } else {
-      return chatBoxID;
+      return divID;
     }
   }
   handleScrollToBottom() {
