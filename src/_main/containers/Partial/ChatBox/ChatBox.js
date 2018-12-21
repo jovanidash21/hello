@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
+import ReactResizeDetector from 'react-resize-detector';
 import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import FontAwesome from 'react-fontawesome';
@@ -143,21 +144,23 @@ class ChatBox extends Component {
     } = this.state;
 
     return (
-      <div
-        id={::this.handleDivID()}
-        className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
-      >
-        {::this.handleChatBoxRender()}
-        {
-          isModalOpen &&
-          <DeleteMessageModal
-            isModalOpen={isModalOpen}
-            chatRoomID={chatRoom.data._id}
-            selectedMessageID={selectedMessageID}
-            handleCloseModal={::this.handleCloseModal}
-          />
-        }
-      </div>
+      <ReactResizeDetector handleHeight onResize={::this.handleScrollToBottom}>
+        <div
+          id={::this.handleDivID()}
+          className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
+        >
+          {::this.handleChatBoxRender()}
+          {
+            isModalOpen &&
+            <DeleteMessageModal
+              isModalOpen={isModalOpen}
+              chatRoomID={chatRoom.data._id}
+              selectedMessageID={selectedMessageID}
+              handleCloseModal={::this.handleCloseModal}
+            />
+          }
+        </div>
+      </ReactResizeDetector>
     )
   }
 }
