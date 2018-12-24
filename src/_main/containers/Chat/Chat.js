@@ -210,7 +210,7 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
-  handleNotificationViewMessage(chatRoomObj) {
+  handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
       user,
       chatRoom,
@@ -218,9 +218,13 @@ class Chat extends Component {
     } = this.props;
     const activeUser = user.active;
 
-    changeChatRoom(chatRoomObj, activeUser._id, chatRoom.active.data._id, activeUser.connectedChatRoom);
-    ::this.handleLeftSideDrawerToggleEvent();
-    ::this.handleRightSideDrawerToggleEvent();
+    if ( mobile ) {
+      changeChatRoom(chatRoomObj, activeUser._id, chatRoom.active.data._id, activeUser.connectedChatRoom);
+      ::this.handleLeftSideDrawerToggleEvent();
+      ::this.handleRightSideDrawerToggleEvent();
+    } else {
+      ::this.handleOpenPopUpChatRoom(chatRoomObj);
+    }
   }
   render() {
     const {
@@ -301,7 +305,7 @@ class Chat extends Component {
                     ?
                     <ChatInput
                       user={user.active}
-                      chatRoom={chatRoom.active}
+                      chatRoom={activeChatRoom}
                       handleSendTextMessage={::this.handleSendTextMessage}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendFileMessage={::this.handleSendFileMessage}
@@ -310,13 +314,23 @@ class Chat extends Component {
                     />
                     :
                     <ChatAudioRecorder
-                      chatRoom={chatRoom.active}
+                      chatRoom={activeChatRoom}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendAudioMessage={::this.handleSendAudioMessage}
                     />
                 )
               }
-              <NotificationPopUp handleViewMessage={::this.handleNotificationViewMessage} />
+              <MediaQuery query="(max-width: 767px)">
+                {(matches) => {
+                  return (
+                    <NotificationPopUp
+                      handleViewMessage={::this.handleNotificationViewMessage}
+                      mobile={matches}
+                    />
+                  )
+                }}
+              </MediaQuery>
+
             </div>
             :
             <ChatRoomsMenu />
