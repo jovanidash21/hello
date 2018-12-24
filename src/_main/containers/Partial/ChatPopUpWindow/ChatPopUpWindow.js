@@ -133,10 +133,7 @@ class ChatPopUpWindow extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
-    typer: state.typer,
-    chatRoom: state.chatRoom,
-    message: state.message
+    user: state.user
   }
 }
 

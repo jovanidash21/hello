@@ -30,11 +30,10 @@ class ChatBox extends Component {
   }
   componentDidMount() {
     document.getElementById(::this.handleDivID()).addEventListener('scroll', ::this.handleChatBoxScroll, true);
-    document.getElementById(::this.handleDivID('chat-input')).addEventListener('focus', ::this.handleScrollToBottom, true);
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.loading && !this.loading ) ||
+      ( prevProps.loading && !this.props.loading ) ||
       this.state.isChatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
@@ -45,9 +44,9 @@ class ChatBox extends Component {
 
     if ( id.length > 0 ) {
       return divID + '-' + id;
-    } else {
-      return divID;
     }
+
+    return divID;
   }
   handleScrollToBottom() {
     document.getElementById(::this.handleDivID()).scrollTop = document.getElementById(::this.handleDivID()).scrollHeight;
