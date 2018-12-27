@@ -378,41 +378,43 @@ var sockets = function(io) {
         default:
           break;
       }
-      socket.on('disconnect', function() {
-        User.findById(connectedUsers[socket.id])
-          .then((user) => {
-            if (user.connectedChatRoom !== null) {
-              ChatRoom.findByIdAndUpdate(
-                user.connectedChatRoom,
-                { $unset: { connectedMembers: user._id } },
-                { safe: true, upsert: true, new: true }
-              ).exec();
+    });
 
-              User.update(
-                { _id: user._id },
-                { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
-                { safe: true, upsert: true, new: true },
-              ).exec();
+    socket.on('disconnect', function() {
+      User.findById(connectedUsers[socket.id])
+        .then((user) => {
+          if (user.connectedChatRoom !== null) {
+            ChatRoom.findByIdAndUpdate(
+              user.connectedChatRoom,
+              { $unset: { connectedMembers: user._id } },
+              { safe: true, upsert: true, new: true }
+            ).exec();
 
-              socket.broadcast.emit('action', {
-                type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
-                userID: user._id,
-                chatRoomID: user.connectedChatRoom
-              });
-            }
+            User.update(
+              { _id: user._id },
+              { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
+              { safe: true, upsert: true, new: true },
+            ).exec();
 
             socket.broadcast.emit('action', {
-              type: 'SOCKET_BROADCAST_USER_LOGOUT',
-              userID: connectedUsers[socket.id]
+              type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+              userID: user._id,
+              chatRoomID: user.connectedChatRoom
             });
+          }
 
-            delete connectedUsers[socket.id];
-          })
-          .catch((error) => {
-            console.log(error);
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_USER_LOGOUT',
+            userID: connectedUsers[socket.id]
           });
-      });
+
+          delete connectedUsers[socket.id];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
+
     User.find({_id: {$ne: null}})
       .then((users) => {
         for (var i = 0; i < users.length; i++) {
