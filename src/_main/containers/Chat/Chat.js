@@ -267,7 +267,10 @@ class Chat extends Component {
                 />
               </LeftSideDrawer>
               {::this.handleRightSideDrawerRender()}
-              <Header handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}>
+              <Header
+                handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+                handleVideoCall={::this.handleVideoCall}
+              >
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
                   handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}

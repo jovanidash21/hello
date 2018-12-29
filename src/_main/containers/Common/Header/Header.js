@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Appbar } from 'muicss/react/';
+import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { NewMessagesDropdown } from '../../../components/Header';
 import { UserDropdown } from '../../../../components/UserDropdown';
@@ -9,6 +10,24 @@ import { UserDropdown } from '../../../../components/UserDropdown';
 class Header extends Component {
   constructor(props) {
     super(props);
+  }
+  handleVideoCamRender() {
+    const { chatRoom } = this.props;
+    const activeChatRoom = chatRoom.active;
+
+    if (
+      Object.keys(activeChatRoom.data).length > 0 && 
+      activeChatRoom.data.constructor === Object &&
+      activeChatRoom.data.chatType === 'direct' &&
+      !chatRoom.fetch.loading &&
+      chatRoom.fetch.success
+    ) {
+      return (
+        <div className="header-item-icon video-cam-icon" onClick={::this.handleVideoCall}>
+          <FontAwesome name="video-camera" />
+        </div>
+      )
+    }
   }
   handleNewMessagesDropdownRender() {
     const {
@@ -48,6 +67,13 @@ class Header extends Component {
       )
     }
   }
+  handleVideoCall(event) {
+    event.preventDefault();
+
+    const { handleVideoCall } = this.props;
+
+    handleVideoCall();
+  }
   handleClearChatRoomUnreadMessages(chatRoomIDs) {
     const {
       user,
@@ -67,6 +93,7 @@ class Header extends Component {
         <div className="content">
           {children}
         </div>
+        {::this.handleVideoCamRender()}
         {::this.handleNewMessagesDropdownRender()}
         <UserDropdown user={user.active} />
       </Appbar>
@@ -82,7 +109,8 @@ const mapStateToProps = (state) => {
 }
 
 Header.propTypes = {
-  handleOpenPopUpChatRoom: PropTypes.func.isRequired
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired,
+  handleVideoCall: PropTypes.func.isRequired
 }
 
 export default connect(
