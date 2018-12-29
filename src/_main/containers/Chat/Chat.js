@@ -210,6 +210,9 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
+  handleVideoCall() {
+
+  }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
       user,
@@ -285,6 +288,7 @@ class Chat extends Component {
                             handleSendFileMessage={::this.handleSendFileMessage}
                             handleSendImageMessage={::this.handleSendImageMessage}
                             handleSendAudioMessage={::this.handleSendAudioMessage}
+                            handleVideoCall={::this.handleVideoCall}
                             handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
                             active={activeChatPopUpWindow === i}
                           />
