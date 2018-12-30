@@ -6,3 +6,4 @@ export { ChatRoomsMenu } from './ChatRoomsMenu';
 export { CreateChatRoomModal } from './CreateChatRoomModal';
 export { DeleteMessageModal } from './DeleteMessageModal';
 export { MembersList } from './MembersList';
+export { VideoCallRequestModal } from './VideoCallRequestModal';

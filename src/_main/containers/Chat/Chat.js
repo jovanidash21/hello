@@ -15,7 +15,8 @@ import {
   ChatPopUpWindow,
   ActiveChatRoom,
   ChatRoomsList,
-  MembersList
+  MembersList,
+  VideoCallRequestModal
 } from '../Partial';
 import {
   ChatInput,
@@ -32,7 +33,8 @@ class Chat extends Component {
       isLeftSideDrawerOpen: false,
       isRightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
-      isAudioRecorderOpen: false
+      isAudioRecorderOpen: false,
+      isVideoCallRequestModalOpen: false,
     };
   }
   componentWillMount() {
@@ -211,7 +213,7 @@ class Chat extends Component {
     }
   }
   handleVideoCall() {
-
+    this.setState({isVideoCallRequestModalOpen: true});
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
@@ -229,6 +231,9 @@ class Chat extends Component {
       ::this.handleOpenPopUpChatRoom(chatRoomObj);
     }
   }
+  handleCloseVideoRequestModal() {
+    this.setState({isVideoCallRequestModalOpen: false});
+  }
   render() {
     const {
       user,
@@ -240,7 +245,8 @@ class Chat extends Component {
     const {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
-      isAudioRecorderOpen
+      isAudioRecorderOpen,
+      isVideoCallRequestModalOpen
     } = this.state;
     const activeChatRoom = chatRoom.active;
     const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
@@ -337,7 +343,14 @@ class Chat extends Component {
                   )
                 }}
               </MediaQuery>
-
+              {
+                isVideoCallRequestModalOpen &&
+                <VideoCallRequestModal
+                  isModalOpen={isVideoCallRequestModalOpen}
+                  user={user.active}
+                  handleCloseModal={::this.handleCloseVideoRequestModal}
+                />
+              }
             </div>
             :
             <ChatRoomsMenu />
