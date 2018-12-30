@@ -21,8 +21,9 @@ class VideoCallRequestModal extends Component {
     return (
       <Modal
         className="video-call-request-modal"
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        showCloseIcon={false}
       >
         <Modal.Body>
           <div className="avatar-wrapper">
