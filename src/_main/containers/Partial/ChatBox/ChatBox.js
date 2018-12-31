@@ -29,7 +29,7 @@ class ChatBox extends Component {
     };
   }
   componentDidMount() {
-    document.getElementById(::this.handleDivID()).addEventListener('scroll', ::this.handleChatBoxScroll, true);
+    this.chatBox.addEventListener('scroll', ::this.handleChatBoxScroll, true);
   }
   componentDidUpdate(prevProps) {
     if (
@@ -39,20 +39,11 @@ class ChatBox extends Component {
       ::this.handleScrollToBottom();
     }
   }
-  handleDivID(divID='chat-box') {
-    const { id } = this.props;
-
-    if ( id.length > 0 ) {
-      return divID + '-' + id;
-    }
-
-    return divID;
-  }
   handleScrollToBottom() {
-    document.getElementById(::this.handleDivID()).scrollTop = document.getElementById(::this.handleDivID()).scrollHeight;
+    this.chatBox.scrollTop = this.chatBox.scrollHeight;
   }
   handleChatBoxScroll() {
-    if ( document.getElementById(::this.handleDivID()).scrollTop === (document.getElementById(::this.handleDivID()).scrollHeight - document.getElementById(::this.handleDivID()).offsetHeight)) {
+    if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
       this.setState({isChatBoxScrollToBottom: true});
     } else {
       this.setState({isChatBoxScrollToBottom: false});
@@ -103,7 +94,7 @@ class ChatBox extends Component {
     const { audioIndex } = this.state;
 
     if ( audioIndex > -1 && audioIndex !== audioPlayingIndex ) {
-      var previousAudio = document.getElementById(::this.handleDivID()).getElementsByClassName('react-plyr-' + audioIndex)[0];
+      var previousAudio = this.chatBox.getElementsByClassName('react-plyr-' + audioIndex)[0];
 
       if (
         previousAudio.currentTime > 0  &&
@@ -145,8 +136,8 @@ class ChatBox extends Component {
     return (
       <ReactResizeDetector handleHeight onResize={::this.handleScrollToBottom}>
         <div
-          id={::this.handleDivID()}
           className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
+          ref={(element) => { this.chatBox = element; }}
         >
           {::this.handleChatBoxRender()}
           {
@@ -171,7 +162,6 @@ const mapStateToProps = (state) => {
 }
 
 ChatBox.propTypes = {
-  id: PropTypes.string,
   chatRoom: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
   loading: PropTypes.bool,
@@ -179,7 +169,6 @@ ChatBox.propTypes = {
 }
 
 ChatBox.defaultProps = {
-  id: '',
   loading: false,
   small: false
 }
