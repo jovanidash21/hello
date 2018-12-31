@@ -11,18 +11,23 @@ class VideoCallRequestModal extends Component {
   constructor(props) {
     super(props);
   }
+  handleCloseModal(event) {
+    event.preventDefault();
+
+    const { handleCloseModal } = this.props;
+
+    handleCloseModal();
+  }
   render() {
     const {
       isModalOpen,
-      user,
-      handleCloseModal
+      user
     } = this.props;
 
     return (
       <Modal
         className="video-call-request-modal"
         open={isModalOpen}
-        onClose={handleCloseModal}
         showCloseIcon={false}
       >
         <Modal.Body>
@@ -45,7 +50,7 @@ class VideoCallRequestModal extends Component {
             <div className="video-call-button accept-call-button" title="Accept Video Call">
               <FontAwesome name="video-camera" size="2x" />
             </div>
-            <div className="video-call-button end-call-button" title="Reject Video Call">
+            <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleCloseModal}>
               <FontAwesome name="phone" size="2x" />
             </div>
           </div>
