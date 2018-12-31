@@ -16,7 +16,8 @@ import {
   ActiveChatRoom,
   ChatRoomsList,
   MembersList,
-  VideoCallRequestModal
+  VideoCallRequestModal,
+  VideoCallWindow
 } from '../Partial';
 import {
   ChatInput,
@@ -35,6 +36,7 @@ class Chat extends Component {
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
       isVideoCallRequestModalOpen: false,
+      isVideoCallWindowOpen: false
     };
   }
   componentWillMount() {
@@ -213,7 +215,7 @@ class Chat extends Component {
     }
   }
   handleVideoCall() {
-    this.setState({isVideoCallRequestModalOpen: true});
+    this.setState({isVideoCallWindowOpen: true});
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
@@ -231,8 +233,11 @@ class Chat extends Component {
       ::this.handleOpenPopUpChatRoom(chatRoomObj);
     }
   }
-  handleCloseVideoRequestModal() {
+  handleCloseVideoCallRequestModal() {
     this.setState({isVideoCallRequestModalOpen: false});
+  }
+  handleCloseVideoCallWindow() {
+    this.setState({isVideoCallWindowOpen: false});
   }
   render() {
     const {
@@ -246,7 +251,7 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
-      isVideoCallRequestModalOpen
+      isVideoCallWindowOpen
     } = this.state;
     const activeChatRoom = chatRoom.active;
     const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
@@ -306,6 +311,12 @@ class Chat extends Component {
                     </div>
                   }
                 </MediaQuery>
+                {
+                  isVideoCallWindowOpen &&
+                  <div className="video-call-window-wrapper">
+                    <VideoCallWindow handleCloseWindow={::this.handleCloseVideoCallWindow} />
+                  </div>
+                }
                 <ChatBox
                   chatRoom={activeChatRoom}
                   message={message}
@@ -343,14 +354,6 @@ class Chat extends Component {
                   )
                 }}
               </MediaQuery>
-              {
-                isVideoCallRequestModalOpen &&
-                <VideoCallRequestModal
-                  isModalOpen={isVideoCallRequestModalOpen}
-                  user={user.active}
-                  handleCloseModal={::this.handleCloseVideoRequestModal}
-                />
-              }
             </div>
             :
             <ChatRoomsMenu />
