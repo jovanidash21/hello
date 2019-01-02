@@ -42,6 +42,11 @@ import {
   updateMemberRole,
   muteMember
 } from './member';
+import {
+  requestVideoCall,
+  rejectVideoCall,
+  acceptVideoCall
+} from './video-call';
 
 const actions = (dispatch) => {
   return bindActionCreators({
@@ -74,7 +79,10 @@ const actions = (dispatch) => {
     blockMember,
     kickMember,
     updateMemberRole,
-    muteMember
+    muteMember,
+    requestVideoCall,
+    rejectVideoCall,
+    acceptVideoCall
   }, dispatch);
 }
 

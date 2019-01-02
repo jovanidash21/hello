@@ -320,6 +320,15 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_REQUEST_VIDEO_CALL':
+
+          break;
+        case 'SOCKET_REJECT_VIDEO_CALL':
+
+          break;
+        case 'SOCKET_ACCEPT_VIDEO_CALL':
+
+          break;
         case 'SOCKET_BLOCK_MEMBER':
           User.findById(action.memberID)
             .then((user) => {
