@@ -1,9 +1,9 @@
 import {
   OPEN_POPUP_CHAT_ROOM,
-  CLOSE_POPUP_CHAT_ROOM,
-  FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES
+  CLOSE_POPUP_CHAT_ROOM
 } from '../constants/popup-chat-room';
 import {
+  FETCH_NEW_MESSAGES,
   SEND_MESSAGE,
   SOCKET_BROADCAST_SEND_MESSAGE,
   DELETE_MESSAGE,
@@ -42,7 +42,7 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES}_LOADING`:
+    case `${FETCH_NEW_MESSAGES}_LOADING`:
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 
@@ -59,7 +59,7 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES}_SUCCESS`:
+    case `${FETCH_NEW_MESSAGES}_SUCCESS`:
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 
@@ -80,7 +80,7 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_POPUP_CHAT_ROOM_NEW_MESSAGES}_ERROR`:
+    case `${FETCH_NEW_MESSAGES}_ERROR`:
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 

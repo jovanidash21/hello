@@ -26,12 +26,21 @@ const initialState = {
 const message = (state=initialState, action) => {
   switch(action.type) {
     case `${FETCH_NEW_MESSAGES}_LOADING`:
+      var activeChatRoom = {...state.activeChatRoom};
+      var chatRoomID = action.meta;
+
+      if ( chatRoomID === activeChatRoom.data._id ) {
+        return {
+          ...state,
+          fetchNew: {
+            ...state.fetchNew,
+            loading: true
+          }
+        };
+      }
+
       return {
-        ...state,
-        fetchNew: {
-          ...state.fetchNew,
-          loading: true
-        }
+        ...state
       };
     case `${DELETE_MESSAGE}_LOADING`:
       return {
@@ -42,16 +51,25 @@ const message = (state=initialState, action) => {
         }
       };
     case `${FETCH_NEW_MESSAGES}_SUCCESS`:
+      var activeChatRoom = {...state.activeChatRoom};
+      var chatRoomID = action.meta;
+
+      if ( chatRoomID === activeChatRoom.data._id ) {
+        return {
+          ...state,
+          fetchNew: {
+            ...state.fetchNew,
+            loading: false,
+            success: true,
+            error: false,
+            message: action.payload.data.message
+          },
+          all: action.payload.data.messages
+        };
+      }
+
       return {
-        ...state,
-        fetchNew: {
-          ...state.fetchNew,
-          loading: false,
-          success: true,
-          error: false,
-          message: action.payload.data.message
-        },
-        all: action.payload.data.messages
+        ...state
       };
     case `${SEND_MESSAGE}_SUCCESS`:
       var messages = [...state.all];
@@ -91,15 +109,24 @@ const message = (state=initialState, action) => {
         all: messages
       };
     case `${FETCH_NEW_MESSAGES}_ERROR`:
+      var activeChatRoom = {...state.activeChatRoom};
+      var chatRoomID = action.meta;
+
+      if ( chatRoomID === activeChatRoom.data._id ) {
+        return {
+          ...state,
+          fetchNew: {
+            ...state.fetchNew,
+            loading: false,
+            success: false,
+            error: true,
+            message: action.payload.response.data.message
+          }
+        };
+      }
+
       return {
-        ...state,
-        fetchNew: {
-          ...state.fetchNew,
-          loading: false,
-          success: false,
-          error: true,
-          message: action.payload.response.data.message
-        }
+        ...state
       };
     case `${DELETE_MESSAGE}_ERROR`:
       return {

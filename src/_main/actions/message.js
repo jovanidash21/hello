@@ -25,7 +25,8 @@ export function fetchNewMessages(chatRoomID, userID) {
   return dispatch => {
     return dispatch({
       type: FETCH_NEW_MESSAGES,
-      payload: axios.post(baseURL + '/api/message', data)
+      payload: axios.post(baseURL + '/api/message', data),
+      meta: chatRoomID
     })
     .catch((error) => {
       if (error instanceof Error) {
