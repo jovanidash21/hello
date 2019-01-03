@@ -321,7 +321,23 @@ var sockets = function(io) {
             });
           break;
         case 'SOCKET_REQUEST_VIDEO_CALL':
+          var callerUser = {};
 
+          User.findById(action.callerID)
+            .then((user) => {
+              callerUser = user;
+
+              return User.findById(action.receiverID);
+            })
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_REQUEST_VIDEO_CALL',
+                caller: callerUser
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         case 'SOCKET_REJECT_VIDEO_CALL':
 

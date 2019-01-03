@@ -16,14 +16,14 @@ class Header extends Component {
     const activeChatRoom = chatRoom.active;
 
     if (
-      Object.keys(activeChatRoom.data).length > 0 && 
+      Object.keys(activeChatRoom.data).length > 0 &&
       activeChatRoom.data.constructor === Object &&
       activeChatRoom.data.chatType === 'direct' &&
       !chatRoom.fetch.loading &&
       chatRoom.fetch.success
     ) {
       return (
-        <div className="header-item-icon video-cam-icon" onClick={::this.handleVideoCall}>
+        <div className="header-item-icon video-cam-icon" onClick={::this.handleRequestVideoCall}>
           <FontAwesome name="video-camera" />
         </div>
       )
@@ -67,12 +67,17 @@ class Header extends Component {
       )
     }
   }
-  handleVideoCall(event) {
+  handleRequestVideoCall(event) {
     event.preventDefault();
 
-    const { handleVideoCall } = this.props;
+    const {
+      chatRoom,
+      handleRequestVideoCall
+    } = this.props;
 
-    handleVideoCall();
+    if ( chatRoom.active.data.chatType === 'direct' ) {
+      handleRequestVideoCall(chatRoom.active);
+    }
   }
   handleClearChatRoomUnreadMessages(chatRoomIDs) {
     const {
@@ -110,7 +115,7 @@ const mapStateToProps = (state) => {
 
 Header.propTypes = {
   handleOpenPopUpChatRoom: PropTypes.func.isRequired,
-  handleVideoCall: PropTypes.func.isRequired
+  handleRequestVideoCall: PropTypes.func.isRequired
 }
 
 export default connect(

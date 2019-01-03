@@ -4,6 +4,7 @@ import MediaQuery from 'react-responsive';
 import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import mapDispatchToProps from '../../actions';
+import { isObjectEmpty } from '../../../utils/object';
 import {
   Header,
   LeftSideDrawer,
@@ -48,16 +49,17 @@ class Chat extends Component {
     socketUserLogin(user.active);
   }
   componentDidUpdate(prevProps) {
-    if (
-      ( Object.keys(prevProps.chatRoom.active.data).length === 0 && prevProps.chatRoom.active.data.constructor === Object ) &&
-      ( Object.keys(this.props.chatRoom.active.data).length > 0 && this.props.chatRoom.active.data.constructor === Object )
-    ) {
+    if ( isObjectEmpty(prevProps.chatRoom.active.data) && !isObjectEmpty(this.props.chatRoom.active.data) ) {
       document.body.className = '';
       document.body.classList.add('chat-page');
 
       ::this.calculateViewportHeight();
       window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
       window.addEventListener('resize', ::this.calculateViewportHeight, true);
+    }
+
+    if ( isObjectEmpty(prevProps.videoCall.caller) && !isObjectEmpty(this.props.videoCall.caller) ) {
+      this.setState({isVideoCallRequestModalOpen: true});
     }
   }
   calculateViewportHeight() {
@@ -214,8 +216,22 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
-  handleVideoCall() {
-    this.setState({isVideoCallWindowOpen: true});
+  handleRequestVideoCall(chatRoom) {
+    const {
+      user,
+      requestVideoCall
+    } = this.props;
+    const activeUser = user.active;
+    const chatRoomMembers = chatRoom.data.members;
+
+    if ( chatRoom.data.chatType === 'direct' ) {
+      var memberIndex = chatRoomMembers.findIndex(singleMember => singleMember._id !== activeUser._id);
+
+      if ( memberIndex > -1 ) {
+        requestVideoCall(user.active._id, chatRoomMembers[memberIndex]._id);
+        this.setState({isVideoCallWindowOpen: true});
+      }
+    }
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
@@ -242,15 +258,16 @@ class Chat extends Component {
   render() {
     const {
       user,
-      typer,
       chatRoom,
       popUpChatRoom,
-      message
+      message,
+      videoCall
     } = this.props;
     const {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
+      isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
     const activeChatRoom = chatRoom.active;
@@ -261,7 +278,7 @@ class Chat extends Component {
         {
           (
             ( chatRoom.fetch.success && chatRoom.all.length === 0 ) ||
-            ( Object.keys(chatRoom.active.data).length > 0 && chatRoom.active.data.constructor === Object )
+            !isObjectEmpty(chatRoom.active.data)
           )
             ?
             <div
@@ -280,7 +297,7 @@ class Chat extends Component {
               {::this.handleRightSideDrawerRender()}
               <Header
                 handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
-                handleVideoCall={::this.handleVideoCall}
+                handleRequestVideoCall={::this.handleRequestVideoCall}
               >
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
@@ -302,7 +319,7 @@ class Chat extends Component {
                             handleSendFileMessage={::this.handleSendFileMessage}
                             handleSendImageMessage={::this.handleSendImageMessage}
                             handleSendAudioMessage={::this.handleSendAudioMessage}
-                            handleVideoCall={::this.handleVideoCall}
+                            handleRequestVideoCall={::this.handleRequestVideoCall}
                             handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
                             active={activeChatPopUpWindow === i}
                           />
@@ -344,6 +361,14 @@ class Chat extends Component {
                     />
                 )
               }
+              {
+                isVideoCallRequestModalOpen &&
+                <VideoCallRequestModal
+                  isModalOpen={isVideoCallRequestModalOpen}
+                  user={videoCall.caller}
+                  handleCloseModal={::this.handleCloseVideoCallRequestModal}
+                />
+              }
               <MediaQuery query="(max-width: 767px)">
                 {(matches) => {
                   return (
@@ -368,7 +393,8 @@ const mapStateToProps = (state) => {
     user: state.user,
     chatRoom: state.chatRoom,
     popUpChatRoom: state.popUpChatRoom,
-    message: state.message
+    message: state.message,
+    videoCall: state.videoCall
   }
 }
 

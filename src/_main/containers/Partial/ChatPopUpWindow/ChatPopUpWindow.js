@@ -39,16 +39,21 @@ class ChatPopUpWindow extends Component {
 
     this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
   }
-  handleVideoCall(event) {
+  handleRequestVideoCall(event) {
     event.preventDefault();
 
     if ( event.stopPropagation ) {
       event.stopPropagation();
     }
 
-    const { handleVideoCall } = this.props;
+    const {
+      popUpChatRoom,
+      handleRequestVideoCall
+    } = this.props;
 
-    handleVideoCall();
+    if ( popUpChatRoom.data.chatType === 'direct' ) {
+      handleRequestVideoCall(popUpChatRoom);
+    }
   }
   handleClosePopUpChatRoom(event) {
     event.preventDefault();
@@ -97,7 +102,7 @@ class ChatPopUpWindow extends Component {
                 <span className="you-label">(you)</span>
               }
             </div>
-            <div className="popup-header-icon video-cam-icon" onClick={::this.handleVideoCall}>
+            <div className="popup-header-icon video-cam-icon" onClick={::this.handleRequestVideoCall}>
               <FontAwesome name="video-camera" />
             </div>
             <div className="popup-header-icon close-icon" onClick={::this.handleClosePopUpChatRoom}>
@@ -157,7 +162,7 @@ ChatPopUpWindow.propTypes = {
   handleSendFileMessage: PropTypes.func.isRequired,
   handleSendImageMessage: PropTypes.func.isRequired,
   handleSendAudioMessage: PropTypes.func.isRequired,
-  handleVideoCall: PropTypes.func.isRequired,
+  handleRequestVideoCall: PropTypes.func.isRequired,
   handleActiveChatPopUpWindow: PropTypes.func.isRequired,
   active: PropTypes.bool
 }
