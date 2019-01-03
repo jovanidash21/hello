@@ -5,6 +5,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
+import { isObjectEmpty } from '../../../../utils/object';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
@@ -219,7 +220,7 @@ class MembersList extends Component {
             handleOpenPopUpChatRoom(chatRoom);
           }
         });
-    } else if ( Object.keys(existingChatRoomData).length > 0 && existingChatRoomData.constructor === Object ) {
+    } else if ( !isObjectEmpty(existingChatRoomData) ) {
       if ( mobile ) {
         changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
       } else {

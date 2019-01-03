@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Appbar } from 'muicss/react/';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
+import { isObjectEmpty } from '../../../../utils/object';
 import { NewMessagesDropdown } from '../../../components/Header';
 import { UserDropdown } from '../../../../components/UserDropdown';
 
@@ -16,8 +17,7 @@ class Header extends Component {
     const activeChatRoom = chatRoom.active;
 
     if (
-      Object.keys(activeChatRoom.data).length > 0 &&
-      activeChatRoom.data.constructor === Object &&
+      !isObjectEmpty(activeChatRoom.data) &&
       activeChatRoom.data.chatType === 'direct' &&
       !chatRoom.fetch.loading &&
       chatRoom.fetch.success

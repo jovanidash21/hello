@@ -5,6 +5,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { handleChatRoomAvatarBadges } from '../../../../utils/avatar';
+import { isObjectEmpty } from '../../../../utils/object';
 import { formatNumber } from '../../../../utils/number';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../../components/Avatar';
@@ -24,7 +25,7 @@ class ActiveChatRoom extends Component {
     if (
       !chatRoom.fetch.loading &&
       chatRoom.fetch.success &&
-      Object.keys(chatRoom.active.data).length > 0
+      !isObjectEmpty(chatRoom.active.data)
     ) {
       const activeChatRoom = chatRoom.active;
 
