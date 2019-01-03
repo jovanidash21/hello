@@ -22,11 +22,10 @@ export function requestVideoCall(callerID, receiverID) {
  * @param {string} callerID
  * @param {string} receiverID
  */
-export function rejectVideoCall(callerID, receiverID) {
+export function rejectVideoCall(callerID) {
   return {
     type: SOCKET_REJECT_VIDEO_CALL,
-    callerID: callerID,
-    receiverID: receiverID
+    callerID: callerID
   };
 }
 

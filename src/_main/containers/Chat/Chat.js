@@ -61,6 +61,10 @@ class Chat extends Component {
     if ( isObjectEmpty(prevProps.videoCall.caller) && !isObjectEmpty(this.props.videoCall.caller) ) {
       this.setState({isVideoCallRequestModalOpen: true});
     }
+
+    if ( !isObjectEmpty(prevProps.videoCall.caller) && isObjectEmpty(this.props.videoCall.caller) ) {
+      ::this.handleCloseVideoCallWindow();
+    }
   }
   calculateViewportHeight() {
     var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -365,7 +369,6 @@ class Chat extends Component {
                 isVideoCallRequestModalOpen &&
                 <VideoCallRequestModal
                   isModalOpen={isVideoCallRequestModalOpen}
-                  user={videoCall.caller}
                   handleCloseModal={::this.handleCloseVideoCallRequestModal}
                 />
               }

@@ -11,18 +11,25 @@ class VideoCallRequestModal extends Component {
   constructor(props) {
     super(props);
   }
-  handleCloseModal(event) {
+  handleRejectVideoCall(event) {
     event.preventDefault();
 
-    const { handleCloseModal } = this.props;
+    const {
+      videoCall,
+      rejectVideoCall,
+      handleCloseModal
+    } = this.props;
+    const caller = videoCall.caller;
 
+    rejectVideoCall(caller._id);
     handleCloseModal();
   }
   render() {
     const {
       isModalOpen,
-      user
+      videoCall
     } = this.props;
+    const caller = videoCall.caller;
 
     return (
       <Modal
@@ -33,24 +40,24 @@ class VideoCallRequestModal extends Component {
         <Modal.Body>
           <div className="avatar-wrapper">
             <Avatar
-              image={user.profilePicture}
+              image={caller.profilePicture}
               size="100px"
-              name={user.name}
-              roleChatType={user.role}
-              accountType={user.accountType}
+              name={caller.name}
+              roleChatType={caller.role}
+              accountType={caller.accountType}
               badgeBigger
               badgeCloser
             />
           </div>
           <p>
-            <span className="user-name mui--text-danger">{user.name}</span>&nbsp;
+            <span className="user-name mui--text-danger">{caller.name}</span>&nbsp;
             is video calling ...
           </p>
           <div className="video-call-controls">
             <div className="video-call-button accept-call-button" title="Accept Video Call">
               <FontAwesome name="video-camera" size="2x" />
             </div>
-            <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleCloseModal}>
+            <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleRejectVideoCall}>
               <FontAwesome name="phone" size="2x" />
             </div>
           </div>
@@ -62,13 +69,12 @@ class VideoCallRequestModal extends Component {
 
 const mapStateToProps = (state) => {
   return {
-
+    videoCall: state.videoCall
   }
 }
 
 VideoCallRequestModal.propTypes = {
   isModalOpen: PropTypes.bool,
-  user: PropTypes.object.isRequired,
   handleCloseModal: PropTypes.func.isRequired
 }
 

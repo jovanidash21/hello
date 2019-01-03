@@ -340,7 +340,15 @@ var sockets = function(io) {
             });
           break;
         case 'SOCKET_REJECT_VIDEO_CALL':
-
+          User.findById(action.callerID)
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_REJECT_VIDEO_CALL'
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         case 'SOCKET_ACCEPT_VIDEO_CALL':
 

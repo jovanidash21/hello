@@ -26,7 +26,8 @@ const videoCall = (state=initialState, action) => {
       };
     case SOCKET_BROADCAST_REJECT_VIDEO_CALL:
       return {
-        ...state
+        ...state,
+        caller: {}
       };
     case SOCKET_BROADCAST_ACCEPT_VIDEO_CALL:
       return {
