@@ -16,6 +16,7 @@
       .textfield[contenteditable=true] {
         font-size: 14px;
         line-height: 20px;
+        max-height: 26px;
         .emojione {
           $emoji-size: 20px;
           height: $emoji-size;
@@ -105,7 +106,7 @@
       flex: 1;
       font-size: 15px;
       line-height: 24px;
-      overflow-x: auto;
+      max-height: 32px;
       padding: 3px 7px;
       user-select: text;
       &:empty:before {
@@ -117,8 +118,8 @@
         outline: none;
       }
       &.single-line {
-        overflow: hidden;
-        white-space: nowrap;
+        overflow: hidden auto;
+        word-break: break-all;
         br {
           display: none;
         }
