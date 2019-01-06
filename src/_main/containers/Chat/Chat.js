@@ -58,11 +58,11 @@ class Chat extends Component {
       window.addEventListener('resize', ::this.calculateViewportHeight, true);
     }
 
-    if ( isObjectEmpty(prevProps.videoCall.caller) && !isObjectEmpty(this.props.videoCall.caller) ) {
+    if ( !prevProps.videoCall.request && this.props.videoCall.request ) {
       this.setState({isVideoCallRequestModalOpen: true});
     }
 
-    if ( !isObjectEmpty(prevProps.videoCall.caller) && isObjectEmpty(this.props.videoCall.caller) ) {
+    if ( !prevProps.videoCall.reject && this.props.videoCall.reject ) {
       ::this.handleCloseVideoCallWindow();
     }
   }

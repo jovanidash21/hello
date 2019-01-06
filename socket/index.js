@@ -332,7 +332,7 @@ var sockets = function(io) {
             .then((user) => {
               socket.broadcast.to(user.socketID).emit('action', {
                 type: 'SOCKET_BROADCAST_REQUEST_VIDEO_CALL',
-                caller: callerUser
+                user: callerUser
               });
             })
             .catch((error) => {
