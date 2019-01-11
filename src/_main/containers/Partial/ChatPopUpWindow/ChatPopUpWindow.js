@@ -7,6 +7,7 @@ import Popup from 'react-popup';
 import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../../actions';
 import { handleChatRoomAvatarBadges } from '../../../../utils/avatar';
+import { isDirectChatRoomMemberOnline } from '../../../../utils/member';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { Avatar } from '../../../../components/Avatar';
 import { ChatBox } from '../ChatBox';
@@ -102,9 +103,12 @@ class ChatPopUpWindow extends Component {
                 <span className="you-label">(you)</span>
               }
             </div>
-            <div className="popup-header-icon video-cam-icon" onClick={::this.handleRequestVideoCall}>
-              <FontAwesome name="video-camera" />
-            </div>
+            {
+              isDirectChatRoomMemberOnline(popUpChatRoom.data.members, user.active._id) &&
+              <div className="popup-header-icon video-cam-icon" onClick={::this.handleRequestVideoCall}>
+                <FontAwesome name="video-camera" />
+              </div>
+            }
             <div className="popup-header-icon close-icon" onClick={::this.handleClosePopUpChatRoom}>
               <FontAwesome name="times" />
             </div>

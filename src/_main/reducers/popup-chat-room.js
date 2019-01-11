@@ -9,6 +9,10 @@ import {
   DELETE_MESSAGE,
   SOCKET_BROADCAST_DELETE_MESSAGE
 } from '../constants/message';
+import {
+  SOCKET_BROADCAST_USER_LOGIN,
+  SOCKET_BROADCAST_USER_LOGOUT
+} from '../constants/auth';
 
 const initialState = {
   all: []
@@ -160,6 +164,59 @@ const popUpChatRoom = (state=initialState, action) => {
 
       if ( chatRoomIndex > -1 ) {
         chatRooms[chatRoomIndex].message.all = chatRooms[chatRoomIndex].message.all.filter((message) => message._id !== messageID);
+      }
+
+      return {
+        ...state,
+        all: [...chatRooms]
+      };
+    case SOCKET_BROADCAST_USER_LOGIN:
+      var user = action.user;
+      var userID = user._id;
+      var chatRooms = [...state.all];
+
+      if ( chatRooms.length > 0 ) {
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var members = chatRoom.data.members;
+
+          if ( members.length > 0 ) {
+            for (var j = 0; j < members.length; j++) {
+              var member = members[j];
+
+              if ( member._id === userID) {
+                member.isOnline = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        ...state,
+        all: [...chatRooms]
+      };
+    case SOCKET_BROADCAST_USER_LOGOUT:
+      var userID = action.userID;
+      var chatRooms = [...state.all];
+
+      if ( chatRooms.length > 0 ) {
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var members = chatRoom.data.members;
+
+          if ( members.length > 0 ) {
+            for (var j = 0; j < members.length; j++) {
+              var member = members[j];
+
+              if ( member._id === userID) {
+                member.isOnline = false;
+                break;
+              }
+            }
+          }
+        }
       }
 
       return {

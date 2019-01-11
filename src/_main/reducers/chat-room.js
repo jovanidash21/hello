@@ -8,7 +8,10 @@ import {
   TRASH_ALL_CHAT_ROOMS,
   TRASH_CHAT_ROOM
 } from '../constants/chat-room';
-import { SOCKET_BROADCAST_USER_LOGIN } from '../constants/auth';
+import {
+  SOCKET_BROADCAST_USER_LOGIN,
+  SOCKET_BROADCAST_USER_LOGOUT
+} from '../constants/auth';
 import {
   SOCKET_BROADCAST_CONNECTED_MEMBER,
   SOCKET_BROADCAST_DISCONNECTED_MEMBER
@@ -338,6 +341,7 @@ const chatRoom = (state=initialState, action) => {
       var user = action.user;
       var userID = user._id;
       var activeChatRoom = {...state.active};
+      var chatRooms = [...state.all];
       var members = activeChatRoom.data.members;
 
       if (
@@ -347,9 +351,80 @@ const chatRoom = (state=initialState, action) => {
         members.push(userID);
       }
 
+      if ( chatRooms.length > 0 ) {
+        if ( activeChatRoom.data.chatType === 'direct' ) {
+          var members = activeChatRoom.data.members;
+
+          if ( members.length > 0 ) {
+            var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
+
+            if ( memberIndex > -1 ) {
+              members[memberIndex].isOnline = true;
+            }
+          }
+        }
+
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var members = chatRoom.data.members;
+
+          if ( ( chatRoom.data.chatType === 'direct' ) && ( members.length > 0 ) ) {
+            for (var j = 0; j < members.length; j++) {
+              var member = members[j];
+
+              if ( member._id === userID) {
+                member.isOnline = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+
       return {
         ...state,
-        active: {...activeChatRoom}
+        active: {...activeChatRoom},
+        all: [...chatRooms]
+      }
+    case SOCKET_BROADCAST_USER_LOGOUT:
+      var userID = action.userID;
+      var chatRooms = [...state.all];
+      var activeChatRoom = {...state.active};
+
+      if ( chatRooms.length > 0 ) {
+        if ( activeChatRoom.data.chatType === 'direct' ) {
+          var members = activeChatRoom.data.members;
+
+          if ( members.length > 0 ) {
+            var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
+
+            if ( memberIndex > -1 ) {
+              members[memberIndex].isOnline = false;
+            }
+          }
+        }
+
+        for (var i = 0; i < chatRooms.length; i++) {
+          var chatRoom = chatRooms[i];
+          var members = chatRoom.data.members;
+
+          if ( ( chatRoom.data.chatType === 'direct' ) && ( members.length > 0 ) ) {
+            for (var j = 0; j < members.length; j++) {
+              var member = members[j];
+
+              if ( member._id === userID) {
+                member.isOnline = false;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        ...state,
+        active: {...activeChatRoom},
+        all: [...chatRooms]
       }
     case SOCKET_BROADCAST_CONNECTED_MEMBER:
       var activeChatRoom = {...state.active};
