@@ -181,13 +181,10 @@ const popUpChatRoom = (state=initialState, action) => {
           var members = chatRoom.data.members;
 
           if ( members.length > 0 ) {
-            for (var j = 0; j < members.length; j++) {
-              var member = members[j];
+            var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
 
-              if ( member._id === userID) {
-                member.isOnline = true;
-                break;
-              }
+            if ( memberIndex > -1 ) {
+              members[memberIndex].isOnline = true;
             }
           }
         }
@@ -207,13 +204,10 @@ const popUpChatRoom = (state=initialState, action) => {
           var members = chatRoom.data.members;
 
           if ( members.length > 0 ) {
-            for (var j = 0; j < members.length; j++) {
-              var member = members[j];
+            var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
 
-              if ( member._id === userID) {
-                member.isOnline = false;
-                break;
-              }
+            if ( memberIndex > -1 ) {
+              members[memberIndex].isOnline = false;
             }
           }
         }
