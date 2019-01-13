@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Webcam from 'react-webcam';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
+import { getMedia } from '../../../../utils/media';
 import './styles.scss';
 
 class VideoCallWindow extends Component {
   constructor(props) {
     super(props);
+
+    getMedia(::this.handleGetMedia, () => {});
+  }
+  componentWillMount() {
+    this.setState({localVideoSource: getMedia(() => {}, () => {})});
+  }
+  componentDidUpdate() {
+    if ( this.localVideoSource && this.localVideo && !this.localVideo.srcObject ) {
+      this.localVideo.srcObject = this.localVideoSource;
+    }
+  }
+  handleGetMedia(stream) {
+    this.localVideoSource = stream;
   }
   handleCloseWindow(event) {
     event.preventDefault();
@@ -29,16 +42,15 @@ class VideoCallWindow extends Component {
 
     return (
       <div className="video-call-window">
-        <Webcam
+        <video
           className="remote-video"
-          videoConstraints={videoConstraints}
-          ref={this.remoteVideo}
-          audio={false}
+          ref={(element) => { this.remoteVideo = element; }}
+          autoPlay
         />
-        <Webcam
+        <video
           className="local-video"
-          videoConstraints={videoConstraints}
-          ref={this.localVideo}
+          ref={(element) => { this.localVideo = element; }}
+          autoPlay muted
         />
         <div className="video-call-controls">
           <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleCloseWindow}>
