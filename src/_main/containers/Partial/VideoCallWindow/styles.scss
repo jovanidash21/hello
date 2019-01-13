@@ -1,9 +1,11 @@
 .video-call-window {
-  background-color: #000;
+  background-color: $color-primary;
   height: 100%;
-  position: relative;
+  left: 0;
+  position: absolute;
+  top: 0;
   width: 100%;
-  z-index: 600;
+  z-index: 1500;
   .remote-video {
     height: 100%;
     width: 100%;

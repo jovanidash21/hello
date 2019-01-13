@@ -63,8 +63,7 @@ body.chat-page {
       }
     }
   }
-  .chat-popup-window-wrapper,
-  .video-call-window-wrapper {
+  .chat-popup-window-wrapper {
     bottom: 0;
     left: 0;
     margin: 12px;
@@ -72,7 +71,7 @@ body.chat-page {
     position: absolute;
     right: 0;
     top: 0;
-    & > div {
+    .chat-popup-window {
       pointer-events: auto;
     }
   }

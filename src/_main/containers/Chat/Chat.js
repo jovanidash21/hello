@@ -332,12 +332,6 @@ class Chat extends Component {
                     </div>
                   }
                 </MediaQuery>
-                {
-                  isVideoCallWindowOpen &&
-                  <div className="video-call-window-wrapper">
-                    <VideoCallWindow handleCloseWindow={::this.handleCloseVideoCallWindow} />
-                  </div>
-                }
                 <ChatBox
                   chatRoom={activeChatRoom}
                   message={message}
@@ -365,13 +359,6 @@ class Chat extends Component {
                     />
                 )
               }
-              {
-                isVideoCallRequestModalOpen &&
-                <VideoCallRequestModal
-                  isModalOpen={isVideoCallRequestModalOpen}
-                  handleCloseModal={::this.handleCloseVideoCallRequestModal}
-                />
-              }
               <MediaQuery query="(max-width: 767px)">
                 {(matches) => {
                   return (
@@ -385,6 +372,17 @@ class Chat extends Component {
             </div>
             :
             <ChatRoomsMenu />
+        }
+        {
+          isVideoCallRequestModalOpen &&
+          <VideoCallRequestModal
+            isModalOpen={isVideoCallRequestModalOpen}
+            handleCloseModal={::this.handleCloseVideoCallRequestModal}
+          />
+        }
+        {
+          isVideoCallWindowOpen &&
+          <VideoCallWindow handleCloseWindow={::this.handleCloseVideoCallWindow} />
         }
       </div>
     )
