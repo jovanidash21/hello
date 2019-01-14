@@ -15,7 +15,10 @@
     position: absolute;
     right: 15px;
     top: 30px;
-    width: 100px;
+    width: 180px;
+    @media screen and (max-width: $screen-mobile-max) {
+      width: 100px;
+    }
   }
   .video-call-controls {
     align-items: center;

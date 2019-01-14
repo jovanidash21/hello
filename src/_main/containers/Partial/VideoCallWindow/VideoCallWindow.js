@@ -12,21 +12,19 @@ class VideoCallWindow extends Component {
 
     getMedia(::this.handleGetMedia, () => {});
   }
-  componentWillMount() {
-    this.setState({localVideoSource: getMedia(() => {}, () => {})});
-  }
-  componentDidUpdate() {
-    if ( this.localVideoSource && this.localVideo && !this.localVideo.srcObject ) {
-      this.localVideo.srcObject = this.localVideoSource;
-    }
-  }
   handleGetMedia(stream) {
-    this.localVideoSource = stream;
+    this.localVideo.srcObject = stream;
   }
   handleCloseWindow(event) {
     event.preventDefault();
 
     const { handleCloseWindow } = this.props;
+
+    if ( this.localVideo && this.localVideo.srcObject ) {
+      this.localVideo.srcObject.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
 
     handleCloseWindow();
   }
