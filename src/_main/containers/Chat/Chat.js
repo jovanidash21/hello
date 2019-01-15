@@ -63,7 +63,7 @@ class Chat extends Component {
     }
 
     if ( !prevProps.videoCall.reject && this.props.videoCall.reject ) {
-      ::this.handleCloseVideoCallWindow();
+      this.setState({isVideoCallWindowOpen: false});
     }
   }
   calculateViewportHeight() {
@@ -237,6 +237,15 @@ class Chat extends Component {
       }
     }
   }
+  handleAcceptVideoCall() {
+    this.setState({isVideoCallRequestModalOpen: false});
+  }
+  handleRejectVideoCall() {
+    this.setState({isVideoCallRequestModalOpen: false});
+  }
+  handleEndVideoCall() {
+    this.setState({isVideoCallWindowOpen: false});
+  }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
       user,
@@ -252,12 +261,6 @@ class Chat extends Component {
     } else {
       ::this.handleOpenPopUpChatRoom(chatRoomObj);
     }
-  }
-  handleCloseVideoCallRequestModal() {
-    this.setState({isVideoCallRequestModalOpen: false});
-  }
-  handleCloseVideoCallWindow() {
-    this.setState({isVideoCallWindowOpen: false});
   }
   render() {
     const {
@@ -377,12 +380,13 @@ class Chat extends Component {
           isVideoCallRequestModalOpen &&
           <VideoCallRequestModal
             isModalOpen={isVideoCallRequestModalOpen}
-            handleCloseModal={::this.handleCloseVideoCallRequestModal}
+            handleAcceptVideoCall={::this.handleAcceptVideoCall}
+            handleRejectVideoCall={::this.handleRejectVideoCall}
           />
         }
         {
           isVideoCallWindowOpen &&
-          <VideoCallWindow handleCloseWindow={::this.handleCloseVideoCallWindow} />
+          <VideoCallWindow handleEndVideoCall={::this.handleEndVideoCall} />
         }
       </div>
     )

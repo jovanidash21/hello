@@ -17,12 +17,12 @@ class VideoCallRequestModal extends Component {
     const {
       videoCall,
       rejectVideoCall,
-      handleCloseModal
+      handleRejectVideoCall
     } = this.props;
     const caller = videoCall.caller;
 
     rejectVideoCall(caller._id);
-    handleCloseModal();
+    handleRejectVideoCall();
   }
   render() {
     const {
@@ -75,7 +75,7 @@ const mapStateToProps = (state) => {
 
 VideoCallRequestModal.propTypes = {
   isModalOpen: PropTypes.bool,
-  handleCloseModal: PropTypes.func.isRequired
+  handleRejectVideoCall: PropTypes.func.isRequired
 }
 
 VideoCallRequestModal.defaultProps = {

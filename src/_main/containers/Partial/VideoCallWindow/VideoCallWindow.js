@@ -15,10 +15,10 @@ class VideoCallWindow extends Component {
   handleGetMedia(stream) {
     this.localVideo.srcObject = stream;
   }
-  handleCloseWindow(event) {
+  handleEndVideoCall(event) {
     event.preventDefault();
 
-    const { handleCloseWindow } = this.props;
+    const { handleEndVideoCall } = this.props;
 
     if ( this.localVideo && this.localVideo.srcObject ) {
       this.localVideo.srcObject.getTracks().forEach((track) => {
@@ -26,7 +26,7 @@ class VideoCallWindow extends Component {
       });
     }
 
-    handleCloseWindow();
+    handleEndVideoCall();
   }
   render() {
     const videoConstraints = {
@@ -51,7 +51,7 @@ class VideoCallWindow extends Component {
           autoPlay muted
         />
         <div className="video-call-controls">
-          <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleCloseWindow}>
+          <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleEndVideoCall}>
             <FontAwesome name="phone" size="2x" />
           </div>
         </div>
@@ -67,7 +67,7 @@ const mapStateToProps = (state) => {
 }
 
 VideoCallWindow.propTypes = {
-  handleCloseWindow: PropTypes.func.isRequired
+  handleEndVideoCall: PropTypes.func.isRequired
 }
 
 export default connect(
