@@ -3,28 +3,29 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
-import { getMedia } from '../../../../utils/media';
+import { isObjectEmpty } from '../../../../utils/object';
 import './styles.scss';
 
 class VideoCallWindow extends Component {
   constructor(props) {
     super(props);
-
-    getMedia(::this.handleGetMedia, () => {});
   }
-  handleGetMedia(stream) {
-    this.localVideo.srcObject = stream;
+  componentDidUpdate(prevProps) {
+    if ( isObjectEmpty(prevProps.localVideoSource) && !isObjectEmpty(this.props.localVideoSource) ) {
+      this.localVideo.srcObject = this.props.localVideoSource;
+    }
   }
-  handleEndVideoCall(event) {
-    event.preventDefault();
-
-    const { handleEndVideoCall } = this.props;
-
+  componentWillUnmount() {
     if ( this.localVideo && this.localVideo.srcObject ) {
       this.localVideo.srcObject.getTracks().forEach((track) => {
         track.stop();
       });
     }
+  }
+  handleEndVideoCall(event) {
+    event.preventDefault();
+
+    const { handleEndVideoCall } = this.props;
 
     handleEndVideoCall();
   }
@@ -67,7 +68,12 @@ const mapStateToProps = (state) => {
 }
 
 VideoCallWindow.propTypes = {
+  localVideoSource: PropTypes.object,
   handleEndVideoCall: PropTypes.func.isRequired
+}
+
+VideoCallWindow.defaultProps = {
+  localVideoSource: {}
 }
 
 export default connect(

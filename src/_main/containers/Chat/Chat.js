@@ -5,6 +5,7 @@ import { Container } from 'muicss/react';
 import Popup from 'react-popup';
 import mapDispatchToProps from '../../actions';
 import { isObjectEmpty } from '../../../utils/object';
+import { getMedia } from '../../../utils/media';
 import {
   Header,
   LeftSideDrawer,
@@ -36,6 +37,7 @@ class Chat extends Component {
       isRightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
+      localVideoSource: {},
       isVideoCallRequestModalOpen: false,
       isVideoCallWindowOpen: false
     };
@@ -233,6 +235,7 @@ class Chat extends Component {
 
       if ( memberIndex > -1 ) {
         requestVideoCall(user.active._id, chatRoomMembers[memberIndex]._id);
+        getMedia(::this.handleGetMedia, () => {});
         this.setState({isVideoCallWindowOpen: true});
       }
     }
@@ -245,6 +248,9 @@ class Chat extends Component {
   }
   handleEndVideoCall() {
     this.setState({isVideoCallWindowOpen: false});
+  }
+  handleGetMedia(stream) {
+    this.setState({localVideoSource: stream});
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
@@ -274,6 +280,7 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
+      localVideoSource,
       isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
@@ -386,7 +393,10 @@ class Chat extends Component {
         }
         {
           isVideoCallWindowOpen &&
-          <VideoCallWindow handleEndVideoCall={::this.handleEndVideoCall} />
+          <VideoCallWindow
+            localVideoSource={localVideoSource}
+            handleEndVideoCall={::this.handleEndVideoCall}
+          />
         }
       </div>
     )
