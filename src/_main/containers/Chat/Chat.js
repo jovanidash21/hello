@@ -26,6 +26,13 @@ import {
   ChatAudioRecorder
 } from '../../components/Chat';
 import { NotificationPopUp } from '../../components/NotificationPopUp';
+import {
+  SOCKET_BROADCAST_REQUEST_VIDEO_CALL,
+  SOCKET_BROADCAST_REJECT_VIDEO_CALL,
+  SOCKET_BROADCAST_ACCEPT_VIDEO_CALL,
+  SOCKET_BROADCAST_END_VIDEO_CALL
+} from '../../constants/video-call';
+import socket from '../../../socket';
 import '../../styles/Chat.scss';
 
 class Chat extends Component {
@@ -50,6 +57,22 @@ class Chat extends Component {
 
     socketUserLogin(user.active);
   }
+  componentDidMount() {
+    socket.on('action', (action) => {
+      switch (action.type) {
+        case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
+          this.setState({isVideoCallRequestModalOpen: true});
+          break;
+        case SOCKET_BROADCAST_REJECT_VIDEO_CALL:
+        case SOCKET_BROADCAST_END_VIDEO_CALL :
+          this.setState({isVideoCallWindowOpen: false});
+          break;
+        case SOCKET_BROADCAST_ACCEPT_VIDEO_CALL:
+          ::this.handleConnectedVideoCall();
+          break;
+      }
+    });
+  }
   componentDidUpdate(prevProps) {
     if ( isObjectEmpty(prevProps.chatRoom.active.data) && !isObjectEmpty(this.props.chatRoom.active.data) ) {
       document.body.className = '';
@@ -58,14 +81,6 @@ class Chat extends Component {
       ::this.calculateViewportHeight();
       window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
       window.addEventListener('resize', ::this.calculateViewportHeight, true);
-    }
-
-    if ( !prevProps.videoCall.request && this.props.videoCall.request ) {
-      this.setState({isVideoCallRequestModalOpen: true});
-    }
-
-    if ( !prevProps.videoCall.reject && this.props.videoCall.reject ) {
-      this.setState({isVideoCallWindowOpen: false});
     }
   }
   calculateViewportHeight() {
@@ -241,12 +256,25 @@ class Chat extends Component {
     }
   }
   handleAcceptVideoCall() {
+    getMedia(::this.handleGetMedia, () => {});
+    this.setState({
+      isVideoCallRequestModalOpen: false,
+      isVideoCallWindowOpen: true
+    });
+  }
+  handleRejectVideoCall(peerUserID) {
+    const { rejectVideoCall } = this.props;
+
+    rejectVideoCall(peerUserID);
     this.setState({isVideoCallRequestModalOpen: false});
   }
-  handleRejectVideoCall() {
-    this.setState({isVideoCallRequestModalOpen: false});
+  handleConnectedVideoCall() {
+
   }
-  handleEndVideoCall() {
+  handleEndVideoCall(peerUserID) {
+    const { endVideoCall } = this.props;
+
+    endVideoCall(peerUserID);
     this.setState({isVideoCallWindowOpen: false});
   }
   handleGetMedia(stream) {

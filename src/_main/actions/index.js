@@ -45,7 +45,8 @@ import {
 import {
   requestVideoCall,
   rejectVideoCall,
-  acceptVideoCall
+  acceptVideoCall,
+  endVideoCall
 } from './video-call';
 
 const actions = (dispatch) => {
@@ -82,7 +83,8 @@ const actions = (dispatch) => {
     muteMember,
     requestVideoCall,
     rejectVideoCall,
-    acceptVideoCall
+    acceptVideoCall,
+    endVideoCall
   }, dispatch);
 }
 

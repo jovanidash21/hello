@@ -371,6 +371,17 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_END_VIDEO_CALL':
+          User.findById(action.callerID)
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_END_VIDEO_CALL'
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
         case 'SOCKET_KICK_MEMBER':
           User.findById(action.memberID)
             .then((user) => {

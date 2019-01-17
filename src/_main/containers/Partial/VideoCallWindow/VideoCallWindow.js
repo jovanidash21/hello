@@ -25,9 +25,13 @@ class VideoCallWindow extends Component {
   handleEndVideoCall(event) {
     event.preventDefault();
 
-    const { handleEndVideoCall } = this.props;
+    const {
+      videoCall,
+      handleEndVideoCall
+    } = this.props;
+    const peerUser = videoCall.peerUser;
 
-    handleEndVideoCall();
+    handleEndVideoCall(peerUser._id);
   }
   render() {
     const videoConstraints = {
@@ -63,7 +67,7 @@ class VideoCallWindow extends Component {
 
 const mapStateToProps = (state) => {
   return {
-
+    videoCall: state.videoCall
   }
 }
 

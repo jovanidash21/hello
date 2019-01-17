@@ -1,7 +1,8 @@
 import {
   SOCKET_REQUEST_VIDEO_CALL,
   SOCKET_REJECT_VIDEO_CALL,
-  SOCKET_ACCEPT_VIDEO_CALL
+  SOCKET_ACCEPT_VIDEO_CALL,
+  SOCKET_END_VIDEO_CALL
 } from '../constants/video-call';
 
 /**
@@ -39,5 +40,16 @@ export function acceptVideoCall(callerID, receiverID) {
     type: SOCKET_ACCEPT_VIDEO_CALL,
     callerID: callerID,
     receiverID: receiverID
+  };
+}
+
+/**
+ * End video call
+ * @param {string} callerID
+ */
+export function endVideoCall(callerID) {
+  return {
+    type: SOCKET_END_VIDEO_CALL,
+    callerID: callerID
   };
 }

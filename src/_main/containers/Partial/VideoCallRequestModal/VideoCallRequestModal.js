@@ -11,25 +11,30 @@ class VideoCallRequestModal extends Component {
   constructor(props) {
     super(props);
   }
+  handleAcceptVideoCall(event) {
+    event.preventDefault();
+
+    const { handleAcceptVideoCall } = this.props;
+
+    handleAcceptVideoCall();
+  }
   handleRejectVideoCall(event) {
     event.preventDefault();
 
     const {
       videoCall,
-      rejectVideoCall,
       handleRejectVideoCall
     } = this.props;
-    const caller = videoCall.caller;
+    const peerUser = videoCall.peerUser;
 
-    rejectVideoCall(caller._id);
-    handleRejectVideoCall();
+    handleRejectVideoCall(peerUser._id);
   }
   render() {
     const {
       isModalOpen,
       videoCall
     } = this.props;
-    const caller = videoCall.caller;
+    const peerUser = videoCall.peerUser;
 
     return (
       <Modal
@@ -40,21 +45,21 @@ class VideoCallRequestModal extends Component {
         <Modal.Body>
           <div className="avatar-wrapper">
             <Avatar
-              image={caller.profilePicture}
+              image={peerUser.profilePicture}
               size="100px"
-              name={caller.name}
-              roleChatType={caller.role}
-              accountType={caller.accountType}
+              name={peerUser.name}
+              roleChatType={peerUser.role}
+              accountType={peerUser.accountType}
               badgeBigger
               badgeCloser
             />
           </div>
           <p>
-            <span className="user-name mui--text-danger">{caller.name}</span>&nbsp;
+            <span className="user-name mui--text-danger">{peerUser.name}</span>&nbsp;
             is video calling ...
           </p>
           <div className="video-call-controls">
-            <div className="video-call-button accept-call-button" title="Accept Video Call">
+            <div className="video-call-button accept-call-button" title="Accept Video Call" onClick={::this.handleAcceptVideoCall}>
               <FontAwesome name="video-camera" size="2x" />
             </div>
             <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleRejectVideoCall}>
@@ -75,6 +80,7 @@ const mapStateToProps = (state) => {
 
 VideoCallRequestModal.propTypes = {
   isModalOpen: PropTypes.bool,
+  handleAcceptVideoCall: PropTypes.func.isRequired,
   handleRejectVideoCall: PropTypes.func.isRequired
 }
 
