@@ -10,9 +10,12 @@ class VideoCallWindow extends Component {
   constructor(props) {
     super(props);
   }
+  componentDidMount() {
+    ::this.handleLocalVideoSource();
+  }
   componentDidUpdate(prevProps) {
-    if ( isObjectEmpty(prevProps.localVideoSource) && !isObjectEmpty(this.props.localVideoSource) ) {
-      this.localVideo.srcObject = this.props.localVideoSource;
+    if ( !isObjectEmpty(this.props.remoteVideoSource) && !this.remoteVideo.srcObject ) {
+      this.remoteVideo.srcObject = this.props.remoteVideoSource;
     }
   }
   componentWillUnmount() {
@@ -20,6 +23,13 @@ class VideoCallWindow extends Component {
       this.localVideo.srcObject.getTracks().forEach((track) => {
         track.stop();
       });
+    }
+  }
+  handleLocalVideoSource() {
+    const { localVideoSource } = this.props;
+
+    if ( !isObjectEmpty(localVideoSource) && !this.localVideo.srcObject ) {
+      this.localVideo.srcObject = localVideoSource;
     }
   }
   handleEndVideoCall(event) {
@@ -73,11 +83,13 @@ const mapStateToProps = (state) => {
 
 VideoCallWindow.propTypes = {
   localVideoSource: PropTypes.object,
+  remoteVideoSource: PropTypes.object,
   handleEndVideoCall: PropTypes.func.isRequired
 }
 
 VideoCallWindow.defaultProps = {
-  localVideoSource: {}
+  localVideoSource: {},
+  remoteVideoSource: {}
 }
 
 export default connect(
