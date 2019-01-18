@@ -238,10 +238,7 @@ class Chat extends Component {
     }
   }
   handleRequestVideoCall(chatRoom) {
-    const {
-      user,
-      requestVideoCall
-    } = this.props;
+    const { user } = this.props;
     const activeUser = user.active;
     const chatRoomMembers = chatRoom.data.members;
 
@@ -249,9 +246,14 @@ class Chat extends Component {
       var memberIndex = chatRoomMembers.findIndex(singleMember => singleMember._id !== activeUser._id);
 
       if ( memberIndex > -1 ) {
-        requestVideoCall(user.active._id, chatRoomMembers[memberIndex]._id);
-        getMedia(::this.handleGetMedia, () => {});
-        this.setState({isVideoCallWindowOpen: true});
+        getMedia(
+          (stream) => {
+            ::this.handleVideoCall(stream, activeUser._id, chatRoomMembers[memberIndex]._id)
+          },
+          () => {
+            Popup.alert('Camera is not supported on your device!');
+          }
+        );
       }
     }
   }
@@ -277,8 +279,15 @@ class Chat extends Component {
     endVideoCall(peerUserID);
     this.setState({isVideoCallWindowOpen: false});
   }
-  handleGetMedia(stream) {
-    this.setState({localVideoSource: stream});
+  handleVideoCall(stream, userID, memberID) {
+    const { requestVideoCall } = this.props;
+
+    requestVideoCall(userID, memberID);
+
+    this.setState({
+      localVideoSource: stream,
+      isVideoCallWindowOpen: true
+    });
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
