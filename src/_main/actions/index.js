@@ -44,6 +44,7 @@ import {
 } from './member';
 import {
   requestVideoCall,
+  cancelRequestVideoCall,
   rejectVideoCall,
   acceptVideoCall,
   endVideoCall
@@ -82,6 +83,7 @@ const actions = (dispatch) => {
     updateMemberRole,
     muteMember,
     requestVideoCall,
+    cancelRequestVideoCall,
     rejectVideoCall,
     acceptVideoCall,
     endVideoCall

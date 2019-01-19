@@ -339,6 +339,17 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_CANCEL_REQUEST_VIDEO_CALL':
+          User.findById(action.receiverID)
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL'
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
         case 'SOCKET_REJECT_VIDEO_CALL':
           User.findById(action.callerID)
             .then((user) => {

@@ -28,6 +28,7 @@ import {
 import { NotificationPopUp } from '../../components/NotificationPopUp';
 import {
   SOCKET_BROADCAST_REQUEST_VIDEO_CALL,
+  SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL,
   SOCKET_BROADCAST_REJECT_VIDEO_CALL,
   SOCKET_BROADCAST_ACCEPT_VIDEO_CALL,
   SOCKET_BROADCAST_END_VIDEO_CALL
@@ -45,6 +46,7 @@ class Chat extends Component {
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
       localVideoSource: {},
+      remoteVideoSource: {},
       isVideoCallRequestModalOpen: false,
       isVideoCallWindowOpen: false
     };
@@ -62,6 +64,9 @@ class Chat extends Component {
       switch (action.type) {
         case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
           this.setState({isVideoCallRequestModalOpen: true});
+          break;
+        case SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL:
+          this.setState({isVideoCallRequestModalOpen: false});
           break;
         case SOCKET_BROADCAST_REJECT_VIDEO_CALL:
         case SOCKET_BROADCAST_END_VIDEO_CALL :
@@ -238,7 +243,10 @@ class Chat extends Component {
     }
   }
   handleRequestVideoCall(chatRoom) {
-    const { user } = this.props;
+    const {
+      user,
+      requestVideoCall
+    } = this.props;
     const activeUser = user.active;
     const chatRoomMembers = chatRoom.data.members;
 
@@ -248,26 +256,47 @@ class Chat extends Component {
       if ( memberIndex > -1 ) {
         getMedia(
           (stream) => {
-            ::this.handleVideoCall(stream, activeUser._id, chatRoomMembers[memberIndex]._id)
+            requestVideoCall(activeUser._id, chatRoomMembers[memberIndex]);
+            this.setState({
+              localVideoSource: stream,
+              remoteVideoSource: {},
+              isVideoCallWindowOpen: true
+            });
           },
-          () => {
-            Popup.alert('Camera is not supported on your device!');
-          }
+          ::this.handleVideoCallError
         );
       }
     }
   }
-  handleAcceptVideoCall() {
-    getMedia(::this.handleGetMedia, () => {});
-    this.setState({
-      isVideoCallRequestModalOpen: false,
-      isVideoCallWindowOpen: true
-    });
+  handleVideoCallError() {
+    Popup.alert('Camera is not supported on your device!');
   }
-  handleRejectVideoCall(peerUserID) {
+  handleCancelRequestVideoCall(receiverID) {
+    const { cancelRequestVideoCall } = this.props;
+
+    cancelRequestVideoCall(receiverID);
+    this.setState({isVideoCallWindowOpen: false});
+  }
+  handleAcceptVideoCall() {
+    const { acceptVideoCall } = this.props;
+
+    getMedia(
+      (stream) => {
+        acceptVideoCall('', '');
+
+        this.setState({
+          localVideoSource: stream,
+          isVideoCallRequestModalOpen: false,
+          isVideoCallWindowOpen: true
+        });
+      },
+      ::this.handleVideoCallError()
+    );
+  }
+  handleRejectVideoCall(callerID) {
     const { rejectVideoCall } = this.props;
 
-    rejectVideoCall(peerUserID);
+    rejectVideoCall(callerID);
     this.setState({isVideoCallRequestModalOpen: false});
   }
   handleConnectedVideoCall() {
@@ -278,16 +307,6 @@ class Chat extends Component {
 
     endVideoCall(peerUserID);
     this.setState({isVideoCallWindowOpen: false});
-  }
-  handleVideoCall(stream, userID, memberID) {
-    const { requestVideoCall } = this.props;
-
-    requestVideoCall(userID, memberID);
-
-    this.setState({
-      localVideoSource: stream,
-      isVideoCallWindowOpen: true
-    });
   }
   handleNotificationViewMessage(chatRoomObj, mobile) {
     const {
@@ -318,6 +337,7 @@ class Chat extends Component {
       activeChatPopUpWindow,
       isAudioRecorderOpen,
       localVideoSource,
+      remoteVideoSource,
       isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
@@ -432,6 +452,8 @@ class Chat extends Component {
           isVideoCallWindowOpen &&
           <VideoCallWindow
             localVideoSource={localVideoSource}
+            remoteVideoSource={remoteVideoSource}
+            handleCancelRequestVideoCall={::this.handleCancelRequestVideoCall}
             handleEndVideoCall={::this.handleEndVideoCall}
           />
         }

@@ -32,6 +32,15 @@ class VideoCallWindow extends Component {
       this.localVideo.srcObject = localVideoSource;
     }
   }
+  handleCancelRequestVideoCall(event) {
+    const {
+      videoCall,
+      handleCancelRequestVideoCall
+    } = this.props;
+    const peerUser = videoCall.peerUser;
+
+    handleCancelRequestVideoCall(peerUser._id);
+  }
   handleEndVideoCall(event) {
     event.preventDefault();
 
@@ -44,6 +53,7 @@ class VideoCallWindow extends Component {
     handleEndVideoCall(peerUser._id);
   }
   render() {
+    const { videoCall } = this.props;
     const videoConstraints = {
       height: {
         min: 360,
@@ -66,7 +76,15 @@ class VideoCallWindow extends Component {
           autoPlay muted
         />
         <div className="video-call-controls">
-          <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleEndVideoCall}>
+          <div
+            className="video-call-button end-call-button"
+            title="Reject Video Call"
+            onClick={
+              !videoCall.active
+                ? ::this.handleCancelRequestVideoCall
+                : ::this.handleEndVideoCall
+            }
+          >
             <FontAwesome name="phone" size="2x" />
           </div>
         </div>
@@ -84,6 +102,7 @@ const mapStateToProps = (state) => {
 VideoCallWindow.propTypes = {
   localVideoSource: PropTypes.object,
   remoteVideoSource: PropTypes.object,
+  handleCancelRequestVideoCall: PropTypes.func.isRequired,
   handleEndVideoCall: PropTypes.func.isRequired
 }
 

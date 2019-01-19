@@ -1,5 +1,6 @@
 import {
   SOCKET_REQUEST_VIDEO_CALL,
+  SOCKET_CANCEL_REQUEST_VIDEO_CALL,
   SOCKET_REJECT_VIDEO_CALL,
   SOCKET_ACCEPT_VIDEO_CALL,
   SOCKET_END_VIDEO_CALL
@@ -8,12 +9,24 @@ import {
 /**
  * Request video call
  * @param {string} callerID
- * @param {string} receiverID
+ * @param {object} receiver
  */
-export function requestVideoCall(callerID, receiverID) {
+export function requestVideoCall(callerID, receiver) {
   return {
     type: SOCKET_REQUEST_VIDEO_CALL,
     callerID: callerID,
+    receiverID: receiver._id,
+    user: receiver,
+  };
+}
+
+/**
+ * Cancel request video call
+ * @param {string} receiverID
+ */
+export function cancelRequestVideoCall(receiverID) {
+  return {
+    type: SOCKET_CANCEL_REQUEST_VIDEO_CALL,
     receiverID: receiverID
   };
 }
