@@ -78,6 +78,7 @@ class ChatPopUpWindow extends Component {
       active
     } = this.props;
     const { isAudioRecorderOpen } = this.state;
+    const activeUser = user.active;
     const isChatInputDisabled = popUpChatRoom.message.fetchNew.loading;
 
     return (
@@ -93,8 +94,8 @@ class ChatPopUpWindow extends Component {
             <Avatar
               image={popUpChatRoom.data.chatIcon}
               name={popUpChatRoom.data.name}
-              roleChatType={handleChatRoomAvatarBadges(popUpChatRoom.data, user, 'role-chat')}
-              accountType={handleChatRoomAvatarBadges(popUpChatRoom.data, user)}
+              roleChatType={handleChatRoomAvatarBadges(popUpChatRoom.data, activeUser, 'role-chat')}
+              accountType={handleChatRoomAvatarBadges(popUpChatRoom.data, activeUser)}
             />
             <div className="chat-room-name">
               {popUpChatRoom.data.name}

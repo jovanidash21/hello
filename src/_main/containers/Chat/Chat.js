@@ -247,8 +247,7 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
-  handleVideoCallError(error) {
-    console.log(error);
+  handleVideoCallError() {
     Popup.alert('Camera is not supported on your device!');
   }
   handleSignalPeer(peerID) {
