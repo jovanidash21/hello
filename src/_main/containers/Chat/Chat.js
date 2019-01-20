@@ -318,10 +318,6 @@ class Chat extends Component {
           acceptVideoCall(callerID, signal);
         });
 
-        this.peer.on('stream', (remoteStream) => {
-          this.setState({remoteVideoSource: remoteStream});
-        });
-
         this.setState({
           localVideoSource: stream,
           isVideoCallRequestModalOpen: false,
