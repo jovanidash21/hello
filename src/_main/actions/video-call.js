@@ -10,13 +10,15 @@ import {
  * Request video call
  * @param {string} callerID
  * @param {object} receiver
+ * @param {object} peerID
  */
-export function requestVideoCall(callerID, receiver) {
+export function requestVideoCall(callerID, receiver, peerID) {
   return {
     type: SOCKET_REQUEST_VIDEO_CALL,
     callerID: callerID,
     receiverID: receiver._id,
     user: receiver,
+    peerID: peerID
   };
 }
 
@@ -46,13 +48,13 @@ export function rejectVideoCall(callerID) {
 /**
  * Accept video call
  * @param {string} callerID
- * @param {string} receiverID
+ * @param {object} peerID
  */
-export function acceptVideoCall(callerID, receiverID) {
+export function acceptVideoCall(callerID, peerID) {
   return {
     type: SOCKET_ACCEPT_VIDEO_CALL,
     callerID: callerID,
-    receiverID: receiverID
+    peerID: peerID
   };
 }
 

@@ -1,6 +1,10 @@
 import {
+  SOCKET_REQUEST_VIDEO_CALL,
   SOCKET_BROADCAST_REQUEST_VIDEO_CALL,
-  SOCKET_BROADCAST_ACCEPT_VIDEO_CALL
+  SOCKET_ACCEPT_VIDEO_CALL,
+  SOCKET_BROADCAST_ACCEPT_VIDEO_CALL,
+  SOCKET_END_VIDEO_CALL,
+  SOCKET_BROADCAST_END_VIDEO_CALL
 } from '../constants/video-call';
 import { isObjectEmpty } from '../../utils/object';
 
@@ -11,23 +15,35 @@ const initialState = {
 
 const videoCall = (state=initialState, action) => {
   switch(action.type) {
+    case SOCKET_REQUEST_VIDEO_CALL:
     case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
       var user =  action.user;
+      var active = state.active;
       var peerUser = {...state.peerUser};
 
-      if ( isObjectEmpty(peerUser) ) {
+      if ( !active && isObjectEmpty(peerUser) ) {
         return {
           ...state,
+          active: false,
           peerUser: user
         };
       }
 
       return {
-        ...state
+        ...state,
+
       };
+    case SOCKET_ACCEPT_VIDEO_CALL:
     case SOCKET_BROADCAST_ACCEPT_VIDEO_CALL:
       return {
         ...state,
+        active: true
+      };
+    case SOCKET_END_VIDEO_CALL:
+    case SOCKET_BROADCAST_END_VIDEO_CALL:
+      return {
+        ...state,
+        active: false
       };
     default:
       return state;

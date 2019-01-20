@@ -14,20 +14,20 @@ class VideoCallRequestModal extends Component {
   handleAcceptVideoCall(event) {
     event.preventDefault();
 
-    const { handleAcceptVideoCall } = this.props;
+    const {
+      videoCall,
+      handleAcceptVideoCall
+    } = this.props;
+    const peerUser = videoCall.peerUser;
 
-    handleAcceptVideoCall();
+    handleAcceptVideoCall(peerUser._id);
   }
   handleRejectVideoCall(event) {
     event.preventDefault();
 
-    const {
-      videoCall,
-      handleRejectVideoCall
-    } = this.props;
-    const peerUser = videoCall.peerUser;
+    const { handleRejectVideoCall } = this.props;
 
-    handleRejectVideoCall(peerUser._id);
+    handleRejectVideoCall();
   }
   render() {
     const {

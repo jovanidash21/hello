@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { Container } from 'muicss/react';
 import Popup from 'react-popup';
+import Peer from 'simple-peer';
 import mapDispatchToProps from '../../actions';
 import { isObjectEmpty } from '../../../utils/object';
 import { getMedia } from '../../../utils/media';
@@ -40,6 +41,9 @@ class Chat extends Component {
   constructor(props) {
     super(props);
 
+    this.peer = null;
+    this.callerPeerID = null;
+
     this.state = {
       isLeftSideDrawerOpen: false,
       isRightSideDrawerOpen: false,
@@ -63,6 +67,7 @@ class Chat extends Component {
     socket.on('action', (action) => {
       switch (action.type) {
         case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
+          this.callerPeerID = action.peerID;
           this.setState({isVideoCallRequestModalOpen: true});
           break;
         case SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL:
@@ -73,7 +78,7 @@ class Chat extends Component {
           this.setState({isVideoCallWindowOpen: false});
           break;
         case SOCKET_BROADCAST_ACCEPT_VIDEO_CALL:
-          ::this.handleConnectedVideoCall();
+          ::this.handleSignalPeer(action.peerID);
           break;
       }
     });
@@ -242,6 +247,19 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
+  handleVideoCallError(error) {
+    console.log(error);
+    Popup.alert('Camera is not supported on your device!');
+  }
+  handleSignalPeer(peerID) {
+    if ( this.peer ) {
+      this.peer.signal(peerID);
+
+      this.peer.on('stream', (remoteStream) => {
+        this.setState({remoteVideoSource: remoteStream});
+      });
+    }
+  }
   handleRequestVideoCall(chatRoom) {
     const {
       user,
@@ -256,7 +274,16 @@ class Chat extends Component {
       if ( memberIndex > -1 ) {
         getMedia(
           (stream) => {
-            requestVideoCall(activeUser._id, chatRoomMembers[memberIndex]);
+            this.peer = new Peer({
+              initiator: true,
+              trickle: false,
+              stream: stream
+            });
+
+            this.peer.on('signal', (signal) => {
+              requestVideoCall(activeUser._id, chatRoomMembers[memberIndex], signal);
+            });
+
             this.setState({
               localVideoSource: stream,
               remoteVideoSource: {},
@@ -268,21 +295,32 @@ class Chat extends Component {
       }
     }
   }
-  handleVideoCallError() {
-    Popup.alert('Camera is not supported on your device!');
-  }
   handleCancelRequestVideoCall(receiverID) {
     const { cancelRequestVideoCall } = this.props;
 
     cancelRequestVideoCall(receiverID);
     this.setState({isVideoCallWindowOpen: false});
   }
-  handleAcceptVideoCall() {
+  handleAcceptVideoCall(callerID) {
     const { acceptVideoCall } = this.props;
 
     getMedia(
       (stream) => {
-        acceptVideoCall('', '');
+        this.peer = new Peer({
+          initiator: false,
+          trickle: false,
+          stream: stream
+        });
+
+        ::this.handleSignalPeer(this.callerPeerID);
+
+        this.peer.on('signal', (signal) => {
+          acceptVideoCall(callerID, signal);
+        });
+
+        this.peer.on('stream', (remoteStream) => {
+          this.setState({remoteVideoSource: remoteStream});
+        });
 
         this.setState({
           localVideoSource: stream,
@@ -290,17 +328,21 @@ class Chat extends Component {
           isVideoCallWindowOpen: true
         });
       },
-      ::this.handleVideoCallError()
+      () => {
+        ::this.handleRejectVideoCall();
+        ::this.handleVideoCallError();
+      }
     );
   }
-  handleRejectVideoCall(callerID) {
-    const { rejectVideoCall } = this.props;
+  handleRejectVideoCall() {
+    const {
+      videoCall,
+      rejectVideoCall
+    } = this.props;
+    const peerUser = videoCall.peerUser;
 
-    rejectVideoCall(callerID);
+    rejectVideoCall(peerUser._id);
     this.setState({isVideoCallRequestModalOpen: false});
-  }
-  handleConnectedVideoCall() {
-
   }
   handleEndVideoCall(peerUserID) {
     const { endVideoCall } = this.props;
