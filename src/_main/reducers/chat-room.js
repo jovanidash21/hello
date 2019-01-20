@@ -344,14 +344,14 @@ const chatRoom = (state=initialState, action) => {
       var chatRooms = [...state.all];
       var members = activeChatRoom.data.members;
 
-      if (
-        activeChatRoom.data.chatType === 'public' &&
-        members.indexOf(userID) == -1
-      ) {
-        members.push(userID);
-      }
-
       if ( chatRooms.length > 0 ) {
+        if (
+          activeChatRoom.data.chatType === 'public' &&
+          members.indexOf(userID) == -1
+        ) {
+          members.push(userID);
+        }
+
         if ( activeChatRoom.data.chatType === 'direct' ) {
           var members = activeChatRoom.data.members;
 
