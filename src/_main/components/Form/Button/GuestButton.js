@@ -13,7 +13,7 @@ const GuestButton = (props) => {
           (props.isDisabled ? 'disabled' : '')
         }
       >
-        Guest
+        Guest Login
       </Link>
     )
   } else {
@@ -25,7 +25,7 @@ const GuestButton = (props) => {
         variant="raised"
         disabled={props.isDisabled}
       >
-        Guest
+        Guest Login
       </Button>
     )
   }
