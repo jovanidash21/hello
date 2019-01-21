@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Draggable from 'react-draggable';
 import FontAwesome from 'react-fontawesome';
 import Popup from 'react-popup';
-import uuidv4 from 'uuid/v4';
 import mapDispatchToProps from '../../../actions';
 import { handleChatRoomAvatarBadges } from '../../../../utils/avatar';
 import { isDirectChatRoomMemberOnline } from '../../../../utils/member';
@@ -99,10 +98,6 @@ class ChatPopUpWindow extends Component {
             />
             <div className="chat-room-name">
               {popUpChatRoom.data.name}
-              {
-                popUpChatRoom.data.chatType === 'private' &&
-                <span className="you-label">(you)</span>
-              }
             </div>
             {
               isDirectChatRoomMemberOnline(popUpChatRoom.data.members, user.active._id) &&
