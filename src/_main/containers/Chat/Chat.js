@@ -259,6 +259,9 @@ class Chat extends Component {
       });
     }
   }
+  handleActivateLiveVideoCall() {
+
+  }
   handleRequestVideoCall(chatRoom) {
     const {
       user,
@@ -406,6 +409,7 @@ class Chat extends Component {
               <Header
                 handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
                 handleRequestVideoCall={::this.handleRequestVideoCall}
+                handleActivateLiveVideoCall={::this.handleActivateLiveVideoCall}
               >
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}

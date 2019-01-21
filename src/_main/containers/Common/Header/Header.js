@@ -6,7 +6,10 @@ import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { isObjectEmpty } from '../../../../utils/object';
 import { isDirectChatRoomMemberOnline } from '../../../../utils/member';
-import { NewMessagesDropdown } from '../../../components/Header';
+import {
+  NewMessagesDropdown,
+  ChatRoomDropdown
+} from '../../../components/Header';
 import { UserDropdown } from '../../../../components/UserDropdown';
 
 class Header extends Component {
@@ -73,6 +76,29 @@ class Header extends Component {
       )
     }
   }
+  handleChatRoomDropdownRender() {
+    const {
+      user,
+      chatRoom,
+      handleActivateLiveVideoCall
+    } = this.props;
+    const activeUser = user.active;
+    const activeChatRoom = chatRoom.active;
+
+    if (
+      !isObjectEmpty(activeChatRoom.data) &&
+      activeChatRoom.data.chatType === 'public' &&
+      !chatRoom.fetch.loading &&
+      chatRoom.fetch.success
+    ) {
+      return (
+        <ChatRoomDropdown
+          activeUser={activeUser}
+          handleActivateLiveVideoCall={handleActivateLiveVideoCall}
+        />
+      )
+    }
+  }
   handleRequestVideoCall(event) {
     event.preventDefault();
 
@@ -106,6 +132,7 @@ class Header extends Component {
         </div>
         {::this.handleVideoCamRender()}
         {::this.handleNewMessagesDropdownRender()}
+        {::this.handleChatRoomDropdownRender()}
         <UserDropdown user={user.active} />
       </Appbar>
     )
@@ -121,7 +148,8 @@ const mapStateToProps = (state) => {
 
 Header.propTypes = {
   handleOpenPopUpChatRoom: PropTypes.func.isRequired,
-  handleRequestVideoCall: PropTypes.func.isRequired
+  handleRequestVideoCall: PropTypes.func.isRequired,
+  handleActivateLiveVideoCall: PropTypes.func.isRequired
 }
 
 export default connect(
