@@ -1,0 +1,45 @@
+.live-video-window {
+  background-color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  position: absolute;
+  width: 400px;
+  z-index: 600;
+  .popup-header {
+    align-items: center;
+    background-color: $color-primary;
+    color: #fff;
+    cursor: all-scroll;
+    display: flex;
+    font-size: 15px;
+    padding: 7px 0 7px 10px;
+    .avatar {
+      margin-right: 12px;
+    }
+    .user-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .you-label {
+        color: $color-alto;
+        margin-left: 7px;
+      }
+    }
+    .popup-header-icon {
+      color: $color-alabaster;
+      cursor: pointer;
+      opacity: 0.5;
+      padding: 0 10px;
+      transition: all 0.2s ease-in-out;
+      &:not(:last-child) {
+        margin-right: 3px;
+      }
+      &:hover {
+        opacity: 8;
+      }
+    }
+  }
+}

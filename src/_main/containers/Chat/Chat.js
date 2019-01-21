@@ -19,6 +19,7 @@ import {
   ActiveChatRoom,
   ChatRoomsList,
   MembersList,
+  LiveVideoWindow,
   VideoCallRequestModal,
   VideoCallWindow
 } from '../Partial';
@@ -51,6 +52,7 @@ class Chat extends Component {
       isAudioRecorderOpen: false,
       localVideoSource: {},
       remoteVideoSource: {},
+      isLiveVideoWindowOpen: false,
       isVideoCallRequestModalOpen: false,
       isVideoCallWindowOpen: false
     };
@@ -261,6 +263,8 @@ class Chat extends Component {
   }
   handleActivateLiveVideoCall() {
 
+  handleCloseLiveVideo() {
+    this.setState({isLiveVideoWindowOpen: false});
   }
   handleRequestVideoCall(chatRoom) {
     const {
@@ -378,6 +382,7 @@ class Chat extends Component {
       isAudioRecorderOpen,
       localVideoSource,
       remoteVideoSource,
+      isLiveVideoWindowOpen,
       isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
@@ -440,6 +445,15 @@ class Chat extends Component {
                     </div>
                   }
                 </MediaQuery>
+                {
+                  isLiveVideoWindowOpen &&
+                  <div className="live-video-window-wrapper">
+                    <LiveVideoWindow
+                      liveUser={user.active}
+                      handleCloseLiveVideo={::this.handleCloseLiveVideo}
+                    />
+                  </div>
+                }
                 <ChatBox
                   chatRoom={activeChatRoom}
                   message={message}
