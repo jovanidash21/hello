@@ -261,8 +261,9 @@ class Chat extends Component {
       });
     }
   }
-  handleActivateLiveVideoCall() {
-
+  handleOpenLiveVideo() {
+    this.setState({isLiveVideoWindowOpen: true});
+  }
   handleCloseLiveVideo() {
     this.setState({isLiveVideoWindowOpen: false});
   }
@@ -414,7 +415,7 @@ class Chat extends Component {
               <Header
                 handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
                 handleRequestVideoCall={::this.handleRequestVideoCall}
-                handleActivateLiveVideoCall={::this.handleActivateLiveVideoCall}
+                handleOpenLiveVideo={::this.handleOpenLiveVideo}
               >
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}

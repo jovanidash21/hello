@@ -6,12 +6,12 @@ class ChatRoomDropdown extends Component {
   constructor(props) {
     super(props);
   }
-  handleActivateLiveVideoCall(event) {
+  handleOpenLiveVideo(event) {
     event.preventDefault();
 
-    const { handleActivateLiveVideoCall } = this.props;
+    const { handleOpenLiveVideo } = this.props;
 
-    handleActivateLiveVideoCall();
+    handleOpenLiveVideo();
   }
   render() {
     return (
@@ -21,7 +21,7 @@ class ChatRoomDropdown extends Component {
         </div>
         <ul className="dropdown-menu has-pointer mui-dropdown__menu mui-dropdown__menu--right">
           <li>
-            <a href="#" onClick={::this.handleActivateLiveVideoCall}>
+            <a href="#" onClick={::this.handleOpenLiveVideo}>
               <div className="option-icon">
                 <FontAwesome name="television" />
               </div>
@@ -36,7 +36,7 @@ class ChatRoomDropdown extends Component {
 
 ChatRoomDropdown.propTypes = {
   activeUser: PropTypes.object.isRequired,
-  handleActivateLiveVideoCall: PropTypes.func.isRequired
+  handleOpenLiveVideo: PropTypes.func.isRequired
 }
 
 export default ChatRoomDropdown;
