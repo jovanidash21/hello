@@ -96,6 +96,10 @@ var userSchema = new Schema (
       type: Boolean,
       default: false,
     },
+    isLiveVideoActive: {
+      type: Boolean,
+      default: false,
+    },
     ipAddress: {
       type: String,
       default: '',
