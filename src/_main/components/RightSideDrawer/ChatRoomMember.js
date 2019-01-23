@@ -20,6 +20,13 @@ class ChatRoomMember extends Component {
 
     handleAddDirectChatRoom(chatRoomMember._id, mobile);
   }
+  handleRequestLiveVideo(event) {
+    event.preventDefault();
+
+    const { handleRequestLiveVideo } = this.props;
+
+    handleRequestLiveVideo(chatRoomMember);
+  }
   handleBlockMember(event) {
     event.preventDefault();
 
@@ -116,11 +123,15 @@ class ChatRoomMember extends Component {
           </div>
           {
             chatRoomMember.mute.data &&
-            <div className="mute-logo" title="This member is muted">
-              <FontAwesome
-                className="eye-icon"
-                name="eye"
-              />
+            <div className="mute-icon" title="This member is muted">
+              <FontAwesome name="eye" />
+            </div>
+          }
+          {
+            user._id !== chatRoomMember._id &&
+            chatRoomMember.isLiveVideoActive &&
+            <div className="live-video-icon" title="This member has live video">
+              <FontAwesome name="television" />
             </div>
           }
           {
@@ -174,6 +185,15 @@ class ChatRoomMember extends Component {
                 </a>
               </li>
             */}
+            {
+              user._id !== chatRoomMember._id &&
+              chatRoomMember.isLiveVideoActive &&
+              <li>
+                <a href="#" onClick={::this.handleRequestLiveVideo}>
+                  View Live Video
+                </a>
+              </li>
+            }
             {
               (
                 ( user.role === 'owner' ||
@@ -261,6 +281,7 @@ class ChatRoomMember extends Component {
 ChatRoomMember.propTypes = {
   user: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
+  handleRequestLiveVideo: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleBlockMember: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,
