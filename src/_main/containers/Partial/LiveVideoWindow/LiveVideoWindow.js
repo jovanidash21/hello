@@ -36,6 +36,13 @@ class LiveVideoWindow extends Component {
       this.liveVideo.srcObject = liveVideoSource;
     }
   }
+  handleWindowDisplay(event, display) {
+    event.preventDefault();
+
+    if ( display.length > 0 ) {
+      this.setState({display: display});
+    }
+  }
   handleCloseLiveVideo(event) {
     event.preventDefault();
 
@@ -49,7 +56,7 @@ class LiveVideoWindow extends Component {
 
     return (
       <Draggable bounds="parent" handle=".popup-header">
-        <div className="live-video-window">
+        <div className={"live-video-window " + display}>
           <div className="popup-header">
             <Avatar
               image={liveUser.profilePicture}
@@ -60,7 +67,41 @@ class LiveVideoWindow extends Component {
             <div className="user-name">
               {liveUser.name}
             </div>
-            <div className="popup-header-icon close-icon" onClick={::this.handleCloseLiveVideo}>
+            {
+              display !== 'minimize' &&
+              <div
+                className="popup-header-icon minimize-icon"
+                title="Minimize"
+                onClick={(e) => {::this.handleWindowDisplay(e, 'minimize')}}
+              >
+                <FontAwesome name="window-minimize" />
+              </div>
+            }
+            {
+              display !== 'restore' &&
+              <div
+                className="popup-header-icon restore-icon"
+                title="Restore"
+                onClick={(e) => {::this.handleWindowDisplay(e, 'restore')}}
+              >
+                <FontAwesome name="window-restore" />
+              </div>
+            }
+            {
+              display !== 'maximize' &&
+              <div
+                className="popup-header-icon maximize-icon"
+                title="Maximize"
+                onClick={(e) => {::this.handleWindowDisplay(e, 'maximize')}}
+              >
+                <FontAwesome name="window-maximize" />
+              </div>
+            }
+            <div
+              className="popup-header-icon close-icon"
+              title="Close"
+              onClick={::this.handleCloseLiveVideo}
+            >
               <FontAwesome name="times" />
             </div>
           </div>

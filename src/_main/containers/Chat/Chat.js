@@ -50,6 +50,7 @@ class Chat extends Component {
       isRightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
+      liveVideoSource: {},
       localVideoSource: {},
       remoteVideoSource: {},
       isLiveVideoWindowOpen: false,
@@ -262,7 +263,20 @@ class Chat extends Component {
     }
   }
   handleOpenLiveVideo() {
-    this.setState({isLiveVideoWindowOpen: true});
+    const { chatRoom } = this.props;
+    const activeChatRoom = chatRoom.active;
+
+    if ( activeChatRoom.data.chatType === 'public' ) {
+      getMedia(
+        (stream) => {
+          this.setState({
+            liveVideoSource: stream,
+            isLiveVideoWindowOpen: true
+          });
+        },
+        ::this.handleVideoCallError
+      );
+    }
   }
   handleCloseLiveVideo() {
     this.setState({isLiveVideoWindowOpen: false});
@@ -381,6 +395,7 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
+      liveVideoSource,
       localVideoSource,
       remoteVideoSource,
       isLiveVideoWindowOpen,
@@ -450,6 +465,7 @@ class Chat extends Component {
                   isLiveVideoWindowOpen &&
                   <div className="live-video-window-wrapper">
                     <LiveVideoWindow
+                      liveVideoSource={liveVideoSource}
                       liveUser={user.active}
                       handleCloseLiveVideo={::this.handleCloseLiveVideo}
                     />
