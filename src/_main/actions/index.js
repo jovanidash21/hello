@@ -43,6 +43,10 @@ import {
   muteMember
 } from './member';
 import {
+  startLiveVideo,
+  endLiveVideo
+} from './live-video';
+import {
   requestVideoCall,
   cancelRequestVideoCall,
   rejectVideoCall,
@@ -82,6 +86,8 @@ const actions = (dispatch) => {
     kickMember,
     updateMemberRole,
     muteMember,
+    startLiveVideo,
+    endLiveVideo,
     requestVideoCall,
     cancelRequestVideoCall,
     rejectVideoCall,
