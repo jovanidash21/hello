@@ -262,13 +262,20 @@ class Chat extends Component {
       });
     }
   }
-  handleOpenLiveVideo() {
-    const { chatRoom } = this.props;
+  handleStartLiveVideo() {
+    const {
+      user,
+      chatRoom,
+      startLiveVideo
+    } = this.props;
+    const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
 
     if ( activeChatRoom.data.chatType === 'public' ) {
       getMedia(
         (stream) => {
+          startLiveVideo(activeUser._id, activeChatRoom.data._id);
+
           this.setState({
             liveVideoSource: stream,
             isLiveVideoWindowOpen: true
@@ -430,7 +437,7 @@ class Chat extends Component {
               <Header
                 handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
                 handleRequestVideoCall={::this.handleRequestVideoCall}
-                handleOpenLiveVideo={::this.handleOpenLiveVideo}
+                handleStartLiveVideo={::this.handleStartLiveVideo}
               >
                 <ActiveChatRoom
                   handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}

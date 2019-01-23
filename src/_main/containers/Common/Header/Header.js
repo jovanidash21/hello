@@ -80,7 +80,7 @@ class Header extends Component {
     const {
       user,
       chatRoom,
-      handleOpenLiveVideo
+      handleStartLiveVideo
     } = this.props;
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
@@ -94,7 +94,7 @@ class Header extends Component {
       return (
         <ChatRoomDropdown
           activeUser={activeUser}
-          handleOpenLiveVideo={handleOpenLiveVideo}
+          handleStartLiveVideo={handleStartLiveVideo}
         />
       )
     }
@@ -149,7 +149,7 @@ const mapStateToProps = (state) => {
 Header.propTypes = {
   handleOpenPopUpChatRoom: PropTypes.func.isRequired,
   handleRequestVideoCall: PropTypes.func.isRequired,
-  handleOpenLiveVideo: PropTypes.func.isRequired
+  handleStartLiveVideo: PropTypes.func.isRequired
 }
 
 export default connect(
