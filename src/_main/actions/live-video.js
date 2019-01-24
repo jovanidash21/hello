@@ -11,24 +11,25 @@ const baseURL = getBaseURL();
 
 /**
  * Start live video
- * @param {string} userID
+ * @param {object} user
  * @param {string} chatRoomID
  */
-export function startLiveVideo(userID, chatRoomID) {
+export function startLiveVideo(user, chatRoomID) {
   let data = {
-    userID: userID,
+    userID: user._id,
     start: true
   };
 
   return dispatch => {
     return dispatch({
       type: START_LIVE_VIDEO,
-      payload: axios.post(baseURL + '/api/live-video', data)
+      payload: axios.post(baseURL + '/api/live-video', data),
+      meta: user
     })
     .then((response) => {
       dispatch({
         type: SOCKET_START_LIVE_VIDEO,
-        userID: userID,
+        userID: user._id,
         chatRoomID: chatRoomID
       });
     })

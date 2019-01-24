@@ -43,6 +43,19 @@ class LiveVideoWindow extends Component {
       this.setState({display: display});
     }
   }
+  handleEndLiveVideo(end) {
+    event.preventDefault();
+
+    const {
+      user,
+      chatRoom,
+      handleEndLiveVideo
+    } = this.props;
+    const activeUser = user.active;
+    const activeChatRoom = chatRoom.active;
+
+    handleEndLiveVideo(activeUser._id, activeChatRoom.data._id);
+  }
   handleCloseLiveVideo(event) {
     event.preventDefault();
 
@@ -51,21 +64,26 @@ class LiveVideoWindow extends Component {
     handleCloseLiveVideo();
   }
   render() {
-    const { liveUser } = this.props;
+    const {
+      user,
+      liveVideo
+    } = this.props;
     const { display } = this.state;
+    const activeUser = user.active;
+    const liveVideoUser = liveVideo.user;
 
     return (
       <Draggable bounds="parent" handle=".popup-header">
         <div className={"live-video-window " + display}>
           <div className="popup-header">
             <Avatar
-              image={liveUser.profilePicture}
-              name={liveUser.name}
-              roleChatType={liveUser.role}
-              accountType={liveUser.accountType}
+              image={liveVideoUser.profilePicture}
+              name={liveVideoUser.name}
+              roleChatType={liveVideoUser.role}
+              accountType={liveVideoUser.accountType}
             />
             <div className="user-name">
-              {liveUser.name}
+              {liveVideoUser.name}
             </div>
             {
               display !== 'minimize' &&
@@ -100,7 +118,11 @@ class LiveVideoWindow extends Component {
             <div
               className="popup-header-icon close-icon"
               title="Close"
-              onClick={::this.handleCloseLiveVideo}
+              onClick={
+                activeUser._id === liveVideoUser._id
+                  ? ::this.handleEndLiveVideo
+                  : ::this.handleCloseLiveVideo
+              }
             >
               <FontAwesome name="times" />
             </div>
@@ -120,13 +142,15 @@ class LiveVideoWindow extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    chatRoom: state.chatRoom,
+    liveVideo: state.liveVideo
   }
 }
 
 LiveVideoWindow.propTypes = {
-  liveUser: PropTypes.object.isRequired,
   liveVideoSource: PropTypes.object,
+  handleEndLiveVideo: PropTypes.func.isRequired,
   handleCloseLiveVideo: PropTypes.func.isRequired
 }
 

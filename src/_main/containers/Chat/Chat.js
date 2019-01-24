@@ -274,7 +274,7 @@ class Chat extends Component {
     if ( activeChatRoom.data.chatType === 'public' ) {
       getMedia(
         (stream) => {
-          startLiveVideo(activeUser._id, activeChatRoom.data._id);
+          startLiveVideo(activeUser, activeChatRoom.data._id);
 
           this.setState({
             liveVideoSource: stream,
@@ -284,6 +284,13 @@ class Chat extends Component {
         ::this.handleVideoCallError
       );
     }
+  }
+  handleEndLiveVideo(userID, chatRoomID) {
+    const { endLiveVideo } = this.props;
+
+    endLiveVideo(userID, chatRoomID);
+
+    this.setState({isLiveVideoWindowOpen: false});
   }
   handleCloseLiveVideo() {
     this.setState({isLiveVideoWindowOpen: false});
@@ -473,7 +480,7 @@ class Chat extends Component {
                   <div className="live-video-window-wrapper">
                     <LiveVideoWindow
                       liveVideoSource={liveVideoSource}
-                      liveUser={user.active}
+                      handleEndLiveVideo={::this.handleEndLiveVideo}
                       handleCloseLiveVideo={::this.handleCloseLiveVideo}
                     />
                   </div>

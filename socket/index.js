@@ -320,6 +320,85 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_START_LIVE_VIDEO':
+          var chatRoomClients = [];
+          var liveVideoUser = {};
+
+          io.in(action.chatRoomID).clients((err, clients) => {
+            if (!err) {
+              chatRoomClients = clients;
+            }
+          });
+
+          User.findById(action.userID)
+            .then((user) => {
+              liveVideoUser = user;
+
+              return ChatRoom.findById(action.chatRoomID)
+                .populate('members')
+                .exec();
+            })
+            .then((chatRoom) => {
+              if (chatRoom.chatType === 'public') {
+                for (var i = 0; i < chatRoom.members.length; i++) {
+                  var chatRoomMember = chatRoom.members[i];
+
+                  User.findById(chatRoomMember)
+                    .then((user) => {
+                      if (chatRoomClients.indexOf(user.socketID) > -1) {
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_START_LIVE_VIDEO',
+                          chatRoomID: action.chatRoomID,
+                          user: liveVideoUser
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
+        case 'SOCKET_END_LIVE_VIDEO':
+          var chatRoomClients = [];
+
+          io.in(action.chatRoomID).clients((err, clients) => {
+            if (!err) {
+              chatRoomClients = clients;
+            }
+          });
+
+          ChatRoom.findById(action.chatRoomID)
+            .populate('members')
+            .then((chatRoom) => {
+              if (chatRoom.chatType === 'public') {
+                for (var i = 0; i < chatRoom.members.length; i++) {
+                  var chatRoomMember = chatRoom.members[i];
+
+                  User.findById(chatRoomMember)
+                    .then((user) => {
+                      if (chatRoomClients.indexOf(user.socketID) > -1) {
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
+                          userID: action.userID,
+                          chatRoomID: action.chatRoomID,
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
         case 'SOCKET_REQUEST_VIDEO_CALL':
           var callerUser = {};
 
