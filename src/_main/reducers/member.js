@@ -20,6 +20,10 @@ import {
   SOCKET_BROADCAST_LEAVE_CHAT_ROOM
 } from '../constants/chat-room';
 import {
+  SOCKET_BROADCAST_START_LIVE_VIDEO,
+  SOCKET_BROADCAST_END_LIVE_VIDEO
+} from '../constants/live-video';
+import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
 } from '../constants/auth';
@@ -238,6 +242,42 @@ const member = (state=initialState, action) => {
 
       if ( memberIndex > -1 ) {
         members[memberIndex].mute.data = false;
+      }
+
+      return {
+        ...state,
+        all: [...members]
+      }
+    case SOCKET_BROADCAST_START_LIVE_VIDEO:
+      var user = action.user;
+      var chatRoomID = action.chatRoomID;
+      var activeChatRoom = {...state.activeChatRoom};
+      var members = [...state.all];
+
+      if ( activeChatRoom.data.chatType === 'public' && activeChatRoom.data._id === chatRoomID ) {
+        var memberIndex = members.findIndex(singleMember => singleMember._id === user._id);
+
+        if ( memberIndex > -1 ) {
+          members[memberIndex].isLiveVideoActive = true;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...members]
+      }
+    case SOCKET_BROADCAST_END_LIVE_VIDEO:
+      var userID = action.userID;
+      var chatRoomID = action.chatRoomID;
+      var activeChatRoom = {...state.activeChatRoom};
+      var members = [...state.all];
+
+      if ( activeChatRoom.data.chatType === 'public' && activeChatRoom.data._id === chatRoomID ) {
+        var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
+
+        if ( memberIndex > -1 ) {
+          members[memberIndex].isLiveVideoActive = false;
+        }
       }
 
       return {
