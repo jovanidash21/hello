@@ -23,6 +23,10 @@ class ChatRoomMember extends Component {
   handleRequestLiveVideo(event) {
     event.preventDefault();
 
+    if ( event.stopPropagation ) {
+      event.stopPropagation();
+    }
+
     const { handleRequestLiveVideo } = this.props;
 
     handleRequestLiveVideo(chatRoomMember);
@@ -130,7 +134,11 @@ class ChatRoomMember extends Component {
           {
             user._id !== chatRoomMember._id &&
             chatRoomMember.isLiveVideoActive &&
-            <div className="live-video-icon" title="This member has live video">
+            <div
+              className="live-video-icon"
+              title="This member has live video"
+              onClick={::this.handleRequestLiveVideo}
+            >
               <FontAwesome name="television" />
             </div>
           }
@@ -185,15 +193,6 @@ class ChatRoomMember extends Component {
                 </a>
               </li>
             */}
-            {
-              user._id !== chatRoomMember._id &&
-              chatRoomMember.isLiveVideoActive &&
-              <li>
-                <a href="#" onClick={::this.handleRequestLiveVideo}>
-                  View Live Video
-                </a>
-              </li>
-            }
             {
               (
                 ( user.role === 'owner' ||
