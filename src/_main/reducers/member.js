@@ -268,11 +268,10 @@ const member = (state=initialState, action) => {
       }
     case SOCKET_BROADCAST_END_LIVE_VIDEO:
       var userID = action.userID;
-      var chatRoomID = action.chatRoomID;
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom.data.chatType === 'public' && activeChatRoom.data._id === chatRoomID ) {
+      if ( activeChatRoom.data.chatType === 'public' ) {
         var memberIndex = members.findIndex(singleMember => singleMember._id === userID);
 
         if ( memberIndex > -1 ) {

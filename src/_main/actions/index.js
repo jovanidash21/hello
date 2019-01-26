@@ -44,6 +44,8 @@ import {
 } from './member';
 import {
   startLiveVideo,
+  requestLiveVideo,
+  acceptLiveVideo,
   endLiveVideo
 } from './live-video';
 import {
@@ -87,6 +89,8 @@ const actions = (dispatch) => {
     updateMemberRole,
     muteMember,
     startLiveVideo,
+    requestLiveVideo,
+    acceptLiveVideo,
     endLiveVideo,
     requestVideoCall,
     cancelRequestVideoCall,

@@ -1,6 +1,8 @@
 import {
   START_LIVE_VIDEO,
-  END_LIVE_VIDEO
+  SOCKET_REQUEST_LIVE_VIDEO,
+  END_LIVE_VIDEO,
+  SOCKET_BROADCAST_END_LIVE_VIDEO
 } from '../constants/live-video';
 
 const commonStateFlags = {
@@ -55,6 +57,27 @@ const liveVideo = (state=initialState, action) => {
           error: true,
           message: action.payload.response.data.message
         }
+      };
+    case SOCKET_REQUEST_LIVE_VIDEO:
+      var liveVideoUser = action.user;
+
+      return {
+        ...state,
+        user: {...liveVideoUser}
+      };
+    case SOCKET_BROADCAST_END_LIVE_VIDEO:
+      var userID = action.userID;
+      var liveVideoUser = {...state.user};
+
+      if ( liveVideoUser._id === userID ) {
+        return {
+          ...state,
+          user: {}
+        };
+      }
+
+      return {
+        ...state
       };
     default:
       return state;

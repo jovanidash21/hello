@@ -363,6 +363,31 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_REQUEST_LIVE_VIDEO':
+          User.findById(action.userID)
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_REQUEST_LIVE_VIDEO',
+                viewerID: action.viewerID,
+                peerID: action.peerID
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
+        case 'SOCKET_ACCEPT_LIVE_VIDEO':
+          User.findById(action.viewerID)
+            .then((user) => {
+              socket.broadcast.to(user.socketID).emit('action', {
+                type: 'SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO',
+                peerID: action.peerID
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
         case 'SOCKET_END_LIVE_VIDEO':
           var chatRoomClients = [];
 
@@ -384,8 +409,7 @@ var sockets = function(io) {
                       if (chatRoomClients.indexOf(user.socketID) > -1) {
                         socket.broadcast.to(user.socketID).emit('action', {
                           type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
-                          userID: action.userID,
-                          chatRoomID: action.chatRoomID,
+                          userID: action.userID
                         });
                       }
                     })
@@ -536,7 +560,7 @@ var sockets = function(io) {
 
             User.update(
               { _id: user._id },
-              { $set: { connectedChatRoom: null, isOnline: false, ipAddress: '', socketID: ''} },
+              { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, ipAddress: '', socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
 
@@ -546,6 +570,11 @@ var sockets = function(io) {
               chatRoomID: user.connectedChatRoom
             });
           }
+
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
+            userID: connectedUsers[socket.id]
+          });
 
           socket.broadcast.emit('action', {
             type: 'SOCKET_BROADCAST_USER_LOGOUT',
@@ -573,7 +602,7 @@ var sockets = function(io) {
 
             User.findByIdAndUpdate(
               user._id,
-              { $set: { connectedChatRoom: null, isOnline: false, socketID: ''} },
+              { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
 

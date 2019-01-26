@@ -72,7 +72,8 @@ class MembersList extends Component {
     const {
       user,
       chatRoom,
-      member
+      member,
+      handleRequestLiveVideo
     } = this.props;
     const {
       members,
@@ -129,6 +130,7 @@ class MembersList extends Component {
                   key={i}
                   user={user.active}
                   chatRoomMember={chatRoomMember}
+                  handleRequestLiveVideo={handleRequestLiveVideo}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                   handleBlockMember={::this.handleBlockMember}
                   handleKickMember={::this.handleKickMember}
@@ -313,7 +315,8 @@ const mapStateToProps = (state) => {
 
 MembersList.propTypes = {
   handleRightSideDrawerToggleEvent: PropTypes.func.isRequired,
-  handleOpenPopUpChatRoom: PropTypes.func.isRequired
+  handleOpenPopUpChatRoom: PropTypes.func.isRequired,
+  handleRequestLiveVideo: PropTypes.func.isRequired
 }
 
 export default connect(

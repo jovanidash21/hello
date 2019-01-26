@@ -2,6 +2,8 @@ import axios from 'axios';
 import {
   START_LIVE_VIDEO,
   SOCKET_START_LIVE_VIDEO,
+  SOCKET_REQUEST_LIVE_VIDEO,
+  SOCKET_ACCEPT_LIVE_VIDEO,
   END_LIVE_VIDEO,
   SOCKET_END_LIVE_VIDEO
 } from '../constants/live-video';
@@ -39,6 +41,35 @@ export function startLiveVideo(user, chatRoomID) {
       }
     });
   }
+}
+
+/**
+ * Request live video
+ * @param {string} viewerID
+ * @param {object} liveVideoUser
+ * @param {object} peerID
+ */
+export function requestLiveVideo(viewerID, liveVideoUser, peerID) {
+  return {
+    type: SOCKET_REQUEST_LIVE_VIDEO,
+    viewerID: viewerID,
+    user: liveVideoUser,
+    userID: liveVideoUser._id,
+    peerID: peerID
+  };
+}
+
+/**
+ * Accept live video
+ * @param {string} viewerID
+ * @param {object} peerID
+ */
+export function acceptLiveVideo(viewerID, peerID) {
+  return {
+    type: SOCKET_ACCEPT_LIVE_VIDEO,
+    viewerID: viewerID,
+    peerID: peerID
+  };
 }
 
 /**

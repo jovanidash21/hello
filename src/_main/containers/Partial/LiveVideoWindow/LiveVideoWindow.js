@@ -30,10 +30,20 @@ class LiveVideoWindow extends Component {
     }
   }
   handleLiveVideoSource() {
-    const { liveVideoSource } = this.props;
+    const {
+      user,
+      liveVideo,
+      liveVideoSource
+    } = this.props;
+    const activeUser = user.active;
+    const liveVideoUser = liveVideo.user;
 
-    if ( !isObjectEmpty(liveVideoSource) && !this.liveVideo.srcObject ) {
+    if ( !isObjectEmpty(liveVideoSource) ) {
       this.liveVideo.srcObject = liveVideoSource;
+
+      if ( activeUser._id === liveVideoUser._id ) {
+        this.liveVideo.muted = true;
+      }
     }
   }
   handleWindowDisplay(event, display) {

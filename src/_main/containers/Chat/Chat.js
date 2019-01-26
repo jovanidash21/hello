@@ -29,6 +29,10 @@ import {
 } from '../../components/Chat';
 import { NotificationPopUp } from '../../components/NotificationPopUp';
 import {
+  SOCKET_BROADCAST_REQUEST_LIVE_VIDEO,
+  SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO
+} from '../../constants/live-video';
+import {
   SOCKET_BROADCAST_REQUEST_VIDEO_CALL,
   SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL,
   SOCKET_BROADCAST_REJECT_VIDEO_CALL,
@@ -42,8 +46,9 @@ class Chat extends Component {
   constructor(props) {
     super(props);
 
-    this.peer = null;
+    this.videoCallPeer = null;
     this.callerPeerID = null;
+    this.liveVideoPeer = null;
 
     this.state = {
       isLeftSideDrawerOpen: false,
@@ -69,6 +74,12 @@ class Chat extends Component {
   componentDidMount() {
     socket.on('action', (action) => {
       switch (action.type) {
+        case SOCKET_BROADCAST_REQUEST_LIVE_VIDEO:
+          ::this.handleAcceptLiveVideo(action.viewerID, action.peerID);
+          break;
+        case SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO:
+          ::this.handleSignalLiveVideoPeer(action.peerID);
+          break;
         case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
           this.callerPeerID = action.peerID;
           this.setState({isVideoCallRequestModalOpen: true});
@@ -81,7 +92,7 @@ class Chat extends Component {
           this.setState({isVideoCallWindowOpen: false});
           break;
         case SOCKET_BROADCAST_ACCEPT_VIDEO_CALL:
-          ::this.handleSignalPeer(action.peerID);
+          ::this.handleSignalVideoCallPeer(action.peerID);
           break;
       }
     });
@@ -94,6 +105,10 @@ class Chat extends Component {
       ::this.calculateViewportHeight();
       window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
       window.addEventListener('resize', ::this.calculateViewportHeight, true);
+    }
+
+    if ( !isObjectEmpty(prevProps.liveVideo.user) && isObjectEmpty(this.props.liveVideo.user) ) {
+      this.setState({isLiveVideoWindowOpen: false});
     }
   }
   calculateViewportHeight() {
@@ -130,6 +145,7 @@ class Chat extends Component {
               <MembersList
                 handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
                 handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+                handleRequestLiveVideo={::this.handleRequestLiveVideo}
               />
             </RightSideDrawer>
           )
@@ -250,14 +266,23 @@ class Chat extends Component {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
   }
-  handleVideoCallError() {
+  handleVideoError() {
     Popup.alert('Camera is not supported on your device!');
   }
-  handleSignalPeer(peerID) {
-    if ( this.peer ) {
-      this.peer.signal(peerID);
+  handleSignalLiveVideoPeer(peerID) {
+    if ( this.liveVideoPeer ) {
+      this.liveVideoPeer.signal(peerID);
 
-      this.peer.on('stream', (remoteStream) => {
+      this.liveVideoPeer.on('stream', (remoteStream) => {
+        this.setState({liveVideoSource: remoteStream});
+      });
+    }
+  }
+  handleSignalVideoCallPeer(peerID) {
+    if ( this.videoCallPeer ) {
+      this.videoCallPeer.signal(peerID);
+
+      this.videoCallPeer.on('stream', (remoteStream) => {
         this.setState({remoteVideoSource: remoteStream});
       });
     }
@@ -281,9 +306,51 @@ class Chat extends Component {
             isLiveVideoWindowOpen: true
           });
         },
-        ::this.handleVideoCallError
+        ::this.handleVideoError
       );
     }
+  }
+  handleRequestLiveVideo(liveVideoUser) {
+    const {
+      user,
+      requestLiveVideo
+    } = this.props;
+    const activeUser = user.active;
+
+    this.liveVideoPeer = new Peer({
+      initiator: true,
+      trickle: false,
+      offerConstraints: {
+        mandatory: {
+          OfferToReceiveAudio: true,
+          OfferToReceiveVideo: true
+        }
+      }
+    });
+
+    this.liveVideoPeer.on('signal', (signal) => {
+      requestLiveVideo(activeUser._id, liveVideoUser, signal);
+
+      this.setState({isLiveVideoWindowOpen: true});
+
+      ::this.handleRightSideDrawerToggleEvent();
+    });
+  }
+  handleAcceptLiveVideo(viewerID, peerID) {
+    const { liveVideoSource } = this.state;
+    const { acceptLiveVideo } = this.props;
+
+    this.liveVideoPeer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: liveVideoSource
+    });
+
+    ::this.handleSignalLiveVideoPeer(peerID);
+
+    this.liveVideoPeer.on('signal', (signal) => {
+      acceptLiveVideo(viewerID, signal);
+    });
   }
   handleEndLiveVideo(userID, chatRoomID) {
     const { endLiveVideo } = this.props;
@@ -309,13 +376,13 @@ class Chat extends Component {
       if ( memberIndex > -1 ) {
         getMedia(
           (stream) => {
-            this.peer = new Peer({
+            this.videoCallPeer = new Peer({
               initiator: true,
               trickle: false,
               stream: stream
             });
 
-            this.peer.on('signal', (signal) => {
+            this.videoCallPeer.on('signal', (signal) => {
               requestVideoCall(activeUser._id, chatRoomMembers[memberIndex], signal);
             });
 
@@ -325,7 +392,7 @@ class Chat extends Component {
               isVideoCallWindowOpen: true
             });
           },
-          ::this.handleVideoCallError
+          ::this.handleVideoError
         );
       }
     }
@@ -341,15 +408,15 @@ class Chat extends Component {
 
     getMedia(
       (stream) => {
-        this.peer = new Peer({
+        this.videoCallPeer = new Peer({
           initiator: false,
           trickle: false,
           stream: stream
         });
 
-        ::this.handleSignalPeer(this.callerPeerID);
+        ::this.handleSignalVideoCallPeer(this.callerPeerID);
 
-        this.peer.on('signal', (signal) => {
+        this.videoCallPeer.on('signal', (signal) => {
           acceptVideoCall(callerID, signal);
         });
 
@@ -361,7 +428,7 @@ class Chat extends Component {
       },
       () => {
         ::this.handleRejectVideoCall();
-        ::this.handleVideoCallError();
+        ::this.handleVideoError();
       }
     );
   }
@@ -554,6 +621,7 @@ const mapStateToProps = (state) => {
     chatRoom: state.chatRoom,
     popUpChatRoom: state.popUpChatRoom,
     message: state.message,
+    liveVideo: state.liveVideo,
     videoCall: state.videoCall
   }
 }
