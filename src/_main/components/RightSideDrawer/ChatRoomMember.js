@@ -23,13 +23,15 @@ class ChatRoomMember extends Component {
   handleRequestLiveVideo(event) {
     event.preventDefault();
 
-    if ( event.stopPropagation ) {
-      event.stopPropagation();
+    const {
+      user,
+      chatRoomMember,
+      handleRequestLiveVideo
+    } = this.props;
+
+    if ( user._id !== chatRoomMember._id ) {
+      handleRequestLiveVideo(chatRoomMember);
     }
-
-    const { handleRequestLiveVideo } = this.props;
-
-    handleRequestLiveVideo(chatRoomMember);
   }
   handleBlockMember(event) {
     event.preventDefault();
@@ -132,13 +134,8 @@ class ChatRoomMember extends Component {
             </div>
           }
           {
-            user._id !== chatRoomMember._id &&
             chatRoomMember.isLiveVideoActive &&
-            <div
-              className="live-video-icon"
-              title="This member has live video"
-              onClick={::this.handleRequestLiveVideo}
-            >
+            <div className="live-video-icon" title="This member has live video">
               <FontAwesome name="television" />
             </div>
           }
@@ -193,6 +190,15 @@ class ChatRoomMember extends Component {
                 </a>
               </li>
             */}
+            {
+              user._id !== chatRoomMember._id &&
+              chatRoomMember.isLiveVideoActive &&
+              <li>
+                <a href="#" onClick={::this.handleRequestLiveVideo}>
+                  Watch Live Video
+                </a>
+              </li>
+            }
             {
               (
                 ( user.role === 'owner' ||
