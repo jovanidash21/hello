@@ -23,9 +23,9 @@ class ChatRoomDropdown extends Component {
           <li>
             <a href="#" onClick={::this.handleStartLiveVideo}>
               <div className="option-icon">
-                <FontAwesome name="television" />
+                <FontAwesome name="video-camera" />
               </div>
-              Live Video
+              Broadcast Video
             </a>
           </li>
         </ul>

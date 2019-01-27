@@ -136,7 +136,7 @@ class ChatRoomMember extends Component {
           {
             chatRoomMember.isLiveVideoActive &&
             <div className="live-video-icon" title="This member has live video">
-              <FontAwesome name="television" />
+              <FontAwesome name="video-camera" />
             </div>
           }
           {
