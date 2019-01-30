@@ -4,12 +4,19 @@ import {
   SOCKET_START_LIVE_VIDEO,
   SOCKET_REQUEST_LIVE_VIDEO,
   SOCKET_ACCEPT_LIVE_VIDEO,
+  SET_LIVE_VIDEO_SOURCE,
   END_LIVE_VIDEO,
   SOCKET_END_LIVE_VIDEO
-} from '../constants/live-video';
+} from '../constants/live-video-user';
 import { getBaseURL } from '../../utils/url';
 
 const baseURL = getBaseURL();
+const extraUserData = {
+  video: {
+    loading: false,
+    source: {}
+  }
+};
 
 /**
  * Start live video
@@ -26,7 +33,10 @@ export function startLiveVideo(user, chatRoomID) {
     return dispatch({
       type: START_LIVE_VIDEO,
       payload: axios.post(baseURL + '/api/live-video', data),
-      meta: user
+      meta: {
+        ...user,
+        ...extraUserData
+      }
     })
     .then((response) => {
       dispatch({
@@ -53,17 +63,28 @@ export function requestLiveVideo(viewerID, liveVideoUser, peerID) {
   return {
     type: SOCKET_REQUEST_LIVE_VIDEO,
     viewerID: viewerID,
-    user: liveVideoUser,
+    user: {
+      ...liveVideoUser,
+      ...extraUserData
+    },
     userID: liveVideoUser._id,
     peerID: peerID
   };
 }
 
 /**
- * Accept live video
- * @param {string} viewerID
- * @param {object} peerID
+ * Set live video source
+ * @param {string} userID
+ * @param {object} source
  */
+export function setLiveVideoSource(userID, source) {
+  return {
+    type: SET_LIVE_VIDEO_SOURCE,
+    userID: userID,
+    source: source
+  };
+}
+
 export function acceptLiveVideo(viewerID, peerID) {
   return {
     type: SOCKET_ACCEPT_LIVE_VIDEO,
@@ -86,7 +107,8 @@ export function endLiveVideo(userID, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: END_LIVE_VIDEO,
-      payload: axios.post(baseURL + '/api/live-video', data)
+      payload: axios.post(baseURL + '/api/live-video', data),
+      meta: userID
     })
     .then((response) => {
       dispatch({

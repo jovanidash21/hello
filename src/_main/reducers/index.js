@@ -9,7 +9,7 @@ import chatRoom from './chat-room';
 import popUpChatRoom from './popup-chat-room';
 import message from './message';
 import member from './member';
-import liveVideo from './live-video';
+import liveVideoUser from './live-video-user';
 import videoCall from './video-call';
 
 const appReducer = combineReducers({
@@ -22,7 +22,7 @@ const appReducer = combineReducers({
   popUpChatRoom,
   message,
   member,
-  liveVideo,
+  liveVideoUser,
   videoCall
 });
 

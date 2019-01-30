@@ -5,6 +5,18 @@
   flex-direction: column;
   position: absolute;
   z-index: 600;
+  &.minimize,
+  &.restore {
+    @for $i from 0 to 7 {
+      &:nth-child(#{$i + 1}) {
+        left: #{$i * 15}px;
+        top: #{$i * 15}px;
+      }
+    }
+    &.active {
+      z-index: 700;
+    }
+  }
   &.minimize {
     width: 400px;
     @media screen and (max-width: $screen-mobile-max) {
@@ -21,8 +33,15 @@
     @media screen and (max-width: $screen-mobile-max) {
       width: 100%;
     }
+    @media screen and (max-width: $screen-small-mobile-max) {
+      height: 250px;
+      width: 60%;
+    }
     .popup-body {
       max-height: 311px;
+      @media screen and (max-width: $screen-small-mobile-max) {
+        max-height: 211px;
+      }
     }
   }
   &.maximize {

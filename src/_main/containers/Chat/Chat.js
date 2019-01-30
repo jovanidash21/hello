@@ -31,7 +31,7 @@ import { NotificationPopUp } from '../../components/NotificationPopUp';
 import {
   SOCKET_BROADCAST_REQUEST_LIVE_VIDEO,
   SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO
-} from '../../constants/live-video';
+} from '../../constants/live-video-user';
 import {
   SOCKET_BROADCAST_REQUEST_VIDEO_CALL,
   SOCKET_BROADCAST_CANCEL_REQUEST_VIDEO_CALL,
@@ -55,10 +55,9 @@ class Chat extends Component {
       isRightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
-      liveVideoSource: {},
+      activeLiveVideoWindow: -1,
       localVideoSource: {},
       remoteVideoSource: {},
-      isLiveVideoWindowOpen: false,
       isVideoCallRequestModalOpen: false,
       isVideoCallWindowOpen: false
     };
@@ -105,10 +104,6 @@ class Chat extends Component {
       ::this.calculateViewportHeight();
       window.addEventListener('onorientationchange', ::this.calculateViewportHeight, true);
       window.addEventListener('resize', ::this.calculateViewportHeight, true);
-    }
-
-    if ( !isObjectEmpty(prevProps.liveVideo.user) && isObjectEmpty(this.props.liveVideo.user) ) {
-      this.setState({isLiveVideoWindowOpen: false});
     }
   }
   calculateViewportHeight() {
@@ -193,6 +188,9 @@ class Chat extends Component {
   handleActiveChatPopUpWindow(popUpIndex) {
     this.setState({activeChatPopUpWindow: popUpIndex});
   }
+  handleActiveLiveVideoWindow(popUpIndex) {
+    this.setState({activeLiveVideoWindow: popUpIndex});
+  }
   handleAudioRecorderToggle(event) {
     event.preventDefault();
 
@@ -274,7 +272,7 @@ class Chat extends Component {
       this.liveVideoPeer.signal(peerID);
 
       this.liveVideoPeer.on('stream', (remoteStream) => {
-        this.setState({liveVideoSource: remoteStream});
+        // this.setState({liveVideoSource: remoteStream});
       });
     }
   }
@@ -291,20 +289,17 @@ class Chat extends Component {
     const {
       user,
       chatRoom,
-      startLiveVideo
+      startLiveVideo,
+      setLiveVideoSource
     } = this.props;
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
 
     if ( activeChatRoom.data.chatType === 'public' ) {
+      startLiveVideo(activeUser, activeChatRoom.data._id);
       getMedia(
         (stream) => {
-          startLiveVideo(activeUser, activeChatRoom.data._id);
-
-          this.setState({
-            liveVideoSource: stream,
-            isLiveVideoWindowOpen: true
-          });
+          setLiveVideoSource(activeUser._id, stream);
         },
         ::this.handleVideoError
       );
@@ -331,19 +326,16 @@ class Chat extends Component {
     this.liveVideoPeer.on('signal', (signal) => {
       requestLiveVideo(activeUser._id, liveVideoUser, signal);
 
-      this.setState({isLiveVideoWindowOpen: true});
-
       ::this.handleRightSideDrawerToggleEvent();
     });
   }
   handleAcceptLiveVideo(viewerID, peerID) {
-    const { liveVideoSource } = this.state;
     const { acceptLiveVideo } = this.props;
 
     this.liveVideoPeer = new Peer({
       initiator: false,
       trickle: false,
-      stream: liveVideoSource
+      // stream: liveVideoSource
     });
 
     ::this.handleSignalLiveVideoPeer(peerID);
@@ -356,11 +348,6 @@ class Chat extends Component {
     const { endLiveVideo } = this.props;
 
     endLiveVideo(userID, chatRoomID);
-
-    this.setState({isLiveVideoWindowOpen: false});
-  }
-  handleCloseLiveVideo() {
-    this.setState({isLiveVideoWindowOpen: false});
   }
   handleRequestVideoCall(chatRoom) {
     const {
@@ -470,16 +457,16 @@ class Chat extends Component {
       chatRoom,
       popUpChatRoom,
       message,
+      liveVideoUser,
       videoCall
     } = this.props;
     const {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
-      liveVideoSource,
+      activeLiveVideoWindow,
       localVideoSource,
       remoteVideoSource,
-      isLiveVideoWindowOpen,
       isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
@@ -543,13 +530,21 @@ class Chat extends Component {
                   }
                 </MediaQuery>
                 {
-                  isLiveVideoWindowOpen &&
+                  liveVideoUser.all.length > 0 &&
                   <div className="live-video-window-wrapper">
-                    <LiveVideoWindow
-                      liveVideoSource={liveVideoSource}
-                      handleEndLiveVideo={::this.handleEndLiveVideo}
-                      handleCloseLiveVideo={::this.handleCloseLiveVideo}
-                    />
+                    {
+                      liveVideoUser.all.map((singleLiveVideoUser, i) =>
+                        <LiveVideoWindow
+                          key={i}
+                          index={i}
+                          liveVideoUser={singleLiveVideoUser}
+                          handleActiveLiveVideoWindow={::this.handleActiveLiveVideoWindow}
+                          handleEndLiveVideo={::this.handleEndLiveVideo}
+                          active={activeLiveVideoWindow === i}
+                          loading={singleLiveVideoUser.video.loading}
+                        />
+                      )
+                    }
                   </div>
                 }
                 <ChatBox
@@ -621,7 +616,7 @@ const mapStateToProps = (state) => {
     chatRoom: state.chatRoom,
     popUpChatRoom: state.popUpChatRoom,
     message: state.message,
-    liveVideo: state.liveVideo,
+    liveVideoUser: state.liveVideoUser,
     videoCall: state.videoCall
   }
 }

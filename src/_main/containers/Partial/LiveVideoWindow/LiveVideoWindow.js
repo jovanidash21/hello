@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { isObjectEmpty } from '../../../../utils/object';
 import { Avatar } from '../../../../components/Avatar';
+import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import './styles.scss';
 
 class LiveVideoWindow extends Component {
@@ -16,11 +17,10 @@ class LiveVideoWindow extends Component {
       display: 'restore'
     };
   }
-  componentDidMount() {
-    ::this.handleLiveVideoSource();
-  }
-  componentDidUpdate() {
-    ::this.handleLiveVideoSource();
+  componentDidUpdate(prevProps) {
+    if ( prevProps.loading && !this.props.loading ) {
+      ::this.handleLiveVideoSource();
+    }
   }
   componentWillUnmount() {
     if ( this.liveVideo && this.liveVideo.srcObject ) {
@@ -32,19 +32,27 @@ class LiveVideoWindow extends Component {
   handleLiveVideoSource() {
     const {
       user,
-      liveVideo,
-      liveVideoSource
+      liveVideoUser
     } = this.props;
     const activeUser = user.active;
-    const liveVideoUser = liveVideo.user;
 
-    if ( !isObjectEmpty(liveVideoSource) ) {
-      this.liveVideo.srcObject = liveVideoSource;
+    if ( !isObjectEmpty(liveVideoUser.video.source) ) {
+      this.liveVideo.srcObject = liveVideoUser.video.source;
 
       if ( activeUser._id === liveVideoUser._id ) {
         this.liveVideo.muted = true;
       }
     }
+  }
+  handleActiveLiveVideoWindow(event) {
+    event.preventDefault();
+
+    const {
+      index,
+      handleActiveLiveVideoWindow
+    } = this.props;
+
+    handleActiveLiveVideoWindow(index);
   }
   handleWindowDisplay(event, display) {
     event.preventDefault();
@@ -76,16 +84,23 @@ class LiveVideoWindow extends Component {
   render() {
     const {
       user,
-      liveVideo
+      liveVideoUser,
+      active,
+      loading
     } = this.props;
     const { display } = this.state;
     const activeUser = user.active;
-    const liveVideoUser = liveVideo.user;
 
     return (
-      <Draggable bounds="parent" handle=".popup-header">
-        <div className={"live-video-window " + display}>
-          <div className="popup-header">
+      <Draggable bounds="parent" handle=".popup-header" onDrag={::this.handleActiveLiveVideoWindow}>
+        <div
+          className={
+            "live-video-window " +
+            display + ' ' +
+            (active ? 'active ' : '')
+          }
+        >
+          <div className="popup-header" onClick={::this.handleActiveLiveVideoWindow}>
             <Avatar
               image={liveVideoUser.profilePicture}
               name={liveVideoUser.name}
@@ -138,11 +153,18 @@ class LiveVideoWindow extends Component {
             </div>
           </div>
           <div className="popup-body">
-            <video
-              className="live-video"
-              ref={(element) => { this.liveVideo = element; }}
-              autoPlay
-            />
+            {
+              loading &&
+              <LoadingAnimation name="ball-clip-rotate" color="white" />
+            }
+            {
+              !loading &&
+              <video
+                className="live-video"
+                ref={(element) => { this.liveVideo = element; }}
+                autoPlay
+              />
+            }
           </div>
         </div>
       </Draggable>
@@ -153,19 +175,22 @@ class LiveVideoWindow extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom,
-    liveVideo: state.liveVideo
+    chatRoom: state.chatRoom
   }
 }
 
 LiveVideoWindow.propTypes = {
-  liveVideoSource: PropTypes.object,
+  index: PropTypes.number.isRequired,
+  liveVideoUser: PropTypes.object.isRequired,
+  handleActiveLiveVideoWindow: PropTypes.func.isRequired,
   handleEndLiveVideo: PropTypes.func.isRequired,
-  handleCloseLiveVideo: PropTypes.func.isRequired
+  active: PropTypes.bool,
+  loading: PropTypes.bool
 }
 
 LiveVideoWindow.defaultProps = {
-  liveVideoSource: {}
+  active: false,
+  loading: false
 }
 
 export default connect(

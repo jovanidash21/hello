@@ -22,7 +22,7 @@ import {
 import {
   SOCKET_BROADCAST_START_LIVE_VIDEO,
   SOCKET_BROADCAST_END_LIVE_VIDEO
-} from '../constants/live-video';
+} from '../constants/live-video-user';
 import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
