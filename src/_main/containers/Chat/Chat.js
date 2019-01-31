@@ -77,7 +77,7 @@ class Chat extends Component {
           ::this.handleAcceptLiveVideo(action.viewerID, action.peerID);
           break;
         case SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO:
-          ::this.handleSignalLiveVideoPeer(action.peerID);
+          ::this.handleSignalLiveVideoPeer(action.peerID, action.userID);
           break;
         case SOCKET_BROADCAST_REQUEST_VIDEO_CALL:
           this.callerPeerID = action.peerID;
@@ -267,13 +267,14 @@ class Chat extends Component {
   handleVideoError() {
     Popup.alert('Camera is not supported on your device!');
   }
-  handleSignalLiveVideoPeer(peerID) {
+  handleSignalLiveVideoPeer(peerID, userID = '') {
     if ( this.liveVideoPeer ) {
       this.liveVideoPeer.signal(peerID);
 
       this.liveVideoPeer.on('stream', (remoteStream) => {
-        // setLiveVideoSource(userID, remoteStream);
-        // this.setState({liveVideoSource: remoteStream});
+        if ( userID.length > 0 ) {
+          setLiveVideoSource(userID, remoteStream);
+        }
       });
     }
   }
@@ -361,19 +362,29 @@ class Chat extends Component {
     }
   }
   handleAcceptLiveVideo(viewerID, peerID) {
-    const { acceptLiveVideo } = this.props;
+    const {
+      user,
+      liveVideoUser,
+      acceptLiveVideo
+    } = this.props;
+    const activeUser = user.active;
+    const allLiveVideoUsers = liveVideoUser.all;
 
-    this.liveVideoPeer = new Peer({
-      initiator: false,
-      trickle: false,
-      // stream: liveVideoSource
-    });
+    var activeUserLiveVideoIndex = allLiveVideoUsers.findIndex(singleLiveVideoUser => singleLiveVideoUser._id === activeUser._id);
 
-    ::this.handleSignalLiveVideoPeer(peerID);
+    if ( activeUserLiveVideoIndex > -1 ) {
+      this.liveVideoPeer = new Peer({
+        initiator: false,
+        trickle: false,
+        stream: allLiveVideoUsers[activeUserLiveVideoIndex].source,
+      });
 
-    this.liveVideoPeer.on('signal', (signal) => {
-      acceptLiveVideo(viewerID, signal);
-    });
+      ::this.handleSignalLiveVideoPeer(peerID);
+
+      this.liveVideoPeer.on('signal', (signal) => {
+        acceptLiveVideo(activeUser._id, viewerID, signal);
+      });
+    }
   }
   handleEndLiveVideo(userID, chatRoomID) {
     const {

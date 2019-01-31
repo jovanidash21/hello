@@ -381,6 +381,7 @@ var sockets = function(io) {
             .then((user) => {
               socket.broadcast.to(user.socketID).emit('action', {
                 type: 'SOCKET_BROADCAST_ACCEPT_LIVE_VIDEO',
+                userID: action.userID,
                 peerID: action.peerID
               });
             })

@@ -86,9 +86,10 @@ export function setLiveVideoSource(userID, source) {
   };
 }
 
-export function acceptLiveVideo(viewerID, peerID) {
+export function acceptLiveVideo(userID, viewerID, peerID) {
   return {
     type: SOCKET_ACCEPT_LIVE_VIDEO,
+    userID: userID, 
     viewerID: viewerID,
     peerID: peerID
   };
