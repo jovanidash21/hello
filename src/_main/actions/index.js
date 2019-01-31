@@ -47,7 +47,8 @@ import {
   requestLiveVideo,
   acceptLiveVideo,
   setLiveVideoSource,
-  endLiveVideo
+  endLiveVideo,
+  closeLiveVideoUser
 } from './live-video-user';
 import {
   requestVideoCall,
@@ -94,6 +95,7 @@ const actions = (dispatch) => {
     acceptLiveVideo,
     setLiveVideoSource,
     endLiveVideo,
+    closeLiveVideoUser,
     requestVideoCall,
     cancelRequestVideoCall,
     rejectVideoCall,

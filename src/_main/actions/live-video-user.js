@@ -6,7 +6,8 @@ import {
   SOCKET_ACCEPT_LIVE_VIDEO,
   SET_LIVE_VIDEO_SOURCE,
   END_LIVE_VIDEO,
-  SOCKET_END_LIVE_VIDEO
+  SOCKET_END_LIVE_VIDEO,
+  CLOSE_LIVE_VIDEO_USER
 } from '../constants/live-video-user';
 import { getBaseURL } from '../../utils/url';
 
@@ -122,5 +123,16 @@ export function endLiveVideo(userID, chatRoomID) {
         console.log(error);
       }
     });
+  }
+}
+
+/**
+ * Close live video user
+ * @param {string} userID
+ */
+export function closeLiveVideoUser(userID) {
+  return {
+    type: CLOSE_LIVE_VIDEO_USER,
+    userID: userID
   }
 }

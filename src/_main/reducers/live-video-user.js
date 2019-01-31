@@ -3,7 +3,8 @@ import {
   SOCKET_REQUEST_LIVE_VIDEO,
   SET_LIVE_VIDEO_SOURCE,
   END_LIVE_VIDEO,
-  SOCKET_BROADCAST_END_LIVE_VIDEO
+  SOCKET_BROADCAST_END_LIVE_VIDEO,
+  CLOSE_LIVE_VIDEO_USER
 } from '../constants/live-video-user';
 
 const initialState = {
@@ -105,6 +106,18 @@ const liveVideoUser = (state=initialState, action) => {
     //   return {
     //     ...state
     //   };
+      case CLOSE_LIVE_VIDEO_USER:
+        var userID = action.userID;
+        var liveVideoUsers = [...state.all];
+
+        liveVideoUsers = liveVideoUsers.filter(singleLiveVideoUser =>
+          singleLiveVideoUser._id !== userID
+        );
+
+        return {
+          ...state,
+          all: [...liveVideoUsers]
+        };
     default:
       return state;
   }

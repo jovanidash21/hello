@@ -272,6 +272,7 @@ class Chat extends Component {
       this.liveVideoPeer.signal(peerID);
 
       this.liveVideoPeer.on('stream', (remoteStream) => {
+        // setLiveVideoSource(userID, remoteStream);
         // this.setState({liveVideoSource: remoteStream});
       });
     }
@@ -289,14 +290,24 @@ class Chat extends Component {
     const {
       user,
       chatRoom,
+      liveVideoUser,
       startLiveVideo,
       setLiveVideoSource
     } = this.props;
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
+    const allLiveVideoUsers = liveVideoUser.all;
 
     if ( activeChatRoom.data.chatType === 'public' ) {
-      startLiveVideo(activeUser, activeChatRoom.data._id);
+      var liveVideoUserIndex = allLiveVideoUsers.findIndex(singleLiveVideoUser => singleLiveVideoUser._id === activeUser._id);
+
+      if ( liveVideoUserIndex === -1  ) {
+        startLiveVideo(activeUser, activeChatRoom.data._id);
+        this.setState({activeLiveVideoWindow: allLiveVideoUsers.length});
+      } else {
+        this.setState({activeLiveVideoWindow: liveVideoUserIndex});
+      }
+
       getMedia(
         (stream) => {
           setLiveVideoSource(activeUser._id, stream);
@@ -305,29 +316,49 @@ class Chat extends Component {
       );
     }
   }
-  handleRequestLiveVideo(liveVideoUser) {
+  handleRequestLiveVideo(selectedLiveVideoUser) {
     const {
       user,
-      requestLiveVideo
+      liveVideoUser,
+      requestLiveVideo,
+      closeLiveVideoUser
     } = this.props;
     const activeUser = user.active;
+    const allLiveVideoUsers = liveVideoUser.all;
 
-    this.liveVideoPeer = new Peer({
-      initiator: true,
-      trickle: false,
-      offerConstraints: {
-        mandatory: {
-          OfferToReceiveAudio: true,
-          OfferToReceiveVideo: true
+    var activeUserLiveVideoIndex = allLiveVideoUsers.findIndex(singleLiveVideoUser => singleLiveVideoUser._id === activeUser._id);
+    var selectedLiveVideoUserIndex = allLiveVideoUsers.findIndex(singleLiveVideoUser => singleLiveVideoUser._id === selectedLiveVideoUser._id);
+
+    if ( selectedLiveVideoUserIndex === -1  ) {
+      this.liveVideoPeer = new Peer({
+        initiator: true,
+        trickle: false,
+        offerConstraints: {
+          mandatory: {
+            OfferToReceiveAudio: true,
+            OfferToReceiveVideo: true
+          }
         }
-      }
-    });
+      });
 
-    this.liveVideoPeer.on('signal', (signal) => {
-      requestLiveVideo(activeUser._id, liveVideoUser, signal);
+      this.liveVideoPeer.on('signal', (signal) => {
+        if ( activeUserLiveVideoIndex > -1 && allLiveVideoUsers.length >= 7 ) {
+          if ( activeUserLiveVideoIndex === 0 ) {
+            closeLiveVideoUser(allLiveVideoUsers[1]._id);
+          } else {
+            closeLiveVideoUser(allLiveVideoUsers[0]._id);
+          }
+        } else if ( activeUserLiveVideoIndex === -1 && allLiveVideoUsers.length >= 6 ) {
+          closeLiveVideoUser(allLiveVideoUsers[0]._id);
+        }
 
-      ::this.handleRightSideDrawerToggleEvent();
-    });
+        requestLiveVideo(activeUser._id, selectedLiveVideoUser, signal);
+        this.setState({activeLiveVideoWindow: allLiveVideoUsers.length});
+        ::this. handleRightSideDrawerToggleEvent();
+      });
+    } else {
+      this.setState({activeLiveVideoWindow: selectedLiveVideoUserIndex});
+    }
   }
   handleAcceptLiveVideo(viewerID, peerID) {
     const { acceptLiveVideo } = this.props;
@@ -345,9 +376,13 @@ class Chat extends Component {
     });
   }
   handleEndLiveVideo(userID, chatRoomID) {
-    const { endLiveVideo } = this.props;
+    const {
+      endLiveVideo,
+      closeLiveVideoUser
+    } = this.props;
 
     endLiveVideo(userID, chatRoomID);
+    closeLiveVideoUser(userID);
   }
   handleRequestVideoCall(chatRoom) {
     const {

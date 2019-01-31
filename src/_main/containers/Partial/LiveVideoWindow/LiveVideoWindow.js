@@ -74,12 +74,20 @@ class LiveVideoWindow extends Component {
 
     handleEndLiveVideo(activeUser._id, activeChatRoom.data._id);
   }
-  handleCloseLiveVideo(event) {
+  handleCloseLiveVideoUser(event) {
     event.preventDefault();
 
-    const { handleCloseLiveVideo } = this.props;
+    const {
+      user,
+      closeLiveVideoUser,
+      liveVideoUser,
+    } = this.props;
+    const activeUser = user.active;
+    const liveVideoUserID = liveVideoUser._id;
 
-    handleCloseLiveVideo();
+    if ( liveVideoUserID !== activeUser._id ) {
+      closeLiveVideoUser(liveVideoUserID);
+    }
   }
   render() {
     const {
@@ -146,7 +154,7 @@ class LiveVideoWindow extends Component {
               onClick={
                 activeUser._id === liveVideoUser._id
                   ? ::this.handleEndLiveVideo
-                  : ::this.handleCloseLiveVideo
+                  : ::this.handleCloseLiveVideoUser
               }
             >
               <FontAwesome name="times" />
