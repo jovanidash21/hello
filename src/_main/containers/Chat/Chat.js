@@ -268,6 +268,8 @@ class Chat extends Component {
     Popup.alert('Camera is not supported on your device!');
   }
   handleSignalLiveVideoPeer(peerID, userID = '') {
+    const { setLiveVideoSource } = this.props;
+
     if ( this.liveVideoPeer ) {
       this.liveVideoPeer.signal(peerID);
 
@@ -376,7 +378,7 @@ class Chat extends Component {
       this.liveVideoPeer = new Peer({
         initiator: false,
         trickle: false,
-        stream: allLiveVideoUsers[activeUserLiveVideoIndex].source,
+        stream: allLiveVideoUsers[activeUserLiveVideoIndex].video.source,
       });
 
       ::this.handleSignalLiveVideoPeer(peerID);
