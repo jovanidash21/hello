@@ -552,7 +552,14 @@ var sockets = function(io) {
     socket.on('disconnect', function() {
       User.findById(connectedUsers[socket.id])
         .then((user) => {
-          if ('connectedChatRoom' in user && user.connectedChatRoom !== null) {
+          if (
+            user !== null &&
+            user !== 'undefined' &&
+            Object.keys(user).length > 0 &&
+            user.constructor === Object &&
+            'connectedChatRoom' in user &&
+            user.connectedChatRoom !== null
+          ) {
             ChatRoom.findByIdAndUpdate(
               user.connectedChatRoom,
               { $unset: { connectedMembers: user._id } },
