@@ -9,9 +9,6 @@ import {
   GUEST_LOGIN,
   SOCKET_USER_LOGIN
 } from '../constants/auth';
-import { getBaseURL } from '../../utils/url';
-
-const baseURL = getBaseURL();
 
 /**
  * Socket user login
@@ -40,7 +37,7 @@ export function localLogin(username, password) {
 
     return dispatch({
       type: LOGIN,
-      payload: axios.post(baseURL + '/api/login/local', data)
+      payload: axios.post('login/local', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -62,7 +59,7 @@ export function facebookLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup(baseURL + '/api/login/facebook', 'Facebook Login', {}, function (err, res) {
+        popupTools.popup('login/facebook', 'Facebook Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -90,7 +87,7 @@ export function googleLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup(baseURL + '/api/login/google', 'Google Login', {}, function (err, res) {
+        popupTools.popup('login/google', 'Google Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -118,7 +115,7 @@ export function twitterLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup(baseURL + '/api/login/twitter', 'Twitter Login', {}, function (err, res) {
+        popupTools.popup('login/twitter', 'Twitter Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -160,7 +157,7 @@ export function register(email, name, username, gender, password) {
 
     return dispatch({
       type: REGISTER,
-      payload: axios.post(baseURL + '/api/register', data)
+      payload: axios.post('register', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -193,7 +190,7 @@ export function guestLogin(name, username, gender) {
 
     return dispatch({
       type: GUEST_LOGIN,
-      payload: axios.post(baseURL + '/api/login/guest', data)
+      payload: axios.post('login/guest', data)
     })
     .then(() => {
       dispatch(hideLoading());

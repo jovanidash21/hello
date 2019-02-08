@@ -9,9 +9,7 @@ import {
   SOCKET_END_LIVE_VIDEO,
   CLOSE_LIVE_VIDEO_USER
 } from '../constants/live-video-user';
-import { getBaseURL } from '../../utils/url';
 
-const baseURL = getBaseURL();
 const extraUserData = {
   video: {
     loading: false,
@@ -33,7 +31,7 @@ export function startLiveVideo(user, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: START_LIVE_VIDEO,
-      payload: axios.post(baseURL + '/api/live-video', data),
+      payload: axios.post('live-video', data),
       meta: {
         ...user,
         ...extraUserData
@@ -89,7 +87,7 @@ export function setLiveVideoSource(userID, source) {
 export function acceptLiveVideo(userID, viewerID, peerID) {
   return {
     type: SOCKET_ACCEPT_LIVE_VIDEO,
-    userID: userID, 
+    userID: userID,
     viewerID: viewerID,
     peerID: peerID
   };
@@ -109,7 +107,7 @@ export function endLiveVideo(userID, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: END_LIVE_VIDEO,
-      payload: axios.post(baseURL + '/api/live-video', data),
+      payload: axios.post('live-video', data),
       meta: userID
     })
     .then((response) => {

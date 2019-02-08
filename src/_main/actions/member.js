@@ -9,9 +9,6 @@ import {
   SOCKET_MUTE_MEMBER,
   SOCKET_BLOCK_MEMBER
 } from '../constants/member';
-import { getBaseURL } from '../../utils/url';
-
-const baseURL = getBaseURL();
 
 /**
  * Fetch members
@@ -27,7 +24,7 @@ export function fetchMembers(chatRoomID, userID) {
   return dispatch => {
     return dispatch({
       type: FETCH_MEMBERS,
-      payload: axios.post(baseURL + '/api/member', data)
+      payload: axios.post('member', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -47,7 +44,7 @@ export function blockMember(memberID) {
   return dispatch => {
     return dispatch({
       type: BLOCK_MEMBER,
-      payload: axios.post(baseURL + '/api/member/block', data)
+      payload: axios.post('member/block', data)
     })
     .then((response) => {
       dispatch({
@@ -77,7 +74,7 @@ export function kickMember(chatRoomID, memberID) {
   return dispatch => {
     return dispatch({
       type: KICK_MEMBER,
-      payload: axios.post(baseURL + '/api/member/kick', data)
+      payload: axios.post('member/kick', data)
     })
     .then((response) => {
       dispatch({
@@ -110,7 +107,7 @@ export function updateMemberRole(memberID, role) {
   return dispatch => {
     return dispatch({
       type: UPDATE_MEMBER_ROLE,
-      payload: axios.post(baseURL + '/api/member/role', data)
+      payload: axios.post('member/role', data)
     })
     .then((response) => {
       dispatch({
@@ -137,7 +134,7 @@ export function muteMember(memberID) {
   return dispatch => {
     return dispatch({
       type: MUTE_MEMBER,
-      payload: axios.post(baseURL + '/api/member/mute', data)
+      payload: axios.post('member/mute', data)
     })
     .then((response) => {
       dispatch({

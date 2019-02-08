@@ -12,9 +12,6 @@ import {
 } from '../constants/chat-room';
 import { fetchNewMessages } from './message';
 import { fetchMembers } from './member';
-import { getBaseURL } from '../../utils/url';
-
-const baseURL = getBaseURL();
 
 /**
  * Fetch chat rooms
@@ -26,7 +23,7 @@ export function fetchChatRooms(userID) {
   return dispatch => {
     return dispatch({
       type: FETCH_CHAT_ROOMS,
-      payload: axios.post(baseURL + '/api/chat-room', data)
+      payload: axios.post('chat-room', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -135,7 +132,7 @@ export function createPublicChatRoom(name, userID, activeChatRoomID, connectedCh
   return dispatch => {
     return dispatch({
       type: CREATE_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/create', data)
+      payload: axios.post('chat-room/create', data)
     })
     .then((response) => {
       dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, connectedChatRoomID));
@@ -167,7 +164,7 @@ export function createGroupChatRoom(name, members, userID, activeChatRoomID, con
   return dispatch => {
     return dispatch({
       type: CREATE_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/create', data)
+      payload: axios.post('chat-room/create', data)
     })
     .then((response) => {
       dispatch(createChatRoom(userID, response.action.payload.data.chatRoom, activeChatRoomID, connectedChatRoomID));
@@ -199,7 +196,7 @@ export function createDirectChatRoom(userID, memberID, activeChatRoomID, connect
   return dispatch => {
     return dispatch({
       type: CREATE_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/create', data)
+      payload: axios.post('chat-room/create', data)
     })
     .then((response) => {
       const chatRoom = response.action.payload.data.chatRoom;
@@ -258,7 +255,7 @@ export function clearChatRoomUnreadMessages(userID, chatRoomIDs) {
   return dispatch => {
     return dispatch({
       type: CLEAR_CHAT_ROOM_UNREAD_MESSAGES,
-      payload: axios.post(baseURL + '/api/chat-room/clear-unread', data)
+      payload: axios.post('chat-room/clear-unread', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -278,7 +275,7 @@ export function trashAllChatRooms(userID) {
   return dispatch => {
     return dispatch({
       type: TRASH_ALL_CHAT_ROOMS,
-      payload: axios.post(baseURL + '/api/chat-room/trash-all', data)
+      payload: axios.post('chat-room/trash-all', data)
     })
     .catch((error) => {
       if (error instanceof Error) {
@@ -302,7 +299,7 @@ export function trashChatRoom(userID, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: TRASH_CHAT_ROOM,
-      payload: axios.post(baseURL + '/api/chat-room/trash', data),
+      payload: axios.post('chat-room/trash', data),
       meta: chatRoomID
     })
     .catch((error) => {
