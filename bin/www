@@ -33,7 +33,7 @@ server.on('listening', onListening);
  * Attach socket.io on the server.
  */
 
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, { wsEngine: 'ws' });
 
 /**
  * Listen on connections to server.
