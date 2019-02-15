@@ -240,7 +240,7 @@ var sockets = function(io) {
                       { safe: true }
                     ).exec();
 
-                    User.update(
+                    User.updateOne(
                       { _id: user._id, 'chatRooms.data': action.chatRoomID },
                       { $set: { 'chatRooms.$.unReadMessages': 0 } },
                       { safe: true, upsert: true, new: true }
@@ -552,21 +552,14 @@ var sockets = function(io) {
     socket.on('disconnect', function() {
       User.findById(connectedUsers[socket.id])
         .then((user) => {
-          if (
-            user !== null &&
-            user !== 'undefined' &&
-            Object.keys(user).length > 0 &&
-            user.constructor === Object &&
-            'connectedChatRoom' in user &&
-            user.connectedChatRoom !== null
-          ) {
+          if ( user !== null && user._id !== null ) {
             ChatRoom.findByIdAndUpdate(
               user.connectedChatRoom,
               { $unset: { connectedMembers: user._id } },
               { safe: true, upsert: true, new: true }
             ).exec();
 
-            User.update(
+            User.updateOne(
               { _id: user._id },
               { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, ipAddress: '', socketID: ''} },
               { safe: true, upsert: true, new: true },
@@ -577,17 +570,17 @@ var sockets = function(io) {
               userID: user._id,
               chatRoomID: user.connectedChatRoom
             });
+
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
+              userID: user._id
+            });
+
+            socket.broadcast.emit('action', {
+              type: 'SOCKET_BROADCAST_USER_LOGOUT',
+              userID: user._id
+            });
           }
-
-          socket.broadcast.emit('action', {
-            type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
-            userID: connectedUsers[socket.id]
-          });
-
-          socket.broadcast.emit('action', {
-            type: 'SOCKET_BROADCAST_USER_LOGOUT',
-            userID: connectedUsers[socket.id]
-          });
 
           delete connectedUsers[socket.id];
         })
