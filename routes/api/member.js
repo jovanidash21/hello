@@ -102,7 +102,7 @@ router.post('/kick', (req, res, next) => {
     var chatRoomID = req.body.chatRoomID;
     var memberID = req.body.memberID;
 
-    User.update(
+    User.updateOne(
       { _id: memberID, 'chatRooms.data': chatRoomID },
       { $set: { 'chatRooms.$.kick.data': true, 'chatRooms.$.kick.endDate': new Date( +new Date() + 30 * 60 * 1000 ) } },
       { safe: true, upsert: true, new: true }

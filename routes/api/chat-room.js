@@ -102,7 +102,7 @@ router.post('/create', (req, res, next) => {
           if (chatRoom !== null) {
             var chatRoomID = chatRoom._id;
 
-            User.update(
+            User.updateOne(
               { _id: userID, 'chatRooms.data': chatRoomID },
               { $set: { 'chatRooms.$.trash.data': false, 'chatRooms.$.trash.endDate': new Date() } },
               { safe: true, upsert: true, new: true }
@@ -205,7 +205,7 @@ router.post('/clear-unread', (req, res, next) => {
         for (var i = 0; i < chatRoomIDs.length; i++) {
           var chatRoomID = chatRoomIDs[i];
 
-          User.update(
+          User.updateOne(
             { _id: userID, 'chatRooms.data': chatRoomID },
             { $set: { 'chatRooms.$.unReadMessages': 0 } },
             { safe: true, upsert: true, new: true }
@@ -238,7 +238,7 @@ router.post('/trash', (req, res, next) => {
   } else {
     var chatRoomID = req.body.chatRoomID;
 
-    User.update(
+    User.updateOne(
       { _id: userID, 'chatRooms.data': chatRoomID },
       { $set: { 'chatRooms.$.trash.data': true, 'chatRooms.$.trash.endDate': new Date( +new Date() + 2 * 60 * 1000 ) } },
       { safe: true, upsert: true, new: true }
@@ -280,7 +280,7 @@ router.post('/trash-all', (req, res, next) => {
           var chatRoom = userChatRooms[i].data;
 
           if ( chatRoom.chatType === 'direct' ) {
-            User.update(
+            User.updateOne(
               { _id: userID, 'chatRooms.data': chatRoom._id },
               { $set: { 'chatRooms.$.trash.data': true, 'chatRooms.$.trash.endDate': new Date( +new Date() + 2 * 60 * 1000 ) } },
               { safe: true, upsert: true, new: true }

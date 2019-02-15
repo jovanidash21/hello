@@ -98,7 +98,7 @@ router.post('/', (req, res, next) => {
       .then((messages) => {
         var chatRoomMessages = messages.reverse();
 
-        User.update(
+        User.updateOne(
           { _id: userID, 'chatRooms.data': chatRoomID },
           { $set: { 'chatRooms.$.unReadMessages': 0 } },
           { safe: true, upsert: true, new: true }
@@ -151,7 +151,7 @@ router.post('/text', (req, res, next) => {
           var memberID = chatRoom.members[i];
 
           if (memberID != userID) {
-            User.update(
+            User.updateOne(
               { _id: memberID, 'chatRooms.data': chatRoomID },
               { $inc: { 'chatRooms.$.unReadMessages': 1 } },
               { safe: true, upsert: true, new: true }
@@ -230,7 +230,7 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
           var memberID = chatRoom.members[i];
 
           if (memberID != userID) {
-            User.update(
+            User.updateOne(
               { _id: memberID, 'chatRooms.data': chatRoomID },
               { $inc: { 'chatRooms.$.unReadMessages': 1 } },
               { safe: true, upsert: true, new: true }
@@ -303,7 +303,7 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
           var memberID = chatRoom.members[i];
 
           if (memberID != userID) {
-            User.update(
+            User.updateOne(
               { _id: memberID, 'chatRooms.data': chatRoomID },
               { $inc: { 'chatRooms.$.unReadMessages': 1 } },
               { safe: true, upsert: true, new: true }
@@ -376,7 +376,7 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
           var memberID = chatRoom.members[i];
 
           if (memberID != userID) {
-            User.update(
+            User.updateOne(
               { _id: memberID, 'chatRooms.data': chatRoomID },
               { $inc: { 'chatRooms.$.unReadMessages': 1 } },
               { safe: true, upsert: true, new: true }
