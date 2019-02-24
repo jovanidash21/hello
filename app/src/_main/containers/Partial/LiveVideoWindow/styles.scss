@@ -1,0 +1,107 @@
+.live-video-window {
+  background-color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 600;
+  &.minimize,
+  &.restore {
+    @for $i from 0 to 7 {
+      &:nth-child(#{$i + 1}) {
+        left: #{$i * 15}px;
+        top: #{$i * 15}px;
+      }
+    }
+    &.active {
+      z-index: 700;
+    }
+  }
+  &.minimize {
+    width: 400px;
+    @media screen and (max-width: $screen-mobile-max) {
+      width: 100%;
+    }
+    .popup-body {
+      display: none;
+      max-height: 0;
+    }
+  }
+  &.restore {
+    height: 350px;
+    width: 400px;
+    @media screen and (max-width: $screen-mobile-max) {
+      width: 100%;
+    }
+    @media screen and (max-width: $screen-small-mobile-max) {
+      height: 250px;
+      width: 60%;
+    }
+    .popup-body {
+      max-height: 311px;
+      @media screen and (max-width: $screen-small-mobile-max) {
+        max-height: 211px;
+      }
+    }
+  }
+  &.maximize {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transform: none !important;
+    z-index: 1500;
+    .popup-body {
+      max-height: calc(100vh - 39px);
+    }
+  }
+  .popup-header {
+    align-items: center;
+    background-color: $color-primary;
+    color: #fff;
+    cursor: all-scroll;
+    display: flex;
+    font-size: 15px;
+    padding: 7px 0 7px 10px;
+    .avatar {
+      margin-right: 12px;
+    }
+    .user-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .you-label {
+        color: $color-alto;
+        margin-left: 7px;
+      }
+    }
+    .popup-header-icon {
+      color: $color-alabaster;
+      cursor: pointer;
+      font-size: 15px;
+      margin-right: 3px;
+      opacity: 0.5;
+      padding: 0 7px;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        opacity: 8;
+      }
+      &.minimize-icon,
+      &.restore-icon,
+      &.maximize-icon {
+        font-size: 11px;
+        padding: 0 5px;
+      }
+    }
+  }
+  .popup-body {
+    background-color: #000;
+    flex: 1;
+    .live-video {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
