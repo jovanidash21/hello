@@ -49,6 +49,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// request header config
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.APP_URL);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(flash());
 
 app.use('/', index);
