@@ -1,5 +1,6 @@
 'use strict';
 
+const webpack = require('webpack');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const postcssFlexbugsFixes = require('postcss-flexbugs-fixes');
@@ -16,6 +17,11 @@ module.exports = {
   },
   plugins: [
     extractSassBundle,
+    new webpack.DefinePlugin({
+      'process.env': {
+        'API_URL': JSON.stringify('http://localhost:4000'),
+      },
+    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],

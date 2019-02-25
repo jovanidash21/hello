@@ -7,10 +7,7 @@ import store from './store';
 import history from '../history';
 import routes from './routes';
 
-const localtionArr = window.location.href.split("/");
-const baseURL = localtionArr[0] + "//" + localtionArr[2] + '/api/';
-
-axios.defaults.baseURL = baseURL;
+axios.defaults.baseURL = process.env.API_URL;
 
 render(
   <Provider store={store}>

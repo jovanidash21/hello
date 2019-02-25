@@ -30,6 +30,12 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
+ * Attach socket.io on the server.
+ */
+
+var io = require('socket.io-client')(process.env.API_URL);
+
+/**
  * Normalize a port into a number, string, or false.
  */
 
