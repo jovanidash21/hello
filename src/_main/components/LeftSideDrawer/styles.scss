@@ -1,0 +1,76 @@
+.chat-room {
+  align-items: center;
+  border-bottom: 1px solid $color-east-bay;
+  color: $color-old-lace;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  padding: 10px 10px 10px 15px;
+  transition: all 0.2s ease;
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: $color-east-bay;
+  }
+  &.active {
+    background-color: $color-tertiary;
+  }
+  &.new-message {
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .avatar {
+    margin-right: 14px;
+  }
+  .chat-room-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    .you-label {
+      color: $color-alto;
+      margin-left: 7px;
+    }
+  }
+  .notification-count {
+    margin-left: 3px;
+  }
+  .trash-icon {
+    align-items: center;
+    cursor: pointer;
+    color: $color-alto;
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    margin-left: 5px;
+    opacity: 0.5;
+    overflow-x: hidden;
+    text-align: center;
+    transition: all 0.2s ease;
+    width: 0;
+    &:hover {
+      color: $color-punch;
+      opacity: 1;
+    }
+  }
+  .connected-members-count {
+    align-items: center;
+    color: $color-alto;
+    display: flex;
+    font-size: 12px;
+    .user-icon {
+      margin: 0 4px;
+    }
+  }
+  &:hover {
+    .trash-icon {
+      width: 12px;
+    }
+  }
+}

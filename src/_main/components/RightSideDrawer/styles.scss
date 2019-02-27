@@ -1,0 +1,71 @@
+.chat-room-member-wrapper {
+  border-bottom: 1px solid $color-mirage;
+  font-size: 14px;
+  position: relative;
+  transition: all 0.2s ease;
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: $color-mirage;
+  }
+  &.active {
+    background-color: $color-secondary;
+  }
+  &.special {
+    background-color: $color-vermillion;
+  }
+  .member-api-address {
+    align-items: center;
+    background-color: $color-dusty-gray;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 2px 8px;
+    small {
+      margin-right: 5px;
+    }
+  }
+}
+.chat-room-member {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  padding: 3px;
+  transition: all 0.2s ease;
+  .online-indicator {
+    color: $color-dusty-gray;
+    font-size: 10px;
+    margin: 0 5px;
+    &.online {
+      color: $color-mantis;
+    }
+  }
+  .avatar {
+    margin-right: 12px;
+  }
+  .member-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    .you-label {
+      color: $color-alto;
+      margin-left: 7px;
+    }
+  }
+  .mute-icon {
+    color: $color-alto;
+    margin: 0 2px;
+  }
+  .live-video-icon {
+    color: $color-amaranth;
+    margin: 0 2px;
+    padding: 0 5px;
+  }
+  .gender-icon {
+    height: 18px;
+    margin: 0 2px;
+    width: 18px;
+  }
+}

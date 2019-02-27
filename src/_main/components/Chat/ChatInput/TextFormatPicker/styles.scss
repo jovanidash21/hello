@@ -1,0 +1,19 @@
+.text-format-picker {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+  padding: 0 5px;
+  .button {
+    width: 40px;
+  }
+  .color-picker {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 5px;
+    position: absolute;
+    transform: translateX(-50%);
+    .sketch-picker {
+      box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24) !important;
+    }
+  }
+}

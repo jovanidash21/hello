@@ -1,0 +1,52 @@
+code,
+pre {
+  background-color: $color-alabaster;
+  border: 1px solid $color-alto;
+  border-radius: 3px;
+}
+code {
+  color: $color-punch;
+  padding: 1px 3px;
+}
+pre {
+  color: $color-mine-shaft;
+  margin: 8px 0;
+  padding: 8px;
+}
+.button {
+  &.button-facebook {
+    @include button($color-chambray);
+  }
+  &.button-google {
+    @include button($color-punch);
+  }
+  &.button-twitter {
+    @include button($color-cerulean);
+  }
+  &.button-instagram {
+    @include button($color-studio);
+  }
+  &.button-linkedin {
+    @include button($color-deep-cerulean);
+  }
+  &.button-github {
+    @include button($color-mine-shaft);
+  }
+  &.button-register {
+    @include button($color-sunshade);
+  }
+  &.button-guest {
+    @include button($color-millbrook);
+  }
+  &.button-social {
+    .social-icon {
+      align-items: center;
+      border-right: 1px solid $color-dusty-gray;
+      display: flex;
+      float: left;
+      height: 100%;
+      justify-content: center;
+      width: 45px;
+    }
+  }
+}
