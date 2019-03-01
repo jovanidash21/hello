@@ -10,6 +10,9 @@ import {
   SOCKET_USER_LOGIN
 } from '../constants/auth';
 
+const localtionArr = window.location.href.split("/");
+const baseURL = localtionArr[0] + "//" + localtionArr[2];
+
 /**
  * Socket user login
  * @param {Object} user
@@ -59,7 +62,7 @@ export function facebookLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('login/facebook', 'Facebook Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/facebook', 'Facebook Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -87,7 +90,7 @@ export function googleLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('login/google', 'Google Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/google', 'Google Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
@@ -115,7 +118,7 @@ export function twitterLogin() {
     return dispatch({
       type: LOGIN,
       payload: new Promise((resolve, reject) => {
-        popupTools.popup('login/twitter', 'Twitter Login', {}, function (err, res) {
+        popupTools.popup(baseURL + '/api/login/twitter', 'Twitter Login', {}, function (err, res) {
           if (!err) {
             resolve(res);
           } else {
