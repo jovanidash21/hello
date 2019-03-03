@@ -26,21 +26,50 @@ class Guest extends Component {
 
     this.state = {
       name: '',
-      gender: 'male'
+      gender: 'male',
+      nameValid: true,
+      errorMessage: ''
     };
   }
   componentWillMount() {
     document.body.className = '';
     document.body.classList.add('guest-login-page');
   }
+  componentDidUpdate(prevProps) {
+    if ( prevProps.auth.guestLogin.loading && ! this.props.auth.guestLogin.loading && this.props.auth.guestLogin.error ) {
+      this.setState({errorMessage: this.props.auth.guestLogin.message});
+    }
+  }
   onInputChange(event) {
     event.preventDefault();
 
     this.setState({[event.target.name]: event.target.value});
   }
-  handleGuestLogin(event) {
+  handleGuestLoginValidation(event) {
     event.preventDefault();
 
+    const { name } = this.state;
+    var nameValid = true;
+    var errorMessage = '';
+
+    if ( name.trim().length === 0 ) {
+      nameValid = false;
+    }
+
+    if ( ! nameValid ) {
+      errorMessage = 'Name is required';
+    }
+
+    this.setState({
+      nameValid: nameValid,
+      errorMessage: errorMessage
+    });
+
+    if ( nameValid && errorMessage.length === 0 ) {
+      ::this.handleGuestLogin();
+    }
+  }
+  handleGuestLogin() {
     const { guestLogin } = this.props;
     const {
       name,
@@ -55,7 +84,9 @@ class Guest extends Component {
     const { auth } = this.props;
     const {
       name,
-      gender
+      gender,
+      nameValid,
+      errorMessage
     } = this.state;
 
     return (
@@ -65,19 +96,20 @@ class Guest extends Component {
             <h1 className="mui--text-center">Create Identity</h1>
           </Col>
           {
-            auth.guestLogin.error &&
+            errorMessage.length > 0 &&
             <Col md="12">
-              <Alert label={auth.guestLogin.message} center />
+              <Alert label={errorMessage} center />
             </Col>
           }
           <Col md="12">
-            <Form onSubmit={::this.handleGuestLogin}>
+            <Form onSubmit={::this.handleGuestLoginValidation}>
               <Input
                 value={name}
                 label="Name"
                 name="name"
                 onChange={::this.onInputChange}
                 disabled={auth.guestLogin.loading}
+                invalid={!nameValid}
               />
               <Select
                 options={[
