@@ -109,7 +109,7 @@ class Header extends Component {
       )
     }
   }
-  handleEditProfile(username, name, email, profilePicture) {
+  handleEditProfile(username, name, email, gender, profilePicture) {
     const {
       user,
       editActiveUser
@@ -117,7 +117,7 @@ class Header extends Component {
     const activeUser = user.active;
 
     if ( activeUser.accountType === 'local' || activeUser.accountType === 'guest' ) {
-      editActiveUser(activeUser._id, username, name, email, profilePicture);
+      editActiveUser(activeUser._id, username, name, email, gender, profilePicture);
     }
   }
   handleRequestVideoCall(event) {

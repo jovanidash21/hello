@@ -32,14 +32,16 @@ export function fetchActiveUser() {
  * @param {string} username
  * @param {string} name
  * @param {string} email
+ * @param {string} gender
  * @param {string} profilePicture
  */
-export function editActiveUser(userID, username, name, email, profilePicture) {
+export function editActiveUser(userID, username, name, email, gender, profilePicture) {
   let data = {
     userID,
     username,
     name,
     email,
+    gender,
     profilePicture
   };
 

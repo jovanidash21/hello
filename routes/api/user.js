@@ -83,7 +83,8 @@ router.post('/edit-profile', (req, res, next) => {
   } else {
     var username = req.body.username;
     var userData = {
-      name: req.body.name
+      name: req.body.name,
+      gender: req.body.gender
     };
 
     User.findOne({username: username})

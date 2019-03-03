@@ -10,7 +10,8 @@ import { Modal } from '../../Modal';
 import { Alert } from '../../Alert';
 import {
   AvatarUploader,
-  Input
+  Input,
+  Select
 } from '../../Form';
 import './styles.scss';
 
@@ -22,6 +23,7 @@ class EditProfileModal extends Component {
       username: '',
       name: '',
       email: '',
+      gender: 'male',
       profilePicture: '',
       usernameValid: true,
       nameValid: true,
@@ -70,6 +72,7 @@ class EditProfileModal extends Component {
       username: user.username,
       name: user.name,
       email: user.email,
+      gender: user.gender,
       profilePicture: user.profilePicture
     });
   }
@@ -144,10 +147,11 @@ class EditProfileModal extends Component {
       username,
       name,
       email,
+      gender,
       profilePicture
     } = this.state;
 
-    handleEditProfile(username, name, email, profilePicture);
+    handleEditProfile(username, name, email, gender, profilePicture);
   }
   render() {
     const {
@@ -160,6 +164,7 @@ class EditProfileModal extends Component {
       username,
       name,
       email,
+      gender,
       profilePicture,
       usernameValid,
       nameValid,
@@ -231,6 +236,20 @@ class EditProfileModal extends Component {
                 onChange={::this.onInputChange}
                 disabled={userEdit.loading || !isLocalUser}
                 invalid={!emailValid}
+              />
+            }
+            {
+              (isLocalUser || isGuestUser) &&
+              <Select
+                options={[
+                  { value: 'male', label: 'Male' },
+                  { value: 'female', label: 'Female' },
+                ]}
+                defaultValue={gender}
+                label="Gender"
+                name="gender"
+                onChange={::this.onInputChange}
+                disabled={userEdit.loading}
               />
             }
           </Modal.Body>
