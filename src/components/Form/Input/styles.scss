@@ -7,4 +7,15 @@
       }
     }
   }
+  &.invalid {
+    & > input {
+      background-color: rgba($color-punch, 0.1);
+      border-color: $color-punch;
+      &:focus {
+        & ~ label {
+          color: $color-punch;
+        }
+      }
+    }
+  }
 }

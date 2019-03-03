@@ -12,6 +12,7 @@ router.use('/chat-room', require('./chat-room'));
 router.use('/message', require('./message'));
 router.use('/member', require('./member'));
 router.use('/live-video', require('./live-video'));
+router.use('/upload', require('./upload'));
 
 router.get('/logout', (req, res) => {
   if (req.user !== 'undefined' && req.user.accountType === 'guest') {

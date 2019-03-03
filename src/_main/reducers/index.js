@@ -11,6 +11,7 @@ import message from './message';
 import member from './member';
 import liveVideoUser from './live-video-user';
 import videoCall from './video-call';
+import upload from './upload';
 
 const appReducer = combineReducers({
   router: connectRouter(history),
@@ -23,7 +24,8 @@ const appReducer = combineReducers({
   message,
   member,
   liveVideoUser,
-  videoCall
+  videoCall,
+  upload
 });
 
 const rootReducer = (state, action) => {

@@ -15,6 +15,16 @@ import { UserDropdown } from '../../../../components/UserDropdown';
 class Header extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      editProfileModalOpen: false
+    }
+  }
+  handleOpenEditProfileModal() {
+    this.setState({editProfileModalOpen: true});
+  }
+  handleCloseEditProfileModal() {
+    this.setState({editProfileModalOpen: false});
   }
   handleVideoCamRender() {
     const {
@@ -99,6 +109,17 @@ class Header extends Component {
       )
     }
   }
+  handleEditProfile(username, name, email, profilePicture) {
+    const {
+      user,
+      editActiveUser
+    } = this.props;
+    const activeUser = user.active;
+
+    if ( activeUser.accountType === 'local' || activeUser.accountType === 'guest' ) {
+      editActiveUser(activeUser._id, username, name, email, profilePicture);
+    }
+  }
   handleRequestVideoCall(event) {
     event.preventDefault();
 
@@ -122,8 +143,11 @@ class Header extends Component {
   render() {
     const {
       user,
+      upload,
+      uploadImage,
       children
     } = this.props;
+    const { editProfileModalOpen } = this.state;
 
     return (
       <Appbar className="header">
@@ -133,7 +157,23 @@ class Header extends Component {
         {::this.handleVideoCamRender()}
         {::this.handleNewMessagesDropdownRender()}
         {::this.handleChatRoomDropdownRender()}
-        <UserDropdown user={user.active} />
+        <UserDropdown
+          user={user.active}
+          handleOpenEditProfileModal={::this.handleOpenEditProfileModal}
+        >
+          {
+            editProfileModalOpen &&
+            <UserDropdown.EditProfileModal
+              user={user.active}
+              upload={upload}
+              handleImageUpload={uploadImage}
+              handleEditProfile={::this.handleEditProfile}
+              userEdit={user.editActive}
+              open={editProfileModalOpen}
+              onClose={::this.handleCloseEditProfileModal}
+            />
+          }
+        </UserDropdown>
       </Appbar>
     )
   }
@@ -142,7 +182,8 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    chatRoom: state.chatRoom
+    chatRoom: state.chatRoom,
+    upload: state.upload
   }
 }
 

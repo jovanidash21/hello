@@ -1,5 +1,6 @@
 import {
   FETCH_ACTIVE_USER,
+  EDIT_ACTIVE_USER,
   SEARCH_USER
 } from '../constants/user';
 import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
@@ -17,6 +18,7 @@ const commonStateFlags = {
 
 const initialState = {
   fetchActive: {...commonStateFlags},
+  editActive: {...commonStateFlags},
   search: {...commonStateFlags},
   active: {},
   searched: []
@@ -29,6 +31,14 @@ const user = (state=initialState, action) => {
         ...state,
         fetchActive: {
           ...state.fetchActive,
+          loading: true
+        }
+      };
+    case `${EDIT_ACTIVE_USER}_LOADING`:
+      return {
+        ...state,
+        editActive: {
+          ...state.editActive,
           loading: true
         }
       };
@@ -53,6 +63,18 @@ const user = (state=initialState, action) => {
         },
         active: action.payload.data.user
       };
+    case `${EDIT_ACTIVE_USER}_SUCCESS`:
+      return {
+        ...state,
+        editActive: {
+          ...state.editActive,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message
+        },
+        active: action.payload.data.user
+      };
     case `${SEARCH_USER}_SUCCESS`:
       return {
         ...state,
@@ -70,6 +92,17 @@ const user = (state=initialState, action) => {
         ...state,
         fetchActive: {
           ...state.fetchActive,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message
+        }
+      };
+    case `${EDIT_ACTIVE_USER}_ERROR`:
+      return {
+        ...state,
+        editActive: {
+          ...state.editActive,
           loading: false,
           success: false,
           error: true,
