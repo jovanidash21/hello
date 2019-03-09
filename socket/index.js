@@ -606,12 +606,6 @@ var sockets = function(io) {
               { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
-
-            socket.broadcast.emit('action', {
-              type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
-              userID: user._id,
-              chatRoomID: user.connectedChatRoom
-            });
           }
         }
       })
