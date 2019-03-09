@@ -565,16 +565,20 @@ var sockets = function(io) {
               { safe: true, upsert: true, new: true },
             ).exec();
 
-            socket.broadcast.emit('action', {
-              type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
-              userID: user._id,
-              chatRoomID: user.connectedChatRoom
-            });
+            if (user.connectedChatRoom !== null) {
+              socket.broadcast.emit('action', {
+                type: 'SOCKET_BROADCAST_DISCONNECTED_MEMBER',
+                userID: user._id,
+                chatRoomID: user.connectedChatRoom
+              });
+            }
 
-            socket.broadcast.emit('action', {
-              type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
-              userID: user._id
-            });
+            if (user.isLiveVideoActive) {
+              socket.broadcast.emit('action', {
+                type: 'SOCKET_BROADCAST_END_LIVE_VIDEO',
+                userID: user._id
+              });
+            }
 
             socket.broadcast.emit('action', {
               type: 'SOCKET_BROADCAST_USER_LOGOUT',
