@@ -48,6 +48,13 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor)
     textColor: textColor
   };
 
+  const messageUser = {
+    name: user.name,
+    profilePicture: user.profilePicture,
+    role: user.role,
+    accountType: user.accountType
+  };
+
   return dispatch => {
     dispatch({
       type: SEND_MESSAGE,
@@ -55,7 +62,7 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor)
         _id: newMessageID,
         createdAt: (new Date()).toString(),
         text: text,
-        user: user,
+        user: messageUser,
         chatRoom: chatRoomID,
         messageType: 'text',
         textColor: textColor
@@ -96,6 +103,13 @@ export function sendFileMessage(newMessageID, text, file, user, chatRoomID) {
   data.append('userID', user._id);
   data.append('chatRoomID', chatRoomID);
 
+  const messageUser = {
+    name: user.name,
+    profilePicture: user.profilePicture,
+    role: user.role,
+    accountType: user.accountType
+  };
+
   let config = {
     headers: {
       'content-type': 'multipart/form-data',
@@ -115,7 +129,7 @@ export function sendFileMessage(newMessageID, text, file, user, chatRoomID) {
         _id: newMessageID,
         createdAt: (new Date()).toString(),
         text: text,
-        user: user,
+        user: messageUser,
         chatRoom: chatRoomID,
         messageType: messageType,
         fileLink: ''
@@ -157,6 +171,13 @@ export function sendImageMessage(newMessageID, text, image, user, chatRoomID) {
   data.append('userID', user._id);
   data.append('chatRoomID', chatRoomID);
 
+  const messageUser = {
+    name: user.name,
+    profilePicture: user.profilePicture,
+    role: user.role,
+    accountType: user.accountType
+  };
+
   let config = {
     headers: {
       'content-type': 'multipart/form-data',
@@ -170,7 +191,7 @@ export function sendImageMessage(newMessageID, text, image, user, chatRoomID) {
         _id: newMessageID,
         createdAt: (new Date()).toString(),
         text: text,
-        user: user,
+        user: messageUser,
         chatRoom: chatRoomID,
         messageType: 'image',
         fileLink: ''
@@ -214,6 +235,13 @@ export function sendAudioMessage(newMessageID, text, audioBlob, user, chatRoomID
   data.append('userID', user._id);
   data.append('chatRoomID', chatRoomID);
 
+  const messageUser = {
+    name: user.name,
+    profilePicture: user.profilePicture,
+    role: user.role,
+    accountType: user.accountType
+  };
+
   let config = {
     headers: {
       'content-type': 'multipart/form-data',
@@ -227,7 +255,7 @@ export function sendAudioMessage(newMessageID, text, audioBlob, user, chatRoomID
         _id: newMessageID,
         createdAt: (new Date()).toString(),
         text: text,
-        user: user,
+        user: messageUser,
         chatRoom: chatRoomID,
         messageType: 'audio',
         fileLink: ''
