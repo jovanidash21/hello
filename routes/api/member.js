@@ -31,20 +31,23 @@ router.post('/', (req, res, next) => {
           },
           isOnline: true
         };
+        var findExclude = '-chatRooms -socketID';
 
         if (chatRoom.chatType === 'public') {
           findParams.connectedChatRoom = chatRoomID;
         }
 
-        return User.find(findParams);
-      })
-      .then((members) => {
-        for (var i = 0; i < members.length; i++) {
-          if (userRole.length > 0 && userRole !== 'admin' && userRole !=='owner') {
-            members[i].ipAddress = null;
-          }
+        if (
+          userRole.length > 0 &&
+          userRole !== 'admin' &&
+          userRole !=='owner'
+        ) {
+          findExclude = findExclude + ' -ipAddress';
         }
 
+        return User.find(findParams, findExclude);
+      })
+      .then((members) => {
         res.status(200).send({
           success: true,
           message: 'Members Fetched',
