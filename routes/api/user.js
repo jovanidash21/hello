@@ -26,7 +26,7 @@ router.post('/search', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    User.find({_id: {$ne: null}, name: {$regex: '\\b' + query, $options: 'i'}})
+    User.find({_id: {$ne: null}, name: {$regex: '\\b' + query, $options: 'i'}}, '-chatRooms -block -mute -ipAddress -socketID')
       .then((users) => {
         res.status(200).send({
           success: true,
@@ -50,7 +50,7 @@ router.get('/all', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    User.find({_id: {$ne: null}})
+    User.find({_id: {$ne: null}}, '-chatRooms -block -mute -ipAddress -socketID')
       .then((users) => {
         res.status(200).send({
           success: true,
@@ -106,7 +106,7 @@ router.post('/edit-profile', (req, res, next) => {
               return User.findByIdAndUpdate(
                 userID,
                 { $set: userData },
-                { safe: true, upsert: true, new: true }
+                { safe: true, upsert: true, new: true, select: '-chatRooms -block -mute -ipAddress -socketID' }
               ).exec();
             })
             .then((user) => {
