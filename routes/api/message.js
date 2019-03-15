@@ -93,7 +93,7 @@ router.post('/', (req, res, next) => {
 
         return Message.find({chatRoom: chatRoomID}, '-readBy')
           .sort({createdAt: 'descending'})
-          .populate('user', '-chatRooms -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messages) => {
         var chatRoomMessages = messages.reverse();
@@ -173,7 +173,7 @@ router.post('/text', (req, res, next) => {
         }
 
         return Message.findById(message._id, '-readBy')
-          .populate('user', '-chatRooms -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -252,7 +252,7 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
         }
 
         return Message.findById(message._id, '-readBy')
-          .populate('user', '-chatRooms -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -325,7 +325,7 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
         }
 
         return Message.findById(message._id, '-readBy')
-          .populate('user', '-chatRooms -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -398,7 +398,7 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
         }
 
         return Message.findById(message._id, '-readBy')
-          .populate('user', '-chatRooms -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({

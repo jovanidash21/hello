@@ -19,7 +19,7 @@ var sockets = function(io) {
                 ipAddress: socket.handshake.headers["x-real-ip"],
                 socketID: socket.id
               }
-            }, { safe: true, upsert: true, new: true, select: '-ipAddress -socketID' },
+            }, { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -ipAddress -socketID' },
           )
           .then((user) => {
             connectedUsers[socket.id] = action.user._id;
@@ -51,7 +51,7 @@ var sockets = function(io) {
             }
           });
 
-          User.findById(action.userID, '-chatRooms -ipAddress -socketID')
+          User.findById(action.userID, '-username -email -chatRooms -chatRooms -socketID')
             .then((user) => {
               connectedUser = user;
 
@@ -86,10 +86,28 @@ var sockets = function(io) {
                     User.findById(chatRoomMember._id)
                       .then((member) => {
                         if (chatRoomClients.indexOf(member.socketID) > -1) {
+                          var user = {
+                            _id: connectedUser._id,
+                            name: connectedUser.name,
+                            email: connectedUser.email,
+                            gender: connectedUser.gender,
+                            profilePicture: connectedUser.profilePicture,
+                            connectedChatRoom: connectedUser.connectedChatRoom,
+                            accountType: connectedUser.accountType,
+                            role: connectedUser.role,
+                            block: connectedUser.block,
+                            mute: connectedUser.mute,
+                            isLiveVideoActive: connectedUser.isLiveVideoActive
+                          };
+
+                          if (member.role === 'owner' || member.role === 'admin') {
+                            user.ipAddress = connectedUser.ipAddress;
+                          }
+
                           socket.broadcast.to(member.socketID).emit('action', {
                             type: 'SOCKET_BROADCAST_JOIN_CHAT_ROOM',
                             chatRoomID: action.chatRoomID,
-                            user: connectedUser
+                            user: user
                           });
                         }
                       })
@@ -330,7 +348,7 @@ var sockets = function(io) {
             }
           });
 
-          User.findById(action.userID, '-chatRooms -block -mute -ipAddress -socketID')
+          User.findById(action.userID, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
             .then((user) => {
               liveVideoUser = user;
 
@@ -427,7 +445,7 @@ var sockets = function(io) {
         case 'SOCKET_REQUEST_VIDEO_CALL':
           var callerUser = {};
 
-          User.findById(action.callerID, '-chatRooms -block -mute -ipAddress -socketID')
+          User.findById(action.callerID, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
             .then((user) => {
               callerUser = user;
 

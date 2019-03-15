@@ -31,7 +31,7 @@ router.post('/', (req, res, next) => {
           },
           isOnline: true
         };
-        var findExclude = '-chatRooms -socketID';
+        var findExclude = '-username -email -chatRooms -connectedChatRoom -socketID';
 
         if (chatRoom.chatType === 'public') {
           findParams.connectedChatRoom = chatRoomID;

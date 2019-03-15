@@ -17,7 +17,7 @@ router.post('/', (req, res, next) => {
         path: 'chatRooms.data',
         populate: {
           path: 'members',
-          select: '-chatRooms -block -mute -ipAddress -socketID'
+          select: 'name profilePicture'
         }
       })
       .exec()
@@ -110,7 +110,7 @@ router.post('/create', (req, res, next) => {
             )
             .then((user) => {
               ChatRoom.findById(chatRoomID)
-                .populate('members', '-chatRooms -block -mute -ipAddress -socketID')
+                .populate('members', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
                 .exec()
                 .then((chatRoomData) => {
                   res.status(200).send({
@@ -161,7 +161,7 @@ router.post('/create', (req, res, next) => {
                 }
 
                 return ChatRoom.findById(chatRoomData._id)
-                  .populate('members', '-chatRooms -block -mute -ipAddress -socketID');
+                  .populate('members', '-username -email -chatRooms -block -mute -ipAddress -socketID');
               })
               .then((chatRoomData) => {
                 res.status(200).send({
