@@ -29,6 +29,7 @@ import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
 } from '../constants/auth';
+import { isObjectEmpty } from '../../utils/object';
 
 const memberPriority = (member) => {
   var priority = -1;
@@ -325,14 +326,21 @@ const member = (state=initialState, action) => {
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
 
-      if ( activeChatRoom.data.chatType !== 'public' ) {
+      if ( ! isObjectEmpty( activeChatRoom.data ) && activeChatRoom.data.chatType !== 'public' ) {
         members = members.filter(member =>
           member._id !== userID
         );
 
-        var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => singleChatRoom.data === activeChatRoom.data._id && !singleChatRoom.kick.data);
+        var memberIndex = -1;
+        var chatRoomMembers = activeChatRoom.data.members;
 
-        if ( chatRoomIndex > -1 ) {
+        if ( activeChatRoom.data.chatType === 'group' ) {
+          memberIndex = chatRoomMembers.findIndex(singleMember => singleMember === userID);
+        } else {
+          memberIndex = chatRoomMembers.findIndex(singleMember => singleMember._id === userID);
+        }
+
+        if ( memberIndex > -1 ) {
           user.isOnline = true;
           user.priority = memberPriority(user);
           members.push(user);
