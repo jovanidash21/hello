@@ -34,12 +34,6 @@ var messageSchema = new Schema (
       type: String,
       default: '',
     },
-    readBy: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
   },
   {
     collection: 'Message',

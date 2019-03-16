@@ -73,28 +73,10 @@ router.post('/', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    Message.find(
-      {
-        chatRoom: chatRoomID,
-        readBy: {
-          $ne: userID
-        }
-      })
-      .then((messages) => {
-        for (var i = 0; i < messages.length; i++) {
-          var message = messages[i];
-
-          Message.findByIdAndUpdate(
-            message._id,
-            { $addToSet: { readBy: userID } },
-            { safe: true, upsert: true, new: true }
-          ).exec();
-        }
-
-        return Message.find({chatRoom: chatRoomID}, '-readBy')
-          .sort({createdAt: 'descending'})
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
-      })
+    Message.find({chatRoom: chatRoomID})
+      .sort({createdAt: 'descending'})
+      .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
+      .exec()
       .then((messages) => {
         var chatRoomMessages = messages.reverse();
 
@@ -133,7 +115,6 @@ router.post('/text', (req, res, next) => {
       text: req.body.text,
       user: userID,
       chatRoom: chatRoomID,
-      readBy: [userID],
       messageType: 'text',
       textColor: req.body.textColor
     };
@@ -172,7 +153,7 @@ router.post('/text', (req, res, next) => {
           Message.deleteOne({_id: messageID}).exec();
         }
 
-        return Message.findById(message._id, '-readBy')
+        return Message.findById(message._id)
           .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
@@ -212,7 +193,6 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
       text: req.file.originalname,
       user: userID,
       chatRoom: chatRoomID,
-      readBy: [userID],
       messageType: messageType,
       fileLink: fileLink
     };
@@ -251,7 +231,7 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
           Message.deleteOne({_id: messageID}).exec();
         }
 
-        return Message.findById(message._id, '-readBy')
+        return Message.findById(message._id)
           .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
@@ -285,7 +265,6 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
       text: req.file.originalname,
       user: userID,
       chatRoom: chatRoomID,
-      readBy: [userID],
       messageType: 'image',
       fileLink: fileLink
     };
@@ -324,7 +303,7 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
           Message.deleteOne({_id: messageID}).exec();
         }
 
-        return Message.findById(message._id, '-readBy')
+        return Message.findById(message._id)
           .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
@@ -358,7 +337,6 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
       text: req.file.originalname,
       user: userID,
       chatRoom: chatRoomID,
-      readBy: [userID],
       messageType: 'audio',
       fileLink: fileLink
     };
@@ -397,7 +375,7 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
           Message.deleteOne({_id: messageID}).exec();
         }
 
-        return Message.findById(message._id, '-readBy')
+        return Message.findById(message._id)
           .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
