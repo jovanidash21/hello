@@ -214,7 +214,7 @@ class CreateChatRoomModal extends Component {
             }
             {
               chatType === 'group' &&
-              <div>
+              <React.Fragment>
                 <Input
                   value={chatRoomName}
                   label="Chat Room Name"
@@ -230,7 +230,7 @@ class CreateChatRoomModal extends Component {
                   checked={isPublic}
                   disabled={chatRoom.create.loading}
                 />
-              </div>
+              </React.Fragment>
             }
             {
               !isPublic &&
@@ -248,7 +248,7 @@ class CreateChatRoomModal extends Component {
                       handleDeselectUser={::this.handleDeselectMember}
                       isListDisabled={chatRoom.create.loading}
                       isInputDisabled={chatRoom.create.loading}
-                      isLoading={user.search.loading}
+                      loading={user.search.loading}
                     />
                   )
                 }}

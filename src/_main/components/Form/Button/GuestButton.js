@@ -10,7 +10,7 @@ const GuestButton = (props) => {
         to={props.link}
         className={
           "mui-btn mui-btn--raised mui-btn--large button button-guest " +
-          (props.isDisabled ? 'disabled' : '')
+          (props.disabled ? 'disabled' : '')
         }
       >
         Guest Login
@@ -23,7 +23,7 @@ const GuestButton = (props) => {
         size="large"
         type="submit"
         variant="raised"
-        disabled={props.isDisabled}
+        disabled={props.disabled}
       >
         Guest Login
       </Button>
@@ -33,12 +33,12 @@ const GuestButton = (props) => {
 
 GuestButton.propTypes = {
   link: PropTypes.string,
-  isDisabled: PropTypes.bool
+  disabled: PropTypes.bool
 }
 
 GuestButton.defaultProps = {
   link: '',
-  isDisabled: false
+  disabled: false
 }
 
 export default GuestButton;

@@ -40,7 +40,7 @@ class UserDropdown extends Component {
             </div>
           </div>
         </MediaQuery>
-        <div>
+        <React.Fragment>
           <button className="mui-btn mui-btn--small mui-btn--fab" data-mui-toggle="dropdown">
             <FontAwesome className="icon" name="ellipsis-v" size="2x" />
           </button>
@@ -63,7 +63,7 @@ class UserDropdown extends Component {
             </li>
           </ul>
           {children}
-        </div>
+        </React.Fragment>
       </div>
     )
   }

@@ -13,7 +13,7 @@ import '../../styles/Common.scss';
 import '../styles/Common.scss';
 
 const routes = (
-  <div>
+  <React.Fragment>
     <LoadingBar className="loading-bar" />
     <Popup />
     <Switch>
@@ -22,7 +22,7 @@ const routes = (
       <AuthForm exact path="/guest" component={Guest} title="Guest" />
       <Layout exact path="/chat" component={Chat} />
     </Switch>
-  </div>
+  </React.Fragment>
 );
 
 export default routes;

@@ -138,7 +138,7 @@ class Login extends Component {
                 disabled={auth.login.loading}
                 invalid={!passwordValid}
               />
-              <LoginButton isDisabled={auth.login.loading} />
+              <LoginButton disabled={auth.login.loading} />
             </Form>
           </Col>
           <Col md="12">
@@ -146,7 +146,7 @@ class Login extends Component {
               socialMedia="facebook"
               label="Login with Facebook"
               handleSocialLogin={facebookLogin}
-              isDisabled={auth.login.loading}
+              disabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
@@ -154,7 +154,7 @@ class Login extends Component {
               socialMedia="google"
               label="Login with Google"
               handleSocialLogin={googleLogin}
-              isDisabled={auth.login.loading}
+              disabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
@@ -162,17 +162,17 @@ class Login extends Component {
               socialMedia="twitter"
               label="Login with Twitter"
               handleSocialLogin={twitterLogin}
-              isDisabled={auth.login.loading}
+              disabled={auth.login.loading}
             />
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <RegisterButton link="/register" isDisabled={auth.login.loading} />
+            <RegisterButton link="/register" disabled={auth.login.loading} />
           </Col>
           <Col md="12">
-            <GuestButton link="/guest" isDisabled={auth.login.loading} />
+            <GuestButton link="/guest" disabled={auth.login.loading} />
           </Col>
         </Row>
       </Panel>

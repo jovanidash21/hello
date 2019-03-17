@@ -208,17 +208,17 @@ class Register extends Component {
                 disabled={auth.register.loading}
                 invalid={!confirmPasswordValid}
               />
-              <RegisterButton isDisabled={auth.register.loading} />
+              <RegisterButton disabled={auth.register.loading} />
             </Form>
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <LoginButton link="/" isDisabled={auth.register.loading} />
+            <LoginButton link="/" disabled={auth.register.loading} />
           </Col>
           <Col md="12">
-            <GuestButton link="/guest" isDisabled={auth.register.loading} />
+            <GuestButton link="/guest" disabled={auth.register.loading} />
           </Col>
         </Row>
       </Panel>

@@ -353,30 +353,28 @@ class ChatInput extends Component {
         }
       >
         <MediaQuery query="(min-width: 768px)">
-          <div>
+          <React.Fragment>
             {
               emojiPicker &&
-              <div>
+              <React.Fragment>
                 <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
                 <div className="picker-overlay" onClick={::this.handleEmojiPickerToggle} />
-              </div>
+              </React.Fragment>
             }
-          </div>
+          </React.Fragment>
         </MediaQuery>
-        <div>
-          {
-            textFormatPicker &&
-            <div>
-              <TextFormatPicker
-                textColor={textColor}
-                textStyle={textStyle}
-                handleTextColor={::this.handleTextColor}
-                handleTextStyle={::this.handleTextStyle}
-              />
-              <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
-            </div>
-          }
-        </div>
+        {
+          textFormatPicker &&
+          <React.Fragment>
+            <TextFormatPicker
+              textColor={textColor}
+              textStyle={textStyle}
+              handleTextColor={::this.handleTextColor}
+              handleTextStyle={::this.handleTextStyle}
+            />
+            <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
+          </React.Fragment>
+        }
         <div className="chat-input">
           <ContentEditable
             className="textfield single-line"

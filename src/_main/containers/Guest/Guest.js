@@ -122,17 +122,17 @@ class Guest extends Component {
                 onChange={::this.onInputChange}
                 disabled={auth.guestLogin.loading}
               />
-              <GuestButton isDisabled={auth.guestLogin.loading} />
+              <GuestButton disabled={auth.guestLogin.loading} />
             </Form>
           </Col>
           <Col md="12">
             <Divider className="line" />
           </Col>
           <Col md="12">
-            <LoginButton link="/" isDisabled={auth.guestLogin.loading} />
+            <LoginButton link="/" disabled={auth.guestLogin.loading} />
           </Col>
           <Col md="12">
-            <RegisterButton link="/register" isDisabled={auth.guestLogin.loading} />
+            <RegisterButton link="/register" disabled={auth.guestLogin.loading} />
           </Col>
         </Row>
       </Panel>

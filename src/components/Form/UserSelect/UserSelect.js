@@ -101,7 +101,7 @@ class UserSelect extends Component {
       searchedUsers,
       isListDisabled,
       isInputDisabled,
-      isLoading
+      loading
     } = this.props;
     const {
       searchSelect,
@@ -163,20 +163,20 @@ class UserSelect extends Component {
             ref={(element) => { this.inputSelect = element; }}
           />
           {
-            isLoading &&
+            loading &&
             <div className="loading-icon">
               <FontAwesome name="spinner" pulse />
             </div>
           }
           {
-            !isLoading &&
+            !loading &&
             searchSelect.length > 0 &&
             <div className="clear-icon" onClick={::this.handleClearSearchSelect}>
               <FontAwesome name="times" />
             </div>
           }
           {
-            !isLoading &&
+            !loading &&
             searchSelect.length > 0 &&
             suggestions.length === 0 &&
             <div className="no-results">
@@ -200,7 +200,7 @@ UserSelect.propTypes = {
   handleDeselectUser: PropTypes.func,
   isListDisabled: PropTypes.bool,
   isInputDisabled: PropTypes.bool,
-  isLoading: PropTypes.bool
+  loading: PropTypes.bool
 }
 
 UserSelect.defaultProps = {
@@ -212,7 +212,7 @@ UserSelect.defaultProps = {
   handleDeselectUser: () => {},
   isListDisabled: false,
   isInputDisabled: false,
-  isLoading: false
+  loading: false
 }
 
 export default UserSelect

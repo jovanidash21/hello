@@ -24,7 +24,7 @@ class Layout extends Component {
     } = this.props;
 
     return (
-      <div>
+      <React.Fragment>
         <Head title={"Chat App " + (title.length > 0 ? '| ' + title : '')} />
         {
           !user.fetchActive.loading &&
@@ -36,7 +36,7 @@ class Layout extends Component {
             :
             <LoadingAnimation name="pacman" color="#2a4160" fullScreen />
         }
-      </div>
+      </React.Fragment>
     )
   }
   render() {
