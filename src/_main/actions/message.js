@@ -49,6 +49,7 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor)
   };
 
   const messageUser = {
+    _id: user._id,
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
@@ -104,6 +105,7 @@ export function sendFileMessage(newMessageID, text, file, user, chatRoomID) {
   data.append('chatRoomID', chatRoomID);
 
   const messageUser = {
+    _id: user._id,
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
@@ -172,6 +174,7 @@ export function sendImageMessage(newMessageID, text, image, user, chatRoomID) {
   data.append('chatRoomID', chatRoomID);
 
   const messageUser = {
+    _id: user._id,
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
@@ -236,6 +239,7 @@ export function sendAudioMessage(newMessageID, text, audioBlob, user, chatRoomID
   data.append('chatRoomID', chatRoomID);
 
   const messageUser = {
+    _id: user._id,
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
