@@ -68,7 +68,7 @@ class Chat extends Component {
       socketUserLogin
     } = this.props;
 
-    socketUserLogin(user.active);
+    socketUserLogin(user.active._id);
   }
   componentDidMount() {
     socket.on('action', (action) => {

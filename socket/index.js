@@ -13,7 +13,7 @@ var sockets = function(io) {
       switch(action.type) {
         case 'SOCKET_USER_LOGIN':
           User.findByIdAndUpdate(
-            action.user._id, {
+            action.userID, {
               $set: {
                 isOnline: true,
                 ipAddress: socket.handshake.headers["x-real-ip"],
@@ -22,7 +22,7 @@ var sockets = function(io) {
             }, { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -ipAddress -socketID' },
           )
           .then((user) => {
-            connectedUsers[socket.id] = action.user._id;
+            connectedUsers[socket.id] = user._id;
 
             socket.broadcast.emit('action', {
               type: 'SOCKET_BROADCAST_USER_LOGIN',
@@ -252,12 +252,6 @@ var sockets = function(io) {
                 .exec()
                 .then((user) => {
                   if (chatRoomClients.indexOf(user.socketID) > -1) {
-                    Message.findOneAndUpdate(
-                      { _id: action.message._id, readBy: { $ne: user._id } },
-                      { $addToSet: { readBy: user._id } },
-                      { safe: true }
-                    ).exec();
-
                     User.updateOne(
                       { _id: user._id, 'chatRooms.data': action.chatRoomID },
                       { $set: { 'chatRooms.$.unReadMessages': 0 } },
