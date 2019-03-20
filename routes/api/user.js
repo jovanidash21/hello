@@ -106,7 +106,7 @@ router.post('/edit-profile', (req, res, next) => {
               return User.findByIdAndUpdate(
                 userID,
                 { $set: userData },
-                { safe: true, upsert: true, new: true, select: '-chatRooms -block -mute -ipAddress -socketID' }
+                { safe: true, upsert: true, new: true, select: '-chatRooms -ipAddress -socketID' }
               ).exec();
             })
             .then((user) => {

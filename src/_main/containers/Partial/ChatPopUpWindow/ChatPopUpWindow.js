@@ -120,7 +120,7 @@ class ChatPopUpWindow extends Component {
           <div className={"popup-body " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
             <ChatBox
               chatRoom={popUpChatRoom}
-              message={popUpChatRoom.message}
+              messages={popUpChatRoom.message.all}
               loading={popUpChatRoom.message.fetchNew.loading}
               small
             />

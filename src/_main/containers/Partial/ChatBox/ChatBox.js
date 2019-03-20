@@ -52,7 +52,7 @@ class ChatBox extends Component {
   handleChatBoxRender() {
     const {
       user,
-      message,
+      messages,
       loading,
       small
     } = this.props;
@@ -64,9 +64,9 @@ class ChatBox extends Component {
       return (
         <Container fluid>
           {
-            message.all.length
+            messages.length
               ?
-              message.all.map((singleMessage, i) =>
+              messages.map((singleMessage, i) =>
                 <ChatBubble
                   key={singleMessage._id}
                   index={i}
@@ -124,7 +124,7 @@ class ChatBox extends Component {
     const {
       user,
       chatRoom,
-      message,
+      loading,
       socketIsTyping,
       socketIsNotTyping
     } = this.props;
@@ -136,7 +136,7 @@ class ChatBox extends Component {
     return (
       <ReactResizeDetector handleHeight onResize={::this.handleScrollToBottom}>
         <div
-          className={"chat-box " + (message.fetchNew.loading ? 'loading' : '')}
+          className={"chat-box " + (loading ? 'loading' : '')}
           ref={(element) => { this.chatBox = element; }}
         >
           {::this.handleChatBoxRender()}
@@ -163,7 +163,7 @@ const mapStateToProps = (state) => {
 
 ChatBox.propTypes = {
   chatRoom: PropTypes.object.isRequired,
-  message: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   small: PropTypes.bool
 }
