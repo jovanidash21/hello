@@ -105,25 +105,25 @@ class ChatInput extends Component {
   }
   handleImageUploadSelect(event, results) {
     const {
-      chatRoom,
+      chatRoomID,
       handleSendImageMessage
     } = this.props;
     const newMessageID = uuidv4();
     const image = results[0][1];
     const imageName = image.name;
 
-    handleSendImageMessage(newMessageID, imageName, image, chatRoom.data._id);
+    handleSendImageMessage(newMessageID, imageName, image, chatRoomID);
   }
   handleFileUploadSelect(event, results) {
     const {
-      chatRoom,
+      chatRoomID,
       handleSendFileMessage
     } = this.props;
     const newMessageID = uuidv4();
     const file = results[0][1];
     const fileName = file.name;
 
-    handleSendFileMessage(newMessageID, fileName, file, chatRoom.data._id);
+    handleSendFileMessage(newMessageID, fileName, file, chatRoomID);
   }
   handleSaveCaretPosition(event) {
     event.preventDefault();
@@ -289,7 +289,7 @@ class ChatInput extends Component {
   handleSendTextMessageOnChange(event) {
     const {
       user,
-      chatRoom,
+      chatRoomID,
       handleSendTextMessage
     } = this.props;
     const { textColor } = this.state;
@@ -297,14 +297,14 @@ class ChatInput extends Component {
     const newMessageID = uuidv4();
 
     document.getElementById(::this.handleDivID()).innerHTML = '';
-    handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
+    handleSendTextMessage(newMessageID, messageText, chatRoomID, textColor);
   }
   handleSendTextMessageOnClick(event) {
     event.preventDefault();
 
     const {
       user,
-      chatRoom,
+      chatRoomID,
       handleSendTextMessage
     } = this.props;
     const {
@@ -318,7 +318,7 @@ class ChatInput extends Component {
     if ( validMessage && !maxLengthReached ) {
       document.getElementById(::this.handleDivID()).innerHTML = '';
       document.getElementById(::this.handleDivID()).focus();
-      handleSendTextMessage(newMessageID, messageText, chatRoom.data._id, textColor);
+      handleSendTextMessage(newMessageID, messageText, chatRoomID, textColor);
 
       this.setState({
         message: '',
@@ -446,7 +446,7 @@ class ChatInput extends Component {
 ChatInput.propTypes = {
   id: PropTypes.string,
   user: PropTypes.object.isRequired,
-  chatRoom: PropTypes.object.isRequired,
+  chatRoomID: PropTypes.string.isRequired,
   handleSendTextMessage: PropTypes.func.isRequired,
   handleAudioRecorderToggle: PropTypes.func.isRequired,
   handleSendFileMessage: PropTypes.func.isRequired,

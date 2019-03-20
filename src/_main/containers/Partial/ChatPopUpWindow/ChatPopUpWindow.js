@@ -119,7 +119,7 @@ class ChatPopUpWindow extends Component {
           </div>
           <div className={"popup-body " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
             <ChatBox
-              chatRoom={popUpChatRoom}
+              chatRoom={popUpChatRoom.data._id}
               messages={popUpChatRoom.message.all}
               loading={popUpChatRoom.message.fetchNew.loading}
               small
@@ -133,7 +133,7 @@ class ChatPopUpWindow extends Component {
                   <ChatInput
                     id={"popup-" + index}
                     user={user.active}
-                    chatRoom={popUpChatRoom}
+                    chatRoomID={popUpChatRoom.data._id}
                     handleSendTextMessage={handleSendTextMessage}
                     handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                     handleSendFileMessage={handleSendFileMessage}
@@ -143,7 +143,7 @@ class ChatPopUpWindow extends Component {
                   />
                   :
                   <ChatAudioRecorder
-                    chatRoom={popUpChatRoom}
+                    chatRoomID={popUpChatRoom.data._id}
                     handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                     handleSendAudioMessage={handleSendAudioMessage}
                     small

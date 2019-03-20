@@ -596,7 +596,7 @@ class Chat extends Component {
                   </div>
                 }
                 <ChatBox
-                  chatRoom={activeChatRoom}
+                  chatRoom={activeChatRoom.data._id}
                   messages={message.all}
                   loading={message.fetchNew.loading}
                 />
@@ -607,7 +607,7 @@ class Chat extends Component {
                     ?
                     <ChatInput
                       user={user.active}
-                      chatRoom={activeChatRoom}
+                      chatRoomID={activeChatRoom.data._id}
                       handleSendTextMessage={::this.handleSendTextMessage}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendFileMessage={::this.handleSendFileMessage}
@@ -616,7 +616,7 @@ class Chat extends Component {
                     />
                     :
                     <ChatAudioRecorder
-                      chatRoom={activeChatRoom}
+                      chatRoomID={activeChatRoom.data._id}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendAudioMessage={::this.handleSendAudioMessage}
                     />

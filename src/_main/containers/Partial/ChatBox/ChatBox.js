@@ -123,7 +123,7 @@ class ChatBox extends Component {
   render() {
     const {
       user,
-      chatRoom,
+      chatRoomID,
       loading,
       socketIsTyping,
       socketIsNotTyping
@@ -144,7 +144,7 @@ class ChatBox extends Component {
             isModalOpen &&
             <DeleteMessageModal
               isModalOpen={isModalOpen}
-              chatRoomID={chatRoom.data._id}
+              chatRoomID={chatRoomID}
               selectedMessageID={selectedMessageID}
               handleCloseModal={::this.handleCloseModal}
             />
@@ -162,7 +162,7 @@ const mapStateToProps = (state) => {
 }
 
 ChatBox.propTypes = {
-  chatRoom: PropTypes.object.isRequired,
+  chatRoomID: PropTypes.string.isRequired,
   messages: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   small: PropTypes.bool
