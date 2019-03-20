@@ -596,7 +596,7 @@ class Chat extends Component {
                   </div>
                 }
                 <ChatBox
-                  chatRoom={activeChatRoom.data._id}
+                  chatRoomID={activeChatRoom.data._id}
                   messages={message.all}
                   loading={message.fetchNew.loading}
                 />
