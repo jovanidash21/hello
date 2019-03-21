@@ -129,11 +129,15 @@ const popUpChatRoom = (state=initialState, action) => {
       var chatRoomIndex = chatRooms.findIndex(singleChatRoom => singleChatRoom.data._id === message.chatRoom);
 
       if ( chatRoomIndex > -1 ) {
-        chatRooms[chatRoomIndex].message.all.push(message);
+        var messages = [...chatRooms[chatRoomIndex].message.all];
 
-        if ( chatRooms[chatRoomIndex].message.all.length > 20 ) {
-          chatRooms[chatRoomIndex].message.all = chatRooms[chatRoomIndex].message.all.slice(1);
+        messages.push(message);
+
+        if ( messages.length > 20 ) {
+          messages = messages.slice(1);
         }
+
+        chatRooms[chatRoomIndex].message.all = messages;
       }
 
       return {
