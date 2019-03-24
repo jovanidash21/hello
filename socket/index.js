@@ -247,7 +247,8 @@ var sockets = function(io) {
                   { safe: true, upsert: true, new: true },
                 )
                 .populate({
-                  path: 'chatRooms.data'
+                  path: 'chatRooms.data',
+                  select: '-members'
                 })
                 .exec()
                 .then((user) => {
@@ -264,26 +265,24 @@ var sockets = function(io) {
                     });
                   } else {
                     if (chatRoom.chatType === 'direct') {
-                      chatRoom.name = action.message.user.name;
+                      var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => {
+                        return singleChatRoom.data._id == action.chatRoomID;
+                      });
 
-                      for (var j = 0; j < user.chatRooms.length; j++) {
-                        var singleChatRoom = user.chatRooms[j];
+                      if (chatRoomIndex > -1) {
+                        var singleChatRoom = user.chatRooms[chatRoomIndex];
 
-                        if ( singleChatRoom.data._id == action.chatRoomID ) {
-                          socket.broadcast.to(user.socketID).emit('action', {
-                            type: 'SOCKET_BROADCAST_CREATE_CHAT_ROOM',
-                            chatRoom: singleChatRoom,
-                          });
+                        singleChatRoom.data.name = action.message.user.name;
+                        singleChatRoom.data.chatIcon = action.message.user.profilePicture;
+                        singleChatRoom.data.members = chatRoom.members;
 
-                          socket.broadcast.to(user.socketID).emit('action', {
-                            type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
-                            chatRoom: singleChatRoom,
-                            chatRoomID: action.chatRoomID,
-                            chatRoomName: chatRoom.name,
-                            senderName: action.message.user.name
-                          });
-                          break;
-                        }
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
+                          chatRoom: singleChatRoom,
+                          chatRoomID: action.chatRoomID,
+                          chatRoomName: chatRoom.name,
+                          senderName: action.message.user.name
+                        });
                       }
                     }
                   }
