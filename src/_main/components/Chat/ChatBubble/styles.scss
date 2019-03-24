@@ -12,6 +12,7 @@
     border-top: 1px solid $color-alto;
   }
   .chat-bubble {
+    padding-right: 20px;
     position: relative;
     width: 100%;
     word-wrap: break-word;
@@ -126,6 +127,17 @@
           min-width: 40px;
           text-align: center;
         }
+      }
+    }
+    .sending-status {
+      bottom: 0;
+      color: $color-emperor;
+      font-size: 14px;
+      line-height: 14px;
+      position: absolute;
+      right: 0;
+      &.sent {
+        color: $color-primary;
       }
     }
     .cross-icon {

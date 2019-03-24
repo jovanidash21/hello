@@ -153,6 +153,15 @@ class ChatBubble extends Component {
           />
         }
         {
+          message.isSending !== undefined &&
+          <div
+            className={"sending-status " + (!message.isSending ? 'sent' : '')}
+            title={message.isSending ? 'Message is sending' : 'Message is sent'}
+          >
+            <FontAwesome name={message.isSending ? 'circle-o' : 'check-circle'} />
+          </div>
+        }
+        {
           canDeleteMessage &&
           <div
             className="cross-icon"
