@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router';
@@ -24,7 +24,7 @@ class Layout extends Component {
     } = this.props;
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Head title={"Chat App " + (title.length > 0 ? '| ' + title : '')} />
         {
           !user.fetchActive.loading &&
@@ -36,7 +36,7 @@ class Layout extends Component {
             :
             <LoadingAnimation name="pacman" color="#2a4160" fullScreen />
         }
-      </React.Fragment>
+      </Fragment>
     )
   }
   render() {

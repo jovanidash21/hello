@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import ContentEditable from 'react-simple-contenteditable';
@@ -368,14 +368,14 @@ class ChatInput extends Component {
         }
       >
         <MediaQuery query="(min-width: 768px)">
-          <React.Fragment>
+          <Fragment>
             {
               emojiPicker &&
               <div ref={(element) => { this.emojiPicker = element; }}>
                 <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
               </div>
             }
-          </React.Fragment>
+          </Fragment>
         </MediaQuery>
         {
           textFormatPicker &&

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
@@ -214,7 +214,7 @@ class CreateChatRoomModal extends Component {
             }
             {
               chatType === 'group' &&
-              <React.Fragment>
+              <Fragment>
                 <Input
                   value={chatRoomName}
                   label="Chat Room Name"
@@ -230,7 +230,7 @@ class CreateChatRoomModal extends Component {
                   checked={isPublic}
                   disabled={chatRoom.create.loading}
                 />
-              </React.Fragment>
+              </Fragment>
             }
             {
               !isPublic &&

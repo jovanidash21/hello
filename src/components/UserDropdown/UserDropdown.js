@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
@@ -40,7 +40,7 @@ class UserDropdown extends Component {
             </div>
           </div>
         </MediaQuery>
-        <React.Fragment>
+        <Fragment>
           <button className="mui-btn mui-btn--small mui-btn--fab" data-mui-toggle="dropdown">
             <FontAwesome className="icon" name="ellipsis-v" size="2x" />
           </button>
@@ -63,7 +63,7 @@ class UserDropdown extends Component {
             </li>
           </ul>
           {children}
-        </React.Fragment>
+        </Fragment>
       </div>
     )
   }
