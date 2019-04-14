@@ -28,6 +28,12 @@ class ChatInput extends Component {
       maxLengthReached: false
     };
   }
+  componentWillMount() {
+    document.addEventListener('mousedown', ::this.handleClick, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', ::this.handleClick, false);
+  }
   handleDivID() {
     const { id } = this.props;
     const chatInputID = 'chat-input';
@@ -36,6 +42,15 @@ class ChatInput extends Component {
       return chatInputID + '-' + id;
     } else {
       return chatInputID;
+    }
+  }
+  handleClick(event) {
+    if ( this.emojiPicker && ! this.emojiPicker.contains(event.target) ) {
+      this.setState({emojiPicker: false});
+    }
+
+    if ( this.textFormatPicker && ! this.textFormatPicker.contains(event.target) ) {
+      this.setState({textFormatPicker: false});
     }
   }
   onMessageChange(event, value) {
@@ -356,24 +371,22 @@ class ChatInput extends Component {
           <React.Fragment>
             {
               emojiPicker &&
-              <React.Fragment>
+              <div ref={(element) => { this.emojiPicker = element; }}>
                 <EmojiPicker onChange={::this.handleEmojiPickerSelect} search />
-                <div className="picker-overlay" onClick={::this.handleEmojiPickerToggle} />
-              </React.Fragment>
+              </div>
             }
           </React.Fragment>
         </MediaQuery>
         {
           textFormatPicker &&
-          <React.Fragment>
+          <div ref={(element) => { this.textFormatPicker = element; }}>
             <TextFormatPicker
               textColor={textColor}
               textStyle={textStyle}
               handleTextColor={::this.handleTextColor}
               handleTextStyle={::this.handleTextStyle}
             />
-            <div className="picker-overlay" onClick={::this.handleTextFormatPickerToggle} />
-          </React.Fragment>
+          </div>
         }
         <div className="chat-input">
           <ContentEditable
