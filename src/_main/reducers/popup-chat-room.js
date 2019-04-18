@@ -20,7 +20,7 @@ const initialState = {
 
 const popUpChatRoom = (state=initialState, action) => {
   switch(action.type) {
-    case OPEN_POPUP_CHAT_ROOM:
+    case OPEN_POPUP_CHAT_ROOM: {
       var chatRoom = action.chatRoom;
       var chatRooms = [...state.all];
 
@@ -34,7 +34,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case CLOSE_POPUP_CHAT_ROOM:
+    }
+    case CLOSE_POPUP_CHAT_ROOM: {
       var chatRoomID = action.chatRoomID;
       var chatRooms = [...state.all];
 
@@ -46,7 +47,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_NEW_MESSAGES}_LOADING`:
+    }
+    case `${FETCH_NEW_MESSAGES}_LOADING`: {
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 
@@ -63,7 +65,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_NEW_MESSAGES}_SUCCESS`:
+    }
+    case `${FETCH_NEW_MESSAGES}_SUCCESS`: {
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 
@@ -84,7 +87,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${FETCH_NEW_MESSAGES}_ERROR`:
+    }
+    case `${FETCH_NEW_MESSAGES}_ERROR`: {
       var chatRoomID = action.meta;
       var chatRooms = [...state.all];
 
@@ -104,7 +108,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${SEND_MESSAGE}_SUCCESS`:
+    }
+    case `${SEND_MESSAGE}_SUCCESS`: {
       var messageID = action.meta;
       var newMessage = action.payload.data.messageData;
       var chatRooms = [...state.all];
@@ -127,8 +132,9 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
+    }
     case SEND_MESSAGE:
-    case SOCKET_BROADCAST_SEND_MESSAGE:
+    case SOCKET_BROADCAST_SEND_MESSAGE: {
       var message = action.message;
       var chatRooms = [...state.all];
 
@@ -150,7 +156,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case `${DELETE_MESSAGE}_SUCCESS`:
+    }
+    case `${DELETE_MESSAGE}_SUCCESS`: {
       var messageID = action.meta.messageID;
       var chatRoomID = action.meta.chatRoomID;
       var chatRooms = [...state.all];
@@ -165,7 +172,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case SOCKET_BROADCAST_DELETE_MESSAGE:
+    }
+    case SOCKET_BROADCAST_DELETE_MESSAGE: {
       var messageID = action.messageID;
       var chatRoomID = action.chatRoomID;
       var chatRooms = [...state.all];
@@ -180,7 +188,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case SOCKET_BROADCAST_USER_LOGIN:
+    }
+    case SOCKET_BROADCAST_USER_LOGIN: {
       var user = action.user;
       var userID = user._id;
       var chatRooms = [...state.all];
@@ -204,7 +213,8 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case SOCKET_BROADCAST_USER_LOGOUT:
+    }
+    case SOCKET_BROADCAST_USER_LOGOUT: {
       var userID = action.userID;
       var chatRooms = [...state.all];
 
@@ -227,6 +237,7 @@ const popUpChatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
+    }
     default:
       return state;
   }

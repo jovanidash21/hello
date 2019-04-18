@@ -1,4 +1,4 @@
-export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+import { UPLOAD_IMAGE } from '../constants/upload';
 
 const commonStateFlags = {
   loading: false,
@@ -14,7 +14,7 @@ const initialState = {
 
 const upload = (state=initialState, action) => {
   switch(action.type) {
-    case `${UPLOAD_IMAGE}_LOADING`:
+    case `${UPLOAD_IMAGE}_LOADING`: {
       return {
         ...state,
         image: {
@@ -22,7 +22,8 @@ const upload = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${UPLOAD_IMAGE}_SUCCESS`:
+    }
+    case `${UPLOAD_IMAGE}_SUCCESS`: {
       return {
         ...state,
         image: {
@@ -34,7 +35,8 @@ const upload = (state=initialState, action) => {
         },
         imageLink: action.payload.data.imageLink
       };
-    case `${UPLOAD_IMAGE}_ERROR`:
+    }
+    case `${UPLOAD_IMAGE}_ERROR`: {
       return {
         ...state,
         image: {
@@ -45,6 +47,7 @@ const upload = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
+    }
     default:
       return state;
   }

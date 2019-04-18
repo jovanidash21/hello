@@ -26,7 +26,7 @@ const initialState = {
 
 const user = (state=initialState, action) => {
   switch(action.type) {
-    case `${FETCH_ACTIVE_USER}_LOADING`:
+    case `${FETCH_ACTIVE_USER}_LOADING`: {
       return {
         ...state,
         fetchActive: {
@@ -34,7 +34,8 @@ const user = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${EDIT_ACTIVE_USER}_LOADING`:
+    }  
+    case `${EDIT_ACTIVE_USER}_LOADING`: {
       return {
         ...state,
         editActive: {
@@ -42,7 +43,8 @@ const user = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${SEARCH_USER}_LOADING`:
+    }  
+    case `${SEARCH_USER}_LOADING`: {
       return {
         ...state,
         search: {
@@ -51,7 +53,8 @@ const user = (state=initialState, action) => {
         },
         searched: []
       };
-    case `${FETCH_ACTIVE_USER}_SUCCESS`:
+    }  
+    case `${FETCH_ACTIVE_USER}_SUCCESS`: {
       return {
         ...state,
         fetchActive: {
@@ -63,7 +66,8 @@ const user = (state=initialState, action) => {
         },
         active: action.payload.data.user
       };
-    case `${EDIT_ACTIVE_USER}_SUCCESS`:
+    }  
+    case `${EDIT_ACTIVE_USER}_SUCCESS`: {
       return {
         ...state,
         editActive: {
@@ -75,7 +79,8 @@ const user = (state=initialState, action) => {
         },
         active: action.payload.data.user
       };
-    case `${SEARCH_USER}_SUCCESS`:
+    }  
+    case `${SEARCH_USER}_SUCCESS`: {
       return {
         ...state,
         search: {
@@ -87,7 +92,8 @@ const user = (state=initialState, action) => {
         },
         searched: action.payload.data.users
       };
-    case `${FETCH_ACTIVE_USER}_ERROR`:
+    }  
+    case `${FETCH_ACTIVE_USER}_ERROR`: {
       return {
         ...state,
         fetchActive: {
@@ -98,7 +104,8 @@ const user = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${EDIT_ACTIVE_USER}_ERROR`:
+    }  
+    case `${EDIT_ACTIVE_USER}_ERROR`: {
       return {
         ...state,
         editActive: {
@@ -109,7 +116,8 @@ const user = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${SEARCH_USER}_ERROR`:
+    }  
+    case `${SEARCH_USER}_ERROR`: {
       return {
         ...state,
         search: {
@@ -121,7 +129,8 @@ const user = (state=initialState, action) => {
         },
         searched: []
       };
-    case CHANGE_CHAT_ROOM:
+    }  
+    case CHANGE_CHAT_ROOM: {
       var chatRoom = action.chatRoom;
       var user = {...state.active};
 
@@ -133,7 +142,8 @@ const user = (state=initialState, action) => {
         ...state,
         active: {...user}
       };
-    case SOCKET_BROADCAST_MUTE_MEMBER:
+    }  
+    case SOCKET_BROADCAST_MUTE_MEMBER: {
       var memberID = action.memberID;
       var user = {...state.active};
 
@@ -145,7 +155,8 @@ const user = (state=initialState, action) => {
         ...state,
         active: {...user}
       };
-    case SOCKET_BROADCAST_UNMUTE_MEMBER:
+    }  
+    case SOCKET_BROADCAST_UNMUTE_MEMBER: {
       var memberID = action.memberID;
       var user = {...state.active};
 
@@ -157,6 +168,7 @@ const user = (state=initialState, action) => {
         ...state,
         active: {...user}
       };
+    }  
     default:
       return state;
   }

@@ -64,7 +64,7 @@ const initialState = {
 
 const chatRoom = (state=initialState, action) => {
   switch(action.type) {
-    case `${FETCH_CHAT_ROOMS}_LOADING`:
+    case `${FETCH_CHAT_ROOMS}_LOADING`: {
       return {
         ...state,
         fetch: {
@@ -72,7 +72,8 @@ const chatRoom = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${CREATE_CHAT_ROOM}_LOADING`:
+    }
+    case `${CREATE_CHAT_ROOM}_LOADING`: {
       return {
         ...state,
         create: {
@@ -80,7 +81,8 @@ const chatRoom = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_LOADING`:
+    }
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_LOADING`: {
       return {
         ...state,
         clear: {
@@ -88,7 +90,8 @@ const chatRoom = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${TRASH_ALL_CHAT_ROOMS}_LOADING`:
+    }
+    case `${TRASH_ALL_CHAT_ROOMS}_LOADING`: {
       return {
         ...state,
         trashAll: {
@@ -96,7 +99,8 @@ const chatRoom = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${TRASH_CHAT_ROOM}_LOADING`:
+    }
+    case `${TRASH_CHAT_ROOM}_LOADING`: {
       var chatRoomID = action.meta;
 
       return {
@@ -107,7 +111,8 @@ const chatRoom = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${FETCH_CHAT_ROOMS}_SUCCESS`:
+    }
+    case `${FETCH_CHAT_ROOMS}_SUCCESS`: {
       var chatRooms = [...action.payload.data.chatRooms];
 
       for (var i = 0; i < chatRooms.length; i++) {
@@ -127,7 +132,8 @@ const chatRoom = (state=initialState, action) => {
         },
         all: [...chatRooms]
       };
-    case `${CREATE_CHAT_ROOM}_SUCCESS`:
+    }
+    case `${CREATE_CHAT_ROOM}_SUCCESS`: {
       return {
         ...state,
         create: {
@@ -138,7 +144,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
-    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_SUCCESS`:
+    }
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_SUCCESS`: {
       var chatRoomIDs = action.payload.data.chatRoomIDs;
       var chatRooms = [...state.all];
 
@@ -161,7 +168,8 @@ const chatRoom = (state=initialState, action) => {
         },
         all: [...chatRooms]
       };
-    case `${TRASH_ALL_CHAT_ROOMS}_SUCCESS`:
+    }
+    case `${TRASH_ALL_CHAT_ROOMS}_SUCCESS`: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
 
@@ -184,7 +192,8 @@ const chatRoom = (state=initialState, action) => {
         },
         all: [...chatRooms]
       };
-    case `${TRASH_CHAT_ROOM}_SUCCESS`:
+    }
+    case `${TRASH_CHAT_ROOM}_SUCCESS`: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
       var chatRoomID = action.meta;
@@ -209,7 +218,8 @@ const chatRoom = (state=initialState, action) => {
         },
         all: [...chatRooms]
       };
-    case `${FETCH_CHAT_ROOMS}_ERROR`:
+    }
+    case `${FETCH_CHAT_ROOMS}_ERROR`: {
       return {
         ...state,
         fetch: {
@@ -220,7 +230,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${CREATE_CHAT_ROOM}_ERROR`:
+    }
+    case `${CREATE_CHAT_ROOM}_ERROR`: {
       return {
         ...state,
         create: {
@@ -231,7 +242,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_ERROR`:
+    }
+    case `${CLEAR_CHAT_ROOM_UNREAD_MESSAGES}_ERROR`: {
       return {
         ...state,
         clear: {
@@ -242,7 +254,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${TRASH_CHAT_ROOM}_ERROR`:
+    }
+    case `${TRASH_CHAT_ROOM}_ERROR`: {
       return {
         ...state,
         trash: {
@@ -253,7 +266,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${TRASH_ALL_CHAT_ROOMS}_ERROR`:
+    }
+    case `${TRASH_ALL_CHAT_ROOMS}_ERROR`: {
       return {
         ...state,
         trashAll: {
@@ -264,7 +278,8 @@ const chatRoom = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case CHANGE_CHAT_ROOM:
+    }
+    case CHANGE_CHAT_ROOM: {
       var chatRooms = [...state.all];
       var activeChatRoom = {...action.chatRoom};
       var userID = action.userID;
@@ -323,8 +338,9 @@ const chatRoom = (state=initialState, action) => {
         active: {...activeChatRoom},
         all: [...chatRooms]
       };
+    }
     case SOCKET_CREATE_CHAT_ROOM:
-    case SOCKET_BROADCAST_CREATE_CHAT_ROOM:
+    case SOCKET_BROADCAST_CREATE_CHAT_ROOM: {
       var chatRoom = {...action.chatRoom};
       var chatRooms = [...state.all];
 
@@ -337,7 +353,8 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       };
-    case SOCKET_BROADCAST_USER_LOGIN:
+    }
+    case SOCKET_BROADCAST_USER_LOGIN: {
       var user = action.user;
       var userID = user._id;
       var activeChatRoom = {...state.active};
@@ -383,7 +400,8 @@ const chatRoom = (state=initialState, action) => {
         active: {...activeChatRoom},
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_USER_LOGOUT:
+    }
+    case SOCKET_BROADCAST_USER_LOGOUT: {
       var userID = action.userID;
       var chatRooms = [...state.all];
       var activeChatRoom = {...state.active};
@@ -420,7 +438,8 @@ const chatRoom = (state=initialState, action) => {
         active: {...activeChatRoom},
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_CONNECTED_MEMBER:
+    }
+    case SOCKET_BROADCAST_CONNECTED_MEMBER: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
       var userID = action.userID;
@@ -458,7 +477,8 @@ const chatRoom = (state=initialState, action) => {
         active: {...activeChatRoom},
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_DISCONNECTED_MEMBER:
+    }
+    case SOCKET_BROADCAST_DISCONNECTED_MEMBER: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
       var userID = action.userID;
@@ -500,7 +520,8 @@ const chatRoom = (state=initialState, action) => {
         active: {...activeChatRoom},
         all: [...chatRooms]
       }
-    case `${FETCH_NEW_MESSAGES}_SUCCESS`:
+    }
+    case `${FETCH_NEW_MESSAGES}_SUCCESS`: {
       var chatRoomID = action.meta;
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
@@ -519,7 +540,8 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_NOTIFY_MESSAGE:
+    }
+    case SOCKET_BROADCAST_NOTIFY_MESSAGE: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
       var chatRoomID = action.chatRoomID;
@@ -535,7 +557,8 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_KICK_USER:
+    }
+    case SOCKET_BROADCAST_KICK_USER: {
       var chatRoomID = action.chatRoomID;
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
@@ -552,7 +575,8 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       }
-    case SOCKET_BROADCAST_UNKICK_USER:
+    }
+    case SOCKET_BROADCAST_UNKICK_USER: {
       var chatRoom = action.chatRoom;
       var chatRooms = [...state.all];
 
@@ -567,6 +591,7 @@ const chatRoom = (state=initialState, action) => {
         ...state,
         all: [...chatRooms]
       }
+    }
     default:
       return state;
   }

@@ -25,7 +25,7 @@ const initialState = {
 
 const message = (state=initialState, action) => {
   switch(action.type) {
-    case `${FETCH_NEW_MESSAGES}_LOADING`:
+    case `${FETCH_NEW_MESSAGES}_LOADING`: {
       var activeChatRoom = {...state.activeChatRoom};
       var chatRoomID = action.meta;
 
@@ -42,7 +42,8 @@ const message = (state=initialState, action) => {
       return {
         ...state
       };
-    case `${DELETE_MESSAGE}_LOADING`:
+    }
+    case `${DELETE_MESSAGE}_LOADING`: {
       return {
         ...state,
         delete: {
@@ -50,7 +51,8 @@ const message = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${FETCH_NEW_MESSAGES}_SUCCESS`:
+    }
+    case `${FETCH_NEW_MESSAGES}_SUCCESS`: {
       var activeChatRoom = {...state.activeChatRoom};
       var chatRoomID = action.meta;
 
@@ -71,7 +73,8 @@ const message = (state=initialState, action) => {
       return {
         ...state
       };
-    case `${SEND_MESSAGE}_SUCCESS`:
+    }
+    case `${SEND_MESSAGE}_SUCCESS`: {
       var messages = [...state.all];
       var activeChatRoom = {...state.activeChatRoom};
       var messageID = action.meta;
@@ -90,7 +93,8 @@ const message = (state=initialState, action) => {
         ...state,
         all: [...messages]
       };
-    case `${DELETE_MESSAGE}_SUCCESS`:
+    }
+    case `${DELETE_MESSAGE}_SUCCESS`: {
       var messages = [...state.all];
       var activeChatRoom = {...state.activeChatRoom};
       var messageID = action.meta.messageID;
@@ -111,7 +115,8 @@ const message = (state=initialState, action) => {
         },
         all: messages
       };
-    case `${FETCH_NEW_MESSAGES}_ERROR`:
+    }
+    case `${FETCH_NEW_MESSAGES}_ERROR`: {
       var activeChatRoom = {...state.activeChatRoom};
       var chatRoomID = action.meta;
 
@@ -131,7 +136,8 @@ const message = (state=initialState, action) => {
       return {
         ...state
       };
-    case `${DELETE_MESSAGE}_ERROR`:
+    }
+    case `${DELETE_MESSAGE}_ERROR`: {
       return {
         ...state,
         delete: {
@@ -142,13 +148,15 @@ const message = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case CHANGE_CHAT_ROOM:
+    }
+    case CHANGE_CHAT_ROOM: {
       return {
         ...state,
         activeChatRoom: action.chatRoom
       };
+    }
     case SEND_MESSAGE:
-    case SOCKET_BROADCAST_SEND_MESSAGE:
+    case SOCKET_BROADCAST_SEND_MESSAGE: {
       var message = action.message;
       var activeChatRoom = {...state.activeChatRoom};
       var messages = [...state.all];
@@ -165,7 +173,8 @@ const message = (state=initialState, action) => {
         ...state,
         all: [...messages]
       };
-    case SOCKET_BROADCAST_DELETE_MESSAGE:
+    }
+    case SOCKET_BROADCAST_DELETE_MESSAGE: {
       var messageID = action.messageID;
       var chatRoomID = action.chatRoomID;
       var activeChatRoom = {...state.activeChatRoom};
@@ -179,6 +188,7 @@ const message = (state=initialState, action) => {
         ...state,
         all: [...messages]
       };
+    }
     default:
       return state;
   }

@@ -19,7 +19,7 @@ const initialState = {
 
 const auth = (state=initialState, action) => {
   switch(action.type) {
-    case `${LOGIN}_LOADING`:
+    case `${LOGIN}_LOADING`: {
       return {
         ...state,
         login: {
@@ -27,7 +27,8 @@ const auth = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${REGISTER}_LOADING`:
+    }  
+    case `${REGISTER}_LOADING`: {
       return {
         ...state,
         register: {
@@ -35,7 +36,8 @@ const auth = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${GUEST_LOGIN}_LOADING`:
+    }
+    case `${GUEST_LOGIN}_LOADING`: {
       return {
         ...state,
         guestLogin: {
@@ -43,7 +45,8 @@ const auth = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${LOGIN}_SUCCESS`:
+    }
+    case `${LOGIN}_SUCCESS`: {
       return {
         ...state,
         login: {
@@ -54,7 +57,8 @@ const auth = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
-    case `${REGISTER}_SUCCESS`:
+    }
+    case `${REGISTER}_SUCCESS`: {
       return {
         ...state,
         register: {
@@ -65,7 +69,8 @@ const auth = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
-    case `${GUEST_LOGIN}_SUCCESS`:
+    }
+    case `${GUEST_LOGIN}_SUCCESS`: {
       return {
         ...state,
         guestLogin: {
@@ -76,7 +81,8 @@ const auth = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
-    case `${LOGIN}_ERROR`:
+    }
+    case `${LOGIN}_ERROR`: {
       return {
         ...state,
         login: {
@@ -87,7 +93,8 @@ const auth = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${REGISTER}_ERROR`:
+    }
+    case `${REGISTER}_ERROR`: {
       return {
         ...state,
         register: {
@@ -98,7 +105,8 @@ const auth = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${GUEST_LOGIN}_ERROR`:
+    }
+    case `${GUEST_LOGIN}_ERROR`: {
       return {
         ...state,
         guestLogin: {
@@ -109,6 +117,7 @@ const auth = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
+    }
     default:
       return state;
   }

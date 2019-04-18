@@ -13,7 +13,7 @@ const initialState = {
 
 const liveVideoUser = (state=initialState, action) => {
   switch(action.type) {
-    case `${START_LIVE_VIDEO}_LOADING`:
+    case `${START_LIVE_VIDEO}_LOADING`: {
       var user = action.meta;
       var liveVideoUsers = [...state.all];
 
@@ -28,7 +28,8 @@ const liveVideoUser = (state=initialState, action) => {
         ...state,
         all: [...liveVideoUsers]
       };
-    case `${START_LIVE_VIDEO}_ERROR`:
+    }
+    case `${START_LIVE_VIDEO}_ERROR`: {
       var user = action.meta;
       var liveVideoUsers = [...state.all];
 
@@ -40,7 +41,8 @@ const liveVideoUser = (state=initialState, action) => {
         ...state,
         all: [...liveVideoUsers]
       };
-    case SOCKET_REQUEST_LIVE_VIDEO:
+    }
+    case SOCKET_REQUEST_LIVE_VIDEO: {
       var user = action.user;
       var liveVideoUsers = [...state.all];
 
@@ -55,7 +57,8 @@ const liveVideoUser = (state=initialState, action) => {
         ...state,
         all: [...liveVideoUsers]
       };
-    case SET_LIVE_VIDEO_SOURCE:
+    }
+    case SET_LIVE_VIDEO_SOURCE: {
       var userID = action.userID;
       var liveVideoUsers = [...state.all];
 
@@ -72,8 +75,9 @@ const liveVideoUser = (state=initialState, action) => {
         ...state,
         all: [...liveVideoUsers]
       };
+    }
     case SOCKET_BROADCAST_END_LIVE_VIDEO:
-    case CLOSE_LIVE_VIDEO_USER:
+    case CLOSE_LIVE_VIDEO_USER: {
       var userID = action.userID;
       var liveVideoUsers = [...state.all];
 
@@ -85,6 +89,7 @@ const liveVideoUser = (state=initialState, action) => {
         ...state,
         all: [...liveVideoUsers]
       };
+    }  
     default:
       return state;
   }

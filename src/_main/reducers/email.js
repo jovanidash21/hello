@@ -14,7 +14,7 @@ const initialState = {
 
 const email = (state=initialState, action) => {
   switch(action.type) {
-    case `${SEND_EMAIL}_LOADING`:
+    case `${SEND_EMAIL}_LOADING`: {
       return {
         ...state,
         send: {
@@ -22,7 +22,8 @@ const email = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${SEND_EMAIL}_SUCCESS`:
+    }
+    case `${SEND_EMAIL}_SUCCESS`: {
       return {
         ...state,
         send: {
@@ -33,7 +34,8 @@ const email = (state=initialState, action) => {
           message: action.payload.data.message
         }
       };
-    case `${SEND_EMAIL}_ERROR`:
+    }
+    case `${SEND_EMAIL}_ERROR`: {
       return {
         ...state,
         send: {
@@ -44,6 +46,7 @@ const email = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
+    }
     default:
       return state;
   }

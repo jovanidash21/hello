@@ -79,7 +79,7 @@ const initialState = {
 
 const member = (state=initialState, action) => {
   switch(action.type) {
-    case `${FETCH_MEMBERS}_LOADING`:
+    case `${FETCH_MEMBERS}_LOADING`: {
       return {
         ...state,
         fetch: {
@@ -87,7 +87,8 @@ const member = (state=initialState, action) => {
           loading: true
         }
       };
-    case `${FETCH_MEMBERS}_SUCCESS`:
+    }
+    case `${FETCH_MEMBERS}_SUCCESS`: {
       var members = [...action.payload.data.members];
       var activeUser = {...state.activeUser};
 
@@ -115,7 +116,8 @@ const member = (state=initialState, action) => {
         },
         all: [...members]
       };
-    case `${FETCH_MEMBERS}_ERROR`:
+    }
+    case `${FETCH_MEMBERS}_ERROR`: {
       return {
         ...state,
         fetch: {
@@ -126,17 +128,20 @@ const member = (state=initialState, action) => {
           message: action.payload.response.data.message
         }
       };
-    case `${FETCH_ACTIVE_USER}_SUCCESS`:
+    }
+    case `${FETCH_ACTIVE_USER}_SUCCESS`: {
       return {
         ...state,
         activeUser: action.payload.data.user
       };
-    case CHANGE_CHAT_ROOM:
+    }
+    case CHANGE_CHAT_ROOM: {
       return {
         ...state,
         activeChatRoom: action.chatRoom
       };
-    case SOCKET_BROADCAST_JOIN_CHAT_ROOM:
+    }
+    case SOCKET_BROADCAST_JOIN_CHAT_ROOM: {
       var chatRoomID = action.chatRoomID;
       var user = action.user;
       var activeChatRoom = {...state.activeChatRoom};
@@ -154,7 +159,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_LEAVE_CHAT_ROOM:
+    }
+    case SOCKET_BROADCAST_LEAVE_CHAT_ROOM: {
       var chatRoomID = action.chatRoomID;
       var userID = action.userID;
       var activeChatRoom = {...state.activeChatRoom};
@@ -170,8 +176,9 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
+    }
     case SOCKET_KICK_MEMBER:
-    case SOCKET_BROADCAST_KICK_MEMBER:
+    case SOCKET_BROADCAST_KICK_MEMBER: {
       var chatRoomID = action.chatRoomID;
       var memberID = action.memberID;
       var activeChatRoom = {...state.activeChatRoom};
@@ -187,7 +194,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_UNKICK_MEMBER:
+    }
+    case SOCKET_BROADCAST_UNKICK_MEMBER: {
       var chatRoomID = action.chatRoomID;
       var member = action.member;
       var activeChatRoom = {...state.activeChatRoom};
@@ -205,8 +213,9 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
+    }
     case SOCKET_UPDATE_MEMBER_ROLE:
-    case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE:
+    case SOCKET_BROADCAST_UPDATE_MEMBER_ROLE: {
       var memberID = action.memberID;
       var role = action.role;
       var members = [...state.all];
@@ -222,8 +231,9 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
+    }
     case SOCKET_MUTE_MEMBER:
-    case SOCKET_BROADCAST_MUTE_MEMBER:
+    case SOCKET_BROADCAST_MUTE_MEMBER: {
       var memberID = action.memberID;
       var members = [...state.all];
 
@@ -237,7 +247,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_UNMUTE_MEMBER:
+    }
+    case SOCKET_BROADCAST_UNMUTE_MEMBER: {
       var memberID = action.memberID;
       var members = [...state.all];
 
@@ -251,7 +262,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case `${START_LIVE_VIDEO}_SUCCESS`:
+    }
+    case `${START_LIVE_VIDEO}_SUCCESS`: {
       var user = action.meta;
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
@@ -268,7 +280,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_START_LIVE_VIDEO:
+    }
+    case SOCKET_BROADCAST_START_LIVE_VIDEO: {
       var user = action.user;
       var chatRoomID = action.chatRoomID;
       var activeChatRoom = {...state.activeChatRoom};
@@ -286,7 +299,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case `${END_LIVE_VIDEO}_SUCCESS`:
+    }
+    case `${END_LIVE_VIDEO}_SUCCESS`: {
       var userID = action.meta;
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
@@ -303,7 +317,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_END_LIVE_VIDEO:
+    }
+    case SOCKET_BROADCAST_END_LIVE_VIDEO: {
       var userID = action.userID;
       var activeChatRoom = {...state.activeChatRoom};
       var members = [...state.all];
@@ -320,7 +335,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_USER_LOGIN:
+    }
+    case SOCKET_BROADCAST_USER_LOGIN: {
       var user = action.user;
       var userID = user._id;
       var activeChatRoom = {...state.activeChatRoom};
@@ -351,7 +367,8 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
-    case SOCKET_BROADCAST_USER_LOGOUT:
+    }
+    case SOCKET_BROADCAST_USER_LOGOUT: {
       var userID = action.userID;
       var members = [...state.all]
 
@@ -363,6 +380,7 @@ const member = (state=initialState, action) => {
         ...state,
         all: [...members]
       }
+    }
     default:
       return state;
   }
