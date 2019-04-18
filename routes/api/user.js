@@ -18,15 +18,26 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/search', (req, res, next) => {
-  var query = req.body.query;
-
   if (req.user === undefined) {
     res.status(401).send({
       success: false,
       message: 'Unauthorized'
     });
   } else {
-    User.find({_id: {$ne: null}, name: {$regex: '\\b' + query, $options: 'i'}}, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
+    var query = req.body.query;
+    var userQuery = {
+      _id: { $ne: null },
+      $or: [
+        { username: { $regex: '\\b' + query, $options: 'i' } },
+        { name: { $regex: '\\b' + query, $options: 'i' } }
+      ]
+    };
+
+    if (req.body.chatRoomID && req.body.chatRoomID.length > 0) {
+      userQuery['chatRooms.data'] = req.body.chatRoomID;
+    }
+
+    User.find(userQuery, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
       .then((users) => {
         res.status(200).send({
           success: true,
