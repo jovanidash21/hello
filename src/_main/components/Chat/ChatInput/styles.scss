@@ -33,6 +33,11 @@
     .text-format-picker {
       bottom: 60px;
     }
+    .autocomplete-box-wrapper {
+      bottom: 60px;
+      left: 10px;
+      right: 10px;
+    }
     .send-button {
       flex: 0 0 50px;
       font-size: 9px;
@@ -42,6 +47,7 @@
   .extra-buttons,
   .emoji-dialog,
   .text-format-picker,
+  .autocomplete-box-wrapper,
   .send-button {
     z-index: 2;
   }
@@ -82,6 +88,17 @@
     position: absolute;
     @media screen and (max-width: $screen-mobile-max) {
       right: 0;
+    }
+  }
+  .autocomplete-box-wrapper {
+    bottom: 65px;
+    left: 20px;
+    position: absolute;
+    right: 20px;
+    width: auto;
+    @media screen and (max-width: $screen-mobile-max) {
+      left: 0;
+      width: 100% !important;
     }
   }
   .chat-input {
@@ -125,6 +142,12 @@
         height: $emoji-size;
         vertical-align: bottom;
         width: $emoji-size;
+      }
+      .user-username-tag {
+        background-color: rgba($color-primary, 0.1);
+        border-radius: 3px;
+        color: $color-primary;
+        padding: 2px 5px;
       }
     }
     .extras {

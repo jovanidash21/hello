@@ -18,7 +18,8 @@ import {
 } from '../constants/member';
 import {
   FETCH_NEW_MESSAGES,
-  SOCKET_BROADCAST_NOTIFY_MESSAGE
+  SOCKET_BROADCAST_NOTIFY_MESSAGE,
+  SOCKET_BROADCAST_NOTIFY_MESSAGE_MENTION
 } from '../constants/message';
 import {
   SOCKET_BROADCAST_KICK_USER,
@@ -541,7 +542,8 @@ const chatRoom = (state=initialState, action) => {
         all: [...chatRooms]
       }
     }
-    case SOCKET_BROADCAST_NOTIFY_MESSAGE: {
+    case SOCKET_BROADCAST_NOTIFY_MESSAGE:
+    case SOCKET_BROADCAST_NOTIFY_MESSAGE_MENTION: {
       var activeChatRoom = {...state.active};
       var chatRooms = [...state.all];
       var chatRoomID = action.chatRoomID;

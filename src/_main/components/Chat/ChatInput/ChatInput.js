@@ -8,8 +8,17 @@ import emojione from 'emojione';
 import EmojiPicker from 'emojione-picker';
 import FontAwesome from 'react-fontawesome';
 import Popup from 'react-popup';
-import { TextFormatPicker } from './TextFormatPicker';
 import uuidv4 from 'uuid/v4';
+import { TextFormatPicker } from './TextFormatPicker';
+import { AutocompleteBox } from './AutocompleteBox';
+import {
+  getCaretPosition,
+  insertHTML,
+  getAutoCompleteTextQuery,
+  insertAutocompleteHTML,
+  removeAutocompleteHTML,
+  getPlainText,
+} from '../../../../utils/input';
 import 'emojione-picker/css/picker.css';
 import './styles.scss';
 
@@ -22,6 +31,7 @@ class ChatInput extends Component {
       message: '',
       emojiPicker: false,
       textFormatPicker: false,
+      userTagging: false,
       textColor: '#000000',
       textStyle: 'normal',
       validMessage: false,
@@ -51,6 +61,10 @@ class ChatInput extends Component {
 
     if ( this.textFormatPicker && ! this.textFormatPicker.contains(event.target) ) {
       this.setState({textFormatPicker: false});
+    }
+
+    if ( this.autocompleteBox && ! this.autocompleteBox.contains(event.target) ) {
+      this.setState({userTagging: false});
     }
   }
   onMessageChange(event, value) {
@@ -108,7 +122,19 @@ class ChatInput extends Component {
         validMessage: false
       });
     }
-    ::this.handleSaveCaretPosition(event);
+
+    if ( removeAutocompleteHTML() ) {
+      this.setState({message: document.getElementById(::this.handleDivID()).innerHTML});
+    }
+
+    ::this.handleSaveCaretPosition();
+    ::this.handleUserTaggingToggle();
+  }
+  onMessageClick(event) {
+    event.preventDefault();
+
+    ::this.handleSaveCaretPosition();
+    ::this.handleUserTaggingToggle();
   }
   onMessagePaste(event) {
     const messageTextLength = ::this.handleMessageText('length');
@@ -140,19 +166,10 @@ class ChatInput extends Component {
 
     handleSendFileMessage(newMessageID, fileName, file, chatRoomID);
   }
-  handleSaveCaretPosition(event) {
-    event.preventDefault();
+  handleSaveCaretPosition() {
+    const caretPosition = getCaretPosition( document.getElementById(::this.handleDivID()) );
 
-    if ( window.getSelection ) {
-      var selection = window.getSelection();
-      if ( selection.getRangeAt && selection.rangeCount ) {
-        this.setState({caretPosition: selection.getRangeAt(0)});
-      }
-    } else if ( document.selection && document.selection.createRange ) {
-      this.setState({caretPosition: document.selection.createRange()});
-    } else {
-      this.setState({caretPosition: null});
-    }
+    this.setState({caretPosition: caretPosition});
   }
   handleEmojiPickerToggle(event) {
     event.preventDefault();
@@ -167,75 +184,6 @@ class ChatInput extends Component {
       textFormatPicker: false
     });
   }
-  handleEmojiPickerSelect(emoji) {
-    const { user } = this.props;
-    const {
-      caretPosition,
-      validMessage,
-      maxLengthReached
-    } = this.state;
-    const messageTextLength = ::this.handleMessageText('length');
-
-    var emojiSelect = emojione.toImage(emoji.shortname);
-
-    if ( caretPosition ) {
-      if ( window.getSelection ) {
-        var selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(caretPosition);
-      } else if ( document.selection && caretPosition.select ) {
-        caretPosition.select();
-      }
-    }
-
-    document.getElementById(::this.handleDivID()).focus();
-
-    if ( maxLengthReached || messageTextLength >= 399 ) {
-      Popup.alert('Sorry, maximum of 400 characters only!');
-    } else {
-      ::this.handleInsertEmoji(emojiSelect);
-    }
-
-    if ( !validMessage ) {
-      this.setState({validMessage: true});
-    }
-  }
-  handleInsertEmoji(emoji) {
-    if ( window.getSelection ) {
-      var selection = window.getSelection();
-      if ( selection.getRangeAt && selection.rangeCount ) {
-        var range = selection.getRangeAt(0);
-        range.deleteContents();
-
-        var element = document.createElement("div");
-        element.innerHTML = emoji;
-
-        var fragment = document.createDocumentFragment(), node, lastNode;
-        while ( (node = element.firstChild) ) {
-          lastNode = fragment.appendChild(node);
-        }
-
-        var firstNode = fragment.firstChild;
-        range.insertNode(fragment);
-
-        if ( lastNode ) {
-          range = range.cloneRange();
-          range.setStartAfter(lastNode);
-          range.collapse(true);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-
-        this.setState({caretPosition: selection.getRangeAt(0)});
-      }
-    } else if ( document.selection && document.selection.createRange ) {
-      var range = document.selection.createRange();
-      range.pasteHTML(emoji);
-      range.select();
-
-      this.setState({caretPosition: document.selection.createRange()});
-    }
-  }
   handleTextFormatPickerToggle(event) {
     event.preventDefault();
 
@@ -245,6 +193,54 @@ class ChatInput extends Component {
       emojiPicker: false,
       textFormatPicker: !textFormatPicker
     });
+  }
+  handleUserTaggingToggle() {
+    const {
+      chatRoomID,
+      handleSearchUser
+    } = this.props;
+    const userTagQuery = getAutoCompleteTextQuery( document.getElementById(::this.handleDivID()) );
+
+    if ( userTagQuery.length > 0 ) {
+      this.setState({
+        emojiPicker: false,
+        textFormatPicker: false,
+        userTagging: true,
+      });
+
+      handleSearchUser(userTagQuery, chatRoomID);
+    } else {
+      this.setState({userTagging: false});
+    }
+  }
+  handleEmojiPickerSelect(emoji) {
+    const { user } = this.props;
+    const {
+      caretPosition,
+      message,
+      validMessage,
+      maxLengthReached
+    } = this.state;
+    const messageTextLength = ::this.handleMessageText('length');
+    const emojiSelect = emojione.toImage(emoji.shortname);
+    let newCaretPosition = caretPosition;
+    let newMessage = message;
+
+    if ( maxLengthReached || messageTextLength >= 399 ) {
+      Popup.alert('Sorry, maximum of 400 characters only!');
+    } else {
+      newCaretPosition = insertHTML(document.getElementById(::this.handleDivID()), caretPosition, emojiSelect);
+      newMessage = document.getElementById(::this.handleDivID()).innerHTML;
+    }
+
+    this.setState({
+      caretPosition: newCaretPosition,
+      message: newMessage
+    });
+
+    if ( !validMessage ) {
+      this.setState({validMessage: true});
+    }
   }
   handleTextColor(textColor) {
     this.setState({textColor: textColor});
@@ -261,6 +257,35 @@ class ChatInput extends Component {
 
     this.setState({textStyle: textStyleSelect});
   }
+  handleUserTaggingSelect(selectedUser) {
+    const { user } = this.props;
+    const {
+      caretPosition,
+      message,
+      validMessage,
+      maxLengthReached
+    } = this.state;
+    const messageTextLength = ::this.handleMessageText('length');
+    let newCaretPosition = caretPosition;
+    let newMessage = message;
+
+    if ( maxLengthReached || messageTextLength >= ( 400 - selectedUser.username.length ) ) {
+      Popup.alert('Sorry, maximum of 160 characters only!');
+    } else {
+      newCaretPosition = insertAutocompleteHTML(document.getElementById(::this.handleDivID()), caretPosition, `<span data-id="${selectedUser._id}" class="user-username-tag">@${selectedUser.username}</span>`);
+      newMessage = document.getElementById(::this.handleDivID()).innerHTML;
+    }
+
+    this.setState({
+      caretPosition: newCaretPosition,
+      message: newMessage,
+      userTagging: false,
+    });
+
+    if ( !validMessage ) {
+      this.setState({validMessage: true});
+    }
+  }
   handleMessageTextLength() {
     const messageTextLength = ::this.handleMessageText('length');
 
@@ -272,19 +297,7 @@ class ChatInput extends Component {
   }
   handleMessageText(type) {
     const { textStyle } = this.state;
-    var emojis = document.getElementById(::this.handleDivID()).getElementsByClassName('emojione');
-    var chatInputText = document.getElementById(::this.handleDivID()).innerHTML;
-
-    var nth = 0;
-    chatInputText = chatInputText.replace(/<img class="emojione" alt="(.*?)" title="(.*?)" src="(.*?)"[^>]*>/g, (match, i, original) => {
-      nth++;
-      return emojis[nth - 1].alt;
-    });
-
-    var element = document.createElement('div');
-    element.innerHTML = chatInputText;
-
-    var messageText = element.textContent || element.innerText || "";
+    const messageText = getPlainText( document.getElementById(::this.handleDivID()) );
 
     if ( type === 'text' ) {
       switch ( textStyle ) {
@@ -346,13 +359,16 @@ class ChatInput extends Component {
   render() {
     const {
       handleAudioRecorderToggle,
+      userTagSuggestions,
       disabled,
+      userTagLoading,
       small
     } = this.props;
     const {
       message,
       emojiPicker,
       textFormatPicker,
+      userTagging,
       textColor,
       textStyle,
       validMessage,
@@ -388,6 +404,16 @@ class ChatInput extends Component {
             />
           </div>
         }
+        {
+          userTagging &&
+          <div ref={(element) => { this.autocompleteBox = element; }}>
+            <AutocompleteBox
+              suggestions={userTagSuggestions}
+              loading={userTagLoading}
+              handleSelectSuggestion={::this.handleUserTaggingSelect}
+            />
+          </div>
+        }
         <div className="chat-input">
           <ContentEditable
             className="textfield single-line"
@@ -396,12 +422,11 @@ class ChatInput extends Component {
             autoComplete="off"
             html={message}
             tagName="span"
-            onClick={::this.handleSaveCaretPosition}
+            onClick={::this.onMessageClick}
             onChange={::this.onMessageChange}
             onKeyPress={::this.onMessageKeyPress}
             onKeyUp={::this.onMessageKeyUp}
             onPaste={::this.onMessagePaste}
-            contentEditable="plaintext-only"
           />
           <div className="extras">
             <div className="extra-buttons">
@@ -460,17 +485,22 @@ ChatInput.propTypes = {
   id: PropTypes.string,
   user: PropTypes.object.isRequired,
   chatRoomID: PropTypes.string.isRequired,
+  handleSearchUser: PropTypes.func.isRequired,
   handleSendTextMessage: PropTypes.func.isRequired,
   handleAudioRecorderToggle: PropTypes.func.isRequired,
   handleSendFileMessage: PropTypes.func.isRequired,
   handleSendImageMessage: PropTypes.func.isRequired,
+  userTagSuggestions: PropTypes.array,
   disabled: PropTypes.bool,
+  userTagLoading: PropTypes.bool,
   small: PropTypes.bool
 }
 
 ChatInput.defaultProps = {
   id: '',
+  userTagSuggestions: [],
   disabled: false,
+  userTagLoading: false,
   small: false
 }
 

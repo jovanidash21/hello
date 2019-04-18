@@ -37,7 +37,7 @@ router.post('/search', (req, res, next) => {
       userQuery['chatRooms.data'] = req.body.chatRoomID;
     }
 
-    User.find(userQuery, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
+    User.find(userQuery, '-email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
       .then((users) => {
         res.status(200).send({
           success: true,

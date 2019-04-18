@@ -238,6 +238,18 @@ var sockets = function(io) {
             .populate('members')
             .exec()
             .then((chatRoom) => {
+              const usernames = [];
+
+              if (action.message.text.length > 0) {
+                const taggedUsernames = action.message.text.match(/<@(\w+)>/ig);
+
+                if (taggedUsernames !== null && taggedUsernames.length > 0) {
+                  for (var i = 0; i < taggedUsernames.length; i++) {
+                    usernames.push(taggedUsernames[i].slice(2, -1));
+                  }
+                }
+              }
+
               for (var i = 0; i < chatRoom.members.length; i++) {
                 var chatRoomMember = chatRoom.members[i];
 
@@ -264,18 +276,26 @@ var sockets = function(io) {
                       message: action.message
                     });
                   } else {
-                    if (chatRoom.chatType === 'direct') {
-                      var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => {
-                        return singleChatRoom.data._id == action.chatRoomID;
-                      });
+                    var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => {
+                      return singleChatRoom.data._id == action.chatRoomID;
+                    });
 
-                      if (chatRoomIndex > -1) {
-                        var singleChatRoom = user.chatRooms[chatRoomIndex];
+                    if (chatRoomIndex > -1) {
+                      var singleChatRoom = user.chatRooms[chatRoomIndex];
 
-                        singleChatRoom.data.name = action.message.user.name;
-                        singleChatRoom.data.chatIcon = action.message.user.profilePicture;
-                        singleChatRoom.data.members = chatRoom.members;
+                      singleChatRoom.data.name = action.message.user.name;
+                      singleChatRoom.data.chatIcon = action.message.user.profilePicture;
+                      singleChatRoom.data.members = chatRoom.members;
 
+                      if (usernames.length > 0 && usernames.indexOf(user.username) > -1) {
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE_MENTION',
+                          chatRoom: singleChatRoom,
+                          chatRoomID: action.chatRoomID,
+                          chatRoomName: chatRoom.name,
+                          senderName: action.message.user.name
+                        });
+                      } else if (chatRoom.chatType === 'direct') {
                         socket.broadcast.to(user.socketID).emit('action', {
                           type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
                           chatRoom: singleChatRoom,

@@ -19,9 +19,9 @@ class ChatBubble extends Component {
       isLightboxOpen: false
     };
   }
-  handleTextFormat(text, tag, slice=1) {
+  handleTextFormat(text, tag, className='', slice=1) {
     if ( tag !== '' ) {
-      return ReactHtmlParser('<' + tag + '>' + text.slice(slice, -slice) + '</' + tag + '>')[0];
+      return ReactHtmlParser('<' + tag + ' class="' + className + '">' + text.slice(slice, -slice) + '</' + tag + '>')[0];
     }
   }
   handleMessageText() {
@@ -42,13 +42,17 @@ class ChatBubble extends Component {
         };
 
         messageText = messageText.replace(/ /g, "\u00a0");
-        messageText = messageText.split(/(\*[A-z0-9\s]+\*|\_[A-z0-9\s]+\_|\~[A-z0-9\s]+\~|\`\`\`[A-z0-9\s]+\`\`\`|\`[A-z0-9\s]+\`)/);
+        messageText = messageText.split(/(\<@[A-z0-9\s\.\,\:\(\)\-\_\^]+\>|\*[A-z0-9\s]+\*|\_[A-z0-9\s]+\_|\~[A-z0-9\s]+\~|\`\`\`[A-z0-9\s]+\`\`\`|\`[A-z0-9\s]+\`)/);
 
         for (var i = 0; i < messageText.length; i++) {
           var tag = '';
+          var className='';
           var slice = 1;
 
-          if ( /\*[A-z0-9\s]+\*/gi.test(messageText[i]) ) {
+          if ( /\<@[A-z0-9\s\.\,\:\(\)\-\_\^]+\>/gi.test(messageText[i]) ) {
+            tag = 'b';
+            className = 'user-username-tag';
+          } else if ( /\*[A-z0-9\s]+\*/gi.test(messageText[i]) ) {
             tag = 'b';
           } else if ( /\_[A-z0-9\s]+\_/gi.test(messageText[i]) ) {
             tag = 'i';
@@ -62,7 +66,7 @@ class ChatBubble extends Component {
           }
 
           if ( tag.length > 0 ) {
-            const formatText = ::this.handleTextFormat(messageText[i], tag, slice);
+            const formatText = ::this.handleTextFormat(messageText[i], tag, className, slice);
 
             messageText[i] = {...formatText};
             messageText[i].key = i;

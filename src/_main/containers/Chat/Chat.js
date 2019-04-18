@@ -506,7 +506,8 @@ class Chat extends Component {
       popUpChatRoom,
       message,
       liveVideoUser,
-      videoCall
+      videoCall,
+      searchUser
     } = this.props;
     const {
       isLeftSideDrawerOpen,
@@ -608,11 +609,14 @@ class Chat extends Component {
                     <ChatInput
                       user={user.active}
                       chatRoomID={activeChatRoom.data._id}
+                      handleSearchUser={searchUser}
                       handleSendTextMessage={::this.handleSendTextMessage}
                       handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                       handleSendFileMessage={::this.handleSendFileMessage}
                       handleSendImageMessage={::this.handleSendImageMessage}
+                      userTagSuggestions={user.searched}
                       disabled={isChatInputDisabled}
+                      userTagLoading={user.search.loading}
                     />
                     :
                     <ChatAudioRecorder

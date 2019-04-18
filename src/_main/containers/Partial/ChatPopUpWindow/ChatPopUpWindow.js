@@ -68,6 +68,7 @@ class ChatPopUpWindow extends Component {
   render() {
     const {
       user,
+      searchUser,
       popUpChatRoom,
       index,
       handleSendTextMessage,
@@ -134,11 +135,14 @@ class ChatPopUpWindow extends Component {
                     id={"popup-" + index}
                     user={user.active}
                     chatRoomID={popUpChatRoom.data._id}
+                    handleSearchUser={searchUser}
                     handleSendTextMessage={handleSendTextMessage}
                     handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
                     handleSendFileMessage={handleSendFileMessage}
                     handleSendImageMessage={handleSendImageMessage}
+                    userTagSuggestions={user.searched}
                     disabled={isChatInputDisabled}
+                    userTagLoading={user.search.loading}
                     small
                   />
                   :

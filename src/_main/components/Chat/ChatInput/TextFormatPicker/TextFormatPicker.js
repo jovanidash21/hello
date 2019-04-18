@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SketchPicker } from 'react-color';
 import { Button } from 'muicss/react';
-import FontAwesome from 'react-fontawesome';
 import './styles.scss';
 
 class TextFormatPicker extends Component {
