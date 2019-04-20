@@ -19,9 +19,42 @@ class ChatBubble extends Component {
       isLightboxOpen: false
     };
   }
-  handleTextFormat(text, tag, className='', slice=1) {
+  handleUserTagColor(text) {
+    const colors = [
+      '#c62828', // tall poppy
+      '#ff4081', // wild strawberry
+      '#7b1fa2', // seance
+      '#673ab7', // purple heart
+      '#3f51b5', // san marino
+      '#2962ff', // dodger blue
+      '#039be5', // cerulean
+      '#00838f', // blue lagoon
+      '#00e5ff', // cyan
+      '#26a69a', // jungle green
+      '#4caf50', // fruit salad
+      '#689f38', // apple
+      '#c0ca33', // earls green
+      '#76ff03', // chartreuse
+      '#fdd835', // bright sun
+      '#ff8f00', // pizazz
+      '#ef6c00', // clementine
+      '#d84315', // tia maria
+      '#6d4c41', // kabul
+      '#546c7a', // cutty sark
+    ];
+    var charCodeSum = 0;
+
+    for ( var i = 0; i < text.length; i++ ) {
+      charCodeSum += text.charCodeAt(i);
+    }
+
+    const j = charCodeSum % colors.length;
+
+    return colors[j];
+  }
+  handleTextFormat(text, tag, slice=1, color='inherit') {
     if ( tag !== '' ) {
-      return ReactHtmlParser('<' + tag + ' class="' + className + '">' + text.slice(slice, -slice) + '</' + tag + '>')[0];
+      return ReactHtmlParser('<' + tag + ' style="color:' + color + ';">' + text.slice(slice, -slice) + '</' + tag + '>')[0];
     }
   }
   handleMessageText() {
@@ -46,12 +79,12 @@ class ChatBubble extends Component {
 
         for (var i = 0; i < messageText.length; i++) {
           var tag = '';
-          var className='';
           var slice = 1;
+          var color = 'inherit';
 
           if ( /\<@[A-z0-9\s\.\,\:\(\)\-\_\^]+\>/gi.test(messageText[i]) ) {
             tag = 'b';
-            className = 'user-username-tag';
+            color = ::this.handleUserTagColor(messageText[i].slice(2, -1));
           } else if ( /\*[A-z0-9\s]+\*/gi.test(messageText[i]) ) {
             tag = 'b';
           } else if ( /\_[A-z0-9\s]+\_/gi.test(messageText[i]) ) {
@@ -66,7 +99,7 @@ class ChatBubble extends Component {
           }
 
           if ( tag.length > 0 ) {
-            const formatText = ::this.handleTextFormat(messageText[i], tag, className, slice);
+            const formatText = ::this.handleTextFormat(messageText[i], tag, slice, color);
 
             messageText[i] = {...formatText};
             messageText[i].key = i;
