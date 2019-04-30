@@ -90,6 +90,12 @@ var userSchema = new Schema (
       ],
       default: 'ordinary',
     },
+    blockedUsers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     block: userEndDateSchema,
     mute: userEndDateSchema,
     isOnline: {

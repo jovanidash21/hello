@@ -19,7 +19,7 @@ var sockets = function(io) {
                 ipAddress: socket.handshake.headers["x-real-ip"],
                 socketID: socket.id
               }
-            }, { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -ipAddress -socketID' },
+            }, { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -ipAddress -socketID' },
           )
           .then((user) => {
             connectedUsers[socket.id] = user._id;
@@ -51,7 +51,7 @@ var sockets = function(io) {
             }
           });
 
-          User.findById(action.userID, '-username -email -chatRooms -chatRooms -socketID')
+          User.findById(action.userID, '-username -email -chatRooms -chatRooms -blockedUsers -socketID')
             .then((user) => {
               connectedUser = user;
 
@@ -361,7 +361,7 @@ var sockets = function(io) {
             }
           });
 
-          User.findById(action.userID, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
+          User.findById(action.userID, '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID')
             .then((user) => {
               liveVideoUser = user;
 
@@ -458,7 +458,7 @@ var sockets = function(io) {
         case 'SOCKET_REQUEST_VIDEO_CALL':
           var callerUser = {};
 
-          User.findById(action.callerID, '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
+          User.findById(action.callerID, '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID')
             .then((user) => {
               callerUser = user;
 

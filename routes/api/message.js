@@ -64,7 +64,6 @@ var audioUpload = multer({
 });
 
 router.post('/', (req, res, next) => {
-  var chatRoomID = req.body.chatRoomID;
   var userID = req.body.userID;
 
   if ((req.user === undefined) || (req.user._id != userID)) {
@@ -73,10 +72,26 @@ router.post('/', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    Message.find({chatRoom: chatRoomID})
-      .sort({createdAt: 'descending'})
-      .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID')
-      .exec()
+    var chatRoomID = req.body.chatRoomID;
+    var blockedUsers = [];
+
+    User.find({'chatRooms.data': chatRoomID, blockedUsers: {$eq: userID}})
+      .distinct('_id')
+      .then((userIDs) => {
+        blockedUsers = userIDs;
+
+        return User.findById(userID, 'blockedUsers');
+      })
+      .then((user) => {
+        return Message.find({
+          $and: [
+            { user: { $nin: user.blockedUsers } },
+            { user: { $nin: blockedUsers } }
+          ], chatRoom: chatRoomID})
+          .sort({createdAt: 'descending'})
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID')
+          .exec();
+      })
       .then((messages) => {
         var chatRoomMessages = messages.reverse();
 
@@ -154,7 +169,7 @@ router.post('/text', (req, res, next) => {
         }
 
         return Message.findById(message._id)
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -232,7 +247,7 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
         }
 
         return Message.findById(message._id)
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -304,7 +319,7 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
         }
 
         return Message.findById(message._id)
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({
@@ -376,7 +391,7 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
         }
 
         return Message.findById(message._id)
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -block -mute -ipAddress -socketID');
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID');
       })
       .then((messageData) => {
         res.status(200).send({

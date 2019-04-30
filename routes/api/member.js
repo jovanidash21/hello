@@ -14,10 +14,12 @@ router.post('/', (req, res, next) => {
   } else {
     var chatRoomID = req.body.chatRoomID;
     var userRole = '';
+    var blockedUsers = [];
 
-    User.findById(userID)
+    User.findById(userID, 'role blockedUsers')
       .then((user) => {
         userRole = user.role;
+        blockedUsers = user.blockedUsers;
 
         return ChatRoom.findById(chatRoomID);
       })
@@ -31,7 +33,7 @@ router.post('/', (req, res, next) => {
           },
           isOnline: true
         };
-        var findExclude = '-username -email -chatRooms -connectedChatRoom -socketID';
+        var findExclude = '-username -email -chatRooms -connectedChatRoom -blockedUsers -socketID';
 
         if (chatRoom.chatType === 'public') {
           findParams.connectedChatRoom = chatRoomID;
@@ -45,9 +47,20 @@ router.post('/', (req, res, next) => {
           findExclude = findExclude + ' -ipAddress';
         }
 
-        return User.find(findParams, findExclude);
+        return User.find(findParams, findExclude).lean();
       })
       .then((members) => {
+        for (var i = 0; i < members.length; i++) {
+          var member = members[i];
+          var blocked = false;
+
+          if (blockedUsers.indexOf(member._id) > -1) {
+            blocked = true;
+          }
+
+          member.blocked = blocked;
+        }
+
         res.status(200).send({
           success: true,
           message: 'Members Fetched',
