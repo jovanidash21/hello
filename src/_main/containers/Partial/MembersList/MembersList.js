@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
 import { isObjectEmpty } from '../../../../utils/object';
+import { BlockUnblockUserModal } from '../BlockUnblockUserModal';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
@@ -18,7 +19,9 @@ class MembersList extends Component {
     this.state = {
       members: [],
       searchFilter: '',
-      selectedMemberIndex: -1
+      selectedMemberIndex: -1,
+      blockUnblockUserModalOpen: false,
+      selectedUser: {},
     }
   }
   componentDidUpdate(prevProps) {
@@ -132,6 +135,7 @@ class MembersList extends Component {
                   chatRoomMember={chatRoomMember}
                   handleRequestLiveVideo={handleRequestLiveVideo}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
+                  handleOpenBlockUnblockUserModal={::this.handleOpenBlockUnblockUserModal}
                   handleBlockMember={::this.handleBlockMember}
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
@@ -290,16 +294,40 @@ class MembersList extends Component {
       muteMember(memberID);
     }
   }
+  handleOpenBlockUnblockUserModal(selectedUser) {
+    this.setState({
+      blockUnblockUserModalOpen: true,
+      selectedUser,
+    });
+  }
+  handleCloseBlockUnblockUserModal() {
+    this.setState({
+      blockUnblockUserModalOpen: false,
+      selectedUser: {},
+    });
+  }
   render() {
     const {
       isRightSideDrawerOpen,
       handleRightSideDrawerToggleState,
       noOverlay
     } = this.props;
+    const {
+      blockUnblockUserModalOpen,
+      selectedUser,
+    } = this.state;
 
     return (
       <div style={{height: '100%'}}>
         {::this.handleMembersListRender()}
+        {
+          blockUnblockUserModalOpen &&
+          <BlockUnblockUserModal
+            open={blockUnblockUserModalOpen}
+            selectedUser={selectedUser}
+            handleCloseModal={::this.handleCloseBlockUnblockUserModal}
+          />
+        }
       </div>
     );
   }

@@ -33,15 +33,15 @@ class ChatRoomMember extends Component {
       handleRequestLiveVideo(chatRoomMember);
     }
   }
-  handleBlockMember(event) {
+  handleOpenBlockUnblockUserModal(event) {
     event.preventDefault();
 
     const {
       chatRoomMember,
-      handleBlockMember
+      handleOpenBlockUnblockUserModal,
     } = this.props;
 
-    handleBlockMember(chatRoomMember._id);
+    handleOpenBlockUnblockUserModal(chatRoomMember);
   }
   handleKickMember(event) {
     event.preventDefault();
@@ -178,19 +178,13 @@ class ChatRoomMember extends Component {
                 {chatRoomMember.ipAddress}
               </li>
             }
-            {/*
-              (
-                ( user.role === 'owner' ||
-                  user.role === 'admin' ) &&
-                ( chatRoomMember.role !== 'owner' &&
-                  chatRoomMember.role !== 'admin' )
-              ) &&
+            {
               <li>
-                <a href="#" onClick={::this.handleBlockMember}>
-                  Block Member
+                <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
+                  {!chatRoomMember.blocked ? 'Block' : 'Unblock'} user
                 </a>
               </li>
-            */}
+            }
             {
               user._id !== chatRoomMember._id &&
               chatRoomMember.isLiveVideoActive &&
@@ -289,6 +283,7 @@ ChatRoomMember.propTypes = {
   chatRoomMember: PropTypes.object.isRequired,
   handleRequestLiveVideo: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
+  handleOpenBlockUnblockUserModal: PropTypes.func.isRequired,
   handleBlockMember: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,

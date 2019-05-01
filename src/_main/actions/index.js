@@ -11,7 +11,9 @@ import {
 import {
   fetchActiveUser,
   editActiveUser,
-  searchUser
+  searchUser,
+  blockUser,
+  unblockUser
 } from './user';
 import { sendEmail } from './email';
 import {
@@ -72,6 +74,8 @@ const actions = (dispatch) => {
     fetchActiveUser,
     editActiveUser,
     searchUser,
+    blockUser,
+    unblockUser,
     fetchChatRooms,
     changeChatRoom,
     createPublicChatRoom,
