@@ -254,7 +254,7 @@ var sockets = function(io) {
                 var chatRoomMember = chatRoom.members[i];
 
                 User.findOneAndUpdate(
-                  { _id: chatRoomMember, 'chatRooms.data': action.chatRoomID },
+                  { _id: chatRoomMember._id, 'chatRooms.data': action.chatRoomID },
                   { $set: { 'chatRooms.$.trash.data': false, 'chatRooms.$.trash.endDate': new Date() } },
                   { safe: true, upsert: true, new: true },
                 )
@@ -332,7 +332,7 @@ var sockets = function(io) {
               for (var i = 0; i < chatRoom.members.length; i++) {
                 var chatRoomMember = chatRoom.members[i];
 
-                User.findById(chatRoomMember)
+                User.findById(chatRoomMember._id)
                   .then((user) => {
                     if (chatRoomClients.indexOf(user.socketID) > -1) {
                       socket.broadcast.to(user.socketID).emit('action', {

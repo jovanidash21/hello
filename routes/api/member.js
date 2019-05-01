@@ -47,7 +47,9 @@ router.post('/', (req, res, next) => {
           findExclude = findExclude + ' -ipAddress';
         }
 
-        return User.find(findParams, findExclude).lean();
+        return User.find(findParams, findExclude)
+          .lean()
+          .exec();
       })
       .then((members) => {
         for (var i = 0; i < members.length; i++) {
