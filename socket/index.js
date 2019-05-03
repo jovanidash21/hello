@@ -100,6 +100,12 @@ var sockets = function(io) {
                             isLiveVideoActive: connectedUser.isLiveVideoActive
                           };
 
+                          if (member.blockedUsers.indexOf(connectedUser._id) > -1) {
+                            user.blocked = true;
+                          } else {
+                            user.blocked = false;
+                          }
+
                           if (member.role === 'owner' || member.role === 'admin') {
                             user.ipAddress = connectedUser.ipAddress;
                           }
