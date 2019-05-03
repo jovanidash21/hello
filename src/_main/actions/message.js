@@ -79,6 +79,7 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor)
       dispatch({
         type: SOCKET_SEND_MESSAGE,
         message: response.action.payload.data.messageData,
+        userID: user._id,
         chatRoomID: chatRoomID
       });
     })
@@ -149,6 +150,7 @@ export function sendFileMessage(newMessageID, text, file, user, chatRoomID) {
       dispatch({
         type: SOCKET_SEND_MESSAGE,
         message: response.action.payload.data.messageData,
+        userID: user._id,
         chatRoomID: chatRoomID
       });
     })
@@ -213,6 +215,7 @@ export function sendImageMessage(newMessageID, text, image, user, chatRoomID) {
       dispatch({
         type: SOCKET_SEND_MESSAGE,
         message: response.action.payload.data.messageData,
+        userID: user._id,
         chatRoomID: chatRoomID
       });
     })
@@ -279,6 +282,7 @@ export function sendAudioMessage(newMessageID, text, audioBlob, user, chatRoomID
       dispatch({
         type: SOCKET_SEND_MESSAGE,
         message: response.action.payload.data.messageData,
+        userID: user._id,
         chatRoomID: chatRoomID
       });
     })
