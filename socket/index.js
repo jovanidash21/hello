@@ -271,45 +271,47 @@ var sockets = function(io) {
                   })
                   .exec()
                   .then((user) => {
-                    if (chatRoomClients.indexOf(user.socketID) > -1) {
-                      User.updateOne(
-                        { _id: user._id, 'chatRooms.data': action.chatRoomID },
-                        { $set: { 'chatRooms.$.unReadMessages': 0 } },
-                        { safe: true, upsert: true, new: true }
-                      ).exec();
+                    if (user.blockedUsers.indexOf(action.userID) === -1) {
+                      if (chatRoomClients.indexOf(user.socketID) > -1) {
+                        User.updateOne(
+                          { _id: user._id, 'chatRooms.data': action.chatRoomID },
+                          { $set: { 'chatRooms.$.unReadMessages': 0 } },
+                          { safe: true, upsert: true, new: true }
+                        ).exec();
 
-                      socket.broadcast.to(user.socketID).emit('action', {
-                        type: 'SOCKET_BROADCAST_SEND_MESSAGE',
-                        message: action.message
-                      });
-                    } else {
-                      var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => {
-                        return singleChatRoom.data._id == action.chatRoomID;
-                      });
+                        socket.broadcast.to(user.socketID).emit('action', {
+                          type: 'SOCKET_BROADCAST_SEND_MESSAGE',
+                          message: action.message
+                        });
+                      } else {
+                        var chatRoomIndex = user.chatRooms.findIndex(singleChatRoom => {
+                          return singleChatRoom.data._id == action.chatRoomID;
+                        });
 
-                      if (chatRoomIndex > -1) {
-                        var singleChatRoom = user.chatRooms[chatRoomIndex];
+                        if (chatRoomIndex > -1) {
+                          var singleChatRoom = user.chatRooms[chatRoomIndex];
 
-                        singleChatRoom.data.name = action.message.user.name;
-                        singleChatRoom.data.chatIcon = action.message.user.profilePicture;
-                        singleChatRoom.data.members = chatRoom.members;
+                          singleChatRoom.data.name = action.message.user.name;
+                          singleChatRoom.data.chatIcon = action.message.user.profilePicture;
+                          singleChatRoom.data.members = chatRoom.members;
 
-                        if (usernames.length > 0 && usernames.indexOf(user.username) > -1) {
-                          socket.broadcast.to(user.socketID).emit('action', {
-                            type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE_MENTION',
-                            chatRoom: singleChatRoom,
-                            chatRoomID: action.chatRoomID,
-                            chatRoomName: chatRoom.name,
-                            senderName: action.message.user.name
-                          });
-                        } else if (chatRoom.chatType === 'direct') {
-                          socket.broadcast.to(user.socketID).emit('action', {
-                            type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
-                            chatRoom: singleChatRoom,
-                            chatRoomID: action.chatRoomID,
-                            chatRoomName: chatRoom.name,
-                            senderName: action.message.user.name
-                          });
+                          if (usernames.length > 0 && usernames.indexOf(user.username) > -1) {
+                            socket.broadcast.to(user.socketID).emit('action', {
+                              type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE_MENTION',
+                              chatRoom: singleChatRoom,
+                              chatRoomID: action.chatRoomID,
+                              chatRoomName: chatRoom.name,
+                              senderName: action.message.user.name
+                            });
+                          } else if (chatRoom.chatType === 'direct') {
+                            socket.broadcast.to(user.socketID).emit('action', {
+                              type: 'SOCKET_BROADCAST_NOTIFY_MESSAGE',
+                              chatRoom: singleChatRoom,
+                              chatRoomID: action.chatRoomID,
+                              chatRoomName: chatRoom.name,
+                              senderName: action.message.user.name
+                            });
+                          }
                         }
                       }
                     }
