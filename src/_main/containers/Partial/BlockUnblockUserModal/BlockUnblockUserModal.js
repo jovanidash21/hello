@@ -17,10 +17,10 @@ class BlockUnblockUserModal extends Component {
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.user.block.loading && this.props.user.block.success ) ||
-      ( prevProps.user.unblock.loading && this.props.user.unblock.success  )
+      ( prevProps.blockedUser.block.loading && this.props.blockedUser.block.success ) ||
+      ( prevProps.blockedUser.unblock.loading && this.props.blockedUser.unblock.success  )
     ) {
-      this.props.handleCloseModal();
+      this.props.onClose();
     }
   }
   handleBlockUnblockUser(event) {
@@ -43,10 +43,10 @@ class BlockUnblockUserModal extends Component {
   }
   render() {
     const {
-      user,
+      blockedUser,
       open,
       selectedUser,
-      handleCloseModal,
+      onClose,
     } = this.props;
     const isBlocked = selectedUser.blocked;
 
@@ -54,7 +54,7 @@ class BlockUnblockUserModal extends Component {
       <Modal
         className="block-unblock-user-modal"
         open={open}
-        onClose={handleCloseModal}
+        onClose={onClose}
       >
         <Form onSubmit={::this.handleBlockUnblockUser}>
           <Modal.Header>
@@ -84,15 +84,15 @@ class BlockUnblockUserModal extends Component {
           <Modal.Footer>
             <Button
               className="button button-default"
-              onClick={handleCloseModal}
-              disabled={user.block.loading || user.unblock.loading}
+              onClick={onClose}
+              disabled={blockedUser.block.loading || blockedUser.unblock.loading}
             >
               Cancel
             </Button>
             <Button
               className="button button-primary"
               type="submit"
-              disabled={user.block.loading || user.unblock.loading}
+              disabled={blockedUser.block.loading || blockedUser.unblock.loading}
             >
               {!isBlocked ? 'Block' : 'Unblock'}
             </Button>
@@ -106,13 +106,14 @@ class BlockUnblockUserModal extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    blockedUser: state.blockedUser,
   }
 }
 
 BlockUnblockUserModal.propTypes = {
   open: PropTypes.bool,
   selectedUser: PropTypes.object.isRequired,
-  handleCloseModal: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 BlockUnblockUserModal.defaultProps = {

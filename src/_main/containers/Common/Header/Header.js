@@ -17,7 +17,8 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      editProfileModalOpen: false
+      editProfileModalOpen: false,
+      blockedUsersListModalOpen: false,
     }
   }
   handleOpenEditProfileModal() {
@@ -25,6 +26,21 @@ class Header extends Component {
   }
   handleCloseEditProfileModal() {
     this.setState({editProfileModalOpen: false});
+  }
+  handleOpenBlockedUsersListModal() {
+    this.setState({blockedUsersListModalOpen: true});
+  }
+  handleCloseBlockedUsersListModal() {
+    this.setState({blockedUsersListModalOpen: false});
+  }
+  handleUnblockAllUsers() {
+    const {
+      user,
+      unblockAllUsers,
+    } = this.props;
+    const activeUser = user.active;
+
+    unblockAllUsers(activeUser._id);
   }
   handleVideoCamRender() {
     const {
@@ -120,6 +136,39 @@ class Header extends Component {
       editActiveUser(activeUser._id, username, name, email, gender, profilePicture);
     }
   }
+  handleFetchBlockedUsers() {
+    const {
+      user,
+      fetchBlockedUsers,
+    } = this.props;
+    const activeUser = user.active;
+
+    fetchBlockedUsers(activeUser._id);
+  }
+  handleUnblockAllUsers() {
+    const {
+      user,
+      unblockAllUsers,
+    } = this.props;
+    const activeUser = user.active;
+
+    unblockAllUsers(activeUser._id);
+  }
+  handleBlockUnblockUser(selectedUser) {
+    const {
+      user,
+      blockUser,
+      unblockUser,
+    } = this.props;
+    const activeUser = user.active;
+    const isBlocked = selectedUser.blocked;
+
+    if ( ! isBlocked ) {
+      blockUser( activeUser._id, selectedUser._id );
+    } else {
+      unblockUser( activeUser._id, selectedUser._id );
+    }
+  }
   handleRequestVideoCall(event) {
     event.preventDefault();
 
@@ -143,11 +192,15 @@ class Header extends Component {
   render() {
     const {
       user,
+      blockedUser,
       upload,
       uploadImage,
-      children
+      children,
     } = this.props;
-    const { editProfileModalOpen } = this.state;
+    const {
+      editProfileModalOpen,
+      blockedUsersListModalOpen,
+    } = this.state;
 
     return (
       <Appbar className="header">
@@ -160,6 +213,7 @@ class Header extends Component {
         <UserDropdown
           user={user.active}
           handleOpenEditProfileModal={::this.handleOpenEditProfileModal}
+          handleOpenBlockedUsersListModal={::this.handleOpenBlockedUsersListModal}
         >
           {
             editProfileModalOpen &&
@@ -173,6 +227,21 @@ class Header extends Component {
               onClose={::this.handleCloseEditProfileModal}
             />
           }
+          {
+            blockedUsersListModalOpen &&
+            <UserDropdown.BlockedUsersListModal
+              handleFetchBlockedUsers={::this.handleFetchBlockedUsers}
+              blockedUsers={blockedUser.all}
+              blockedUserFetch={blockedUser.fetch}
+              handleUnblockAllUsers={::this.handleUnblockAllUsers}
+              blockedUserUnblockAll={blockedUser.unblockAll}
+              handleBlockUnblockUser={::this.handleBlockUnblockUser}
+              blockedUserBlock={blockedUser.block}
+              blockedUserUnblock={blockedUser.unblock}
+              open={blockedUsersListModalOpen}
+              onClose={::this.handleCloseBlockedUsersListModal}
+            />
+          }
         </UserDropdown>
       </Appbar>
     )
@@ -183,7 +252,8 @@ const mapStateToProps = (state) => {
   return {
     user: state.user,
     chatRoom: state.chatRoom,
-    upload: state.upload
+    blockedUser: state.blockedUser,
+    upload: state.upload,
   }
 }
 

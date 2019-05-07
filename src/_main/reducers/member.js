@@ -1,7 +1,5 @@
 import {
   FETCH_ACTIVE_USER,
-  BLOCK_USER,
-  UNBLOCK_USER
 } from '../constants/user';
 import {
   FETCH_MEMBERS,
@@ -29,6 +27,10 @@ import {
   END_LIVE_VIDEO,
   SOCKET_BROADCAST_END_LIVE_VIDEO
 } from '../constants/live-video-user';
+import {
+  BLOCK_USER,
+  UNBLOCK_USER,
+} from '../constants/blocked-user';
 import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
@@ -138,40 +140,6 @@ const member = (state=initialState, action) => {
         ...state,
         activeUser: action.payload.data.user
       };
-    }
-    case `${BLOCK_USER}_SUCCESS`: {
-      const blockedUserID = action.meta;
-      const members = [...state.all];
-
-      const memberIndex = members.findIndex(( singleMember ) => {
-        return singleMember._id === blockedUserID;
-      });
-
-      if ( memberIndex > -1 ) {
-        members[memberIndex].blocked = true;
-      }
-
-      return {
-        ...state,
-        all: [ ...members ],
-      }
-    }
-    case `${UNBLOCK_USER}_SUCCESS`: {
-      const unblockedUserID = action.meta;
-      const members = [...state.all];
-
-      const memberIndex = members.findIndex(( singleMember ) => {
-        return singleMember._id === unblockedUserID;
-      });
-
-      if ( memberIndex > -1 ) {
-        members[memberIndex].blocked = false;
-      }
-
-      return {
-        ...state,
-        all: [ ...members ],
-      }
     }
     case CHANGE_CHAT_ROOM: {
       return {
@@ -404,6 +372,40 @@ const member = (state=initialState, action) => {
       return {
         ...state,
         all: [...members]
+      }
+    }
+    case `${BLOCK_USER}_SUCCESS`: {
+      const blockedUserID = action.meta;
+      const members = [...state.all];
+
+      const memberIndex = members.findIndex(( singleMember ) => {
+        return singleMember._id === blockedUserID;
+      });
+
+      if ( memberIndex > -1 ) {
+        members[memberIndex].blocked = true;
+      }
+
+      return {
+        ...state,
+        all: [ ...members ],
+      }
+    }
+    case `${UNBLOCK_USER}_SUCCESS`: {
+      const unblockedUserID = action.meta;
+      const members = [...state.all];
+
+      const memberIndex = members.findIndex(( singleMember ) => {
+        return singleMember._id === unblockedUserID;
+      });
+
+      if ( memberIndex > -1 ) {
+        members[memberIndex].blocked = false;
+      }
+
+      return {
+        ...state,
+        all: [ ...members ],
       }
     }
     case SOCKET_BROADCAST_USER_LOGOUT: {

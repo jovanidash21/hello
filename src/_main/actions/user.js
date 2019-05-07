@@ -3,8 +3,6 @@ import {
   FETCH_ACTIVE_USER,
   EDIT_ACTIVE_USER,
   SEARCH_USER,
-  BLOCK_USER,
-  UNBLOCK_USER
 } from '../constants/user';
 import { fetchChatRooms } from './chat-room';
 
@@ -80,58 +78,6 @@ export function searchUser(query, chatRoomID = '') {
     .catch((error) => {
       if (error instanceof Error) {
         console.log(error);
-      }
-    });
-  }
-}
-
-/**
- * Block user
- *
- * @param {string} userID
- * @param {string} blockUserID
- */
-export function blockUser( userID, blockUserID ) {
-  let data = {
-    userID,
-    blockUserID,
-  };
-
-  return dispatch => {
-    return dispatch({
-      type: BLOCK_USER,
-      payload: axios.post( 'user/block', data ),
-      meta: blockUserID,
-    })
-    .catch(( error ) => {
-      if ( error instanceof Error ) {
-        console.log( error );
-      }
-    });
-  }
-}
-
-/**
- * Unblock user
- *
- * @param {string} userID
- * @param {string} unblockUserID
- */
-export function unblockUser( userID, unblockUserID ) {
-  let data = {
-    userID,
-    unblockUserID,
-  };
-
-  return dispatch => {
-    return dispatch({
-      type: UNBLOCK_USER,
-      payload: axios.post( 'user/unblock', data ),
-      meta: unblockUserID,
-    })
-    .catch(( error ) => {
-      if ( error instanceof Error ) {
-        console.log( error );
       }
     });
   }

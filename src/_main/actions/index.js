@@ -12,8 +12,6 @@ import {
   fetchActiveUser,
   editActiveUser,
   searchUser,
-  blockUser,
-  unblockUser
 } from './user';
 import { sendEmail } from './email';
 import {
@@ -60,6 +58,12 @@ import {
   acceptVideoCall,
   endVideoCall
 } from './video-call';
+import {
+  fetchBlockedUsers,
+  blockUser,
+  unblockUser,
+  unblockAllUsers,
+} from './blocked-user';
 import { uploadImage } from './upload';
 
 const actions = (dispatch) => {
@@ -74,8 +78,6 @@ const actions = (dispatch) => {
     fetchActiveUser,
     editActiveUser,
     searchUser,
-    blockUser,
-    unblockUser,
     fetchChatRooms,
     changeChatRoom,
     createPublicChatRoom,
@@ -108,6 +110,10 @@ const actions = (dispatch) => {
     rejectVideoCall,
     acceptVideoCall,
     endVideoCall,
+    fetchBlockedUsers,
+    blockUser,
+    unblockUser,
+    unblockAllUsers,
     uploadImage
   }, dispatch);
 }

@@ -325,7 +325,7 @@ class MembersList extends Component {
           <BlockUnblockUserModal
             open={blockUnblockUserModalOpen}
             selectedUser={selectedUser}
-            handleCloseModal={::this.handleCloseBlockUnblockUserModal}
+            onClose={::this.handleCloseBlockUnblockUserModal}
           />
         }
       </div>

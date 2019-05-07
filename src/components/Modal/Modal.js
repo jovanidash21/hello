@@ -17,6 +17,7 @@ class Modal extends Component {
       className,
       open,
       onClose,
+      center,
       showCloseIcon,
       danger,
       loading,
@@ -32,7 +33,7 @@ class Modal extends Component {
         classNames={modalClassNames}
         open={open}
         onClose={onClose}
-        center
+        center={center}
         closeOnEsc={false}
         closeOnOverlayClick={false}
         showCloseIcon={showCloseIcon && !loading}
@@ -53,6 +54,7 @@ Modal.propTypes = {
   className: PropTypes.string,
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  center: PropTypes.bool,
   showCloseIcon: PropTypes.bool,
   danger: PropTypes.bool,
   loading: PropTypes.bool
@@ -62,6 +64,7 @@ Modal.defaultProps = {
   className: '',
   open: false,
   onClose: () => {},
+  center: true,
   showCloseIcon: true,
   danger: false,
   loading: false

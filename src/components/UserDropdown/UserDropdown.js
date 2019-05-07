@@ -4,6 +4,7 @@ import MediaQuery from 'react-responsive';
 import FontAwesome from 'react-fontawesome';
 import { Avatar } from '../Avatar';
 import { EditProfileModal } from './EditProfileModal';
+import { BlockedUsersListModal } from './BlockedUsersListModal';
 import './styles.scss';
 
 class UserDropdown extends Component {
@@ -16,6 +17,13 @@ class UserDropdown extends Component {
     const { handleOpenEditProfileModal } = this.props;
 
     handleOpenEditProfileModal();
+  }
+  handleOpenBlockedUsersListModal(event) {
+    event.preventDefault();
+
+    const { handleOpenBlockedUsersListModal } = this.props;
+
+    handleOpenBlockedUsersListModal();
   }
   render() {
     const {
@@ -54,6 +62,14 @@ class UserDropdown extends Component {
               </a>
             </li>
             <li>
+              <a href="#" onClick={::this.handleOpenBlockedUsersListModal}>
+                <div className="option-icon">
+                  <FontAwesome name="user-times" />
+                </div>
+                Blocked users
+              </a>
+            </li>
+            <li>
               <a href="/logout">
                 <div className="option-icon">
                   <FontAwesome name="sign-out" />
@@ -70,6 +86,7 @@ class UserDropdown extends Component {
 }
 
 UserDropdown.EditProfileModal = EditProfileModal;
+UserDropdown.BlockedUsersListModal = BlockedUsersListModal;
 
 UserDropdown.propTypes = {
   user: PropTypes.object.isRequired,
