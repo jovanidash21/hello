@@ -7,6 +7,7 @@ import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
 import { isObjectEmpty } from '../../../../utils/object';
 import { BlockUnblockUserModal } from '../BlockUnblockUserModal';
+import { BanUserModal } from '../BanUserModal';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
@@ -21,6 +22,7 @@ class MembersList extends Component {
       searchFilter: '',
       selectedMemberIndex: -1,
       blockUnblockUserModalOpen: false,
+      banUserModalOpen: false,
       selectedUser: {},
     }
   }
@@ -140,6 +142,7 @@ class MembersList extends Component {
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
                   handleMuteMember={::this.handleMuteMember}
+                  handleOpenBanUserModal={::this.handleOpenBanUserModal}
                   isActive={selectedMemberIndex === i}
                 />
               )
@@ -306,14 +309,27 @@ class MembersList extends Component {
       selectedUser: {},
     });
   }
+  handleOpenBanUserModal(selectedUser) {
+    this.setState({
+      banUserModalOpen: true,
+      selectedUser,
+    });
+  }
+  handleCloseBanUserModal() {
+    this.setState({
+      banUserModalOpen: false,
+      selectedUser: {},
+    });
+  }
   render() {
     const {
       isRightSideDrawerOpen,
       handleRightSideDrawerToggleState,
-      noOverlay
+      noOverlay,
     } = this.props;
     const {
       blockUnblockUserModalOpen,
+      banUserModalOpen,
       selectedUser,
     } = this.state;
 
@@ -326,6 +342,14 @@ class MembersList extends Component {
             open={blockUnblockUserModalOpen}
             selectedUser={selectedUser}
             onClose={::this.handleCloseBlockUnblockUserModal}
+          />
+        }
+        {
+          banUserModalOpen &&
+          <BanUserModal
+            open={banUserModalOpen}
+            selectedUser={selectedUser}
+            onClose={::this.handleCloseBanUserModal}
           />
         }
       </div>

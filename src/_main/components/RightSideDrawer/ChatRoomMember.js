@@ -73,6 +73,16 @@ class ChatRoomMember extends Component {
 
     handleMuteMember(chatRoomMember._id);
   }
+  handleOpenBanUserModal(event) {
+    event.preventDefault();
+
+    const {
+      chatRoomMember,
+      handleOpenBanUserModal,
+    } = this.props;
+
+    handleOpenBanUserModal(chatRoomMember);
+  }
   render() {
     const {
       user,
@@ -271,6 +281,18 @@ class ChatRoomMember extends Component {
                 <a href="#" onClick={::this.handleMuteMember}>Mute Member</a>
               </li>
             }
+            {
+              (
+                ( user.role === 'owner' ||
+                  user.role === 'admin' ||
+                  user.role === 'moderator' ) &&
+                ( chatRoomMember.role !== 'owner' &&
+                  chatRoomMember.accountType !== 'guest' )
+              ) &&
+              <li>
+                <a href="#" onClick={::this.handleOpenBanUserModal}>Ban User</a>
+              </li>
+            }
           </ul>
         }
       </div>
@@ -288,6 +310,7 @@ ChatRoomMember.propTypes = {
   handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,
   handleMuteMember: PropTypes.func.isRequired,
+  handleOpenBanUserModal: PropTypes.func.isRequired,
   isActive: PropTypes.bool
 }
 
