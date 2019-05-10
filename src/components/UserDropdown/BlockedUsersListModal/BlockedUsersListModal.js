@@ -68,6 +68,7 @@ class BlockedUsersListModal extends Component {
   }
   render() {
     const {
+      blockedUsers: allBlockedUsers,
       blockedUserFetch,
       handleUnblockAllUsers,
       blockedUserUnblockAll,
@@ -81,6 +82,7 @@ class BlockedUsersListModal extends Component {
       searchFilter,
       unblockAllUsersModalOpen,
     } = this.state;
+    const loading = blockedUserFetch.loading;
     const disabled = blockedUserBlock.loading || blockedUserUnblock.loading;
 
     return (
@@ -90,30 +92,33 @@ class BlockedUsersListModal extends Component {
           open={open}
           onClose={onClose}
           center={false}
-          loading={blockedUserFetch.loading}
+          loading={loading}
         >
           <Modal.Header>
             <h3 className="modal-title">Blocked Users</h3>
           </Modal.Header>
           <Modal.Body>
-            <div className="list-header">
-              <SearchFilter
-                value={searchFilter}
-                onChange={::this.onSearchFilterChange}
-                handleClearSearchFilter={::this.handleClearSearchFilter}
-              />
-              {
-                this.props.blockedUsers.length > 0 &&
-                <Button
-                  color="danger"
-                  size="small"
-                  onClick={::this.handleOpenUnblockAllUsersModal}
-                  disabled={disabled}
-                >
-                  Unblock All
-                </Button>
-              }
-            </div>
+            {
+              ( loading || ! loading && allBlockedUsers.length > 0 ) &&
+              <div className="list-header">
+                <SearchFilter
+                  value={searchFilter}
+                  onChange={::this.onSearchFilterChange}
+                  handleClearSearchFilter={::this.handleClearSearchFilter}
+                />
+                {
+                  allBlockedUsers.length > 0 &&
+                  <Button
+                    color="danger"
+                    size="small"
+                    onClick={::this.handleOpenUnblockAllUsersModal}
+                    disabled={disabled}
+                  >
+                    Unblock All
+                  </Button>
+                }
+              </div>
+            }
             {
               blockedUsers.length > 0 &&
               blockedUsers.map((blockedUser, i) =>
