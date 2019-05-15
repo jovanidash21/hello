@@ -106,6 +106,7 @@ var userSchema = new Schema (
       type: Boolean,
       default: false,
     },
+    ban: userEndDateSchema,
     ipAddress: {
       type: String,
       default: '',
