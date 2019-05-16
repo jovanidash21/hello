@@ -6,7 +6,7 @@ import {
   googleLogin,
   twitterLogin,
   register,
-  guestLogin
+  guestLogin,
 } from './auth';
 import {
   fetchActiveUser,
@@ -22,11 +22,11 @@ import {
   createDirectChatRoom,
   clearChatRoomUnreadMessages,
   trashAllChatRooms,
-  trashChatRoom
+  trashChatRoom,
 } from './chat-room';
 import {
   openPopUpChatRoom,
-  closePopUpChatRoom
+  closePopUpChatRoom,
 } from './popup-chat-room';
 import {
   fetchNewMessages,
@@ -34,14 +34,14 @@ import {
   sendFileMessage,
   sendImageMessage,
   sendAudioMessage,
-  deleteMessage
+  deleteMessage,
 } from './message';
 import {
   fetchMembers,
   blockMember,
   kickMember,
   updateMemberRole,
-  muteMember
+  muteMember,
 } from './member';
 import {
   startLiveVideo,
@@ -49,14 +49,14 @@ import {
   acceptLiveVideo,
   setLiveVideoSource,
   endLiveVideo,
-  closeLiveVideoUser
+  closeLiveVideoUser,
 } from './live-video-user';
 import {
   requestVideoCall,
   cancelRequestVideoCall,
   rejectVideoCall,
   acceptVideoCall,
-  endVideoCall
+  endVideoCall,
 } from './video-call';
 import {
   fetchBlockedUsers,
@@ -64,6 +64,7 @@ import {
   unblockUser,
   unblockAllUsers,
 } from './blocked-user';
+import { fetchBannedUsers } from './banned-user';
 import { uploadImage } from './upload';
 
 const actions = (dispatch) => {
@@ -114,7 +115,8 @@ const actions = (dispatch) => {
     blockUser,
     unblockUser,
     unblockAllUsers,
-    uploadImage
+    fetchBannedUsers,
+    uploadImage,
   }, dispatch);
 }
 

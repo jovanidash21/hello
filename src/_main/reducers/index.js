@@ -12,6 +12,7 @@ import member from './member';
 import liveVideoUser from './live-video-user';
 import videoCall from './video-call';
 import blockedUser from './blocked-user';
+import bannedUser from './banned-user';
 import upload from './upload';
 
 const appReducer = combineReducers({
@@ -27,6 +28,7 @@ const appReducer = combineReducers({
   liveVideoUser,
   videoCall,
   blockedUser,
+  bannedUser,
   upload
 });
 

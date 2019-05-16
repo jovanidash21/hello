@@ -13,6 +13,7 @@ router.use('/message', require('./message'));
 router.use('/member', require('./member'));
 router.use('/live-video', require('./live-video'));
 router.use('/blocked-user', require('./blocked-user'));
+router.use('/banned-user', require('./banned-user'));
 router.use('/upload', require('./upload'));
 
 router.get('/logout', (req, res) => {
