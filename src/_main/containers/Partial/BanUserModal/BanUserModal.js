@@ -9,23 +9,33 @@ import mapDispatchToProps from '../../../actions';
 import { Modal } from '../../../../components/Modal';
 import { Avatar } from '../../../../components/Avatar';
 import { Alert } from '../../../../components/Alert';
+import { Select } from '../../../../components/Form';
 import './styles.scss';
 
 class BanUserModal extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      banDuration: 'two_hours',
+    };
+  }
+  onInputChange(event) {
+    event.preventDefault();
+
+    this.setState({[event.target.name]: event.target.value});
   }
   handleBanUser(event) {
     event.preventDefault();
   }
   render() {
     const {
-      blockedUser,
+      bannedUser,
       open,
       selectedUser,
       onClose,
     } = this.props;
-    const isBlocked = selectedUser.blocked;
+    const { banDuration } = this.state;
 
     return (
       <Modal
@@ -51,9 +61,39 @@ class BanUserModal extends Component {
             </div>
             <p>
               <span className="user-name mui--text-danger">{selectedUser.name}</span>&nbsp;
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada nec felis a tincidunt. Proin vehicula, nulla id tempor vulputate, velit odio viverra mauris, ac ullamcorper turpis justo nec ante.
+              will be banned for
             </p>
+            <Select
+              options={[
+                { value: 'two_hours', label: '2 Hours' },
+                { value: 'two_days', label: '2 Days' },
+                { value: 'one_week', label: '1 Week' },
+                { value: 'one_month', label: '1 Month' },
+                { value: 'three_months', label: '3 Months' },
+                { value: 'lifetime', label: 'Lifetime' },
+              ]}
+              defaultValue={banDuration}
+              name="banDuration"
+              onChange={::this.onInputChange}
+              disabled={bannedUser.ban.loading}
+            />
           </Modal.Body>
+          <Modal.Footer>
+            <Button
+              className="button button-default"
+              onClick={onClose}
+              disabled={bannedUser.ban.loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="button button-primary"
+              type="submit"
+              disabled={bannedUser.ban.loading}
+            >
+              Ban
+            </Button>
+          </Modal.Footer>
         </Form>
       </Modal>
     )
@@ -63,7 +103,7 @@ class BanUserModal extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    blockedUser: state.blockedUser,
+    bannedUser: state.bannedUser,
   }
 }
 
