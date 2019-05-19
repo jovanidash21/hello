@@ -64,7 +64,12 @@ import {
   unblockUser,
   unblockAllUsers,
 } from './blocked-user';
-import { fetchBannedUsers } from './banned-user';
+import { 
+  fetchBannedUsers,
+  banUser,
+  unbanUser,
+  unbanAllUsers,
+} from './banned-user';
 import { uploadImage } from './upload';
 
 const actions = (dispatch) => {
@@ -116,6 +121,9 @@ const actions = (dispatch) => {
     unblockUser,
     unblockAllUsers,
     fetchBannedUsers,
+    banUser,
+    unbanUser,
+    unbanAllUsers,
     uploadImage,
   }, dispatch);
 }

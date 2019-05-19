@@ -9,6 +9,9 @@ const commonStateFlags = {
 
 const initialState = {
   fetch: { ...commonStateFlags },
+  ban: { ...commonStateFlags },
+  unban: { ...commonStateFlags },
+  unbanAll: { ...commonStateFlags },
   all: [],
 };
 

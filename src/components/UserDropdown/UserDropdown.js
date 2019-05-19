@@ -5,6 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import { Avatar } from '../Avatar';
 import { EditProfileModal } from './EditProfileModal';
 import { BlockedUsersListModal } from './BlockedUsersListModal';
+import { BannedUsersListModal } from './BannedUsersListModal';
 import './styles.scss';
 
 class UserDropdown extends Component {
@@ -24,6 +25,13 @@ class UserDropdown extends Component {
     const { handleOpenBlockedUsersListModal } = this.props;
 
     handleOpenBlockedUsersListModal();
+  }
+  handleOpenBannedUsersListModal(event) {
+    event.preventDefault();
+
+    const { handleOpenBannedUsersListModal } = this.props;
+
+    handleOpenBannedUsersListModal();
   }
   render() {
     const {
@@ -70,6 +78,14 @@ class UserDropdown extends Component {
               </a>
             </li>
             <li>
+              <a href="#" onClick={::this.handleOpenBannedUsersListModal}>
+                <div className="option-icon">
+                  <FontAwesome name="ban" />
+                </div>
+                Banned users
+              </a>
+            </li>
+            <li>
               <a href="/logout">
                 <div className="option-icon">
                   <FontAwesome name="sign-out" />
@@ -87,10 +103,13 @@ class UserDropdown extends Component {
 
 UserDropdown.EditProfileModal = EditProfileModal;
 UserDropdown.BlockedUsersListModal = BlockedUsersListModal;
+UserDropdown.BannedUsersListModal = BannedUsersListModal;
 
 UserDropdown.propTypes = {
   user: PropTypes.object.isRequired,
-  handleOpenEditProfileModal: PropTypes.func.isRequired
+  handleOpenEditProfileModal: PropTypes.func.isRequired,
+  handleOpenBlockedUsersListModal: PropTypes.func.isRequired,
+  handleOpenBannedUsersListModal: PropTypes.func.isRequired,
 }
 
 export default UserDropdown;

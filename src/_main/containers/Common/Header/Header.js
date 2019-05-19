@@ -19,6 +19,7 @@ class Header extends Component {
     this.state = {
       editProfileModalOpen: false,
       blockedUsersListModalOpen: false,
+      bannedUSersListModalOpen: false,
     }
   }
   handleOpenEditProfileModal() {
@@ -33,14 +34,11 @@ class Header extends Component {
   handleCloseBlockedUsersListModal() {
     this.setState({blockedUsersListModalOpen: false});
   }
-  handleUnblockAllUsers() {
-    const {
-      user,
-      unblockAllUsers,
-    } = this.props;
-    const activeUser = user.active;
-
-    unblockAllUsers(activeUser._id);
+  handleOpenBannedUsersListModal() {
+    this.setState({bannedUsersListModalOpen: true});
+  }
+  handleCloseBannedUsersListModal() {
+    this.setState({bannedUsersListModalOpen: false});
   }
   handleVideoCamRender() {
     const {
@@ -169,6 +167,39 @@ class Header extends Component {
       unblockUser( activeUser._id, selectedUser._id );
     }
   }
+  handleFetchBannedUsers() {
+    const {
+      user,
+      fetchBannedUsers,
+    } = this.props;
+    const activeUser = user.active;
+
+    fetchBannedUsers(activeUser._id);
+  }
+  handleUnbanAllUsers() {
+    const {
+      user,
+      unbanAllUsers,
+    } = this.props;
+    const activeUser = user.active;
+
+    unbanAllUsers(activeUser._id);
+  }
+  handleBanUnbanUser(selectedUser) {
+    const {
+      user,
+      banUser,
+      unbanUser,
+    } = this.props;
+    const activeUser = user.active;
+    const isBanned = selectedUser.banned;
+
+    if ( ! isBanned ) {
+      banUser( activeUser._id, selectedUser._id );
+    } else {
+      unbanUser( activeUser._id, selectedUser._id );
+    }
+  }
   handleRequestVideoCall(event) {
     event.preventDefault();
 
@@ -193,6 +224,7 @@ class Header extends Component {
     const {
       user,
       blockedUser,
+      bannedUser,
       upload,
       uploadImage,
       children,
@@ -200,6 +232,7 @@ class Header extends Component {
     const {
       editProfileModalOpen,
       blockedUsersListModalOpen,
+      bannedUsersListModalOpen,
     } = this.state;
 
     return (
@@ -214,6 +247,7 @@ class Header extends Component {
           user={user.active}
           handleOpenEditProfileModal={::this.handleOpenEditProfileModal}
           handleOpenBlockedUsersListModal={::this.handleOpenBlockedUsersListModal}
+          handleOpenBannedUsersListModal={::this.handleOpenBannedUsersListModal}
         >
           {
             editProfileModalOpen &&
@@ -242,6 +276,21 @@ class Header extends Component {
               onClose={::this.handleCloseBlockedUsersListModal}
             />
           }
+          {
+            bannedUsersListModalOpen &&
+            <UserDropdown.BannedUsersListModal
+              handleFetchBannedUsers={::this.handleFetchBannedUsers}
+              bannedUsers={bannedUser.all}
+              bannedUserFetch={bannedUser.fetch}
+              handleUnbanAllUsers={::this.handleUnbanAllUsers}
+              bannedUserUnbanAll={bannedUser.unbanAll}
+              handleBanUnbanUser={::this.handleBanUnbanUser}
+              bannedUserBan={bannedUser.ban}
+              bannedUserUnban={bannedUser.unban}
+              open={bannedUsersListModalOpen}
+              onClose={::this.handleCloseBannedUsersListModal}
+            />
+          }
         </UserDropdown>
       </Appbar>
     )
@@ -253,6 +302,7 @@ const mapStateToProps = (state) => {
     user: state.user,
     chatRoom: state.chatRoom,
     blockedUser: state.blockedUser,
+    bannedUser: state.bannedUser,
     upload: state.upload,
   }
 }
