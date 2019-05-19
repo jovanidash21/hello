@@ -50,8 +50,8 @@ passport.use(new Strategy({
         });
       } else {
         userData.role = 'ordinary';
-        userData.block = {};
         userData.mute = {};
+        userData.ban = {};
         var newUser = new User(userData);
 
         newUser.save()

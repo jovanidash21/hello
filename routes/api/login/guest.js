@@ -38,8 +38,8 @@ router.post('/', (req, res, next) => {
         });
       } else {
         userData.role = 'ordinary';
-        userData.block = {};
         userData.mute = {};
+        userData.ban = {};
         var newUser = new User(userData);
 
         newUser.save((err) => {

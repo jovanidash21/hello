@@ -13,7 +13,7 @@ router.post('/', (req, res, next) => {
     });
   } else {
     User.find({_id: {$ne: null}, ban: {data: true}})
-      .populate('blockedUsers', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ban -ipAddress -socketID')
+      .populate('blockedUsers', '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
       .lean()
       .exec()
       .then((users) => {

@@ -161,7 +161,7 @@ router.post('/create', (req, res, next) => {
                 }
 
                 return ChatRoom.findById(chatRoomData._id)
-                  .populate('members', '-username -email -chatRooms -blockedUsers -block -mute -ipAddress -socketID');
+                  .populate('members', '-username -email -chatRooms -blockedUsers -mute -ban -ipAddress -socketID');
               })
               .then((chatRoomData) => {
                 res.status(200).send({

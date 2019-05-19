@@ -96,8 +96,8 @@ var userSchema = new Schema (
         ref: 'User',
       },
     ],
-    block: userEndDateSchema,
     mute: userEndDateSchema,
+    ban: userEndDateSchema,
     isOnline: {
       type: Boolean,
       default: false,
@@ -106,7 +106,6 @@ var userSchema = new Schema (
       type: Boolean,
       default: false,
     },
-    ban: userEndDateSchema,
     ipAddress: {
       type: String,
       default: '',

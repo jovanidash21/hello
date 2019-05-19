@@ -12,7 +12,7 @@ router.post('/', (req, res, next) => {
     var userID = req.body.userID;
 
     User.findById(userID)
-      .populate('blockedUsers', '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID')
+      .populate('blockedUsers', '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
       .lean()
       .exec()
       .then((user) => {
@@ -49,7 +49,7 @@ router.post('/block', (req, res, next) => {
     User.findByIdAndUpdate(
       userID,
       { $addToSet: { blockedUsers: blockUserID }},
-      { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID' }
+      { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
     )
     .then((user) => {
       res.status(200).send({
@@ -80,7 +80,7 @@ router.post('/unblock', (req, res, next) => {
     User.findByIdAndUpdate(
       userID,
       { $pull: { blockedUsers: unblockUserID }},
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID' }
+      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
     )
     .then((user) => {
       res.status(200).send({
@@ -109,7 +109,7 @@ router.post('/unblock-all', (req, res, next) => {
     User.findByIdAndUpdate(
       userID,
       { $set: { blockedUsers: [] }},
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -block -mute -ipAddress -socketID' }
+      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
     )
     .then((user) => {
       res.status(200).send({

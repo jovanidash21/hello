@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
           },
           isOnline: true
         };
-        var findExclude = '-username -email -chatRooms -connectedChatRoom -blockedUsers -socketID';
+        var findExclude = '-username -email -chatRooms -connectedChatRoom -blockedUsers -ban -socketID';
 
         if (chatRoom.chatType === 'public') {
           findParams.connectedChatRoom = chatRoomID;
@@ -78,34 +78,6 @@ router.post('/', (req, res, next) => {
   }
 });
 
-router.post('/block', (req, res, next) => {
-  if (
-    req.user === undefined &&
-    (req.user.role !== 'owner' || req.user.role !== 'admin')
-  ) {
-    res.status(401).send({
-      success: false,
-      message: 'Unauthorized'
-    });
-  } else {
-    var memberID = req.body.memberID;
-
-    User.findByIdAndUpdate(
-      memberID,
-      { $set: { block: { data: true, endDate: new Date( +new Date() + 3 * 60 * 1000 ) } } },
-      { safe: true, upsert: true, new: true }
-    )
-    .then((user) => {
-
-    })
-    .catch((error) => {
-      res.status(500).send({
-        success: false,
-        message: 'Server Error!'
-      });
-    });
-  }
-});
 
 router.post('/kick', (req, res, next) => {
   if (

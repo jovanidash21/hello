@@ -12,8 +12,8 @@ router.post('/', (req, res, next) => {
     gender: req.body.gender,
     accountType: 'local',
     role: 'ordinary',
-    block: {},
-    mute: {}
+    mute: {},
+    ban: {}
   };
 
   User.register(new User(userData), req.body.password, (err) => {
