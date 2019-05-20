@@ -12,7 +12,7 @@ router.post('/', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    User.find({_id: {$ne: null}, ban: {data: true}}, '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
+    User.find({_id: { $ne: null }, 'ban.data': true }, '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
       .then((users) => {
         res.status(200).send({
           success: true,
