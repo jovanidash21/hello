@@ -12,12 +12,12 @@ class Avatar extends Component {
     const {
       image,
       size,
-      name
+      name,
     } = this.props;
-    var avatarStyles = {
+    const avatarStyles = {
       height: size,
       width: size,
-      flex: `0 0 ${size}`
+      flex: `0 0 ${size}`,
     };
     const colors = [
       '#f85f0d', // blaze orange
@@ -36,9 +36,9 @@ class Avatar extends Component {
       avatarStyles.backgroundImage = `url(${image})`,
       avatarStyles.backgroundSize = size;
     } else {
-      var charCodeSum = 0;
+      let charCodeSum = 0;
 
-      for ( var i = 0; i < name.length; i++ ) {
+      for ( let i = 0; i < name.length; i += 1 ) {
         charCodeSum += name.charCodeAt(i);
       }
 
@@ -53,8 +53,8 @@ class Avatar extends Component {
   }
   handleTopBadge(type='icon') {
     const { roleChatType } = this.props;
-    var icon = '';
-    var title = '';
+    let icon = '';
+    let title = '';
 
     switch ( roleChatType ) {
       case 'owner':
@@ -84,8 +84,8 @@ class Avatar extends Component {
   }
   handleBottomBadge(type='icon') {
     const { accountType } = this.props;
-    var icon = '';
-    var title = '';
+    let icon = '';
+    let title = '';
 
     switch ( accountType ) {
       case 'facebook':
@@ -133,7 +133,7 @@ class Avatar extends Component {
       roleChatType,
       accountType,
       badgeBigger,
-      badgeCloser
+      badgeCloser,
     } = this.props;
     const avatarStyles = ::this.handleAvatarStyles();
     const nameAbbr = initials(name).substring(0,2);
@@ -198,7 +198,7 @@ Avatar.propTypes = {
   roleChatType: PropTypes.string,
   accountType: PropTypes.string,
   badgeBigger: PropTypes.bool,
-  badgeCloser: PropTypes.bool
+  badgeCloser: PropTypes.bool,
 }
 
 Avatar.defaultProps = {
@@ -208,7 +208,7 @@ Avatar.defaultProps = {
   roleChatType: '',
   accountType: '',
   badgeBigger: false,
-  badgeCloser: false
+  badgeCloser: false,
 }
 
 export default Avatar;
