@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { 
+import {
   FETCH_BANNED_USERS,
   BAN_USER,
   UNBAN_USER,
-  UNBAN_ALL_USERS, 
+  UNBAN_ALL_USERS,
 } from '../constants/banned-user';
 
 /**
@@ -26,13 +26,13 @@ export function fetchBannedUsers() {
 /**
  * Ban user
  *
- * @param {string} userID
  * @param {string} banUserID
+ * @param {string} banDuration
  */
-export function banUser( userID, banUserID ) {
+export function banUser( banUserID, banDuration ) {
   let data = {
-    userID,
     banUserID,
+    banDuration,
   };
 
   return dispatch => {
@@ -52,12 +52,10 @@ export function banUser( userID, banUserID ) {
 /**
  * Unban user
  *
- * @param {string} userID
  * @param {string} unbanUserID
  */
-export function unbanUser( userID, unbanUserID ) {
+export function unbanUser( unbanUserID ) {
   let data = {
-    userID,
     unbanUserID,
   };
 
@@ -97,4 +95,3 @@ export function unbanAllUsers( userID ) {
     });
   }
 }
-

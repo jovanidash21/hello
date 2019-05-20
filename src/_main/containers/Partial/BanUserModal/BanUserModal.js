@@ -20,6 +20,13 @@ class BanUserModal extends Component {
       banDuration: 'two_hours',
     };
   }
+  componentDidUpdate(prevProps) {
+    if (
+      ( prevProps.bannedUser.ban.loading && this.props.bannedUser.ban.success )
+    ) {
+      this.props.onClose();
+    }
+  }
   onInputChange(event) {
     event.preventDefault();
 
@@ -27,6 +34,16 @@ class BanUserModal extends Component {
   }
   handleBanUser(event) {
     event.preventDefault();
+
+    const {
+      user,
+      banUser,
+      selectedUser,
+    } = this.props;
+    const { banDuration } = this.state;
+    const activeUser = user.active;
+
+    banUser( selectedUser._id, banDuration );
   }
   render() {
     const {
