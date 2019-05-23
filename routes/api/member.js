@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
           },
           isOnline: true
         };
-        var findExclude = '-username -email -chatRooms -connectedChatRoom -blockedUsers -ban -socketID';
+        var findExclude = '-username -email -chatRooms -connectedChatRoom -blockedUsers -socketID';
 
         if (chatRoom.chatType === 'public') {
           findParams.connectedChatRoom = chatRoomID;

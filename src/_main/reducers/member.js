@@ -33,6 +33,11 @@ import {
   UNBLOCK_ALL_USERS,
 } from '../constants/blocked-user';
 import {
+  BAN_USER,
+  UNBAN_USER,
+  UNBAN_ALL_USERS,
+} from '../constants/banned-user';
+import {
   SOCKET_BROADCAST_USER_LOGIN,
   SOCKET_BROADCAST_USER_LOGOUT
 } from '../constants/auth';
@@ -414,6 +419,52 @@ const member = (state=initialState, action) => {
 
       for ( let i = 0; i < members.length; i += 1 ) {
         members[i].blocked = false;
+      }
+
+      return {
+        ...state,
+        all: [ ...members ],
+      };
+    }
+    case `${BAN_USER}_SUCCESS`: {
+      const bannedUserID = action.meta;
+      const members = [...state.all];
+
+      const memberIndex = members.findIndex(( singleMember ) => {
+        return singleMember._id === bannedUserID;
+      });
+
+      if ( memberIndex > -1 ) {
+        members[memberIndex].ban.data = true;
+      }
+
+      return {
+        ...state,
+        all: [ ...members ],
+      }
+    }
+    case `${UNBAN_USER}_SUCCESS`: {
+      const unbannedUserID = action.meta;
+      const members = [...state.all];
+
+      const memberIndex = members.findIndex(( singleMember ) => {
+        return singleMember._id === unbannedUserID;
+      });
+
+      if ( memberIndex > -1 ) {
+        members[memberIndex].ban.data = false;
+      }
+
+      return {
+        ...state,
+        all: [ ...members ],
+      }
+    }
+    case `${UNBAN_ALL_USERS}_SUCCESS`: {
+      const members = [...state.all];
+
+      for ( let i = 0; i < members.length; i += 1 ) {
+        members[i].ban.data = false;
       }
 
       return {
