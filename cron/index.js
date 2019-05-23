@@ -6,6 +6,28 @@ var Message = require('../models/Message');
 var cron = function(socket) {
   var minute = new CronJob('0 */1 * * * *', function() {
     User.find({
+        'ban.data': true,
+        'ban.endDate': {
+          $lte: new Date()
+        }
+      })
+      .then((users) => {
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+          var userID = user._id;
+
+          User.update(
+            { _id: userID },
+            { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
+            { safe: true, upsert: true, new: true }
+          ).exec();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
+    User.find({
       chatRooms: {
         $elemMatch: {
           'kick.data': true,
@@ -155,28 +177,6 @@ var cron = function(socket) {
             .catch((error) => {
               console.log(error);
             });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      User.find({
-        'ban.data': true,
-        'ban.endDate': {
-          $lte: new Date()
-        }
-      })
-      .then((users) => {
-        for (var i = 0; i < users.length; i++) {
-          var user = users[i];
-          var userID = user._id;
-
-          User.update(
-            { _id: userID },
-            { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
-            { safe: true, upsert: true, new: true }
-          ).exec();
         }
       })
       .catch((error) => {
