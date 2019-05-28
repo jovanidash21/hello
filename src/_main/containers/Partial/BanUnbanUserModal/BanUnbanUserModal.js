@@ -12,7 +12,7 @@ import { Alert } from '../../../../components/Alert';
 import { Select } from '../../../../components/Form';
 import './styles.scss';
 
-class BanUserModal extends Component {
+class BanUnbanUserModal extends Component {
   constructor(props) {
     super(props);
 
@@ -56,7 +56,7 @@ class BanUserModal extends Component {
 
     return (
       <Modal
-        className="ban-user-modal"
+        className="ban-unban-user-modal"
         open={open}
         onClose={onClose}
       >
@@ -124,17 +124,17 @@ const mapStateToProps = (state) => {
   }
 }
 
-BanUserModal.propTypes = {
+BanUnbanUserModal.propTypes = {
   open: PropTypes.bool,
   selectedUser: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
 }
 
-BanUserModal.defaultProps = {
+BanUnbanUserModal.defaultProps = {
   open: false,
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BanUserModal);
+)(BanUnbanUserModal);

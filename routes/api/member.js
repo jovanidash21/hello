@@ -55,12 +55,18 @@ router.post('/', (req, res, next) => {
         for (var i = 0; i < members.length; i++) {
           var member = members[i];
           var blocked = false;
+          var banned = false;
 
           if (blockedUsers.indexOf(member._id) > -1) {
             blocked = true;
           }
 
+          if (member.ban.data) {
+            banned = true;
+          }
+
           member.blocked = blocked;
+          member.ban.data = banned;
         }
 
         res.status(200).send({

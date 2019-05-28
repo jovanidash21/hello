@@ -7,7 +7,7 @@ import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
 import { isObjectEmpty } from '../../../../utils/object';
 import { BlockUnblockUserModal } from '../BlockUnblockUserModal';
-import { BanUserModal } from '../BanUserModal';
+import { BanUnbanUserModal } from '../BanUnbanUserModal';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
@@ -22,7 +22,7 @@ class MembersList extends Component {
       searchFilter: '',
       selectedMemberIndex: -1,
       blockUnblockUserModalOpen: false,
-      banUserModalOpen: false,
+      banUnbanUserModalOpen: false,
       selectedUser: {},
     }
   }
@@ -142,7 +142,7 @@ class MembersList extends Component {
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
                   handleMuteMember={::this.handleMuteMember}
-                  handleOpenBanUserModal={::this.handleOpenBanUserModal}
+                  handleOpenBanUnbanUserModal={::this.handleOpenBanUnbanUserModal}
                   isActive={selectedMemberIndex === i}
                 />
               )
@@ -309,15 +309,15 @@ class MembersList extends Component {
       selectedUser: {},
     });
   }
-  handleOpenBanUserModal(selectedUser) {
+  handleOpenBanUnbanUserModal(selectedUser) {
     this.setState({
-      banUserModalOpen: true,
+      banUnbanUserModalOpen: true,
       selectedUser,
     });
   }
-  handleCloseBanUserModal() {
+  handleCloseBanUnbanUserModal() {
     this.setState({
-      banUserModalOpen: false,
+      banUnbanUserModalOpen: false,
       selectedUser: {},
     });
   }
@@ -329,7 +329,7 @@ class MembersList extends Component {
     } = this.props;
     const {
       blockUnblockUserModalOpen,
-      banUserModalOpen,
+      banUnbanUserModalOpen,
       selectedUser,
     } = this.state;
 
@@ -345,11 +345,11 @@ class MembersList extends Component {
           />
         }
         {
-          banUserModalOpen &&
-          <BanUserModal
-            open={banUserModalOpen}
+          banUnbanUserModalOpen &&
+          <BanUnbanUserModal
+            open={banUnbanUserModalOpen}
             selectedUser={selectedUser}
-            onClose={::this.handleCloseBanUserModal}
+            onClose={::this.handleCloseBanUnbanUserModal}
           />
         }
       </div>
