@@ -290,7 +290,9 @@ class ChatRoomMember extends Component {
                   chatRoomMember.accountType !== 'guest' )
               ) &&
               <li>
-                <a href="#" onClick={::this.handleOpenBanUnbanUserModal}>Ban User</a>
+                <a href="#" onClick={::this.handleOpenBanUnbanUserModal}>
+                  {!chatRoomMember.ban.data ? 'Ban' : 'Unban'} user
+                </a>
               </li>
             }
           </ul>

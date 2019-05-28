@@ -49,6 +49,15 @@ const bannedUser = ( state = initialState, action ) => {
         },
       };
     }
+    case `${UNBAN_ALL_USERS}_LOADING`: {
+      return {
+        ...state,
+        unbanAll: {
+          ...state.unbanAll,
+          loading: true,
+        },
+      };
+    }
     case `${FETCH_BANNED_USERS}_SUCCESS`: {
       return {
         ...state,
@@ -63,6 +72,17 @@ const bannedUser = ( state = initialState, action ) => {
       };
     }
     case `${BAN_USER}_SUCCESS`: {
+      const unbannedUserID = action.meta;
+      const bannedUsers = [...state.all];
+
+      const bannedUserIndex = bannedUsers.findIndex(( bannedUser ) => {
+        return bannedUser._id === unbannedUserID;
+      });
+
+      if ( bannedUserIndex > -1 ) {
+        bannedUsers[bannedUserIndex].ban.data = false;
+      }
+
       return {
         ...state,
         ban: {
@@ -72,9 +92,21 @@ const bannedUser = ( state = initialState, action ) => {
           error: false,
           message: action.payload.data.message,
         },
+        all: [ ...bannedUsers ],
       };
     }
     case `${UNBAN_USER}_SUCCESS`: {
+      const bannedUserID = action.meta;
+      const bannedUsers = [...state.all];
+
+      const bannedUserIndex = bannedUsers.findIndex(( bannedUser ) => {
+        return bannedUser._id === bannedUserID;
+      });
+
+      if ( bannedUserIndex > -1 ) {
+        bannedUsers[bannedUserIndex].ban.data = true;
+      }
+
       return {
         ...state,
         unban: {
@@ -84,6 +116,25 @@ const bannedUser = ( state = initialState, action ) => {
           error: false,
           message: action.payload.data.message,
         },
+      };
+    }
+    case `${UNBAN_ALL_USERS}_SUCCESS`: {
+      const bannedUsers = [...state.all];
+
+      for ( let i = 0; i < bannedUsers.length; i += 1 ) {
+        bannedUsers[i].ban.data = false;
+      }
+
+      return {
+        ...state,
+        unbanAll: {
+          ...state.unbanAll,
+          loading: false,
+          success: true,
+          error: false,
+          message: action.payload.data.message,
+        },
+        all: [ ...bannedUsers ],
       };
     }
     case `${FETCH_BANNED_USERS}_ERROR`: {
@@ -115,6 +166,18 @@ const bannedUser = ( state = initialState, action ) => {
         ...state,
         unban: {
           ...state.unban,
+          loading: false,
+          success: false,
+          error: true,
+          message: action.payload.response.data.message,
+        },
+      };
+    }
+    case `${UNBAN_ALL_USERS}_ERROR`: {
+      return {
+        ...state,
+        unbanAll: {
+          ...state.unbanAll,
           loading: false,
           success: false,
           error: true,

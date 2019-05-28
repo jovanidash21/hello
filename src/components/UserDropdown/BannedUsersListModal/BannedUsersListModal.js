@@ -141,7 +141,7 @@ class BannedUsersListModal extends Component {
                     onClick={(e) => {::this.handlebanUnbanUser(e, bannedUser)}}
                     disabled={disabled}
                   >
-                    {bannedUser.banned ? 'Unban' : 'ban'}
+                    {bannedUser.ban.data ? 'Unban' : 'Ban'}
                   </Button>
                 </div>
               )

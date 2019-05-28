@@ -22,7 +22,8 @@ class BanUnbanUserModal extends Component {
   }
   componentDidUpdate(prevProps) {
     if (
-      ( prevProps.bannedUser.ban.loading && this.props.bannedUser.ban.success )
+      ( prevProps.bannedUser.ban.loading && this.props.bannedUser.ban.success ) ||
+      ( prevProps.bannedUser.unban.loading && this.props.bannedUser.unban.success )
     ) {
       this.props.onClose();
     }
@@ -32,18 +33,24 @@ class BanUnbanUserModal extends Component {
 
     this.setState({[event.target.name]: event.target.value});
   }
-  handleBanUser(event) {
+  handleBanUnbanUser(event) {
     event.preventDefault();
 
     const {
       user,
       banUser,
+      unbanUser,
       selectedUser,
     } = this.props;
     const { banDuration } = this.state;
     const activeUser = user.active;
+    const isBanned = selectedUser.ban.data;
 
-    banUser( selectedUser._id, banDuration );
+    if ( ! isBanned ) {
+      banUser( selectedUser._id, banDuration );
+    } else {
+      unbanUser( selectedUser._id );
+    }
   }
   render() {
     const {
@@ -53,6 +60,7 @@ class BanUnbanUserModal extends Component {
       onClose,
     } = this.props;
     const { banDuration } = this.state;
+    const isBanned = selectedUser.ban.data;
 
     return (
       <Modal
@@ -60,9 +68,9 @@ class BanUnbanUserModal extends Component {
         open={open}
         onClose={onClose}
       >
-        <Form onSubmit={::this.handleBanUser}>
+        <Form onSubmit={::this.handleBanUnbanUser}>
           <Modal.Header>
-            <h3 className="modal-title">Ban User</h3>
+            <h3 className="modal-title">{!isBanned ? 'Ban' : 'Unban'} User</h3>
           </Modal.Header>
           <Modal.Body>
             <div className="avatar-wrapper">
@@ -78,37 +86,44 @@ class BanUnbanUserModal extends Component {
             </div>
             <p>
               <span className="user-name mui--text-danger">{selectedUser.name}</span>&nbsp;
-              will be banned for
+              {
+                ! isBanned
+                  ? 'will be banned for'
+                  : 'will be unbanned.'
+              }
             </p>
-            <Select
-              options={[
-                { value: 'two_hours', label: '2 Hours' },
-                { value: 'two_days', label: '2 Days' },
-                { value: 'one_week', label: '1 Week' },
-                { value: 'one_month', label: '1 Month' },
-                { value: 'three_months', label: '3 Months' },
-                { value: 'lifetime', label: 'Lifetime' },
-              ]}
-              defaultValue={banDuration}
-              name="banDuration"
-              onChange={::this.onInputChange}
-              disabled={bannedUser.ban.loading}
-            />
+            {
+              ! isBanned &&
+              <Select
+                options={[
+                  { value: 'two_hours', label: '2 Hours' },
+                  { value: 'two_days', label: '2 Days' },
+                  { value: 'one_week', label: '1 Week' },
+                  { value: 'one_month', label: '1 Month' },
+                  { value: 'three_months', label: '3 Months' },
+                  { value: 'lifetime', label: 'Lifetime' },
+                ]}
+                defaultValue={banDuration}
+                name="banDuration"
+                onChange={::this.onInputChange}
+                disabled={bannedUser.ban.loading || bannedUser.unban.loading}
+              />
+            }
           </Modal.Body>
           <Modal.Footer>
             <Button
               className="button button-default"
               onClick={onClose}
-              disabled={bannedUser.ban.loading}
+              disabled={bannedUser.ban.loading || bannedUser.unban.loading}
             >
               Cancel
             </Button>
             <Button
               className="button button-primary"
               type="submit"
-              disabled={bannedUser.ban.loading}
+              disabled={bannedUser.ban.loading || bannedUser.unban.loading}
             >
-              Ban
+              {!isBanned ? 'Ban' : 'Unban'}
             </Button>
           </Modal.Footer>
         </Form>

@@ -18,7 +18,7 @@ class BlockUnblockUserModal extends Component {
   componentDidUpdate(prevProps) {
     if (
       ( prevProps.blockedUser.block.loading && this.props.blockedUser.block.success ) ||
-      ( prevProps.blockedUser.unblock.loading && this.props.blockedUser.unblock.success  )
+      ( prevProps.blockedUser.unblock.loading && this.props.blockedUser.unblock.success )
     ) {
       this.props.onClose();
     }

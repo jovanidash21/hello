@@ -51,7 +51,7 @@ var sockets = function(io) {
             }
           });
 
-          User.findById(action.userID, '-username -email -chatRooms -chatRooms -blockedUsers -ban -socketID')
+          User.findById(action.userID, '-username -email -chatRooms -chatRooms -blockedUsers -socketID')
             .then((user) => {
               connectedUser = user;
 
@@ -97,6 +97,7 @@ var sockets = function(io) {
                             role: connectedUser.role,
                             block: connectedUser.block,
                             mute: connectedUser.mute,
+                            ban: connectedUser.ban,
                             isLiveVideoActive: connectedUser.isLiveVideoActive
                           };
 
