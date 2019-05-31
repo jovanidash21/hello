@@ -13,6 +13,7 @@ import {
   RightSideDrawer
 } from '../Common';
 import {
+  NotAllowed,
   ChatRoomsMenu,
   ChatBox,
   ChatPopUpWindow,
@@ -519,126 +520,131 @@ class Chat extends Component {
       isVideoCallRequestModalOpen,
       isVideoCallWindowOpen
     } = this.state;
+    const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
     const isChatInputDisabled = chatRoom.fetch.loading || message.fetchNew.loading;
 
     return (
       <div className="chat-section-wrapper">
         {
-          (
-            ( chatRoom.fetch.success && chatRoom.all.length === 0 ) ||
-            !isObjectEmpty(chatRoom.active.data)
-          )
+          activeUser.ban.data
             ?
-            <div
-              className={"chat-section " + (user.active.mute.data ? 'no-chat-input' : '')}
-              ref={(element) => { this.chatSection = element; }}
-            >
-              <LeftSideDrawer
-                handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
-                isLeftSideDrawerOpen={isLeftSideDrawerOpen}
+            <NotAllowed />
+            :
+            (
+              ( chatRoom.fetch.success && chatRoom.all.length === 0 ) ||
+              ! isObjectEmpty(chatRoom.active.data)
+            )
+              ?
+              <div
+                className={"chat-section " + (user.active.mute.data ? 'no-chat-input' : '')}
+                ref={(element) => { this.chatSection = element; }}
               >
-                <ChatRoomsList
-                  handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+                <LeftSideDrawer
+                  handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
+                  isLeftSideDrawerOpen={isLeftSideDrawerOpen}
+                >
+                  <ChatRoomsList
+                    handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+                    handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+                  />
+                </LeftSideDrawer>
+                {::this.handleRightSideDrawerRender()}
+                <Header
                   handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
-                />
-              </LeftSideDrawer>
-              {::this.handleRightSideDrawerRender()}
-              <Header
-                handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
-                handleRequestVideoCall={::this.handleRequestVideoCall}
-                handleStartLiveVideo={::this.handleStartLiveVideo}
-              >
-                <ActiveChatRoom
-                  handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
-                  handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
-                />
-              </Header>
-              <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
-                <MediaQuery query="(min-width: 768px)">
+                  handleRequestVideoCall={::this.handleRequestVideoCall}
+                  handleStartLiveVideo={::this.handleStartLiveVideo}
+                >
+                  <ActiveChatRoom
+                    handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
+                    handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
+                  />
+                </Header>
+                <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+                  <MediaQuery query="(min-width: 768px)">
+                    {
+                      popUpChatRoom.all.length > 0 &&
+                      <div className="chat-popup-window-wrapper">
+                        {
+                          popUpChatRoom.all.map((singlePopUpChatRoom, i) =>
+                            <ChatPopUpWindow
+                              key={i}
+                              index={i}
+                              popUpChatRoom={singlePopUpChatRoom}
+                              handleSendTextMessage={::this.handleSendTextMessage}
+                              handleSendFileMessage={::this.handleSendFileMessage}
+                              handleSendImageMessage={::this.handleSendImageMessage}
+                              handleSendAudioMessage={::this.handleSendAudioMessage}
+                              handleRequestVideoCall={::this.handleRequestVideoCall}
+                              handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
+                              active={activeChatPopUpWindow === i}
+                            />
+                          )
+                        }
+                      </div>
+                    }
+                  </MediaQuery>
                   {
-                    popUpChatRoom.all.length > 0 &&
-                    <div className="chat-popup-window-wrapper">
+                    liveVideoUser.all.length > 0 &&
+                    <div className="live-video-window-wrapper">
                       {
-                        popUpChatRoom.all.map((singlePopUpChatRoom, i) =>
-                          <ChatPopUpWindow
+                        liveVideoUser.all.map((singleLiveVideoUser, i) =>
+                          <LiveVideoWindow
                             key={i}
                             index={i}
-                            popUpChatRoom={singlePopUpChatRoom}
-                            handleSendTextMessage={::this.handleSendTextMessage}
-                            handleSendFileMessage={::this.handleSendFileMessage}
-                            handleSendImageMessage={::this.handleSendImageMessage}
-                            handleSendAudioMessage={::this.handleSendAudioMessage}
-                            handleRequestVideoCall={::this.handleRequestVideoCall}
-                            handleActiveChatPopUpWindow={::this.handleActiveChatPopUpWindow}
-                            active={activeChatPopUpWindow === i}
+                            liveVideoUser={singleLiveVideoUser}
+                            handleActiveLiveVideoWindow={::this.handleActiveLiveVideoWindow}
+                            handleEndLiveVideo={::this.handleEndLiveVideo}
+                            active={activeLiveVideoWindow === i}
+                            loading={singleLiveVideoUser.video.loading}
                           />
                         )
                       }
                     </div>
                   }
-                </MediaQuery>
+                  <ChatBox
+                    chatRoomID={activeChatRoom.data._id}
+                    messages={message.all}
+                    loading={message.fetchNew.loading}
+                  />
+                </div>
                 {
-                  liveVideoUser.all.length > 0 &&
-                  <div className="live-video-window-wrapper">
-                    {
-                      liveVideoUser.all.map((singleLiveVideoUser, i) =>
-                        <LiveVideoWindow
-                          key={i}
-                          index={i}
-                          liveVideoUser={singleLiveVideoUser}
-                          handleActiveLiveVideoWindow={::this.handleActiveLiveVideoWindow}
-                          handleEndLiveVideo={::this.handleEndLiveVideo}
-                          active={activeLiveVideoWindow === i}
-                          loading={singleLiveVideoUser.video.loading}
-                        />
-                      )
-                    }
-                  </div>
-                }
-                <ChatBox
-                  chatRoomID={activeChatRoom.data._id}
-                  messages={message.all}
-                  loading={message.fetchNew.loading}
-                />
-              </div>
-              {
-                !user.active.mute.data && (
-                  !isAudioRecorderOpen
-                    ?
-                    <ChatInput
-                      user={user.active}
-                      chatRoomID={activeChatRoom.data._id}
-                      handleSearchUser={searchUser}
-                      handleSendTextMessage={::this.handleSendTextMessage}
-                      handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
-                      handleSendFileMessage={::this.handleSendFileMessage}
-                      handleSendImageMessage={::this.handleSendImageMessage}
-                      userTagSuggestions={user.searched}
-                      disabled={isChatInputDisabled}
-                      userTagLoading={user.search.loading}
-                    />
-                    :
-                    <ChatAudioRecorder
-                      chatRoomID={activeChatRoom.data._id}
-                      handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
-                      handleSendAudioMessage={::this.handleSendAudioMessage}
-                    />
-                )
-              }
-              <MediaQuery query="(max-width: 767px)">
-                {(matches) => {
-                  return (
-                    <NotificationPopUp
-                      handleViewMessage={::this.handleNotificationViewMessage}
-                      mobile={matches}
-                    />
+                  !user.active.mute.data && (
+                    !isAudioRecorderOpen
+                      ?
+                      <ChatInput
+                        user={user.active}
+                        chatRoomID={activeChatRoom.data._id}
+                        handleSearchUser={searchUser}
+                        handleSendTextMessage={::this.handleSendTextMessage}
+                        handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                        handleSendFileMessage={::this.handleSendFileMessage}
+                        handleSendImageMessage={::this.handleSendImageMessage}
+                        userTagSuggestions={user.searched}
+                        disabled={isChatInputDisabled}
+                        userTagLoading={user.search.loading}
+                      />
+                      :
+                      <ChatAudioRecorder
+                        chatRoomID={activeChatRoom.data._id}
+                        handleAudioRecorderToggle={::this.handleAudioRecorderToggle}
+                        handleSendAudioMessage={::this.handleSendAudioMessage}
+                      />
                   )
-                }}
-              </MediaQuery>
-            </div>
-            :
-            <ChatRoomsMenu />
+                }
+                <MediaQuery query="(max-width: 767px)">
+                  {(matches) => {
+                    return (
+                      <NotificationPopUp
+                        handleViewMessage={::this.handleNotificationViewMessage}
+                        mobile={matches}
+                      />
+                    )
+                  }}
+                </MediaQuery>
+              </div>
+              :
+              <ChatRoomsMenu />
         }
         {
           isVideoCallRequestModalOpen &&

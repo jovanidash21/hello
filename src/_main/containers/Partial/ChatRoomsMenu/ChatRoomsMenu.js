@@ -44,7 +44,6 @@ class ChatRoomsMenu extends Component {
               }
             </Row>
           </Container>
-
         </div>
       )
     } else {

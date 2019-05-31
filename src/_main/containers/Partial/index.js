@@ -7,5 +7,6 @@ export { CreateChatRoomModal } from './CreateChatRoomModal';
 export { DeleteMessageModal } from './DeleteMessageModal';
 export { LiveVideoWindow } from './LiveVideoWindow';
 export { MembersList } from './MembersList';
+export { NotAllowed } from './NotAllowed';
 export { VideoCallRequestModal } from './VideoCallRequestModal';
 export { VideoCallWindow } from './VideoCallWindow';
