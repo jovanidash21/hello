@@ -1,0 +1,26 @@
+.not-allowed {
+  align-items: center;
+  background-color: $color-primary;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  text-align: center;
+  .ban-icon {
+    color: $color-punch;
+    font-size: 250px;
+    line-height: 250px;
+    @media screen and (max-width: $screen-mobile-max) {
+      font-size: 150px;
+      line-height: 150px;
+    }
+  }
+  .ban-text {
+    color: #fff;
+    font-size: 24px;
+    margin-top: 10px;
+    @media screen and (max-width: $screen-mobile-max) {
+      font-size: 20px;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import {
   Row,
   Col
 } from 'muicss/react';
+import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import './styles.scss';
 
@@ -19,7 +20,12 @@ class NotAllowed extends Component {
         <Container>
           <Row>
             <Col md="12"> 
-              Not Allowed
+              <div className="ban-icon">
+                <FontAwesome name="ban" />
+              </div>
+              <div className="ban-text">
+                You are not allowed to access this page. Your account has been banned. 
+              </div>
             </Col>
           </Row>
         </Container>
