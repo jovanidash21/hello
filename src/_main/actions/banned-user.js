@@ -13,7 +13,7 @@ export function fetchBannedUsers() {
   return dispatch => {
     return dispatch({
       type: FETCH_BANNED_USERS,
-      payload: axios.post( 'banned-user' ),
+      payload: axios.post( '/banned-user' ),
     })
     .catch(( error ) => {
       if ( error instanceof Error ) {
@@ -38,7 +38,7 @@ export function banUser( banUserID, banDuration ) {
   return dispatch => {
     return dispatch({
       type: BAN_USER,
-      payload: axios.post( 'banned-user/ban', data ),
+      payload: axios.post( '/banned-user/ban', data ),
       meta: banUserID,
     })
     .catch(( error ) => {
@@ -62,7 +62,7 @@ export function unbanUser( unbanUserID ) {
   return dispatch => {
     return dispatch({
       type: UNBAN_USER,
-      payload: axios.post( 'banned-user/unban', data ),
+      payload: axios.post( '/banned-user/unban', data ),
       meta: unbanUserID,
     })
     .catch(( error ) => {
@@ -86,7 +86,7 @@ export function unbanAllUsers( userID ) {
   return dispatch => {
     return dispatch({
       type: UNBAN_ALL_USERS,
-      payload: axios.post( 'banned-user/unban-all', data ),
+      payload: axios.post( '/banned-user/unban-all', data ),
     })
     .catch(( error ) => {
       if ( error instanceof Error ) {

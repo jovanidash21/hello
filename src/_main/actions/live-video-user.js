@@ -31,7 +31,7 @@ export function startLiveVideo(user, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: START_LIVE_VIDEO,
-      payload: axios.post('live-video', data),
+      payload: axios.post('/live-video', data),
       meta: {
         ...user,
         ...extraUserData
@@ -107,7 +107,7 @@ export function endLiveVideo(userID, chatRoomID) {
   return dispatch => {
     return dispatch({
       type: END_LIVE_VIDEO,
-      payload: axios.post('live-video', data),
+      payload: axios.post('/live-video', data),
       meta: userID
     })
     .then((response) => {

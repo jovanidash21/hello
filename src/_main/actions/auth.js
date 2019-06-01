@@ -40,7 +40,7 @@ export function localLogin(username, password) {
 
     return dispatch({
       type: LOGIN,
-      payload: axios.post('login/local', data)
+      payload: axios.post('/login/local', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -160,7 +160,7 @@ export function register(email, name, username, gender, password) {
 
     return dispatch({
       type: REGISTER,
-      payload: axios.post('register', data)
+      payload: axios.post('/register', data)
     })
     .then(() => {
       dispatch(hideLoading());
@@ -193,7 +193,7 @@ export function guestLogin(name, username, gender) {
 
     return dispatch({
       type: GUEST_LOGIN,
-      payload: axios.post('login/guest', data)
+      payload: axios.post('/login/guest', data)
     })
     .then(() => {
       dispatch(hideLoading());

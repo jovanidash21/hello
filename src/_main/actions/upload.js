@@ -18,7 +18,7 @@ export function uploadImage(image) {
   return dispatch => {
     return dispatch({
       type: UPLOAD_IMAGE,
-      payload: axios.post('upload/image', data, config)
+      payload: axios.post('/upload/image', data, config)
     })
     .catch((error) => {
       if (error instanceof Error) {
