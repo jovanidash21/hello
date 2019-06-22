@@ -1,24 +1,24 @@
 require('dotenv').config();
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var cookieSession = require('cookie-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var flash = require('connect-flash');
-var mongoose = require('mongoose');
-var Promise = require('bluebird');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
+const mongoose = require('mongoose');
+const Promise = require('bluebird');
 
-var index = require('./routes');
-var api = require('./routes/api');
+const index = require('./routes');
+const api = require('./routes/api');
 
 // browserSync setup
 if ( process.env.NODE_ENV != 'production' ) {
-  var browserSync = require('browser-sync');
+  const browserSync = require('browser-sync');
   browserSync({
     files: ['./**/*'],
     online: false,
@@ -28,7 +28,7 @@ if ( process.env.NODE_ENV != 'production' ) {
   });
 }
 
-var app = express();
+const app = express();
 
 mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGODB_URI, {
@@ -66,7 +66,7 @@ app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
