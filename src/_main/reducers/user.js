@@ -8,6 +8,7 @@ import {
   SOCKET_BROADCAST_MUTE_MEMBER,
   SOCKET_BROADCAST_UNMUTE_MEMBER
 } from '../constants/member';
+import { SOCKET_BROADCAST_BAN_USER } from '../constants/banned-user';
 
 const commonStateFlags = {
   loading: false,
@@ -162,6 +163,19 @@ const user = (state=initialState, action) => {
 
       if ( memberID === user._id ) {
         user.mute.data = false;
+      }
+
+      return {
+        ...state,
+        active: {...user}
+      };
+    }
+    case SOCKET_BROADCAST_BAN_USER: {
+      var bannedUserID = action.bannedUserID;
+      var user = {...state.active};
+
+      if ( bannedUserID === user._id ) {
+        user.ban.data = true;
       }
 
       return {

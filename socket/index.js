@@ -592,6 +592,12 @@ var sockets = function(io) {
               console.log(error);
             });
           break;
+        case 'SOCKET_BAN_USER':
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_BAN_USER',
+            bannedUserID: action.bannedUserID
+          });
+          break;
         default:
           break;
       }

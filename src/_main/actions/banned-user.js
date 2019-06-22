@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   FETCH_BANNED_USERS,
   BAN_USER,
+  SOCKET_BAN_USER,
   UNBAN_USER,
   UNBAN_ALL_USERS,
 } from '../constants/banned-user';
@@ -40,6 +41,12 @@ export function banUser( banUserID, banDuration ) {
       type: BAN_USER,
       payload: axios.post( '/banned-user/ban', data ),
       meta: banUserID,
+    })
+    .then((response) => {
+      dispatch({
+        type: SOCKET_BAN_USER,
+        bannedUserID: banUserID,
+      });
     })
     .catch(( error ) => {
       if ( error instanceof Error ) {

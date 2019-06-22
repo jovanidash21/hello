@@ -72,11 +72,11 @@ const bannedUser = ( state = initialState, action ) => {
       };
     }
     case `${BAN_USER}_SUCCESS`: {
-      const unbannedUserID = action.meta;
+      const bannedUserID = action.meta;
       const bannedUsers = [...state.all];
 
       const bannedUserIndex = bannedUsers.findIndex(( bannedUser ) => {
-        return bannedUser._id === unbannedUserID;
+        return bannedUser._id === bannedUserID;
       });
 
       if ( bannedUserIndex > -1 ) {
@@ -96,11 +96,11 @@ const bannedUser = ( state = initialState, action ) => {
       };
     }
     case `${UNBAN_USER}_SUCCESS`: {
-      const bannedUserID = action.meta;
+      const unbannedUserID = action.meta;
       const bannedUsers = [...state.all];
 
       const bannedUserIndex = bannedUsers.findIndex(( bannedUser ) => {
-        return bannedUser._id === bannedUserID;
+        return bannedUser._id === unbannedUserID;
       });
 
       if ( bannedUserIndex > -1 ) {

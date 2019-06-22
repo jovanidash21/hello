@@ -34,6 +34,7 @@ import {
 } from '../constants/blocked-user';
 import {
   BAN_USER,
+  SOCKET_BROADCAST_BAN_USER,
   UNBAN_USER,
   UNBAN_ALL_USERS,
 } from '../constants/banned-user';
@@ -428,7 +429,7 @@ const member = (state=initialState, action) => {
     }
     case `${BAN_USER}_SUCCESS`: {
       const bannedUserID = action.meta;
-      const members = [...state.all];
+      let members = [...state.all];
 
       const memberIndex = members.findIndex(( singleMember ) => {
         return singleMember._id === bannedUserID;
@@ -437,6 +438,10 @@ const member = (state=initialState, action) => {
       if ( memberIndex > -1 ) {
         members[memberIndex].ban.data = true;
       }
+
+      members = members.filter(member =>
+        member._id !== bannedUserID
+      );
 
       return {
         ...state,
@@ -471,6 +476,19 @@ const member = (state=initialState, action) => {
         ...state,
         all: [ ...members ],
       };
+    }
+    case SOCKET_BROADCAST_BAN_USER: {
+      var bannedUserID = action.bannedUserID;
+      var members = [...state.all];
+
+      members = members.filter(member =>
+        member._id !== bannedUserID
+      );
+
+      return {
+        ...state,
+        all: [...members]
+      }
     }
     case SOCKET_BROADCAST_USER_LOGOUT: {
       var userID = action.userID;
