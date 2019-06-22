@@ -284,10 +284,9 @@ class ChatRoomMember extends Component {
             {
               (
                 ( user.role === 'owner' ||
-                  user.role === 'admin' ||
-                  user.role === 'moderator' ) &&
+                  user.role === 'admin' ) &&
                 ( chatRoomMember.role !== 'owner' &&
-                  chatRoomMember.accountType !== 'guest' )
+                  chatRoomMember.accountType !== 'admin' )
               ) &&
               <li>
                 <a href="#" onClick={::this.handleOpenBanUnbanUserModal}>

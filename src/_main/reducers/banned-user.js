@@ -80,7 +80,7 @@ const bannedUser = ( state = initialState, action ) => {
       });
 
       if ( bannedUserIndex > -1 ) {
-        bannedUsers[bannedUserIndex].ban.data = false;
+        bannedUsers[bannedUserIndex].ban.data = true;
       }
 
       return {
@@ -104,7 +104,7 @@ const bannedUser = ( state = initialState, action ) => {
       });
 
       if ( bannedUserIndex > -1 ) {
-        bannedUsers[bannedUserIndex].ban.data = true;
+        bannedUsers[bannedUserIndex].ban.data = false;
       }
 
       return {
