@@ -6,6 +6,7 @@ import { Modal } from '../../Modal';
 import { SearchFilter } from '../../SearchFilter';
 import { Avatar } from '../../Avatar';
 import { UnbanAllUsersModal } from './UnbanAllUsersModal';
+import { BanUnbanUserModal } from '../../../_main/containers/Partial'
 import './styles.scss';
 
 class BannedUsersListModal extends Component {
@@ -16,6 +17,8 @@ class BannedUsersListModal extends Component {
       bannedUsers: [],
       searchFilter: '',
       unbanAllUsersModalOpen: false,
+      banUnbanUserModalOpen: false,
+      selectedUser: {},
     }
   }
   componentWillMount() {
@@ -59,12 +62,19 @@ class BannedUsersListModal extends Component {
   handleCloseUnbanAllUsersModal() {
     this.setState({unbanAllUsersModalOpen: false});
   }
-  handlebanUnbanUser(event, selectedUser) {
+  handleOpenBanUnbanUserModal(event, selectedUser) {
     event.preventDefault();
 
-    const { handlebanUnbanUser } = this.props;
-
-    handlebanUnbanUser(selectedUser);
+    this.setState({
+      banUnbanUserModalOpen: true,
+      selectedUser,
+    });
+  }
+  handleCloseBanUnbanUserModal() {
+    this.setState({
+      banUnbanUserModalOpen: false,
+      selectedUser: {},
+    });
   }
   render() {
     const {
@@ -81,6 +91,8 @@ class BannedUsersListModal extends Component {
       bannedUsers,
       searchFilter,
       unbanAllUsersModalOpen,
+      banUnbanUserModalOpen,
+      selectedUser,
     } = this.state;
     const loading = bannedUserFetch.loading;
     const disabled = bannedUserBan.loading || bannedUserUnban.loading;
@@ -138,7 +150,7 @@ class BannedUsersListModal extends Component {
                   <Button
                     className={"button button-" + (bannedUser.banned ? 'default' : 'primary')}
                     size="small"
-                    onClick={(e) => {::this.handlebanUnbanUser(e, bannedUser)}}
+                    onClick={(e) => {::this.handleOpenBanUnbanUserModal(e, bannedUser)}}
                     disabled={disabled}
                   >
                     {bannedUser.ban.data ? 'Unban' : 'Ban'}
@@ -163,6 +175,14 @@ class BannedUsersListModal extends Component {
             onClose={::this.handleCloseUnbanAllUsersModal}
           />
         }
+        {
+          banUnbanUserModalOpen &&
+          <BanUnbanUserModal
+            open={banUnbanUserModalOpen}
+            selectedUser={selectedUser}
+            onClose={::this.handleCloseBanUnbanUserModal}
+          />
+        }
       </Fragment>
     )
   }
@@ -174,7 +194,6 @@ BannedUsersListModal.propTypes = {
   bannedUserFetch: PropTypes.object.isRequired,
   handleUnbanAllUsers: PropTypes.func.isRequired,
   bannedUserUnbanAll: PropTypes.object.isRequired,
-  handleBanUnbanUser: PropTypes.func.isRequired,
   bannedUserBan: PropTypes.object.isRequired,
   bannedUserUnban: PropTypes.object.isRequired,
   open: PropTypes.bool,

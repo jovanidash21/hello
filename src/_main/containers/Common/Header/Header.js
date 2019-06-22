@@ -185,21 +185,6 @@ class Header extends Component {
 
     unbanAllUsers(activeUser._id);
   }
-  handleBanUnbanUser(selectedUser) {
-    const {
-      user,
-      banUser,
-      unbanUser,
-    } = this.props;
-    const activeUser = user.active;
-    const isBanned = selectedUser.banned;
-
-    if ( ! isBanned ) {
-      banUser( activeUser._id, selectedUser._id );
-    } else {
-      unbanUser( activeUser._id, selectedUser._id );
-    }
-  }
   handleRequestVideoCall(event) {
     event.preventDefault();
 
@@ -284,7 +269,6 @@ class Header extends Component {
               bannedUserFetch={bannedUser.fetch}
               handleUnbanAllUsers={::this.handleUnbanAllUsers}
               bannedUserUnbanAll={bannedUser.unbanAll}
-              handleBanUnbanUser={::this.handleBanUnbanUser}
               bannedUserBan={bannedUser.ban}
               bannedUserUnban={bannedUser.unban}
               open={bannedUsersListModalOpen}

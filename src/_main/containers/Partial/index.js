@@ -1,4 +1,5 @@
 export { ActiveChatRoom } from './ActiveChatRoom';
+export { BanUnbanUserModal } from './BanUnbanUserModal';
 export { ChatBox } from './ChatBox';
 export { ChatPopUpWindow } from './ChatPopUpWindow';
 export { ChatRoomsList } from './ChatRoomsList';
