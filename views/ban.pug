@@ -1,0 +1,14 @@
+extends layout
+
+block style
+  link(rel='stylesheet', type='text/css', href='/build/main.bundle.css')
+
+block content
+  .not-allowed
+      .nui-container
+        .mui-row
+          .mui-col-md-12
+            .ban-icon 
+              span.fa.fa-ban(aria-hidden='true')
+            .ban-text
+              | You are not allowed to access this page. Your IP Address has been banned.

@@ -12,6 +12,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
+const getRealIp = require('express-real-ip')();
 
 const index = require('./routes');
 const api = require('./routes/api');

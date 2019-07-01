@@ -1,11 +1,16 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 var User = require('../models/User');
 var ChatRoom = require('../models/ChatRoom');
 var Message = require('../models/Message');
 
 router.get('/', (req, res, next) => {
-  if (!req.user) {
+  var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+  if (ipBlacklist.indexOf(req.ip) > -1) {
+    res.render('ban', { title: 'Chat App | Banned' });
+  } else if (!req.user) {
     res.render('index', { title: 'Chat App | Login' });
   } else {
     res.redirect('/chat');
@@ -47,7 +52,11 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/register', (req, res, next) => {
-  if (!req.user) {
+  var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+  if (ipBlacklist.indexOf(req.ip) > -1) {
+    res.render('ban', { title: 'Chat App | Banned' });
+  } else if (!req.user) {
     res.render('index', { title: 'Chat App | Register' });
   } else {
     res.redirect('/chat');
@@ -55,7 +64,11 @@ router.get('/register', (req, res, next) => {
 });
 
 router.get('/guest', (req, res, next) => {
-  if (!req.user) {
+  var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+  if (ipBlacklist.indexOf(req.ip) > -1) {
+    res.render('ban', { title: 'Chat App | Banned' });
+  } else if (!req.user) {
     res.render('index', { title: 'Chat App | Guest' });
   } else {
     res.redirect('/chat');
@@ -63,7 +76,11 @@ router.get('/guest', (req, res, next) => {
 });
 
 router.get('/chat', (req, res, next) => {
-  if (req.user) {
+  var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+  if (ipBlacklist.indexOf(req.ip) > -1) {
+    res.render('ban', { title: 'Chat App | Banned' });
+  } else if (req.user) {
     res.render('index', { title: 'Chat App' });
   } else {
     res.redirect('/');
@@ -71,7 +88,11 @@ router.get('/chat', (req, res, next) => {
 });
 
 router.get('/admin', (req, res, next) => {
-  if (req.user && (req.user.role == 'owner' || req.user.role == 'admin')) {
+  var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+  if (ipBlacklist.indexOf(req.ip) > -1) {
+    res.render('ban', { title: 'Chat App | Banned' });
+  } else if (req.user && (req.user.role == 'owner' || req.user.role == 'admin')) {
     res.render('index', { title: 'Chat App | Admin' });
   } else {
     res.redirect('/');
