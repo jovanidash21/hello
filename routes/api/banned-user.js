@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router({mergeParams: true});
+var fs = require('fs');
 var User = require('../../models/User');
+var ChatRoom = require('../../models/ChatRoom');
 
 router.post('/', (req, res, next) => {
   if (
@@ -67,12 +69,31 @@ router.post('/ban', (req, res, next) => {
     User.findByIdAndUpdate(
       banUserID,
       { $set: { ban: { data: true, endDate: banEndDate } } },
-      { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
+      { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -socketID' }
     )
     .then((user) => {
-      res.status(200).send({
-        success: true,
-        message: 'User Banned'
+      ChatRoom.findByIdAndUpdate(
+        user.connectedChatRoom,
+        { $unset: { connectedMembers: user._id } },
+        { safe: true, upsert: true, new: true }
+      ).exec();
+
+      User.updateOne(
+        { _id: user._id },
+        { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, ipAddress: '', socketID: ''} },
+        { safe: true, upsert: true, new: true },
+      ).exec();
+
+      return user;
+    })
+    .then((user) => {
+      fs.appendFile('ip-blacklist.txt', user.ipAddress + '\n', function (error) {
+        if (!error) {
+          res.status(200).send({
+            success: true,
+            message: 'User Banned'
+          });
+        }
       });
     })
     .catch((error) => {
