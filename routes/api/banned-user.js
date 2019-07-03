@@ -120,12 +120,24 @@ router.post('/unban', (req, res, next) => {
     User.findByIdAndUpdate(
       unbanUserID,
       { $set: { ban: { data: false, endDate: new Date() } } },
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
+      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -socketID' }
     )
     .then((user) => {
-      res.status(200).send({
-        success: true,
-        message: 'User Unbanned'
+      var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+      for (var i = 0; i < ipBlacklist.length; i++) {
+        if (ipBlacklist[i] == user.ipAddress) {
+          ipBlacklist.splice(i, 1);
+        }
+      }
+
+      fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
+        if (!error) {
+          res.status(200).send({
+            success: true,
+            message: 'User Unbanned'
+          });
+        }
       });
     })
     .catch((error) => {
@@ -149,7 +161,7 @@ router.post('/unban-all', (req, res, next) => {
     User.findByIdAndUpdate(
       userID,
       { $set: { blockedUsers: [] }},
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
+      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -socketID' }
     )
     .then((user) => {
       res.status(200).send({
