@@ -1,32 +1,11 @@
 var CronJob = require('cron').CronJob;
+var fs = require('fs');
 var User = require('../models/User');
 var ChatRoom = require('../models/ChatRoom');
 var Message = require('../models/Message');
 
 var cron = function(socket) {
   var minute = new CronJob('0 */1 * * * *', function() {
-    User.find({
-        'ban.data': true,
-        'ban.endDate': {
-          $lte: new Date()
-        }
-      })
-      .then((users) => {
-        for (var i = 0; i < users.length; i++) {
-          var user = users[i];
-          var userID = user._id;
-
-          User.update(
-            { _id: userID },
-            { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
-            { safe: true, upsert: true, new: true }
-          ).exec();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    
     User.find({
       chatRooms: {
         $elemMatch: {
@@ -118,6 +97,47 @@ var cron = function(socket) {
       .catch((error) => {
         console.log(error);
       });
+  }, null, true);
+
+  var thirtyMinutes = new CronJob('0 */30 * * * *', function() {
+    User.find({
+      'ban.data': true,
+      'ban.endDate': {
+        $lte: new Date()
+      }
+    })
+    .then((users) => {
+      var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+      for (var i = 0; i < users.length; i++) {
+        var user = users[i];
+        var userID = user._id;
+
+        for (var j = 0; j < ipBlacklist.length; j++) {
+          if (ipBlacklist[j] == user.ipAddress) {
+            ipBlacklist.splice(j, 1);
+          }
+        }
+
+        User.update(
+          { _id: userID },
+          { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
+          { safe: true, upsert: true, new: true }
+        ).exec();
+      }
+
+      return ipBlacklist;
+    })
+    .then((ipBlacklist) => {
+      fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
+        if (error) {
+          console.log(error);
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }, null, true);
 
   var day = new CronJob('0 0 0 * * *', function() {
