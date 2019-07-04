@@ -117,38 +117,45 @@ router.post('/unban', (req, res, next) => {
   } else {
     var unbanUserID = req.body.unbanUserID;
 
-    User.findByIdAndUpdate(
-      unbanUserID,
-      { $set: { ban: { data: false, endDate: new Date() } } },
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -socketID' }
-    )
-    .then((user) => {
-      var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+    User.find({'ban.data': true})
+      .then((users) => {
+        var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
 
-      for (var i = 0; i < ipBlacklist.length; i++) {
-        if (ipBlacklist[i] == user.ipAddress) {
-          ipBlacklist.splice(i, 1);
-        }
-      }
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+          var userID = user._id;
 
-      return ipBlacklist;
-    })
-    .then((ipBlacklist) => {
-      fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
-        if (!error) {
-          res.status(200).send({
-            success: true,
-            message: 'User Unbanned'
-          });
+          for (var j = 0; j < ipBlacklist.length; j++) {
+            if (ipBlacklist[j] == user.ipAddress) {
+              ipBlacklist.splice(j, 1);
+            }
+          }
+
+          User.update(
+            { _id: userID },
+            { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
+            { safe: true, upsert: true, new: true }
+          ).exec();
         }
-      });
-    })
-    .catch((error) => {
-      res.status(500).send({
-        success: false,
-        message: 'Server Error!'
-      });
-    });
+
+        return ipBlacklist;
+      })
+      .then((ipBlacklist) => {
+        fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
+          if (!error) {
+            res.status(200).send({
+              success: true,
+              message: 'All Users Unbanned'
+            });
+          }
+        });         
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      });    
   }
 });
 
