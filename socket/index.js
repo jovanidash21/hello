@@ -615,7 +615,7 @@ var sockets = function(io) {
 
             User.updateOne(
               { _id: user._id },
-              { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, ipAddress: '', socketID: ''} },
+              { $set: { connectedChatRoom: null, isOnline: false, isLiveVideoActive: false, socketID: ''} },
               { safe: true, upsert: true, new: true },
             ).exec();
 

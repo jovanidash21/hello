@@ -131,6 +131,9 @@ router.post('/unban', (req, res, next) => {
         }
       }
 
+      return ipBlacklist;
+    })
+    .then((ipBlacklist) => {
       fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
         if (!error) {
           res.status(200).send({
