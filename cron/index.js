@@ -119,7 +119,7 @@ var cron = function(socket) {
           }
         }
 
-        User.update(
+        User.updateOne(
           { _id: userID },
           { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
           { safe: true, upsert: true, new: true }

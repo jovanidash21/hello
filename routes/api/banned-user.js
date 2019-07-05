@@ -148,14 +148,14 @@ router.post('/unban', (req, res, next) => {
               message: 'All Users Unbanned'
             });
           }
-        });         
+        });
       })
       .catch((error) => {
         res.status(500).send({
           success: false,
           message: 'Server Error!'
         });
-      });    
+      });
   }
 });
 
@@ -168,23 +168,42 @@ router.post('/unban-all', (req, res, next) => {
       message: 'Unauthorized'
     });
   } else {
-    User.findByIdAndUpdate(
-      userID,
-      { $set: { blockedUsers: [] }},
-      { new: true, upsert: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -socketID' }
-    )
-    .then((user) => {
-      res.status(200).send({
-        success: true,
-        message: 'All Users Unblocked'
+    User.find({'ban.data': true})
+      .then((users) => {
+        var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
+
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+          var userID = user._id;
+
+          for (var j = 0; j < ipBlacklist.length; j++) {
+            if (ipBlacklist[j] == user.ipAddress) {
+              ipBlacklist.splice(j, 1);
+            }
+          }
+
+          User.updateOne(
+            { _id: userID },
+            { $set: { 'ban.data': false, 'ban.endDate': new Date() } },
+            { safe: true, upsert: true, new: true }
+          ).exec();
+        }
+
+        return ipBlacklist;
+      })
+      .then((ipBlacklist) => {
+        fs.writeFile('ip-blacklist.txt', ipBlacklist.join('\n'), 'utf-8', function (error) {
+          if (error) {
+            console.log(error);
+          }
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
       });
-    })
-    .catch((error) => {
-      res.status(500).send({
-        success: false,
-        message: 'Server Error!'
-      });
-    });
   }
 });
 
