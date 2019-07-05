@@ -77,14 +77,17 @@ class UserDropdown extends Component {
                 Blocked users
               </a>
             </li>
-            <li>
-              <a href="#" onClick={::this.handleOpenBannedUsersListModal}>
-                <div className="option-icon">
-                  <FontAwesome name="ban" />
-                </div>
-                Banned users
-              </a>
-            </li>
+            {
+              ( ( user.role === 'owner' ) || ( user.role === 'admin' ) ) &&
+              <li>
+                <a href="#" onClick={::this.handleOpenBannedUsersListModal}>
+                  <div className="option-icon">
+                    <FontAwesome name="ban" />
+                  </div>
+                  Banned users
+                </a>
+              </li>
+            }
             <li>
               <a href="/logout">
                 <div className="option-icon">

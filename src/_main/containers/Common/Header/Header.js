@@ -219,6 +219,7 @@ class Header extends Component {
       blockedUsersListModalOpen,
       bannedUsersListModalOpen,
     } = this.state;
+    const activeUser = user.active;
 
     return (
       <Appbar className="header">
@@ -229,7 +230,7 @@ class Header extends Component {
         {::this.handleNewMessagesDropdownRender()}
         {::this.handleChatRoomDropdownRender()}
         <UserDropdown
-          user={user.active}
+          user={activeUser}
           handleOpenEditProfileModal={::this.handleOpenEditProfileModal}
           handleOpenBlockedUsersListModal={::this.handleOpenBlockedUsersListModal}
           handleOpenBannedUsersListModal={::this.handleOpenBannedUsersListModal}
@@ -237,7 +238,7 @@ class Header extends Component {
           {
             editProfileModalOpen &&
             <UserDropdown.EditProfileModal
-              user={user.active}
+              user={activeUser}
               upload={upload}
               handleImageUpload={uploadImage}
               handleEditProfile={::this.handleEditProfile}
@@ -262,6 +263,7 @@ class Header extends Component {
             />
           }
           {
+            ( ( activeUser.role === 'owner' ) || ( activeUser.role === 'admin' ) ) &&
             bannedUsersListModalOpen &&
             <UserDropdown.BannedUsersListModal
               handleFetchBannedUsers={::this.handleFetchBannedUsers}
