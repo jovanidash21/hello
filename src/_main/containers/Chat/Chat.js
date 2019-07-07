@@ -213,12 +213,12 @@ class Chat extends Component {
       const lastMessageDate = new Date(lastMessage.createdAt);
       const lastMessageUserID = lastMessage.user._id;
 
-      if ( user.active._id === lastMessageUserID && ( todayDate - lastMessageDate ) <= 2000 ) {
+      if ( user.active._id === lastMessageUserID && ( todayDate - lastMessageDate ) <= 1000 ) {
         validMessage = false;
       }
     }
 
-    if ( !validMessage ) {
+    if ( ! validMessage ) {
       Popup.alert('Please take a break and send message slowly!');
     } else {
       sendTextMessage(newMessageID, text, user.active, chatRoomID, textColor);
