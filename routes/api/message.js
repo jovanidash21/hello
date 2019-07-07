@@ -6,9 +6,18 @@ var User = require('../../models/User');
 var multer = require('multer');
 var slash = require('slash');
 
-var fileImageStorage = multer.diskStorage({
+var fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './uploads/');
+    cb(null, './uploads/file/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+  }
+});
+
+var imageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/image/');
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
@@ -25,7 +34,7 @@ var audioStorage = multer.diskStorage({
 });
 
 var fileUpload = multer({
-  storage: fileImageStorage,
+  storage: fileStorage,
   limits: {
     fileSize: 1024 * 1024 * 5
   }
@@ -40,7 +49,7 @@ var imageFilter = (req, file, cb) => {
 };
 
 var imageUpload = multer({
-  storage: fileImageStorage,
+  storage: imageStorage,
   fileFilter: imageFilter,
   limits: {
     fileSize: 1024 * 1024 * 5
