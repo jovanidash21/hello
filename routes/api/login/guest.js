@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var passport = require('passport');
-var Strategy = require('passport-custom').Strategy;
-var User = require('../../../models/User');
-var ChatRoom = require('../../../models/ChatRoom');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const passport = require('passport');
+const Strategy = require('passport-custom').Strategy;
+const User = require('../../../models/User');
+const ChatRoom = require('../../../models/ChatRoom');
 
 passport.use(new Strategy(
   (req, done) => {

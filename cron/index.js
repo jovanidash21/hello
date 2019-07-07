@@ -1,10 +1,10 @@
-var CronJob = require('cron').CronJob;
-var fs = require('fs');
-var User = require('../models/User');
-var ChatRoom = require('../models/ChatRoom');
-var Message = require('../models/Message');
+const CronJob = require('cron').CronJob;
+const fs = require('fs');
+const User = require('../models/User');
+const ChatRoom = require('../models/ChatRoom');
+const Message = require('../models/Message');
 
-var cron = function(socket) {
+const cron = function(socket) {
   var minute = new CronJob('0 */1 * * * *', function() {
     User.find({
       chatRooms: {

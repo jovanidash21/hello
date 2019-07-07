@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var User = require('../../models/User');
-var ChatRoom = require('../../models/ChatRoom');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const User = require('../../models/User');
+const ChatRoom = require('../../models/ChatRoom');
 
 router.post('/', (req, res, next) => {
   var userID = req.body.userID;

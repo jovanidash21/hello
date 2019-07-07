@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var User = require('../../models/User');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const User = require('../../models/User');
 
 router.get('/', (req, res, next) => {
   if (req.user === undefined) {

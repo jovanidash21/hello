@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var multer = require('multer');
-var slash = require('slash');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const multer = require('multer');
+const slash = require('slash');
 
 var imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {

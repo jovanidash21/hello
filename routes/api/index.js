@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../../models/User');
-var ChatRoom = require('../../models/ChatRoom');
-var Message = require('../../models/Message');
+const express = require('express');
+const router = express.Router();
+const User = require('../../models/User');
+const ChatRoom = require('../../models/ChatRoom');
+const Message = require('../../models/Message');
 
 router.use('/login', require('./login'));
 router.use('/register', require('./register'));

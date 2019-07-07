@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var nodemailer = require('nodemailer');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const nodemailer = require('nodemailer');
 
 router.post('/', (req, res, next) => {
   var transporter = nodemailer.createTransport({

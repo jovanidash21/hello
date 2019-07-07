@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var passport = require('passport');
-var Strategy = require('passport-facebook').Strategy;
-var User = require('../../../models/User');
-var ChatRoom = require('../../../models/ChatRoom');
-var popupTools = require('popup-tools');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const passport = require('passport');
+const Strategy = require('passport-facebook').Strategy;
+const User = require('../../../models/User');
+const ChatRoom = require('../../../models/ChatRoom');
+const popupTools = require('popup-tools');
 
 passport.use(new Strategy({
   clientID: process.env.FACEBOOK_CLIENT_ID,

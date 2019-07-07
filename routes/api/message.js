@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var Message = require('../../models/Message');
-var ChatRoom = require('../../models/ChatRoom');
-var User = require('../../models/User');
-var multer = require('multer');
-var slash = require('slash');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const Message = require('../../models/Message');
+const ChatRoom = require('../../models/ChatRoom');
+const User = require('../../models/User');
+const multer = require('multer');
+const slash = require('slash');
 
 var fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {

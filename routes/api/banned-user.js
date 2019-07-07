@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router({mergeParams: true});
-var fs = require('fs');
-var User = require('../../models/User');
-var ChatRoom = require('../../models/ChatRoom');
+const express = require('express');
+const router = express.Router({mergeParams: true});
+const fs = require('fs');
+const User = require('../../models/User');
+const ChatRoom = require('../../models/ChatRoom');
 
 router.post('/', (req, res, next) => {
   if (

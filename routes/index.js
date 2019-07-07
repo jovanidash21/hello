@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-var User = require('../models/User');
-var ChatRoom = require('../models/ChatRoom');
-var Message = require('../models/Message');
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const User = require('../models/User');
+const ChatRoom = require('../models/ChatRoom');
+const Message = require('../models/Message');
 
 router.get('/', (req, res, next) => {
   var ipBlacklist = fs.readFileSync('ip-blacklist.txt').toString().replace(/\r\n/g,'\n').split('\n');
