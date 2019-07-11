@@ -98,6 +98,7 @@ router.post('/', (req, res, next) => {
             { user: { $nin: blockedUsers } }
           ], chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
+          .limit(20)
           .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
           .exec();
       })
@@ -168,7 +169,7 @@ router.post('/text', (req, res, next) => {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(20)
+          .skip(50)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -246,7 +247,7 @@ router.post('/file', fileUpload.single('file'), (req, res, next) => {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(20)
+          .skip(50)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -318,7 +319,7 @@ router.post('/image', imageUpload.single('image'), (req, res, next) => {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(20)
+          .skip(50)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {
@@ -390,7 +391,7 @@ router.post('/audio', audioUpload.single('audio'), (req, res, next) => {
 
         return Message.find({chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
-          .skip(20)
+          .skip(50)
       })
       .then((messages) => {
         for (var i = 0; i < messages.length; i++) {

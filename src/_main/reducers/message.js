@@ -164,7 +164,7 @@ const message = (state=initialState, action) => {
       if ( message.chatRoom === activeChatRoom.data._id ) {
         messages.push(message);
 
-        if ( messages.length > 20 ) {
+        if ( messages.length > 50 ) {
           messages = messages.slice(1);
         }
       }
