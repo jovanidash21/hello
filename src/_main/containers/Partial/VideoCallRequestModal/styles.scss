@@ -27,6 +27,9 @@
       &:hover {
         background-color: transparent;
       }
+      &:focus {
+        outline: none;
+      }
     }
     .accept-call-button {
       background-color: $color-mantis;

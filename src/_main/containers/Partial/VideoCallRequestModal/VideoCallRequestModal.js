@@ -59,12 +59,12 @@ class VideoCallRequestModal extends Component {
             is video calling ...
           </p>
           <div className="video-call-controls">
-            <div className="video-call-button accept-call-button" title="Accept Video Call" onClick={::this.handleAcceptVideoCall}>
+            <button className="video-call-button accept-call-button" title="Accept Video Call" onClick={::this.handleAcceptVideoCall}>
               <FontAwesome name="video-camera" size="2x" />
-            </div>
-            <div className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleRejectVideoCall}>
+            </button>
+            <button className="video-call-button end-call-button" title="Reject Video Call" onClick={::this.handleRejectVideoCall}>
               <FontAwesome name="phone" size="2x" />
-            </div>
+            </button>
           </div>
         </Modal.Body>
       </Modal>
