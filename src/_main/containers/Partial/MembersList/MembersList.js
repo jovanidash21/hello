@@ -11,6 +11,8 @@ import { BanUnbanUserModal } from '../BanUnbanUserModal';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
+import { SOCKET_BROADCAST_EDIT_ACTIVE_USER } from '../../../constants/user';
+import socket from '../../../../socket';
 import './styles.scss';
 
 class MembersList extends Component {
@@ -25,6 +27,15 @@ class MembersList extends Component {
       banUnbanUserModalOpen: false,
       selectedUser: {},
     }
+  }
+  componentDidMount() {
+    socket.on('action', (action) => {
+      switch (action.type) {
+        case SOCKET_BROADCAST_EDIT_ACTIVE_USER:
+          ::this.handleMembersListFilter(this.state.searchFilter);
+          break;
+      }
+    });
   }
   componentDidUpdate(prevProps) {
     if ( prevProps.member.fetch.loading && !this.props.member.fetch.loading ) {

@@ -1,5 +1,6 @@
 import {
   FETCH_ACTIVE_USER,
+  SOCKET_BROADCAST_EDIT_ACTIVE_USER,
 } from '../constants/user';
 import {
   FETCH_MEMBERS,
@@ -147,6 +148,24 @@ const member = (state=initialState, action) => {
         ...state,
         activeUser: action.payload.data.user
       };
+    }
+    case SOCKET_BROADCAST_EDIT_ACTIVE_USER: {
+      var user = action.user;
+      var members = [...state.all];
+
+      var memberIndex = members.findIndex(singleMember => singleMember._id === user._id);
+
+      if ( memberIndex > -1 ) {
+        members[memberIndex] = {
+          ...members[memberIndex],
+          ...user,
+        };
+      }
+
+      return {
+        ...state,
+        all: [...members]
+      }
     }
     case CHANGE_CHAT_ROOM: {
       return {

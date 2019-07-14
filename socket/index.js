@@ -33,6 +33,12 @@ var sockets = function(io) {
             console.log(error);
           });
           break;
+        case 'SOCKET_EDIT_ACTIVE_USER':
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_EDIT_ACTIVE_USER',
+            user: action.user,
+          });
+          break;
         case 'SOCKET_JOIN_CHAT_ROOM':
           var chatRoomClients = [];
           var connectedChatRoomClients = [];

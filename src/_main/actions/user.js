@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   FETCH_ACTIVE_USER,
   EDIT_ACTIVE_USER,
+  SOCKET_EDIT_ACTIVE_USER,
   SEARCH_USER,
 } from '../constants/user';
 import { fetchChatRooms } from './chat-room';
@@ -49,6 +50,12 @@ export function editActiveUser(userID, username, name, email, gender, profilePic
     return dispatch({
       type: EDIT_ACTIVE_USER,
       payload: axios.post('/user/edit-profile', data)
+    })
+    .then((response) => {
+      dispatch({
+        type: SOCKET_EDIT_ACTIVE_USER,
+        user: response.action.payload.data.user,
+      });
     })
     .catch((error) => {
       if (error instanceof Error) {
