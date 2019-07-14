@@ -38,6 +38,10 @@ class ChatBox extends Component {
     ) {
       ::this.handleScrollToBottom();
     }
+
+    if ( prevProps.loading && !this.props.loading ) {
+      this.setState({isChatBoxScrollToBottom: true});
+    }
   }
   handleScrollToBottom() {
     this.chatBox.scrollTop = this.chatBox.scrollHeight;
