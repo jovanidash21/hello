@@ -117,10 +117,10 @@ class ChatRoomMember extends Component {
         title={chatRoomMember.name}
       >
         <div className="chat-room-member" {...chatRoomMemberOptions}>
-          <div className={"online-indicator " + (chatRoomMember.isOnline ? 'online' : '')}>
+          <div className="online-indicator online">
             <FontAwesome
               className="circle-icon"
-              name={chatRoomMember.isOnline ? 'circle' : 'circle-thin'}
+              name="circle"
             />
           </div>
           <Avatar

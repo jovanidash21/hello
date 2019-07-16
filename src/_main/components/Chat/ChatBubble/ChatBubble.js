@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import MediaQuery from 'react-responsive';
 import { emojify } from 'react-emojione';
 import Linkify from 'react-linkify';
 import ReactHtmlParser from 'react-html-parser';
@@ -127,18 +128,57 @@ class ChatBubble extends Component {
     const {
       index,
       message,
+      user,
+      sender,
       canDeleteMessage,
-      small
+      small,
     } = this.props;
     const { isLightboxOpen } = this.state;
+    let isShowDropdownMenu = false;
+    let chatUserNameOptions = {};
+
+    if (
+      !sender &&
+      (
+        user.role === 'owner' ||
+        user.role === 'admin' ||
+        message.user.role !== 'vip'
+      )
+    ) {
+      isShowDropdownMenu = true;
+    }
+
+    if (isShowDropdownMenu) {
+      chatUserNameOptions = {
+        'data-mui-toggle': 'dropdown',
+      };
+    }
 
     return (
       <div className={"chat-bubble " + (small ? 'small' : '')}>
         {
-          !small &&
-          <div className="chat-user-name">
-            {message.user.name}
-          </div>
+          ! small &&
+          <Fragment>
+            <div className="chat-user-name" {...chatUserNameOptions}>
+              {message.user.name}
+            </div>
+            {
+              isShowDropdownMenu &&
+              <ul className="dropdown-menu mui-dropdown__menu">
+                  <MediaQuery query="(max-width: 767px)">
+                  {(matches) => {
+                    return (
+                      <li>
+                        <a href="#" onClick={(e) => {}}>
+                          Direct Messages
+                        </a>
+                      </li>
+                    )
+                  }}
+                </MediaQuery>
+              </ul>
+            }
+          </Fragment>
         }
         {
           ( message.messageType === 'text' ||
@@ -257,13 +297,16 @@ class ChatBubble extends Component {
 
 ChatBubble.propTypes = {
   index: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
+  sender: PropTypes.bool,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
   canDeleteMessage: PropTypes.bool,
   small: PropTypes.bool
 }
 
 ChatBubble.defaultProps = {
+  sender: false,
   canDeleteMessage: false,
   handleOpenModal: () => {},
   small: false

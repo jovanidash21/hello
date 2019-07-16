@@ -77,7 +77,9 @@ class ChatBox extends Component {
                 <ChatBubble
                   key={singleMessage._id}
                   index={i}
+                  user={activeUser}
                   message={singleMessage}
+                  sender={singleMessage.user._id === activeUser._id}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
                   handleOpenModal={::this.handleOpenModal}
