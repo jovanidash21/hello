@@ -29,7 +29,7 @@ router.post('/', (req, res, next) => {
     accountType: 'guest'
   };
 
-  User.findOne({name: req.body.name, accountType: 'guest', isOnline: true}, (err, user) => {
+  User.findOne({name: { $regex : new RegExp(req.body.name, "i") }, accountType: 'guest', isOnline: true}, (err, user) => {
     if (!err) {
       if (user !== null) {
         res.status(401).send({

@@ -81,13 +81,34 @@ router.post('/edit-profile', (req, res, next) => {
       name: req.body.name,
       gender: req.body.gender
     };
+    var userQuery = {};
 
-    User.findOne({username: username})
+    if (req.user.accountType === 'guest') {
+      userQuery = {
+        name: { $regex : new RegExp(req.body.name, "i") },
+        accountType: 'guest',
+        isOnline: true,
+      };
+
+    } else {
+      userQuery = {
+        username: username,
+      };
+    }
+
+    User.findOne(userQuery)
       .then((user) => {
-        if (user != null && user._id != userID) {
+        if (user !== null) {
+          var message = '';
+
+          if (req.user.accountType === 'guest') {
+            message = 'Sorry! Guest name already taken';
+          } else {
+            message = 'Username already exist';
+          }
           res.status(401).send({
             success: false,
-            message: 'Username already exist'
+            message: message,
           });
         } else {
           User.findById(userID)
