@@ -169,7 +169,7 @@ class ChatBubble extends Component {
                   {(matches) => {
                     return (
                       <li>
-                        <a href="#" onClick={(e) => {}}>
+                        <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, message.user._id, matches)}}>
                           Direct Messages
                         </a>
                       </li>
@@ -264,6 +264,13 @@ class ChatBubble extends Component {
 
     handleAudioPlayingToggle(index);
   }
+  handleAddDirectChatRoom(event, userID, mobile) {
+    event.preventDefault();
+
+    const { handleAddDirectChatRoom } = this.props;
+
+    handleAddDirectChatRoom(userID, mobile);
+  }
   handleOpenModal(event) {
     event.preventDefault();
 
@@ -301,6 +308,8 @@ ChatBubble.propTypes = {
   message: PropTypes.object.isRequired,
   sender: PropTypes.bool,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
+  handleAddDirectChatRoom: PropTypes.func,
+  handleOpenModal: PropTypes.func,
   canDeleteMessage: PropTypes.bool,
   small: PropTypes.bool
 }
@@ -308,6 +317,7 @@ ChatBubble.propTypes = {
 ChatBubble.defaultProps = {
   sender: false,
   canDeleteMessage: false,
+  handleAddDirectChatRoom: () => {},
   handleOpenModal: () => {},
   small: false
 }

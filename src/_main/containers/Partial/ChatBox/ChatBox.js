@@ -47,7 +47,7 @@ class ChatBox extends Component {
     this.chatBox.scrollTop = this.chatBox.scrollHeight;
   }
   handleChatBoxScroll() {
-    if ( 
+    if (
       (this.chatBox.scrollTop > (this.chatBox.scrollHeight - this.chatBox.offsetHeight - 30)) ||
       (this.chatBox.offsetHeight >= this.chatBox.scrollHeight)
     ) {
@@ -60,6 +60,7 @@ class ChatBox extends Component {
     const {
       user,
       messages,
+      handleAddDirectChatRoom,
       loading,
       small
     } = this.props;
@@ -82,6 +83,7 @@ class ChatBox extends Component {
                   sender={singleMessage.user._id === activeUser._id}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
+                  handleAddDirectChatRoom={handleAddDirectChatRoom}
                   handleOpenModal={::this.handleOpenModal}
                   small={small}
                 />
@@ -173,11 +175,13 @@ const mapStateToProps = (state) => {
 ChatBox.propTypes = {
   chatRoomID: PropTypes.string.isRequired,
   messages: PropTypes.array.isRequired,
+  handleAddDirectChatRoom: PropTypes.func,
   loading: PropTypes.bool,
   small: PropTypes.bool
 }
 
 ChatBox.defaultProps = {
+  handleAddDirectChatRoom: () => {},
   loading: false,
   small: false
 }

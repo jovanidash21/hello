@@ -140,7 +140,7 @@ class Chat extends Component {
             >
               <MembersList
                 handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
-                handleOpenPopUpChatRoom={::this.handleOpenPopUpChatRoom}
+                handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                 handleRequestLiveVideo={::this.handleRequestLiveVideo}
               />
             </RightSideDrawer>
@@ -160,6 +160,48 @@ class Chat extends Component {
   }
   handleRightSideDrawerToggleState(state) {
     this.setState({isRightSideDrawerOpen: state.isOpen});
+  }
+  handleAddDirectChatRoom(memberID, mobile) {
+    const {
+      user,
+      chatRoom,
+      createDirectChatRoom,
+      changeChatRoom
+    } = this.props;
+    const activeUser = user.active;
+    const userID = activeUser._id;
+    const chatRooms = chatRoom.all;
+    const activeChatRoom = chatRoom.active;
+    var chatRoomExists = false;
+    var existingChatRoomData = {};
+
+    for ( var i = 0; i < chatRooms.length; i++ ) {
+      var singleChatRoom = chatRooms[i];
+
+      if (
+        userID === memberID ||
+        ( singleChatRoom.data.chatType === 'direct' && singleChatRoom.data.members.some(member => member._id === memberID) )
+      ) {
+        chatRoomExists = true;
+        existingChatRoomData = singleChatRoom;
+        break;
+      }
+    }
+
+    if ( !chatRoomExists ) {
+      createDirectChatRoom(userID, memberID, activeChatRoom.data._id, activeUser.connectedChatRoom, !mobile)
+        .then((chatRoom) => {
+          if ( ! mobile ) {
+            ::this.handleOpenPopUpChatRoom(chatRoom);
+          }
+        });
+    } else if ( !isObjectEmpty(existingChatRoomData) ) {
+      if ( mobile ) {
+        changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
+      } else {
+        ::this.handleOpenPopUpChatRoom(existingChatRoomData);
+      }
+    }
   }
   handleOpenPopUpChatRoom(selectedChatRoom) {
     const {
@@ -358,7 +400,7 @@ class Chat extends Component {
 
         requestLiveVideo(activeUser._id, selectedLiveVideoUser, signal);
         this.setState({activeLiveVideoWindow: allLiveVideoUsers.length});
-        ::this. handleRightSideDrawerToggleEvent();
+        ::this.handleRightSideDrawerToggleEvent();
       });
     } else {
       this.setState({activeLiveVideoWindow: selectedLiveVideoUserIndex});
@@ -605,6 +647,7 @@ class Chat extends Component {
                   <ChatBox
                     chatRoomID={activeChatRoom.data._id}
                     messages={message.all}
+                    handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                     loading={message.fetchNew.loading}
                   />
                 </div>

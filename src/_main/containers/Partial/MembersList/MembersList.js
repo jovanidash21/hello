@@ -175,6 +175,7 @@ class MembersList extends Component {
     ::this.handleMembersListFilter(searchFilter);
   }
   onMemberNameKeyDown(event, mobile) {
+    const { handleAddDirectChatRoom } = this.props;
     const {
       members,
       selectedMemberIndex
@@ -206,61 +207,17 @@ class MembersList extends Component {
   }
   handleAddDirectChatRoom(memberID, mobile) {
     const {
-      user,
-      chatRoom,
-      createDirectChatRoom,
-      changeChatRoom,
       handleRightSideDrawerToggleEvent,
-      handleOpenPopUpChatRoom
+      handleAddDirectChatRoom
     } = this.props;
-    const activeUser = user.active;
-    const userID = activeUser._id;
-    const chatRooms = chatRoom.all;
-    const activeChatRoom = chatRoom.active;
-    var chatRoomExists = false;
-    var existingChatRoomData = {};
 
-    for ( var i = 0; i < chatRooms.length; i++ ) {
-      var singleChatRoom = chatRooms[i];
-
-      if (
-        userID === memberID ||
-        ( singleChatRoom.data.chatType === 'direct' && singleChatRoom.data.members.some(member => member._id === memberID) )
-      ) {
-        chatRoomExists = true;
-        existingChatRoomData = singleChatRoom;
-        break;
-      }
-    }
-
-    if ( !chatRoomExists ) {
-      createDirectChatRoom(userID, memberID, activeChatRoom.data._id, activeUser.connectedChatRoom, !mobile)
-        .then((chatRoom) => {
-          if ( ! mobile ) {
-            handleOpenPopUpChatRoom(chatRoom);
-          }
-        });
-    } else if ( !isObjectEmpty(existingChatRoomData) ) {
-      if ( mobile ) {
-        changeChatRoom(existingChatRoomData, userID, activeChatRoom.data._id, user.connectedChatRoom);
-      } else {
-        handleOpenPopUpChatRoom(existingChatRoomData);
-      }
-
-      handleRightSideDrawerToggleEvent();
-      ::this.handleMembersListFilter();
-      this.setState({
-        searchFilter: '',
-        selectedMemberIndex: -1
-      });
-    } else {
-      handleRightSideDrawerToggleEvent();
-      ::this.handleMembersListFilter();
-      this.setState({
-        searchFilter: '',
-        selectedMemberIndex: -1
-      });
-    }
+    handleAddDirectChatRoom(memberID, mobile);
+    handleRightSideDrawerToggleEvent();
+    ::this.handleMembersListFilter();
+    this.setState({
+      searchFilter: '',
+      selectedMemberIndex: -1,
+    });
   }
   handleBlockMember(memberID) {
     const {
@@ -378,7 +335,7 @@ const mapStateToProps = (state) => {
 
 MembersList.propTypes = {
   handleRightSideDrawerToggleEvent: PropTypes.func.isRequired,
-  handleOpenPopUpChatRoom: PropTypes.func.isRequired,
+  handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleRequestLiveVideo: PropTypes.func.isRequired
 }
 
