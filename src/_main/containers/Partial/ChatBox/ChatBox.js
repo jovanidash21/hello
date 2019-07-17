@@ -24,7 +24,7 @@ class ChatBox extends Component {
       isChatBoxScrollToBottom: false,
       scrollPosition: 0,
       audioIndex: -1,
-      isModalOpen: false,
+      deleteMessageModalOpen: false,
       selectedMessageID: ''
     };
   }
@@ -84,7 +84,7 @@ class ChatBox extends Component {
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
                   handleAddDirectChatRoom={handleAddDirectChatRoom}
-                  handleOpenModal={::this.handleOpenModal}
+                  handleOpenDeleteMessageModal={::this.handleOpenDeleteMessageModal}
                   small={small}
                 />
               )
@@ -119,15 +119,15 @@ class ChatBox extends Component {
 
     this.setState({audioIndex: audioPlayingIndex});
   }
-  handleOpenModal(selectedMessageID) {
+  handleOpenDeleteMessageModal(selectedMessageID) {
     this.setState({
-      isModalOpen: true,
+      deleteMessageModalOpen: true,
       selectedMessageID: selectedMessageID
     });
   }
-  handleCloseModal() {
+  handleCloseDeleteMessageModal() {
     this.setState({
-      isModalOpen: false,
+      deleteMessageModalOpen: false,
       selectedMessageID: ''
     });
   }
@@ -140,7 +140,7 @@ class ChatBox extends Component {
       socketIsNotTyping
     } = this.props;
     const {
-      isModalOpen,
+      deleteMessageModalOpen,
       selectedMessageID
     } = this.state;
 
@@ -152,12 +152,12 @@ class ChatBox extends Component {
         >
           {::this.handleChatBoxRender()}
           {
-            isModalOpen &&
+            deleteMessageModalOpen &&
             <DeleteMessageModal
-              isModalOpen={isModalOpen}
+              isModalOpen={deleteMessageModalOpen}
               chatRoomID={chatRoomID}
               selectedMessageID={selectedMessageID}
-              handleCloseModal={::this.handleCloseModal}
+              handleCloseModal={::this.handleCloseDeleteMessageModal}
             />
           }
         </div>

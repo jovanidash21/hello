@@ -138,10 +138,9 @@ class ChatBubble extends Component {
     let chatUserNameOptions = {};
 
     if (
-      !sender &&
+      ! sender &&
       (
-        user.role === 'owner' ||
-        user.role === 'admin' ||
+        user.role !== 'ordinary' ||
         message.user.role !== 'vip'
       )
     ) {
@@ -165,17 +164,42 @@ class ChatBubble extends Component {
             {
               isShowDropdownMenu &&
               <ul className="dropdown-menu mui-dropdown__menu">
+                {
+                  (
+                    user.role === 'owner' ||
+                    user.role === 'admin' ||
+                    message.user !== 'vip'
+                  ) &&
                   <MediaQuery query="(max-width: 767px)">
-                  {(matches) => {
-                    return (
-                      <li>
-                        <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, message.user._id, matches)}}>
-                          Direct Messages
-                        </a>
-                      </li>
-                    )
-                  }}
-                </MediaQuery>
+                    {(matches) => {
+                      return (
+                        <li>
+                          <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, message.user._id, matches)}}>
+                            Direct Messages
+                          </a>
+                        </li>
+                      )
+                    }}
+                  </MediaQuery>
+                }
+                <li>
+                  <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
+                    {!message.user.blocked ? 'Block' : 'Unblock'} user
+                  </a>
+                </li>
+                {
+                  (
+                    ( user.role === 'owner' ||
+                      user.role === 'admin' ) &&
+                    ( message.user.role !== 'owner' &&
+                      message.user.accountType !== 'admin' )
+                  ) &&
+                  <li>
+                    <a href="#" onClick={::this.handleOpenBanUnbanUserModal}>
+                      {!message.user.ban.data ? 'Ban' : 'Unban'} user
+                    </a>
+                  </li>
+                }
               </ul>
             }
           </Fragment>
@@ -243,7 +267,7 @@ class ChatBubble extends Component {
           <div
             className="cross-icon"
             title="Delete Message"
-            onClick={::this.handleOpenModal}
+            onClick={::this.handleOpenDeleteMessageModal}
           >
             <FontAwesome name="times" />
           </div>
@@ -271,17 +295,37 @@ class ChatBubble extends Component {
 
     handleAddDirectChatRoom(userID, mobile);
   }
-  handleOpenModal(event) {
+  handleOpenBlockUnblockUserModal(event) {
+    event.preventDefault();
+
+    const {
+      message,
+      handleOpenBlockUnblockUserModal,
+    } = this.props;
+
+    handleOpenBlockUnblockUserModal(message.user);
+  }
+  handleOpenBanUnbanUserModal(event) {
+    event.preventDefault();
+
+    const {
+      message,
+      handleOpenBanUnbanUserModal,
+    } = this.props;
+
+    handleOpenBanUnbanUserModal(message.user);
+  }
+  handleOpenDeleteMessageModal(event) {
     event.preventDefault();
 
     const {
       message,
       canDeleteMessage,
-      handleOpenModal
+      handleOpenDeleteMessageModal
     } = this.props;
 
     if ( canDeleteMessage ) {
-      handleOpenModal(message._id);
+      handleOpenDeleteMessageModal(message._id);
     }
   }
   render() {
@@ -309,7 +353,9 @@ ChatBubble.propTypes = {
   sender: PropTypes.bool,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func,
-  handleOpenModal: PropTypes.func,
+  handleOpenBlockUnblockUserModal: PropTypes.func,
+  handleOpenBanUnbanUserModal: PropTypes.func,
+  handleOpenDeleteMessageModal: PropTypes.func,
   canDeleteMessage: PropTypes.bool,
   small: PropTypes.bool
 }
@@ -318,7 +364,9 @@ ChatBubble.defaultProps = {
   sender: false,
   canDeleteMessage: false,
   handleAddDirectChatRoom: () => {},
-  handleOpenModal: () => {},
+  handleOpenBlockUnblockUserModal: () => {},
+  handleOpenBanUnbanUserModal:  () => {},
+  handleOpenDeleteMessageModal: () => {},
   small: false
 }
 
