@@ -61,6 +61,8 @@ class ChatBox extends Component {
       user,
       messages,
       handleAddDirectChatRoom,
+      handleOpenBlockUnblockUserModal,
+      handleOpenBanUnbanUserModal,
       loading,
       small
     } = this.props;
@@ -80,10 +82,13 @@ class ChatBox extends Component {
                   index={i}
                   user={activeUser}
                   message={singleMessage}
+                  messageUser={singleMessage.user}
                   sender={singleMessage.user._id === activeUser._id}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
                   handleAddDirectChatRoom={handleAddDirectChatRoom}
+                  handleOpenBlockUnblockUserModal={handleOpenBlockUnblockUserModal}
+                  handleOpenBanUnbanUserModal={handleOpenBanUnbanUserModal}
                   handleOpenDeleteMessageModal={::this.handleOpenDeleteMessageModal}
                   small={small}
                 />
@@ -176,12 +181,16 @@ ChatBox.propTypes = {
   chatRoomID: PropTypes.string.isRequired,
   messages: PropTypes.array.isRequired,
   handleAddDirectChatRoom: PropTypes.func,
+  handleOpenBlockUnblockUserModal: PropTypes.func,
+  handleOpenBanUnbanUserModal: PropTypes.func,
   loading: PropTypes.bool,
   small: PropTypes.bool
 }
 
 ChatBox.defaultProps = {
   handleAddDirectChatRoom: () => {},
+  handleOpenBlockUnblockUserModal: () => {},
+  handleOpenBanUnbanUserModal: () => {},
   loading: false,
   small: false
 }

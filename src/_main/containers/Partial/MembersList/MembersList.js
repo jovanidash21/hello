@@ -6,8 +6,6 @@ import FontAwesome from 'react-fontawesome';
 import mapDispatchToProps from '../../../actions';
 import { formatNumber } from '../../../../utils/number';
 import { isObjectEmpty } from '../../../../utils/object';
-import { BlockUnblockUserModal } from '../BlockUnblockUserModal';
-import { BanUnbanUserModal } from '../BanUnbanUserModal';
 import { LoadingAnimation } from '../../../../components/LoadingAnimation';
 import { SearchFilter } from '../../../../components/SearchFilter';
 import { ChatRoomMember } from '../../../components/RightSideDrawer';
@@ -23,9 +21,6 @@ class MembersList extends Component {
       members: [],
       searchFilter: '',
       selectedMemberIndex: -1,
-      blockUnblockUserModalOpen: false,
-      banUnbanUserModalOpen: false,
-      selectedUser: {},
     }
   }
   componentDidMount() {
@@ -92,7 +87,9 @@ class MembersList extends Component {
       user,
       chatRoom,
       member,
-      handleRequestLiveVideo
+      handleOpenBlockUnblockUserModal,
+      handleOpenBanUnbanUserModal,
+      handleRequestLiveVideo,
     } = this.props;
     const {
       members,
@@ -151,12 +148,11 @@ class MembersList extends Component {
                   chatRoomMember={chatRoomMember}
                   handleRequestLiveVideo={handleRequestLiveVideo}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
-                  handleOpenBlockUnblockUserModal={::this.handleOpenBlockUnblockUserModal}
-                  handleBlockMember={::this.handleBlockMember}
+                  handleOpenBlockUnblockUserModal={handleOpenBlockUnblockUserModal}
                   handleKickMember={::this.handleKickMember}
                   handleUpdateMemberRole={::this.handleUpdateMemberRole}
                   handleMuteMember={::this.handleMuteMember}
-                  handleOpenBanUnbanUserModal={::this.handleOpenBanUnbanUserModal}
+                  handleOpenBanUnbanUserModal={handleOpenBanUnbanUserModal}
                   isActive={selectedMemberIndex === i}
                 />
               )
@@ -222,17 +218,6 @@ class MembersList extends Component {
       selectedMemberIndex: -1,
     });
   }
-  handleBlockMember(memberID) {
-    const {
-      user,
-      blockMember
-    } = this.props;
-    const userData = user.active;
-
-    if ( userData.role === 'owner' || userData.role === 'admin' ) {
-      blockMember(memberID);
-    }
-  }
   handleKickMember(memberID) {
     const {
       user,
@@ -268,61 +253,16 @@ class MembersList extends Component {
       muteMember(memberID);
     }
   }
-  handleOpenBlockUnblockUserModal(selectedUser) {
-    this.setState({
-      blockUnblockUserModalOpen: true,
-      selectedUser,
-    });
-  }
-  handleCloseBlockUnblockUserModal() {
-    this.setState({
-      blockUnblockUserModalOpen: false,
-      selectedUser: {},
-    });
-  }
-  handleOpenBanUnbanUserModal(selectedUser) {
-    this.setState({
-      banUnbanUserModalOpen: true,
-      selectedUser,
-    });
-  }
-  handleCloseBanUnbanUserModal() {
-    this.setState({
-      banUnbanUserModalOpen: false,
-      selectedUser: {},
-    });
-  }
   render() {
     const {
       isRightSideDrawerOpen,
       handleRightSideDrawerToggleState,
       noOverlay,
     } = this.props;
-    const {
-      blockUnblockUserModalOpen,
-      banUnbanUserModalOpen,
-      selectedUser,
-    } = this.state;
 
     return (
       <div style={{height: '100%'}}>
         {::this.handleMembersListRender()}
-        {
-          blockUnblockUserModalOpen &&
-          <BlockUnblockUserModal
-            open={blockUnblockUserModalOpen}
-            selectedUser={selectedUser}
-            onClose={::this.handleCloseBlockUnblockUserModal}
-          />
-        }
-        {
-          banUnbanUserModalOpen &&
-          <BanUnbanUserModal
-            open={banUnbanUserModalOpen}
-            selectedUser={selectedUser}
-            onClose={::this.handleCloseBanUnbanUserModal}
-          />
-        }
       </div>
     );
   }
@@ -339,6 +279,8 @@ const mapStateToProps = (state) => {
 MembersList.propTypes = {
   handleRightSideDrawerToggleEvent: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
+  handleOpenBlockUnblockUserModal: PropTypes.func.isRequired,
+  handleOpenBanUnbanUserModal: PropTypes.func.isRequired,
   handleRequestLiveVideo: PropTypes.func.isRequired
 }
 

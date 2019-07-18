@@ -249,7 +249,11 @@ export function sendAudioMessage(newMessageID, text, audioBlob, user, chatRoomID
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
-    accountType: user.accountType
+    accountType: user.accountType,
+    blocked: false,
+    ban: {
+      data: false,
+    }
   };
 
   let config = {

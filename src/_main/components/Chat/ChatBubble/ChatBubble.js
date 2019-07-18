@@ -129,6 +129,7 @@ class ChatBubble extends Component {
       index,
       message,
       user,
+      messageUser,
       sender,
       canDeleteMessage,
       small,
@@ -141,7 +142,7 @@ class ChatBubble extends Component {
       ! sender &&
       (
         user.role !== 'ordinary' ||
-        message.user.role !== 'vip'
+        messageUser.role !== 'vip'
       )
     ) {
       isShowDropdownMenu = true;
@@ -159,7 +160,7 @@ class ChatBubble extends Component {
           ! small &&
           <Fragment>
             <div className="chat-user-name" {...chatUserNameOptions}>
-              {message.user.name}
+              {messageUser.name}
             </div>
             {
               isShowDropdownMenu &&
@@ -168,13 +169,13 @@ class ChatBubble extends Component {
                   (
                     user.role === 'owner' ||
                     user.role === 'admin' ||
-                    message.user !== 'vip'
+                    messageUser !== 'vip'
                   ) &&
                   <MediaQuery query="(max-width: 767px)">
                     {(matches) => {
                       return (
                         <li>
-                          <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, message.user._id, matches)}}>
+                          <a href="#" onClick={(e) => {::this.handleAddDirectChatRoom(e, messageUser._id, matches)}}>
                             Direct Messages
                           </a>
                         </li>
@@ -184,19 +185,19 @@ class ChatBubble extends Component {
                 }
                 <li>
                   <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
-                    {!message.user.blocked ? 'Block' : 'Unblock'} user
+                    {!messageUser.blocked ? 'Block' : 'Unblock'} user
                   </a>
                 </li>
                 {
                   (
                     ( user.role === 'owner' ||
                       user.role === 'admin' ) &&
-                    ( message.user.role !== 'owner' &&
-                      message.user.accountType !== 'admin' )
+                    ( messageUser.role !== 'owner' &&
+                      messageUser.accountType !== 'admin' )
                   ) &&
                   <li>
                     <a href="#" onClick={::this.handleOpenBanUnbanUserModal}>
-                      {!message.user.ban.data ? 'Ban' : 'Unban'} user
+                      {!messageUser.ban.data ? 'Ban' : 'Unban'} user
                     </a>
                   </li>
                 }
@@ -299,21 +300,21 @@ class ChatBubble extends Component {
     event.preventDefault();
 
     const {
-      message,
+      messageUser,
       handleOpenBlockUnblockUserModal,
     } = this.props;
 
-    handleOpenBlockUnblockUserModal(message.user);
+    handleOpenBlockUnblockUserModal(messageUser);
   }
   handleOpenBanUnbanUserModal(event) {
     event.preventDefault();
 
     const {
-      message,
+      messageUser,
       handleOpenBanUnbanUserModal,
     } = this.props;
 
-    handleOpenBanUnbanUserModal(message.user);
+    handleOpenBanUnbanUserModal(messageUser);
   }
   handleOpenDeleteMessageModal(event) {
     event.preventDefault();
@@ -329,16 +330,16 @@ class ChatBubble extends Component {
     }
   }
   render() {
-    const { message } = this.props;
+    const { messageUser } = this.props;
 
     return (
       <div className="chat-bubble-wrapper">
         <Avatar
-          image={message.user.profilePicture}
+          image={messageUser.profilePicture}
           size="25px"
-          name={message.user.name}
-          roleChatType={message.user.role}
-          accountType={message.user.accountType}
+          name={messageUser.name}
+          roleChatType={messageUser.role}
+          accountType={messageUser.accountType}
         />
         {::this.handleChatBubbleRender()}
       </div>
@@ -350,6 +351,7 @@ ChatBubble.propTypes = {
   index: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
+  messageUser: PropTypes.object.isRequired,
   sender: PropTypes.bool,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func,

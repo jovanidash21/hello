@@ -20,6 +20,8 @@ import {
   ActiveChatRoom,
   ChatRoomsList,
   MembersList,
+  BlockUnblockUserModal,
+  BanUnbanUserModal,
   LiveVideoWindow,
   VideoCallRequestModal,
   VideoCallWindow
@@ -56,6 +58,9 @@ class Chat extends Component {
       isRightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
       isAudioRecorderOpen: false,
+      blockUnblockUserModalOpen: false,
+      banUnbanUserModalOpen: false,
+      selectedUser: {},
       activeLiveVideoWindow: -1,
       localVideoSource: {},
       remoteVideoSource: {},
@@ -141,6 +146,8 @@ class Chat extends Component {
               <MembersList
                 handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
                 handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
+                handleOpenBlockUnblockUserModal={::this.handleOpenBlockUnblockUserModal}
+                handleOpenBanUnbanUserModal={::this.handleOpenBanUnbanUserModal}
                 handleRequestLiveVideo={::this.handleRequestLiveVideo}
               />
             </RightSideDrawer>
@@ -306,6 +313,30 @@ class Chat extends Component {
     } else {
       sendImageMessage(newMessageID, text, image, user.active, chatRoomID);
     }
+  }
+  handleOpenBlockUnblockUserModal(selectedUser) {
+    this.setState({
+      blockUnblockUserModalOpen: true,
+      selectedUser,
+    });
+  }
+  handleCloseBlockUnblockUserModal() {
+    this.setState({
+      blockUnblockUserModalOpen: false,
+      selectedUser: {},
+    });
+  }
+  handleOpenBanUnbanUserModal(selectedUser) {
+    this.setState({
+      banUnbanUserModalOpen: true,
+      selectedUser,
+    });
+  }
+  handleCloseBanUnbanUserModal() {
+    this.setState({
+      banUnbanUserModalOpen: false,
+      selectedUser: {},
+    });
   }
   handleVideoError() {
     Popup.alert('Camera is not supported on your device!');
@@ -556,11 +587,14 @@ class Chat extends Component {
       isLeftSideDrawerOpen,
       activeChatPopUpWindow,
       isAudioRecorderOpen,
+      blockUnblockUserModalOpen,
+      banUnbanUserModalOpen,
+      selectedUser,
       activeLiveVideoWindow,
       localVideoSource,
       remoteVideoSource,
       isVideoCallRequestModalOpen,
-      isVideoCallWindowOpen
+      isVideoCallWindowOpen,
     } = this.state;
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
@@ -648,6 +682,8 @@ class Chat extends Component {
                     chatRoomID={activeChatRoom.data._id}
                     messages={message.all}
                     handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
+                    handleOpenBlockUnblockUserModal={::this.handleOpenBlockUnblockUserModal}
+                    handleOpenBanUnbanUserModal={::this.handleOpenBanUnbanUserModal}
                     loading={message.fetchNew.loading}
                   />
                 </div>
@@ -688,6 +724,22 @@ class Chat extends Component {
               </div>
               :
               <ChatRoomsMenu />
+        }
+        {
+          blockUnblockUserModalOpen &&
+          <BlockUnblockUserModal
+            open={blockUnblockUserModalOpen}
+            selectedUser={selectedUser}
+            onClose={::this.handleCloseBlockUnblockUserModal}
+          />
+        }
+        {
+          banUnbanUserModalOpen &&
+          <BanUnbanUserModal
+            open={banUnbanUserModalOpen}
+            selectedUser={selectedUser}
+            onClose={::this.handleCloseBanUnbanUserModal}
+          />
         }
         {
           isVideoCallRequestModalOpen &&

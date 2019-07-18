@@ -99,11 +99,16 @@ router.post('/', (req, res, next) => {
           ], chatRoom: chatRoomID})
           .sort({createdAt: 'descending'})
           .limit(20)
-          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID')
+          .populate('user', '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ipAddress -socketID')
+          .lean()
           .exec();
       })
       .then((messages) => {
         var chatRoomMessages = messages.reverse();
+
+        for (var i = 0; i < messages.length; i++) {
+          messages[i].user.blocked = false;
+        }
 
         User.updateOne(
           { _id: userID, 'chatRooms.data': chatRoomID },

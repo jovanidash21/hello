@@ -305,7 +305,6 @@ ChatRoomMember.propTypes = {
   handleRequestLiveVideo: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleOpenBlockUnblockUserModal: PropTypes.func.isRequired,
-  handleBlockMember: PropTypes.func.isRequired,
   handleKickMember: PropTypes.func.isRequired,
   handleUpdateMemberRole: PropTypes.func.isRequired,
   handleMuteMember: PropTypes.func.isRequired,

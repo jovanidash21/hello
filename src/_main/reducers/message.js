@@ -6,6 +6,17 @@ import {
   SOCKET_BROADCAST_DELETE_MESSAGE
 } from '../constants/message';
 import { CHANGE_CHAT_ROOM } from '../constants/chat-room';
+import {
+  BLOCK_USER,
+  UNBLOCK_USER,
+  UNBLOCK_ALL_USERS,
+} from '../constants/blocked-user';
+import {
+  BAN_USER,
+  SOCKET_BROADCAST_BAN_USER,
+  UNBAN_USER,
+  UNBAN_ALL_USERS,
+} from '../constants/banned-user';
 
 const commonStateFlags = {
   loading: false,
@@ -172,6 +183,105 @@ const message = (state=initialState, action) => {
       return {
         ...state,
         all: [...messages]
+      };
+    }
+    case `${BLOCK_USER}_SUCCESS`: {
+      const blockedUserID = action.meta;
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        if (messages[i].user._id === blockedUserID) {
+          messages[i].user.blocked = true;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case `${UNBLOCK_USER}_SUCCESS`: {
+      const unblockedUserID = action.meta;
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        if (messages[i].user._id === unblockedUserID) {
+          messages[i].user.blocked = false;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case `${UNBLOCK_ALL_USERS}_SUCCESS`: {
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        messages[i].user.blocked = false;
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case `${BAN_USER}_SUCCESS`: {
+      const bannedUserID = action.meta;
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        if (messages[i].user._id === bannedUserID) {
+          messages[i].user.ban.data = true;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case `${UNBAN_USER}_SUCCESS`: {
+      const unbannedUserID = action.meta;
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        if (messages[i].user._id === unbannedUserID) {
+          messages[i].user.ban.data = false;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case `${UNBAN_ALL_USERS}_SUCCESS`: {
+      const messages = [...state.all];
+
+      for ( let i = 0; i < members.length; i += 1 ) {
+        messages[i].user.ban.data = false;
+      }
+
+      return {
+        ...state,
+        all: [...messages],
+      };
+    }
+    case SOCKET_BROADCAST_BAN_USER: {
+      const bannedUserID = action.bannedUserID;
+      const messages = [...state.all];
+
+      for ( let i = 0; i < messages.length; i += 1 ) {
+        if (messages[i].user._id === bannedUserID) {
+          messages[i].user.ban.data = true;
+        }
+      }
+
+      return {
+        ...state,
+        all: [...messages],
       };
     }
     case SOCKET_BROADCAST_DELETE_MESSAGE: {
