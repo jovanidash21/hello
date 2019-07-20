@@ -54,10 +54,10 @@ class Chat extends Component {
     this.liveVideoPeer = null;
 
     this.state = {
-      isLeftSideDrawerOpen: false,
-      isRightSideDrawerOpen: false,
+      leftSideDrawerOpen: false,
+      rightSideDrawerOpen: false,
       activeChatPopUpWindow: -1,
-      isAudioRecorderOpen: false,
+      audioRecorderOpen: false,
       blockUnblockUserModalOpen: false,
       banUnbanUserModalOpen: false,
       selectedUser: {},
@@ -132,7 +132,7 @@ class Chat extends Component {
     }
   }
   handleRightSideDrawerRender() {
-    const { isRightSideDrawerOpen } = this.state;
+    const { rightSideDrawerOpen } = this.state;
 
     return (
       <MediaQuery query="(max-width: 767px)">
@@ -140,7 +140,7 @@ class Chat extends Component {
           return (
             <RightSideDrawer
               handleRightSideDrawerToggleState={::this.handleRightSideDrawerToggleState}
-              isRightSideDrawerOpen={matches ? isRightSideDrawerOpen : true}
+              open={matches ? rightSideDrawerOpen : true}
               noOverlay={matches ? false : true}
             >
               <MembersList
@@ -157,16 +157,16 @@ class Chat extends Component {
     )
   }
   handleLeftSideDrawerToggleEvent(openTheDrawer=false) {
-    this.setState({isLeftSideDrawerOpen: openTheDrawer});
+    this.setState({leftSideDrawerOpen: openTheDrawer});
   }
   handleLeftSideDrawerToggleState(state) {
-    this.setState({isLeftSideDrawerOpen: state.isOpen});
+    this.setState({leftSideDrawerOpen: state.isOpen});
   }
   handleRightSideDrawerToggleEvent(openTheDrawer=false) {
-    this.setState({isRightSideDrawerOpen: openTheDrawer});
+    this.setState({rightSideDrawerOpen: openTheDrawer});
   }
   handleRightSideDrawerToggleState(state) {
-    this.setState({isRightSideDrawerOpen: state.isOpen});
+    this.setState({rightSideDrawerOpen: state.isOpen});
   }
   handleAddDirectChatRoom(memberID, mobile) {
     const {
@@ -244,7 +244,7 @@ class Chat extends Component {
   handleAudioRecorderToggle(event) {
     event.preventDefault();
 
-    this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
+    this.setState({audioRecorderOpen: !this.state.audioRecorderOpen});
   }
   handleSendTextMessage(newMessageID, text, chatRoomID, textColor) {
     const {
@@ -584,9 +584,9 @@ class Chat extends Component {
       searchUser
     } = this.props;
     const {
-      isLeftSideDrawerOpen,
+      leftSideDrawerOpen,
       activeChatPopUpWindow,
-      isAudioRecorderOpen,
+      audioRecorderOpen,
       blockUnblockUserModalOpen,
       banUnbanUserModalOpen,
       selectedUser,
@@ -618,7 +618,7 @@ class Chat extends Component {
               >
                 <LeftSideDrawer
                   handleLeftSideDrawerToggleState={::this.handleLeftSideDrawerToggleState}
-                  isLeftSideDrawerOpen={isLeftSideDrawerOpen}
+                  open={leftSideDrawerOpen}
                 >
                   <ChatRoomsList
                     handleLeftSideDrawerToggleEvent={::this.handleLeftSideDrawerToggleEvent}
@@ -636,7 +636,7 @@ class Chat extends Component {
                     handleRightSideDrawerToggleEvent={::this.handleRightSideDrawerToggleEvent}
                   />
                 </Header>
-                <div className={"chat-box-wrapper " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+                <div className={"chat-box-wrapper " + (audioRecorderOpen ? 'audio-recorder-open' : '')}>
                   <MediaQuery query="(min-width: 768px)">
                     {
                       popUpChatRoom.all.length > 0 &&
@@ -689,7 +689,7 @@ class Chat extends Component {
                 </div>
                 {
                   !user.active.mute.data && (
-                    !isAudioRecorderOpen
+                    !audioRecorderOpen
                       ?
                       <ChatInput
                         user={user.active}

@@ -21,7 +21,7 @@ class ChatPopUpWindow extends Component {
     super(props);
 
     this.state = {
-      isAudioRecorderOpen: false
+      audioRecorderOpen: false,
     };
   }
   handleActiveChatPopUpWindow(event) {
@@ -37,7 +37,7 @@ class ChatPopUpWindow extends Component {
   handleAudioRecorderToggle(event) {
     event.preventDefault();
 
-    this.setState({isAudioRecorderOpen: !this.state.isAudioRecorderOpen});
+    this.setState({audioRecorderOpen: !this.state.audioRecorderOpen});
   }
   handleRequestVideoCall(event) {
     event.preventDefault();
@@ -77,7 +77,7 @@ class ChatPopUpWindow extends Component {
       handleSendAudioMessage,
       active
     } = this.props;
-    const { isAudioRecorderOpen } = this.state;
+    const { audioRecorderOpen } = this.state;
     const activeUser = user.active;
     const isChatInputDisabled = popUpChatRoom.message.fetchNew.loading;
 
@@ -118,7 +118,7 @@ class ChatPopUpWindow extends Component {
               <FontAwesome name="times" />
             </div>
           </div>
-          <div className={"popup-body " + (isAudioRecorderOpen ? 'audio-recorder-open' : '')}>
+          <div className={"popup-body " + (audioRecorderOpen ? 'audio-recorder-open' : '')}>
             <ChatBox
               chatRoomID={popUpChatRoom.data._id}
               messages={popUpChatRoom.message.all}
@@ -129,7 +129,7 @@ class ChatPopUpWindow extends Component {
           <div className="popup-footer">
             {
               !user.active.mute.data && (
-                !isAudioRecorderOpen
+                !audioRecorderOpen
                   ?
                   <ChatInput
                     id={"popup-" + index}

@@ -21,7 +21,7 @@ class ChatBox extends Component {
     super(props);
 
     this.state = {
-      isChatBoxScrollToBottom: false,
+      chatBoxScrollToBottom: false,
       scrollPosition: 0,
       audioIndex: -1,
       deleteMessageModalOpen: false,
@@ -34,13 +34,13 @@ class ChatBox extends Component {
   componentDidUpdate(prevProps) {
     if (
       ( prevProps.loading && !this.props.loading ) ||
-      this.state.isChatBoxScrollToBottom
+      this.state.chatBoxScrollToBottom
     ) {
       ::this.handleScrollToBottom();
     }
 
     if ( prevProps.loading && !this.props.loading ) {
-      this.setState({isChatBoxScrollToBottom: true});
+      this.setState({chatBoxScrollToBottom: true});
     }
   }
   handleScrollToBottom() {
@@ -51,9 +51,9 @@ class ChatBox extends Component {
       (this.chatBox.scrollTop > (this.chatBox.scrollHeight - this.chatBox.offsetHeight - 30)) ||
       (this.chatBox.offsetHeight >= this.chatBox.scrollHeight)
     ) {
-      this.setState({isChatBoxScrollToBottom: true});
+      this.setState({chatBoxScrollToBottom: true});
     } else {
-      this.setState({isChatBoxScrollToBottom: false});
+      this.setState({chatBoxScrollToBottom: false});
     }
   }
   handleChatBoxRender() {
