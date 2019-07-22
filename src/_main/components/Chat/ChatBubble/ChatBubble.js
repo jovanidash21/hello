@@ -17,7 +17,7 @@ class ChatBubble extends Component {
     super(props);
 
     this.state = {
-      isLightboxOpen: false
+      lightboxOpen: false,
     };
   }
   handleUserTagColor(text) {
@@ -61,7 +61,7 @@ class ChatBubble extends Component {
   handleMessageText() {
     const {
       message,
-      small
+      small,
     } = this.props;
     var messageText = message.text;
 
@@ -134,7 +134,7 @@ class ChatBubble extends Component {
       canDeleteMessage,
       small,
     } = this.props;
-    const { isLightboxOpen } = this.state;
+    const { lightboxOpen } = this.state;
     let isShowDropdownMenu = false;
     let chatUserNameOptions = {};
 
@@ -248,13 +248,14 @@ class ChatBubble extends Component {
         }
         {
           message.messageType === 'image' &&
-          isLightboxOpen &&
+          lightboxOpen &&
           <Lightbox
             mainSrc={message.fileLink}
             onCloseRequest={::this.handleLightboxToggle}
           />
         }
         {
+          sender &&
           message.isSending !== undefined &&
           <div
             className={"sending-status " + (!message.isSending ? 'sent' : '')}
@@ -279,12 +280,12 @@ class ChatBubble extends Component {
   handleLightboxToggle(event) {
     event.preventDefault();
 
-    this.setState({isLightboxOpen: !this.state.isLightboxOpen});
+    this.setState({lightboxOpen: !this.state.lightboxOpen});
   }
   handleAudioOnPlay(event) {
     const {
       index,
-      handleAudioPlayingToggle
+      handleAudioPlayingToggle,
     } = this.props;
 
     handleAudioPlayingToggle(index);
@@ -322,7 +323,7 @@ class ChatBubble extends Component {
     const {
       message,
       canDeleteMessage,
-      handleOpenDeleteMessageModal
+      handleOpenDeleteMessageModal,
     } = this.props;
 
     if ( canDeleteMessage ) {
@@ -359,7 +360,7 @@ ChatBubble.propTypes = {
   handleOpenBanUnbanUserModal: PropTypes.func,
   handleOpenDeleteMessageModal: PropTypes.func,
   canDeleteMessage: PropTypes.bool,
-  small: PropTypes.bool
+  small: PropTypes.bool,
 }
 
 ChatBubble.defaultProps = {
@@ -369,7 +370,7 @@ ChatBubble.defaultProps = {
   handleOpenBlockUnblockUserModal: () => {},
   handleOpenBanUnbanUserModal:  () => {},
   handleOpenDeleteMessageModal: () => {},
-  small: false
+  small: false,
 }
 
 export default ChatBubble;
