@@ -22,7 +22,7 @@ class CreateChatRoomModal extends Component {
 
     this.state = {
       chatRoomName: '',
-      public: false,
+      publicChatRoom: false,
       members: [this.props.user.active]
     }
   }
@@ -46,7 +46,7 @@ class CreateChatRoomModal extends Component {
     this.setState({[event.target.name]: event.target.checked});
   }
   onIsChatRoomPublicChange(event) {
-    this.setState({public: event.target.checked});
+    this.setState({publicChatRoom: event.target.checked});
   }
   onSuggestionSelected(event, suggestion, mobile) {
     event.preventDefault();
@@ -98,13 +98,13 @@ class CreateChatRoomModal extends Component {
     } = this.props;
     const {
       chatRoomName,
-      public,
+      publicChatRoom,
       members
     } = this.state;
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
 
-    if ( public && chatRoomName.length > 0 ) {
+    if ( publicChatRoomc && chatRoomName.length > 0 ) {
       createPublicChatRoom(chatRoomName, activeUser._id, activeChatRoom._id, activeUser.connectedChatRoom);
     } else if (
       chatType === 'group' &&
@@ -180,7 +180,7 @@ class CreateChatRoomModal extends Component {
     } = this.props;
     const {
       chatRoomName,
-      public,
+      publicChatRoom,
       members
     } = this.state;
     const searchedUsers = user.searched.filter((singleUser) => {
@@ -188,7 +188,7 @@ class CreateChatRoomModal extends Component {
     });
     const isButtonDisabled =
       chatRoomName.length === 0 ||
-      ( !public && ( members.length < 3 || members.length === 5 ) ) ||
+      ( ! publicChatRoom && ( members.length < 3 || members.length === 5 ) ) ||
       chatRoom.create.loading;
 
     return (
@@ -225,15 +225,15 @@ class CreateChatRoomModal extends Component {
                 <Checkbox
                   id="chat-room-public"
                   label="Make this public"
-                  name="public"
+                  name="publicChatRoom"
                   onChange={::this.onCheckboxChange}
-                  checked={public}
+                  checked={publicChatRoom}
                   disabled={chatRoom.create.loading}
                 />
               </Fragment>
             }
             {
-              !public &&
+              ! publicChatRoom &&
               <MediaQuery query="(max-width: 767px)">
                 {(matches) => {
                   return (

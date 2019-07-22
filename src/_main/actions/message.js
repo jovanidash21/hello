@@ -53,7 +53,11 @@ export function sendTextMessage(newMessageID, text, user, chatRoomID, textColor)
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
-    accountType: user.accountType
+    accountType: user.accountType,
+    blocked: false,
+    ban: {
+      data: false,
+    }
   };
 
   return dispatch => {
@@ -111,7 +115,11 @@ export function sendFileMessage(newMessageID, text, file, user, chatRoomID) {
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
-    accountType: user.accountType
+    accountType: user.accountType,
+    blocked: false,
+    ban: {
+      data: false,
+    }
   };
 
   let config = {
@@ -182,7 +190,11 @@ export function sendImageMessage(newMessageID, text, image, user, chatRoomID) {
     name: user.name,
     profilePicture: user.profilePicture,
     role: user.role,
-    accountType: user.accountType
+    accountType: user.accountType,
+    blocked: false,
+    ban: {
+      data: false,
+    }
   };
 
   let config = {
