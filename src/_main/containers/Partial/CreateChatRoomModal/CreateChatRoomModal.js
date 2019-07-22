@@ -104,7 +104,7 @@ class CreateChatRoomModal extends Component {
     const activeUser = user.active;
     const activeChatRoom = chatRoom.active;
 
-    if ( publicChatRoomc && chatRoomName.length > 0 ) {
+    if ( publicChatRoom && chatRoomName.length > 0 ) {
       createPublicChatRoom(chatRoomName, activeUser._id, activeChatRoom._id, activeUser.connectedChatRoom);
     } else if (
       chatType === 'group' &&
