@@ -117,20 +117,6 @@ class Chat extends Component {
 
     this.chatSection.setAttribute('style', 'height:' + viewportHeight + 'px;');
   }
-  handleChatBoxScroll() {
-    if ( this.chatBox.scrollTop === (this.chatBox.scrollHeight - this.chatBox.offsetHeight)) {
-      this.setState({isChatBoxScrollToBottom: true});
-    } else {
-      this.setState({isChatBoxScrollToBottom: false});
-    }
-
-    if ( this.chatBox.scrollTop < 40 ) {
-      this.setState({isChatBoxScrollToTop: true});
-      ::this.handleFetchOldMessages();
-    } else {
-      this.setState({isChatBoxScrollToTop: false});
-    }
-  }
   handleRightSideDrawerRender() {
     const { rightSideDrawerOpen } = this.state;
 
