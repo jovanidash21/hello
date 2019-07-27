@@ -188,13 +188,16 @@ class ChatRoomMember extends Component {
                 {chatRoomMember.ipAddress}
               </li>
             }
-            <li>
-              <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
-                {!chatRoomMember.blocked ? 'Block' : 'Unblock'} user
-              </a>
-            </li>
             {
-              user._id !== chatRoomMember._id &&
+              chatRoomMember.role !== 'owner' &&
+              chatRoomMember.role !== 'admin' &&
+              <li>
+                <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
+                  {!chatRoomMember.blocked ? 'Block' : 'Unblock'} user
+                </a>
+              </li>
+            }
+            {
               chatRoomMember.isLiveVideoActive &&
               <li>
                 <a href="#" onClick={::this.handleRequestLiveVideo}>

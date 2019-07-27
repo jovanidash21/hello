@@ -46,23 +46,35 @@ router.post('/block', (req, res, next) => {
   } else {
     var blockUserID = req.body.blockUserID;
 
-    User.findByIdAndUpdate(
-      userID,
-      { $addToSet: { blockedUsers: blockUserID }},
-      { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
-    )
-    .then((user) => {
-      res.status(200).send({
-        success: true,
-        message: 'User Blocked'
-      });
-    })
-    .catch((error) => {
-      res.status(500).send({
-        success: false,
-        message: 'Server Error!'
-      });
-    });
+    User.findById(blockUserID)
+      .then((user) => {
+        if (
+          user.role === 'owner' ||
+          user.role === 'admin'
+        ) {
+          res.status(401).send({
+            success: false,
+            message: 'Unauthorized'
+          });
+        } else {
+          User.findByIdAndUpdate(
+            userID,
+            { $addToSet: { blockedUsers: blockUserID }},
+            { safe: true, upsert: true, new: true, select: '-username -email -chatRooms -connectedChatRoom -blockedUsers -mute -ban -ipAddress -socketID' }
+          );
+
+          res.status(200).send({
+            success: true,
+            message: 'User Blocked'
+          });
+        }
+      })
+      .catch((error) => {
+        res.status(500).send({
+          success: false,
+          message: 'Server Error!'
+        });
+      });      
   }
 });
 

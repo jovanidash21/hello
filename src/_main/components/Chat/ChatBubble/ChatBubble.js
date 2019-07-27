@@ -183,11 +183,15 @@ class ChatBubble extends Component {
                     }}
                   </MediaQuery>
                 }
-                <li>
-                  <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
-                    {!messageUser.blocked ? 'Block' : 'Unblock'} user
-                  </a>
-                </li>
+                {
+                  messageUser.role !== 'owner' &&
+                  messageUser.role !== 'admin' &&
+                  <li>
+                    <a href="#" onClick={::this.handleOpenBlockUnblockUserModal}>
+                      {!messageUser.blocked ? 'Block' : 'Unblock'} user
+                    </a>
+                  </li>
+                }
                 {
                   (
                     ( user.role === 'owner' ||
