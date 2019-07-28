@@ -98,12 +98,18 @@ router.post('/edit-profile', (req, res, next) => {
 
     User.findOne(userQuery)
       .then((user) => {
-        if (user !== null) {
+        if (
+          (user !== null) &&
+          (
+            (req.user.accountType === 'guest') ||
+            (user._id != userID)
+          )
+        ) {
           var message = '';
 
           if (req.user.accountType === 'guest') {
             message = 'Sorry! Guest name already taken';
-          } else {
+          } else if (user._id != userID) {
             message = 'Username already exist';
           }
           res.status(401).send({
