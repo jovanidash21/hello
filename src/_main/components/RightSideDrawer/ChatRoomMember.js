@@ -68,7 +68,7 @@ class ChatRoomMember extends Component {
 
     const {
       chatRoomMember,
-      handleMuteMember
+      handleMuteMember,
     } = this.props;
 
     handleMuteMember(chatRoomMember._id);
@@ -87,7 +87,8 @@ class ChatRoomMember extends Component {
     const {
       user,
       chatRoomMember,
-      isActive
+      dropdownTop,
+      active,
     } = this.props;
     var isShowDropdownMenu = false;
     var chatRoomMemberOptions = {};
@@ -112,7 +113,7 @@ class ChatRoomMember extends Component {
       <div
         className={"chat-room-member-wrapper " +
           (chatRoomMember.role === 'vip' ? 'special ' : ' ' ) +
-          (isActive ? 'active' : '')
+          (active ? 'active' : '')
         }
         title={chatRoomMember.name}
       >
@@ -158,7 +159,7 @@ class ChatRoomMember extends Component {
         </div>
         {
           isShowDropdownMenu &&
-          <ul className="dropdown-menu mui-dropdown__menu mui-dropdown__menu--right">
+          <ul className={"dropdown-menu mui-dropdown__menu mui-dropdown__menu--right " + (dropdownTop ? 'dropdown-menu-top' : '')}>
             {
               (
                 user.role === 'owner' ||
@@ -305,6 +306,7 @@ class ChatRoomMember extends Component {
 ChatRoomMember.propTypes = {
   user: PropTypes.object.isRequired,
   chatRoomMember: PropTypes.object.isRequired,
+  dropdownTop: PropTypes.bool,
   handleRequestLiveVideo: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func.isRequired,
   handleOpenBlockUnblockUserModal: PropTypes.func.isRequired,
@@ -312,11 +314,12 @@ ChatRoomMember.propTypes = {
   handleUpdateMemberRole: PropTypes.func.isRequired,
   handleMuteMember: PropTypes.func.isRequired,
   handleOpenBanUnbanUserModal: PropTypes.func.isRequired,
-  isActive: PropTypes.bool
+  active: PropTypes.bool,
 }
 
 ChatRoomMember.defaultProps = {
-  isActive: false
+  dropdownTop: false,
+  active: false,
 }
 
 export default ChatRoomMember;

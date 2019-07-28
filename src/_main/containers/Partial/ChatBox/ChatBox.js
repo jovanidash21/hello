@@ -74,7 +74,7 @@ class ChatBox extends Component {
       return (
         <Container fluid>
           {
-            messages.length
+            messages.length > 0
               ?
               messages.map((singleMessage, i) =>
                 <ChatBubble
@@ -84,6 +84,7 @@ class ChatBox extends Component {
                   message={singleMessage}
                   messageUser={singleMessage.user}
                   sender={singleMessage.user._id === activeUser._id}
+                  dropdownTop={i >= (messages.length - 5)}
                   handleAudioPlayingToggle={::this.handleAudioPlayingToggle}
                   canDeleteMessage={canDeleteMessage}
                   handleAddDirectChatRoom={handleAddDirectChatRoom}

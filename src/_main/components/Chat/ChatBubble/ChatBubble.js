@@ -131,6 +131,7 @@ class ChatBubble extends Component {
       user,
       messageUser,
       sender,
+      dropdownTop,
       canDeleteMessage,
       small,
     } = this.props;
@@ -164,7 +165,7 @@ class ChatBubble extends Component {
             </div>
             {
               isShowDropdownMenu &&
-              <ul className="dropdown-menu mui-dropdown__menu">
+              <ul className={"dropdown-menu mui-dropdown__menu " + (dropdownTop ? 'dropdown-menu-top' : '')}>
                 {
                   (
                     user.role === 'owner' ||
@@ -358,6 +359,7 @@ ChatBubble.propTypes = {
   message: PropTypes.object.isRequired,
   messageUser: PropTypes.object.isRequired,
   sender: PropTypes.bool,
+  dropdownTop: PropTypes.bool,
   handleAudioPlayingToggle: PropTypes.func.isRequired,
   handleAddDirectChatRoom: PropTypes.func,
   handleOpenBlockUnblockUserModal: PropTypes.func,
@@ -369,6 +371,7 @@ ChatBubble.propTypes = {
 
 ChatBubble.defaultProps = {
   sender: false,
+  dropdownTop: false,
   canDeleteMessage: false,
   handleAddDirectChatRoom: () => {},
   handleOpenBlockUnblockUserModal: () => {},

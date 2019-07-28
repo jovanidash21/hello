@@ -146,6 +146,7 @@ class MembersList extends Component {
                   key={i}
                   user={user.active}
                   chatRoomMember={chatRoomMember}
+                  dropdownTop={(members.length > 15) && (i >= (members.length - 15))}
                   handleRequestLiveVideo={handleRequestLiveVideo}
                   handleAddDirectChatRoom={::this.handleAddDirectChatRoom}
                   handleOpenBlockUnblockUserModal={handleOpenBlockUnblockUserModal}

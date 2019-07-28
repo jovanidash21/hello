@@ -39,6 +39,16 @@
         margin-top: 0;
       }
     }
+    .dropdown-menu {
+      &.dropdown-menu-top {
+        bottom: 25px;
+        margin: 0 0 0.125rem 0;
+        top: auto !important;
+        @media screen and (max-width: $screen-mobile-max) {
+          bottom: 40px;
+        }
+      }
+    }
     .uploading-icon,
     .chat-text,
     .plyr {
