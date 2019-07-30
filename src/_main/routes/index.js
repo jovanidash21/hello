@@ -8,6 +8,7 @@ import { Login } from '../containers/Login';
 import { Register } from '../containers/Register';
 import { Guest } from '../containers/Guest';
 import { Chat } from '../containers/Chat';
+import { NotFound } from '../../components/NotFound';
 import 'react-popup/style.css';
 import '../../styles/Common.scss';
 import '../styles/Common.scss';
@@ -21,6 +22,7 @@ const routes = (
       <AuthForm exact path="/register" component={Register} title="Register" />
       <AuthForm exact path="/guest" component={Guest} title="Guest" />
       <Layout exact path="/chat" component={Chat} />
+      <Layout path="*" component={NotFound} title="Page Not Found" />
     </Switch>
   </Fragment>
 );
