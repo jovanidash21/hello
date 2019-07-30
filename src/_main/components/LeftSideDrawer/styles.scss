@@ -59,15 +59,6 @@
       opacity: 1;
     }
   }
-  .connected-members-count {
-    align-items: center;
-    color: $color-alto;
-    display: flex;
-    font-size: 12px;
-    .user-icon {
-      margin: 0 4px;
-    }
-  }
   &:hover {
     .trash-icon {
       width: 12px;

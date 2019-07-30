@@ -119,18 +119,6 @@ class ChatRoom extends Component {
                   <FontAwesome name="trash" />
                 </div>
               }
-              {
-                chatRoom.data.chatType === 'public' &&
-                <div
-                  className="connected-members-count"
-                  title={chatRoom.data.connectedMembers.length + " Connected Members"}
-                >
-                  <div className="user-icon">
-                    <FontAwesome name="user" />
-                  </div>
-                  {chatRoom.data.connectedMembers.length}
-                </div>
-              }
             </div>
           )
         }}

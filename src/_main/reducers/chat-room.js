@@ -290,11 +290,7 @@ const chatRoom = (state=initialState, action) => {
         ( activeChatRoom.data.chatType === 'public' ) &&
         ( activeChatRoom.data._id !== connectedChatRoomID )
       ) {
-        if (
-          ( activeChatRoom.data.connectedMembers.length >= 0 ) &&
-          ( activeChatRoom.data.connectedMembers.length < 500 ) &&
-          ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
-        ) {
+        if ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 ) {
           activeChatRoom.data.connectedMembers.push(userID);
         }
 
@@ -308,8 +304,6 @@ const chatRoom = (state=initialState, action) => {
             ( ! activeChatRoomFound ) &&
             ( chatRoom.data._id === activeChatRoom.data._id ) &&
             ( chatRoom.data.chatType === 'public' ) &&
-            ( chatRoom.data.connectedMembers.length >= 0 ) &&
-            ( chatRoom.data.connectedMembers.length < 500 ) &&
             ( chatRoom.data.connectedMembers.indexOf(userID) === -1 )
           ) {
             chatRoom.data.connectedMembers.push(userID);
@@ -318,8 +312,6 @@ const chatRoom = (state=initialState, action) => {
             ( ! connectedChatRoomFound ) &&
             ( chatRoom.data._id === connectedChatRoomID ) &&
             ( chatRoom.data.chatType === 'public' ) &&
-            ( chatRoom.data.connectedMembers.length > 0 ) &&
-            ( chatRoom.data.connectedMembers.length <= 500 ) &&
             ( chatRoom.data.connectedMembers.indexOf(userID) > -1 )
           ) {
             chatRoom.data.connectedMembers = chatRoom.data.connectedMembers.filter(memberID =>
@@ -449,8 +441,6 @@ const chatRoom = (state=initialState, action) => {
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
         ( activeChatRoom.data.chatType === 'public' ) &&
-        ( activeChatRoom.data.connectedMembers.length >= 0 ) &&
-        ( activeChatRoom.data.connectedMembers.length < 500 ) &&
         ( activeChatRoom.data.connectedMembers.indexOf(userID) === -1 )
       ) {
         activeChatRoom.data.connectedMembers.push(userID);
@@ -462,8 +452,6 @@ const chatRoom = (state=initialState, action) => {
         if (
           ( chatRoom.data._id === chatRoomID ) &&
           ( chatRoom.data.chatType === 'public' ) &&
-          ( chatRoom.data.connectedMembers.length >= 0 ) &&
-          ( chatRoom.data.connectedMembers.length < 500 ) &&
           ( chatRoom.data.connectedMembers.indexOf(userID) === -1 )
         ) {
           chatRoom.data.connectedMembers.push(userID);
@@ -488,8 +476,6 @@ const chatRoom = (state=initialState, action) => {
       if (
         ( activeChatRoom.data._id === chatRoomID ) &&
         ( activeChatRoom.data.chatType === 'public' ) &&
-        ( activeChatRoom.data.connectedMembers.length > 0 ) &&
-        ( activeChatRoom.data.connectedMembers.length <= 500 ) &&
         ( activeChatRoom.data.connectedMembers.indexOf(userID) > -1 )
       ) {
         activeChatRoom.data.connectedMembers = activeChatRoom.data.connectedMembers.filter(memberID =>
@@ -503,8 +489,6 @@ const chatRoom = (state=initialState, action) => {
         if (
           ( chatRoom.data._id === chatRoomID ) &&
           ( chatRoom.data.chatType === 'public' ) &&
-          ( chatRoom.data.connectedMembers.length > 0 ) &&
-          ( chatRoom.data.connectedMembers.length <= 500 ) &&
           ( chatRoom.data.connectedMembers.indexOf(userID) > -1 )
         ) {
           chatRoom.data.connectedMembers = chatRoom.data.connectedMembers.filter(memberID =>

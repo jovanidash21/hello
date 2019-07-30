@@ -47,15 +47,6 @@ class ChatRoom extends Component {
         <div className="chat-room-name">
           {chatRoom.data.name}
         </div>
-        <div
-          className="connected-members-count"
-          title={chatRoom.data.connectedMembers.length + " Connected Members"}
-        >
-          <div className="user-icon">
-            <FontAwesome name="user" />
-          </div>
-          {chatRoom.data.connectedMembers.length}/500
-        </div>
       </div>
     )
   }
