@@ -156,7 +156,7 @@ class ChatBubble extends Component {
     }
 
     return (
-      <div className={"chat-bubble " + (small ? 'small' : '')}>
+      <div className={"chat-bubble " + (small ? 'small ' : '') + (isShowDropdownMenu && dropdownTop ? 'mui-dropdown--up' : '')}>
         {
           ! small &&
           <Fragment>
@@ -165,7 +165,7 @@ class ChatBubble extends Component {
             </div>
             {
               isShowDropdownMenu &&
-              <ul className={"dropdown-menu mui-dropdown__menu " + (dropdownTop ? 'dropdown-menu-top' : '')}>
+              <ul className="dropdown-menu mui-dropdown__menu">
                 {
                   (
                     user.role === 'owner' ||

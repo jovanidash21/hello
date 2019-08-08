@@ -14,16 +14,6 @@
   &.special {
     background-color: $color-vermillion;
   }
-  .dropdown-menu {
-    &.dropdown-menu-top {
-      bottom: 25px;
-      margin: 0 0 0.125rem 0;
-      top: auto !important;
-      @media screen and (max-width: $screen-mobile-max) {
-        bottom: 27px;
-      }
-    }
-  }
   .member-api-address {
     align-items: center;
     background-color: $color-dusty-gray;

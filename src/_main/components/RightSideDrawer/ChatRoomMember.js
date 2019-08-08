@@ -113,7 +113,8 @@ class ChatRoomMember extends Component {
       <div
         className={"chat-room-member-wrapper " +
           (chatRoomMember.role === 'vip' ? 'special ' : ' ' ) +
-          (active ? 'active' : '')
+          (active ? 'active ' : '') + 
+          (isShowDropdownMenu && dropdownTop ? 'mui-dropdown--up' : '')
         }
         title={chatRoomMember.name}
       >
@@ -159,7 +160,7 @@ class ChatRoomMember extends Component {
         </div>
         {
           isShowDropdownMenu &&
-          <ul className={"dropdown-menu mui-dropdown__menu mui-dropdown__menu--right " + (dropdownTop ? 'dropdown-menu-top' : '')}>
+          <ul className="dropdown-menu mui-dropdown__menu mui-dropdown__menu--right">
             {
               (
                 user.role === 'owner' ||
