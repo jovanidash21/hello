@@ -82,7 +82,7 @@
     "friendly-errors-webpack-plugin": "^1.7.0",
     "history": "^4.7.2",
     "initials": "^3.0.0",
-    "muicss": "^0.9.38",
+    "muicss": "^0.9.43",
     "nodemon": "^1.18.10",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
