@@ -1,6 +1,11 @@
+.chat-box-container {
+  display: flex;
+  flex-direction: column;
+  height: 100% !important;
+  justify-content: flex-end;
+}
 .chat-box {
   @include scrollbar($color-mine-shaft);
-  height: 100% !important;
   overflow-x: hidden;
   overflow-y: auto;
   &.loading {
@@ -16,6 +21,7 @@
   }
   .mui-container-fluid {
     padding: 5px;
+    width: 100%;
   }
   .loading-icon {
     color: $color-emperor;
