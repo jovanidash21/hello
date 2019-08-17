@@ -5,7 +5,30 @@ const ChatRoom = require('../models/ChatRoom');
 const Message = require('../models/Message');
 
 const cron = function(socket) {
-  var minute = new CronJob('0 */1 * * * *', function() {
+  var twoMinutes = new CronJob('0 */2 * * * *', function() {
+    User.find({'mute.data': true, 'mute.endDate': {$lte: new Date()}})
+      .then((users) => {
+        for (var i = 0; i < users.length; i++) {
+          var user = users[i];
+
+          User.findByIdAndUpdate(
+            user._id,
+            { $set: { mute: { data: false, endDate: new Date() } } },
+            { safe: true, upsert: true, new: true }
+          ).exec();
+
+          socket.broadcast.emit('action', {
+            type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
+            memberID: user._id
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, null, true);
+
+  var tenMinutes = new CronJob('0 */10 * * * *', function() {
     User.find({
       chatRooms: {
         $elemMatch: {
@@ -76,27 +99,6 @@ const cron = function(socket) {
     .catch((error) => {
       console.log(error);
     });
-
-    User.find({'mute.data': true, 'mute.endDate': {$lte: new Date()}})
-      .then((users) => {
-        for (var i = 0; i < users.length; i++) {
-          var user = users[i];
-
-          User.findByIdAndUpdate(
-            user._id,
-            { $set: { mute: { data: false, endDate: new Date() } } },
-            { safe: true, upsert: true, new: true }
-          ).exec();
-
-          socket.broadcast.emit('action', {
-            type: 'SOCKET_BROADCAST_UNMUTE_MEMBER',
-            memberID: user._id
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }, null, true);
 
   var thirtyMinutes = new CronJob('0 */30 * * * *', function() {
