@@ -9,7 +9,7 @@ class TextFormatPicker extends Component {
     super(props);
 
     this.state = {
-      colorPicker: false
+      colorPicker: false,
     };
   }
   handleColorPickerToggle(event) {
@@ -88,12 +88,12 @@ TextFormatPicker.propTypes = {
   textColor: PropTypes.string,
   textStyle: PropTypes.string,
   handleTextColor: PropTypes.func.isRequired,
-  handleTextStyle: PropTypes.func.isRequired
+  handleTextStyle: PropTypes.func.isRequired,
 }
 
 TextFormatPicker.defautProps = {
   textColor: '#000000',
-  textStyle: 'normal'
+  textStyle: 'normal',
 }
 
 export default TextFormatPicker;

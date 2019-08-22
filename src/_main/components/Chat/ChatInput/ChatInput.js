@@ -35,7 +35,7 @@ class ChatInput extends Component {
       textColor: '#000000',
       textStyle: 'normal',
       validMessage: false,
-      maxLengthReached: false
+      maxLengthReached: false,
     };
   }
   componentWillMount() {
@@ -92,7 +92,7 @@ class ChatInput extends Component {
     const {
       message,
       validMessage,
-      maxLengthReached
+      maxLengthReached,
     } = this.state;
     const chatInputText = document.getElementById(::this.handleDivID()).innerHTML;
 
@@ -119,7 +119,7 @@ class ChatInput extends Component {
         message: '',
         emojiPicker: false,
         textFormatPicker: false,
-        validMessage: false
+        validMessage: false,
       });
     }
 
@@ -147,7 +147,7 @@ class ChatInput extends Component {
   handleImageUploadSelect(event, results) {
     const {
       chatRoomID,
-      handleSendImageMessage
+      handleSendImageMessage,
     } = this.props;
     const newMessageID = uuidv4();
     const image = results[0][1];
@@ -176,12 +176,12 @@ class ChatInput extends Component {
 
     const {
       emojiPicker,
-      textFormatPicker
+      textFormatPicker,
     } = this.state;
 
     this.setState({
       emojiPicker: !emojiPicker,
-      textFormatPicker: false
+      textFormatPicker: false,
     });
   }
   handleTextFormatPickerToggle(event) {
@@ -191,7 +191,7 @@ class ChatInput extends Component {
 
     this.setState({
       emojiPicker: false,
-      textFormatPicker: !textFormatPicker
+      textFormatPicker: !textFormatPicker,
     });
   }
   handleUserTaggingToggle() {
@@ -199,7 +199,7 @@ class ChatInput extends Component {
       chatRoomID,
       handleSearchUser
     } = this.props;
-    const userTagQuery = getAutoCompleteTextQuery( document.getElementById(::this.handleDivID()) );
+    const userTagQuery = getAutoCompleteTextQuery(document.getElementById(::this.handleDivID()));
 
     if ( userTagQuery.length > 0 ) {
       this.setState({
@@ -219,7 +219,7 @@ class ChatInput extends Component {
       caretPosition,
       message,
       validMessage,
-      maxLengthReached
+      maxLengthReached,
     } = this.state;
     const messageTextLength = ::this.handleMessageText('length');
     const emojiSelect = emojione.toImage(emoji.shortname);
@@ -235,10 +235,10 @@ class ChatInput extends Component {
 
     this.setState({
       caretPosition: newCaretPosition,
-      message: newMessage
+      message: newMessage,
     });
 
-    if ( !validMessage ) {
+    if (!validMessage) {
       this.setState({validMessage: true});
     }
   }
@@ -249,7 +249,7 @@ class ChatInput extends Component {
     const { textStyle } = this.state;
     var textStyleSelect = 'normal';
 
-    if ( textStyleClick === textStyle ) {
+    if (textStyleClick === textStyle) {
       textStyleSelect = 'normal';
     } else {
       textStyleSelect = textStyleClick;
@@ -263,7 +263,7 @@ class ChatInput extends Component {
       caretPosition,
       message,
       validMessage,
-      maxLengthReached
+      maxLengthReached,
     } = this.state;
     const messageTextLength = ::this.handleMessageText('length');
     let newCaretPosition = caretPosition;
@@ -299,8 +299,8 @@ class ChatInput extends Component {
     const { textStyle } = this.state;
     const messageText = getPlainText( document.getElementById(::this.handleDivID()) );
 
-    if ( type === 'text' ) {
-      switch ( textStyle ) {
+    if (type === 'text') {
+      switch (textStyle) {
         case 'bold':
           return '*' + messageText + '*';
         case 'italic':
@@ -318,7 +318,7 @@ class ChatInput extends Component {
     const {
       user,
       chatRoomID,
-      handleSendTextMessage
+      handleSendTextMessage,
     } = this.props;
     const { textColor } = this.state;
     const messageText = ::this.handleMessageText('text');
@@ -333,17 +333,17 @@ class ChatInput extends Component {
     const {
       user,
       chatRoomID,
-      handleSendTextMessage
+      handleSendTextMessage,
     } = this.props;
     const {
       textColor,
       validMessage,
-      maxLengthReached
+      maxLengthReached,
     } = this.state;
     const messageText = ::this.handleMessageText('text');
     const newMessageID = uuidv4();
 
-    if ( validMessage && !maxLengthReached ) {
+    if (validMessage && !maxLengthReached) {
       document.getElementById(::this.handleDivID()).innerHTML = '';
       document.getElementById(::this.handleDivID()).focus();
       handleSendTextMessage(newMessageID, messageText, chatRoomID, textColor);
@@ -352,7 +352,7 @@ class ChatInput extends Component {
         message: '',
         emojiPicker: false,
         textFormatPicker: false,
-        validMessage: false
+        validMessage: false,
       });
     }
   }
@@ -362,7 +362,7 @@ class ChatInput extends Component {
       userTagSuggestions,
       disabled,
       userTagLoading,
-      small
+      small,
     } = this.props;
     const {
       message,
@@ -372,7 +372,7 @@ class ChatInput extends Component {
       textColor,
       textStyle,
       validMessage,
-      maxLengthReached
+      maxLengthReached,
     } = this.state;
 
     return (
@@ -493,7 +493,7 @@ ChatInput.propTypes = {
   userTagSuggestions: PropTypes.array,
   disabled: PropTypes.bool,
   userTagLoading: PropTypes.bool,
-  small: PropTypes.bool
+  small: PropTypes.bool,
 }
 
 ChatInput.defaultProps = {
@@ -501,7 +501,7 @@ ChatInput.defaultProps = {
   userTagSuggestions: [],
   disabled: false,
   userTagLoading: false,
-  small: false
+  small: false,
 }
 
 export default ChatInput;
