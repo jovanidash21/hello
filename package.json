@@ -58,7 +58,7 @@
     "passport-local-mongoose": "^4.0.0",
     "passport-twitter": "^1.0.4",
     "popup-tools": "^1.0.2",
-    "pug": "^2.0.0-rc.3",
+    "pug": "^3.0.1",
     "redis": "^2.8.0",
     "rimraf": "^2.6.3",
     "serve-favicon": "^2.5.0",
